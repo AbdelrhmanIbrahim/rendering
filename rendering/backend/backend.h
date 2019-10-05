@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cbs
+namespace backend
 {
 	struct callbacks
 	{
@@ -25,7 +25,10 @@ namespace cbs
 	keyboard_handle(unsigned char c, int x, int y);
 
 
-	//init callbacks backend
+	//init backend
+	void
+	graphics_init();
+
 	void
 	callbacks_init(int argc, char** argv);
 
@@ -34,4 +37,7 @@ namespace cbs
 
 	void
 	callbacks_run();
+
+	void
+	callbacks_update();
 };

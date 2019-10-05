@@ -1,10 +1,10 @@
 #pragma once
 
-#include "callbacks/callbacks.h"
+#include "backend/backend.h"
 
 namespace app
 {
-	struct application : cbs::callbacks
+	struct application : backend::callbacks
 	{
 		application(int argc, char** argv);
 

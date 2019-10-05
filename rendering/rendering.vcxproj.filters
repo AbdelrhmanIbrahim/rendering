@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\callbacks">
-      <UniqueIdentifier>{6bc6247b-4be5-4591-8513-1791c93181f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\callbacks">
-      <UniqueIdentifier>{9b47eab4-a6bb-4f85-af74-11de48f39cd7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\window">
       <UniqueIdentifier>{628e8ebc-eba7-4bbe-b24b-696a29bd8f5f}</UniqueIdentifier>
     </Filter>
@@ -31,13 +25,16 @@
     <Filter Include="Source Files\app">
       <UniqueIdentifier>{c8ca0e94-ecf2-450f-a311-4bdce5b49c1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\backend">
+      <UniqueIdentifier>{6bc6247b-4be5-4591-8513-1791c93181f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\backend">
+      <UniqueIdentifier>{9b47eab4-a6bb-4f85-af74-11de48f39cd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="callbacks\callbacks.cpp">
-      <Filter>Source Files\callbacks</Filter>
     </ClCompile>
     <ClCompile Include="window\window.cpp">
       <Filter>Source Files\window</Filter>
@@ -45,16 +42,19 @@
     <ClCompile Include="app\app.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
+    <ClCompile Include="backend\backend.cpp">
+      <Filter>Source Files\backend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="callbacks\callbacks.h">
-      <Filter>Header Files\callbacks</Filter>
-    </ClInclude>
     <ClInclude Include="window\window.h">
       <Filter>Header Files\window</Filter>
     </ClInclude>
     <ClInclude Include="app\app.h">
       <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\backend.h">
+      <Filter>Header Files\backend</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

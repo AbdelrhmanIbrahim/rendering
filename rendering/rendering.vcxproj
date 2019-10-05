@@ -122,13 +122,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
-    <ClCompile Include="callbacks\callbacks.cpp" />
+    <ClCompile Include="backend\backend.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\app.h" />
-    <ClInclude Include="callbacks\callbacks.h" />
+    <ClInclude Include="backend\backend.h" />
     <ClInclude Include="window\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

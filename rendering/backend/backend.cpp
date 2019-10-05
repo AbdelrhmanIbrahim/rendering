@@ -1,8 +1,10 @@
-#include "callbacks.h"
+#include "backend.h"
 
+#include <glew.h>
 #include <freeglut.h>
+#include <assert.h>
 
-namespace cbs
+namespace backend
 {
 	void
 	update()
@@ -22,6 +24,12 @@ namespace cbs
 		cb->keyboard_handle(c, x, y);
 	}
 
+	void
+	graphics_init()
+	{
+		GLenum gl_ok = glewInit();
+		assert(gl_ok == GLEW_OK);
+	}
 
 	void
 	callbacks_init(int argc, char** argv)
@@ -32,16 +40,22 @@ namespace cbs
 	void
 	callbacks_set(callbacks* cb)
 	{
-		cbs::cb = cb;
+		backend::cb = cb;
 		glutDisplayFunc(update);
 		glutPassiveMotionFunc(mouse_handle);
 		glutKeyboardFunc(keyboard_handle);
-		//glutIdleFunc(update);
+		glutIdleFunc(update);
 	}
 
 	void
 	callbacks_run()
 	{
 		glutMainLoop();
+	}
+
+	void
+	callbacks_update()
+	{
+		glutSwapBuffers();
 	}
 };

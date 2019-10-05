@@ -1,25 +1,31 @@
 #include "app/app.h"
-#include "callbacks/callbacks.h"
+#include "backend/backend.h"
 #include "window/window.h"
 
 namespace app
 {
 	application::application(int argc, char** argv)
 	{
-		cbs::callbacks_init(argc, argv);
+		backend::callbacks_init(argc, argv);
 		win::window_create(1400, 800, "rendering journey");
-		cbs::callbacks_set(this);
+		backend::callbacks_set(this);
+		backend::graphics_init();
 	}
 
 	void
 	application::run()
 	{
-		cbs::callbacks_run();
+		backend::callbacks_run();
 	}
 
 	void
 	application::update()
 	{
+		//render the top world
+
+
+		//swap buffer
+		backend::callbacks_update();
 	}
 
 	void

@@ -31,6 +31,30 @@
     <Filter Include="Source Files\backend">
       <UniqueIdentifier>{9b47eab4-a6bb-4f85-af74-11de48f39cd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\glgpu">
+      <UniqueIdentifier>{e95a6cae-efd3-4546-9b81-26c074125def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\glgpu">
+      <UniqueIdentifier>{8114925a-7e39-4e09-8df2-729c352bab06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\geometry">
+      <UniqueIdentifier>{d58637b7-ff01-48ba-9a84-fbf7345ad795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\geometry">
+      <UniqueIdentifier>{02f763f6-e5cf-4f87-98d7-761deb9ce8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\world">
+      <UniqueIdentifier>{8db8f275-4d3f-43a4-adcb-f19a44107156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\world">
+      <UniqueIdentifier>{1acbb581-a710-4ec8-9b27-b647af1b3d61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine">
+      <UniqueIdentifier>{54177124-b493-480b-b8fd-e38f61306b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{148504de-78ff-4428-a00b-a6ce4e86b344}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,6 +69,21 @@
     <ClCompile Include="backend\backend.cpp">
       <Filter>Source Files\backend</Filter>
     </ClCompile>
+    <ClCompile Include="gpu_gl\glgpu.cpp">
+      <Filter>Source Files\glgpu</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\Mesh.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="world\World.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Engine.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Mesh_Renderer.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -55,6 +94,24 @@
     </ClInclude>
     <ClInclude Include="backend\backend.h">
       <Filter>Header Files\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_gl\glgpu.h">
+      <Filter>Header Files\glgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\vertex.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\Mesh.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="world\World.h">
+      <Filter>Header Files\world</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Engine.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\Mesh_Renderer.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

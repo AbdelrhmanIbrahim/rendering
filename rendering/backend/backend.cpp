@@ -1,6 +1,5 @@
 #include "backend.h"
 
-#include <glew.h>
 #include <freeglut.h>
 #include <assert.h>
 
@@ -22,13 +21,6 @@ namespace backend
 	keyboard_handle(unsigned char c, int x, int y)
 	{
 		cb->keyboard_handle(c, x, y);
-	}
-
-	void
-	graphics_init()
-	{
-		GLenum gl_ok = glewInit();
-		assert(gl_ok == GLEW_OK);
 	}
 
 	void

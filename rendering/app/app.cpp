@@ -1,5 +1,4 @@
 #include "app/app.h"
-#include "backend/backend.h"
 #include "window/window.h"
 
 namespace app
@@ -9,7 +8,16 @@ namespace app
 		backend::callbacks_init(argc, argv);
 		win::window_create(1400, 800, "rendering journey");
 		backend::callbacks_set(this);
-		backend::graphics_init();
+		glgpu::graphics_init();
+
+		w = world::world_create();
+		e = rndr::engine_create();
+	}
+
+	application::~application()
+	{
+		world::world_free(w);
+		rndr::engine_free(e);
 	}
 
 	void
@@ -22,7 +30,7 @@ namespace app
 	application::update()
 	{
 		//render the top world
-
+		rndr::engine_world_draw(e, &w);
 
 		//swap buffer
 		backend::callbacks_update();

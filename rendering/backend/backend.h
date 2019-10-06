@@ -25,10 +25,6 @@ namespace backend
 	keyboard_handle(unsigned char c, int x, int y);
 
 
-	//init backend
-	void
-	graphics_init();
-
 	void
 	callbacks_init(int argc, char** argv);
 

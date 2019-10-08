@@ -58,6 +58,15 @@
     <Filter Include="Header Files\engine\shaders">
       <UniqueIdentifier>{b6350581-c2c0-41a9-b488-fb95e505d5e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\IO">
+      <UniqueIdentifier>{606dc22b-4e5b-4888-8841-1e8668b5961d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IO">
+      <UniqueIdentifier>{2027e95a-78c0-467e-b4c9-d4524856760c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{2d2172c1-6e6a-4f50-b2a3-0512a7b3d41f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -87,6 +96,9 @@
     <ClCompile Include="engine\Mesh_Renderer.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="IO\STL_Reader.cpp">
+      <Filter>Source Files\IO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -115,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="engine\Mesh_Renderer.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\STL_Reader.h">
+      <Filter>Header Files\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector.h">
+      <Filter>Header Files\math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

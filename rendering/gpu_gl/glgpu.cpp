@@ -54,8 +54,7 @@ namespace glgpu
 		GLchar* src[1];
 		GLint length[1];
 		src[0] = &str.front();
-		length[0] = str.size()
-			;
+		length[0] = str.size();
 		GLuint obj = glCreateShader(_map(shader_stage));
 		glShaderSource(obj, 1, src, length);
 		glCompileShader(obj);
@@ -103,31 +102,23 @@ namespace glgpu
 	}
 
 	buffer
-	vertex_buffer_create(geo::Vertex vertices[])
+	vertex_buffer_create(geo::Vertex vertices[], unsigned int count)
 	{
 		GLuint vbo;
 		glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(geo::Vertex), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(geo::Vertex), vertices, GL_STATIC_DRAW);
 		return (buffer)vbo;
 	}
 
 	buffer
-	index_buffer_create(unsigned int indices[])
+	index_buffer_create(unsigned int indices[], unsigned int count)
 	{
 		GLuint ebo;
 		glGenBuffers(1, &ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 		return (buffer)ebo;
-	}
-
-	buffer
-	buffer_create()
-	{
-		GLuint buf;
-		glGenBuffers(1, &buf);
-		return (buffer)buf;
 	}
 
 	void

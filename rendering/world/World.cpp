@@ -8,12 +8,7 @@ namespace world
 	world_create()
 	{
 		World* self = new World;
-
-		//triangle for now (revisit)
-		static Vertex vs[3] = { { 0.5, -0.5, 0 } , { 0, 0.5, 0 } , { -0.5, -0.5, 0 } };
-		static unsigned int is[3] = { 0, 1, 2 };
-		self->mesh = mesh_create(vs, is);
-
+		self->mesh = mesh_create("../rendering/stls/cube.stl");
 		return self;
 	}
 
@@ -23,6 +18,6 @@ namespace world
 		//revisit
 		mesh_delete(w->mesh);
 
-		//delete w;
+		delete w;
 	}
 }

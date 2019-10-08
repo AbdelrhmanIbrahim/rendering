@@ -1,9 +1,11 @@
 #pragma once
 
+#include "math/vector.h"
+
 namespace geo
 {
 	struct Vertex
 	{
-		float coord[3];
+		math::vec3f pos;
 	};
 };

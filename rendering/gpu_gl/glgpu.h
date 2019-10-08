@@ -24,10 +24,10 @@ namespace glgpu
 	program_delete(program prog);
 
 	buffer
-	vertex_buffer_create(geo::Vertex vertices[]);
+	vertex_buffer_create(geo::Vertex vertices[], unsigned int count);
 
 	buffer
-	index_buffer_create(unsigned int indices[]);
+	index_buffer_create(unsigned int indices[], unsigned int count);
 
 	void
 	buffer_delete(buffer buf);

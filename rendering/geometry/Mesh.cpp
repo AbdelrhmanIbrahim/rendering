@@ -1,22 +1,20 @@
 #include "geometry/Mesh.h"
+#include "IO/STL_Reader.h"
 
 using namespace glgpu;
+using namespace io;
 
 namespace geo
 {
 	Mesh
-	mesh_create(geo::Vertex vs[], unsigned int is[])
+	mesh_create(const char* stl_path)
 	{
 		Mesh self{};
-		self.vertices[0] = vs[0];
-		self.vertices[1] = vs[1];
-		self.vertices[2] = vs[2];
-		self.indices[0] = is[0];
-		self.indices[1] = is[1];
-		self.indices[2] = is[2];
-
-		self.vs = vertex_buffer_create(self.vertices);
-		self.is = index_buffer_create(self.indices);
+		Indexed_Triangles tris = stl_binary_read(stl_path);
+		self.vertices = std::move(tris.vertices);
+		self.indices = std::move(tris.indices);
+		self.vs = vertex_buffer_create(&self.vertices.front(), self.vertices.size());
+		self.is = index_buffer_create(&self.indices.front(), self.indices.size());
 		self.va = vao_create();
 
 		return self;

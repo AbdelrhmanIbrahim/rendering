@@ -1,15 +1,23 @@
 #pragma once
 
 #include "backend/backend.h"
-#include "world/World.h"
-#include "engine/Engine.h"
+
+namespace world
+{
+	struct World;
+}
+
+namespace rndr
+{
+	struct Engine;
+}
 
 namespace app
 {
 	struct application : backend::callbacks
 	{
-		world::World w;
-		rndr::Engine e;
+		world::World* w;
+		rndr::Engine* e;
 
 		application(int argc, char** argv);
 

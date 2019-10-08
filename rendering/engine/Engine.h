@@ -1,7 +1,5 @@
 #pragma once
 
-#include "engine/Mesh_Renderer.h"
-
 namespace world
 {
 	struct World;
@@ -9,17 +7,14 @@ namespace world
 
 namespace rndr
 {
-	struct Engine
-	{
-		Mesh_Renderer mr;
-	};
+	struct Engine;
 
-	Engine
+	Engine*
 	engine_create();
 
 	void
-	engine_free(Engine& e);
+	engine_free(Engine* e);
 
 	void
-	engine_world_draw(const Engine& e, const world::World* w);
+	engine_world_draw(const Engine* e, const world::World* w);
 }

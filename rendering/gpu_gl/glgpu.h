@@ -15,7 +15,7 @@ namespace glgpu
 	graphics_init();
 
 	program
-	program_create(const char* vertex_shader, const char* pixel_shader);
+	program_create(const char* vertex_shader_path, const char* pixel_shader_path);
 
 	void
 	program_use(program prog);

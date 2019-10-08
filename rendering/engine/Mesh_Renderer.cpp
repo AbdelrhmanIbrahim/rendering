@@ -1,7 +1,6 @@
 #include "Mesh_Renderer.h"
 
 using namespace glgpu;
-using namespace geo;
 
 namespace rndr
 {
@@ -9,11 +8,8 @@ namespace rndr
 	mesh_renderer_create()
 	{
 		Mesh_Renderer self{};
-
-		static char vs[] = "#version 330 core \n layout(location = 0) in vec3 aPos; \n void main(){gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);}";
-		static char ps[] = "#version 330 core \n out vec4 FragColor; \n void main(){FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);}";
-		self.prog = program_create(vs, ps);
-		
+		//TODO, deploy shaders to bin when moving to cmake or create a src obj (revisit)
+		self.prog = program_create("../rendering/engine/shaders/colored.vertex", "../rendering/engine/shaders/colored.pixel");
 		return self;
 	}
 

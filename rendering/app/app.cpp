@@ -1,5 +1,13 @@
 #include "app/app.h"
+
 #include "window/window.h"
+#include "gpu_gl/glgpu.h"
+
+#include "world/World.h"
+#include "engine/Engine.h"
+
+using namespace world;
+using namespace rndr;
 
 namespace app
 {
@@ -10,14 +18,14 @@ namespace app
 		backend::callbacks_set(this);
 		glgpu::graphics_init();
 
-		w = world::world_create();
-		e = rndr::engine_create();
+		w = world_create();
+		e = engine_create();
 	}
 
 	application::~application()
 	{
-		world::world_free(w);
-		rndr::engine_free(e);
+		world_free(w);
+		engine_free(e);
 	}
 
 	void
@@ -30,7 +38,7 @@ namespace app
 	application::update()
 	{
 		//render the top world
-		rndr::engine_world_draw(e, &w);
+		engine_world_draw(e, w);
 
 		//swap buffer
 		backend::callbacks_update();

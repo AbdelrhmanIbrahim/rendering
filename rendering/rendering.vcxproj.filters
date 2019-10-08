@@ -55,6 +55,9 @@
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{148504de-78ff-4428-a00b-a6ce4e86b344}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\shaders">
+      <UniqueIdentifier>{b6350581-c2c0-41a9-b488-fb95e505d5e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

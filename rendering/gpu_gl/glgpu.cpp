@@ -4,6 +4,9 @@
 
 #include <assert.h>
 
+#include <fstream>
+#include <string>
+
 namespace glgpu
 {
 	void
@@ -13,42 +16,74 @@ namespace glgpu
 		assert(gl_ok == GLEW_OK);
 	}
 
-	program
-	program_create(const char* vertex_shader, const char* pixel_shader)
+	enum SHADER_STAGE
 	{
-		int  success;
+		VERTEX,
+		PIXEL
+	};
+
+	int
+	_map(SHADER_STAGE stage)
+	{
+		switch (stage)
+		{
+		case SHADER_STAGE::VERTEX:
+			return GL_VERTEX_SHADER;
+		case SHADER_STAGE::PIXEL:
+			return GL_FRAGMENT_SHADER;
+		default:
+			assert("undefined shader stage" && false);
+		}
+	}
+
+	GLuint
+	_shader_obj(std::ifstream& stream, const char* shader_path, SHADER_STAGE shader_stage)
+	{
+		stream.open(shader_path);
+		if (!stream.is_open())
+			assert("shader file not found" && false);
+
+		std::string str;
+		while (!stream.eof()) {
+			std::string line;
+			std::getline(stream, line);
+			str += line + "\n";
+		}
+		stream.close();
+
+		GLchar* src[1];
+		GLint length[1];
+		src[0] = &str.front();
+		length[0] = str.size()
+			;
+		GLuint obj = glCreateShader(_map(shader_stage));
+		glShaderSource(obj, 1, src, length);
+		glCompileShader(obj);
+
+		//check if shader compiled
+		int success;
 		char infoLog[512];
-
-		GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vs, 1, &vertex_shader, nullptr);
-		glCompileShader(vs);
-
-		//check if vertex shader compiled
-		glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
+		glGetShaderiv(obj, GL_COMPILE_STATUS, &success);
 		if (success == false)
 		{
-			glGetShaderInfoLog(vs, 512, nullptr, infoLog);
-			assert("ERROR: vertex shader couldn't be compiled." && false);
+			glGetShaderInfoLog(obj, 512, nullptr, infoLog);
+			assert("ERROR: shader couldn't be compiled." && false);
 		}
+		return obj;
+	}
 
-		GLuint ps =  glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(ps, 1, &pixel_shader, nullptr);
-		glCompileShader(ps);
-
-		//check if pixel shader compiled
-		glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
-		if (success == false)
-		{
-			glGetShaderInfoLog(ps, 512, nullptr, infoLog);
-			assert("ERROR: pixel shader couldn't be compiled." && false);
-		}
-
-		GLuint prog =  glCreateProgram();
-		glAttachShader(prog, vs);
-		glAttachShader(prog, ps);
+	program
+	program_create(const char* vertex_shader_path, const char* pixel_shader_path)
+	{
+		std::ifstream stream;
+		GLuint vobj = _shader_obj(stream, vertex_shader_path, SHADER_STAGE::VERTEX);
+		GLuint pobj = _shader_obj(stream, pixel_shader_path, SHADER_STAGE::PIXEL);
+		GLuint prog = glCreateProgram();
+		glAttachShader(prog, vobj);
+		glAttachShader(prog, pobj);
 		glLinkProgram(prog);
-		glDeleteShader(vs);
-		glDeleteShader(ps);
+		glDeleteShader(vobj);
+		glDeleteShader(pobj);
 
 		return (program)prog;
 	}

@@ -10,9 +10,9 @@ namespace world
 		geo::Mesh mesh;
 	};
 
-	World
+	World*
 	world_create();
 
 	void
-	world_free(World& w);
+	world_free(World* w);
 };

@@ -23,7 +23,4 @@ namespace geo
 
 	void
 	mesh_delete(const Mesh& mesh);
-
-	void
-	mesh_draw(const Mesh& mesh);
 }

@@ -19,9 +19,9 @@ namespace io
 	{
 		unsigned int operator()(const vec3f& point) const
 		{
-			unsigned int h1 = hash<double>()(point.pos[0]);
-			unsigned int h2 = hash<double>()(point.pos[1]);
-			unsigned int h3 = hash<double>()(point.pos[2]);
+			unsigned int h1 = hash<double>()(point.data[0]);
+			unsigned int h2 = hash<double>()(point.data[1]);
+			unsigned int h3 = hash<double>()(point.data[2]);
 			return (h1 ^ (h2 << 1)) ^ h3;
 		}
 	};
@@ -45,12 +45,12 @@ namespace io
 			return vec3f{ x,y,z };
 		};
 
-		auto insert_point = [&self, &unique_points_table](const vec3f& point) -> void
+		auto insert_point = [&self, &unique_points_table](const vec3f& point, const vec3f& normal) -> void
 		{
 			auto itr = unique_points_table.find(point);
 			if (itr == unique_points_table.end())
 			{
-				self.vertices.push_back(geo::Vertex{ point });
+				self.vertices.push_back(geo::Vertex{ point, normal, vec2f{} });
 				unique_points_table.insert(std::make_pair(point, self.vertices.size() - 1));
 				self.indices.push_back(self.vertices.size() - 1);
 			}
@@ -74,9 +74,9 @@ namespace io
 			for (unsigned int i = 0; i < tris_count; ++i)
 			{
 				vec3f normal = read_point(file);
-				insert_point(read_point(file));
-				insert_point(read_point(file));
-				insert_point(read_point(file));
+				insert_point(read_point(file), normal);
+				insert_point(read_point(file), normal);
+				insert_point(read_point(file), normal);
 				char dummy[2];
 				file.read(dummy, 2);
 			}

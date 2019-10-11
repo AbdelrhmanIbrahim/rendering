@@ -128,6 +128,7 @@
     <ClCompile Include="engine\Mesh_Renderer.cpp" />
     <ClCompile Include="geometry\Mesh.cpp" />
     <ClCompile Include="gpu_gl\glgpu.cpp" />
+    <ClCompile Include="IO\Image.cpp" />
     <ClCompile Include="IO\STL_Reader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window\window.cpp" />
@@ -141,10 +142,18 @@
     <ClInclude Include="geometry\Mesh.h" />
     <ClInclude Include="geometry\vertex.h" />
     <ClInclude Include="gpu_gl\glgpu.h" />
+    <ClInclude Include="IO\Image.h" />
+    <ClInclude Include="IO\Stb_Image.h" />
     <ClInclude Include="IO\STL_Reader.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="window\window.h" />
     <ClInclude Include="world\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="engine\shaders\colored.pixel" />
+    <None Include="engine\shaders\colored.vertex" />
+    <None Include="engine\shaders\texture.pixel" />
+    <None Include="engine\shaders\texture.vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

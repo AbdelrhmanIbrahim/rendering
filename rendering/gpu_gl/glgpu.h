@@ -9,7 +9,13 @@ namespace glgpu
 	//make an internal handle instead of casting to an address ofc
 	HANDLE(program);
 	HANDLE(buffer);
+	HANDLE(texture);
 	HANDLE(vao);
+
+	enum TEXTURE_UNIT
+	{
+		UNIT_0
+	};
 
 	void
 	graphics_init();
@@ -44,11 +50,26 @@ namespace glgpu
 	void
 	vao_delete(vao va);
 
+	texture
+	texture_create(const char* image_path);
+
+	void
+	texture_bind(texture texture, TEXTURE_UNIT texture_unit);
+
+	void
+	texture_free(texture texture);
+
 	void
 	color_clear(float r, float g, float b);
 
 	void
 	draw_indexed(unsigned int indcies_count);
+
+	void
+	uniform4f_set(program prog, const char* uniform, math::vec4f& data);
+
+	void
+	uniform1i_set(program prog, const char* uniform, int data);
 
 	bool
 	error();

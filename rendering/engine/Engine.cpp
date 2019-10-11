@@ -1,9 +1,10 @@
 #include "Engine.h"
 
 #include "world/World.h"
+
 #include "engine/Mesh_Renderer.h"
 
-#include <memory>
+#include "math/Vector.h"
 
 namespace rndr
 {
@@ -24,7 +25,6 @@ namespace rndr
 	engine_free(Engine* e)
 	{
 		mesh_renderer_free(e->mr);
-
 		delete e;
 	}
 
@@ -32,6 +32,6 @@ namespace rndr
 	engine_world_draw(const Engine* e, const world::World* w)
 	{
 		//render all meshes in the world using engine mesh renderer
-		mesh_rendere_draw(e->mr, w->mesh);
+		mesh_renderer_draw(e->mr, w->mesh, math::vec4f{1.0f, 0.0f, 0.0f, 1.0f});
 	}
 };

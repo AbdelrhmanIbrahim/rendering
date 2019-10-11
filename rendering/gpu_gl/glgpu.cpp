@@ -7,6 +7,10 @@
 #include <fstream>
 #include <string>
 
+#include "IO/Image.h"
+
+using namespace io;
+
 namespace glgpu
 {
 	void
@@ -21,6 +25,18 @@ namespace glgpu
 		VERTEX,
 		PIXEL
 	};
+
+	int
+	_map(TEXTURE_UNIT unit)
+	{
+		switch (unit)
+		{
+		case TEXTURE_UNIT::UNIT_0:
+			return GL_TEXTURE0;
+		default:
+			assert("undefined texture unit" && false);
+		}
+	}
 
 	int
 	_map(SHADER_STAGE stage)
@@ -66,6 +82,7 @@ namespace glgpu
 		if (success == false)
 		{
 			glGetShaderInfoLog(obj, 512, nullptr, infoLog);
+			printf(infoLog);
 			assert("ERROR: shader couldn't be compiled." && false);
 		}
 		return obj;
@@ -144,6 +161,10 @@ namespace glgpu
 		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
 	}
 
@@ -160,6 +181,38 @@ namespace glgpu
 		glDeleteVertexArrays(1, &v);
 	}
 
+	texture
+	texture_create(const char* image_path)
+	{
+		Image img = image_read(image_path);
+
+		GLuint tex;
+		glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
+		image_free(img);
+
+		return (texture)tex;
+	}
+
+	void
+	texture_bind(texture texture, TEXTURE_UNIT texture_unit)
+	{
+		glActiveTexture(_map(texture_unit));
+		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
+	}
+
+	void
+	texture_free(texture texture)
+	{
+		GLuint t = (GLuint)texture;
+		glDeleteTextures(1, &t);
+	}
+
 	void
 	color_clear(float r, float g, float b)
 	{
@@ -171,6 +224,20 @@ namespace glgpu
 	draw_indexed(unsigned int indcies_count)
 	{
 		glDrawElements(GL_TRIANGLES, indcies_count, GL_UNSIGNED_INT, 0);
+	}
+
+	void
+	uniform4f_set(program prog, const char* uniform, math::vec4f& data)
+	{
+		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		glUniform4f(uniform_loc, data[0], data[1], data[2], data[3]);
+	}
+
+	void
+	uniform1i_set(program prog, const char* uniform, int data)
+	{
+		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		glUniform1i(uniform_loc, data);
 	}
 
 	bool

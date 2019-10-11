@@ -99,6 +99,9 @@
     <ClCompile Include="IO\STL_Reader.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
+    <ClCompile Include="IO\Image.cpp">
+      <Filter>Source Files\IO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -134,5 +137,25 @@
     <ClInclude Include="math\Vector.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
+    <ClInclude Include="IO\Stb_Image.h">
+      <Filter>Header Files\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\Image.h">
+      <Filter>Header Files\IO</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="engine\shaders\colored.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\colored.vertex">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\texture.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\texture.vertex">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@
 using namespace glgpu;
 using namespace io;
 
+using namespace math;
+
 namespace geo
 {
 	Mesh
@@ -26,13 +28,5 @@ namespace geo
 		buffer_delete(mesh.vs);
 		buffer_delete(mesh.is);
 		vao_delete(mesh.va);
-	}
-
-	void
-	mesh_draw(const Mesh& mesh)
-	{
-		vao_bind(mesh.va, mesh.vs, mesh.is);
-		draw_indexed(sizeof(mesh.indices));
-		vao_unbind();
 	}
 }

@@ -143,6 +143,9 @@
     <ClInclude Include="IO\Image.h">
       <Filter>Header Files\IO</Filter>
     </ClInclude>
+    <ClInclude Include="math\Matrix.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\shaders\colored.pixel">

@@ -28,7 +28,7 @@ namespace world
 	world_create()
 	{
 		World* self = new World;
-		self->mesh = mesh_create("../rendering/res/stls/cube.stl");
+		self->mesh = mesh_create("../rendering/res/stls/cube1.stl");
 		return self;
 	}
 

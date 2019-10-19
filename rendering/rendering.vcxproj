@@ -145,9 +145,11 @@
     <ClInclude Include="IO\Image.h" />
     <ClInclude Include="IO\Stb_Image.h" />
     <ClInclude Include="IO\STL_Reader.h" />
+    <ClInclude Include="math\Gfx.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="window\window.h" />
+    <ClInclude Include="world\3Dobject.h" />
     <ClInclude Include="world\World.h" />
   </ItemGroup>
   <ItemGroup>

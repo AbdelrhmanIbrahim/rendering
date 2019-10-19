@@ -1,13 +1,11 @@
 #include "gpu_gl/glgpu.h"
 
+#include "IO/Image.h"
+
 #include <glew.h>
-
 #include <assert.h>
-
 #include <fstream>
 #include <string>
-
-#include "IO/Image.h"
 
 using namespace io;
 
@@ -160,10 +158,13 @@ namespace glgpu
 		GLuint v = (GLuint)va;
 		glBindVertexArray(v);
 		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
+		//pos
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
+		//normal
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+		//uv
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
@@ -221,7 +222,6 @@ namespace glgpu
 	{
 		glClearColor(r, g, b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glEnable(GL_DEPTH);
 	}
 
 	void
@@ -238,10 +238,23 @@ namespace glgpu
 	}
 
 	void
+	uniformmat4f_set(program prog, const char* uniform, math::Mat4f& data)
+	{
+		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, &data.data[0][0]);
+	}
+
+	void
 	uniform1i_set(program prog, const char* uniform, int data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform1i(uniform_loc, data);
+	}
+
+	void
+	view_port(int x, int y, int width, int height)
+	{
+		glViewport(x, y, width, height);
 	}
 
 	bool

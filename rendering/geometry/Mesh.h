@@ -3,7 +3,7 @@
 #include "geometry/vertex.h"
 #include "gpu_gl/glgpu.h"
 
-#include<vector>
+#include <vector>
 
 namespace geo
 {

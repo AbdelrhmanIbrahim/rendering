@@ -11,6 +11,12 @@ namespace math
 		{
 			return data[index];
 		}
+
+		const float&
+		operator[](unsigned int index) const
+		{
+			return data[index];
+		}
 	};
 
 	struct vec3f

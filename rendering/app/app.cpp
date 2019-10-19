@@ -38,7 +38,7 @@ namespace app
 	application::update()
 	{
 		//render the top world
-		engine_world_draw(e, w);
+		engine_world_draw(e, w, math::vec2f{ 1400, 800 });
 
 		//swap buffer
 		backend::callbacks_update();

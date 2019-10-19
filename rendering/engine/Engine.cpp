@@ -4,8 +4,6 @@
 
 #include "engine/Mesh_Renderer.h"
 
-#include "math/Vector.h"
-
 namespace rndr
 {
 	struct Engine
@@ -29,9 +27,9 @@ namespace rndr
 	}
 
 	void
-	engine_world_draw(const Engine* e, const world::World* w)
+	engine_world_draw(const Engine* e, const world::World* w, const math::vec2f& viewport)
 	{
 		//render all meshes in the world using engine mesh renderer
-		mesh_renderer_draw(e->mr, w->mesh, math::vec4f{1.0f, 0.0f, 0.0f, 1.0f});
+		mesh_renderer_draw(e->mr, w->obj, viewport);
 	}
 };

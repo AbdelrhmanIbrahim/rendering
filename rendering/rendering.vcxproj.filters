@@ -146,6 +146,12 @@
     <ClInclude Include="math\Matrix.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
+    <ClInclude Include="math\Gfx.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="world\3Dobject.h">
+      <Filter>Header Files\world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\shaders\colored.pixel">

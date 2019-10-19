@@ -2,7 +2,7 @@
 
 #include "gpu_gl/glgpu.h"
 
-#include "geometry/Mesh.h"
+#include "world/3Dobject.h"
 
 #include "math/Vector.h"
 
@@ -21,5 +21,5 @@ namespace rndr
 	mesh_renderer_free(const Mesh_Renderer& mr);
 
 	void
-	mesh_renderer_draw(const Mesh_Renderer& mr, const geo::Mesh& mesh, math::vec4f& col);
+	mesh_renderer_draw(const Mesh_Renderer& mr, const world::object3D& object, const math::vec2f& viewport);
 };

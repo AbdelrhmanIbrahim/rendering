@@ -1,10 +1,11 @@
 #include "world/World.h"
+#include "world/3Dobject.h"
 
-using namespace geo;
+using namespace math;
 
 namespace world
 {
-	Mesh
+	/*Mesh
 	_mesh_test()
 	{
 		Mesh mesh{};
@@ -22,13 +23,13 @@ namespace world
 		mesh.is = glgpu::index_buffer_create(&mesh.indices.front(), mesh.indices.size());
 		mesh.va = glgpu::vao_create();
 		return mesh;
-	}
+	}*/
 
 	World*
 	world_create()
 	{
 		World* self = new World;
-		self->mesh = mesh_create("../rendering/res/stls/cube1.stl");
+		self->obj = object3d_create(math::Z_AXIS, 0.785f, vec3f{1.0f, 1.0f, 1.0f}, vec3f{}, "../rendering/res/stls/cube.stl");
 		return self;
 	}
 
@@ -36,7 +37,7 @@ namespace world
 	world_free(World* w)
 	{
 		//revisit
-		mesh_delete(w->mesh);
+		object3d_delete(w->obj);
 		delete w;
 	}
 }

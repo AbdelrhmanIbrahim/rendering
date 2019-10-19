@@ -1,9 +1,11 @@
 #include "Mesh_Renderer.h"
 
-#include "IO/Image.h"
+#include "math/Matrix.h"
+#include "math/Gfx.h"
 
 using namespace glgpu;
-using namespace io;
+using namespace math;
+using namespace world;
 
 namespace rndr
 {
@@ -27,18 +29,25 @@ namespace rndr
 	}
 
 	void
-	mesh_renderer_draw(const Mesh_Renderer& mr, const geo::Mesh& mesh, math::vec4f& color)
+	mesh_renderer_draw(const Mesh_Renderer& mr, const world::object3D& object, const vec2f& viewport)
 	{
 		color_clear(0.0f, 1.0f, 0.0f);
 		program_use(mr.prog);
 
-		//texture settings
+		//texture
 		texture_bind(mr.tex, TEXTURE_UNIT::UNIT_0);
 		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
+		//MVP
+		Mat4f transform = mat4_from_transform(object.model);
+		uniformmat4f_set(mr.prog, "transform", transform);
+
+		//viewport
+		view_port(0, 0, viewport[0], viewport[1]);
+
 		//draw geometry
-		vao_bind(mesh.va, mesh.vs, mesh.is);
-		draw_indexed(sizeof(mesh.indices));
+		vao_bind(object.mesh.va, object.mesh.vs, object.mesh.is);
+		draw_indexed(sizeof(object.mesh.indices));
 		vao_unbind();
 	}
 }

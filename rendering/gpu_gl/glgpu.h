@@ -1,6 +1,8 @@
 #pragma once
 
 #include "geometry/vertex.h"
+#include "math/Vector.h"
+#include "math/Matrix.h"
 
 #define HANDLE(NAME) typedef struct NAME##__ { int unused; } *NAME;
 
@@ -69,7 +71,13 @@ namespace glgpu
 	uniform4f_set(program prog, const char* uniform, math::vec4f& data);
 
 	void
+	uniformmat4f_set(program prog, const char* uniform, math::Mat4f& data);
+
+	void
 	uniform1i_set(program prog, const char* uniform, int data);
+
+	void
+	view_port(int x, int y, int width, int height);
 
 	bool
 	error();

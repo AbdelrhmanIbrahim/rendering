@@ -152,6 +152,12 @@
     <ClInclude Include="world\3Dobject.h">
       <Filter>Header Files\world</Filter>
     </ClInclude>
+    <ClInclude Include="math\Transform.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="world\Camera.h">
+      <Filter>Header Files\world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\shaders\colored.pixel">

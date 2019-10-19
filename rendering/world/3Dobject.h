@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/Gfx.h"
+#include "math/Transform.h"
 #include "math/Vector.h"
 #include "geometry/Mesh.h"
 

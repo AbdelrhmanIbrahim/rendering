@@ -39,8 +39,7 @@ namespace rndr
 		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
-		uniformmat4f_set(mr.prog, "model", mat4_from_transform(object.model));
-		uniformmat4f_set(mr.prog, "view_proj", camera_view_proj(cam));
+		uniformmat4f_set(mr.prog, "mvp", camera_view_proj(cam) * mat4_from_transform(object.model));
 
 		//viewport
 		vec2f viewport = world::camera_viewport(cam);

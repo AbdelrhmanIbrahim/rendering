@@ -59,6 +59,24 @@ namespace math
 			return vec3f{ other.data[0]*data[0], other.data[1]*data[1], other.data[2]*data[2] };
 		}
 
+		inline vec3f&
+		operator-=(const vec3f& vec)
+		{
+			data[0] -= vec[0];
+			data[1] -= vec[1];
+			data[2] -= vec[2];
+			return *this;
+		}
+
+		inline vec3f&
+		operator+=(const vec3f& vec)
+		{
+			data[0] += vec[0];
+			data[1] += vec[1];
+			data[2] += vec[2];
+			return *this;
+		}
+
 		inline vec3f
 		operator*(const float factor) const
 		{

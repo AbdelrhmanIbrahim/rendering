@@ -1,8 +1,11 @@
 #include "Engine.h"
 
 #include "world/World.h"
+#include "world/Camera.h"
 
 #include "engine/Mesh_Renderer.h"
+
+using namespace world;
 
 namespace rndr
 {
@@ -27,9 +30,12 @@ namespace rndr
 	}
 
 	void
-	engine_world_draw(const Engine* e, const world::World* w, const math::vec2f& viewport)
+	engine_world_draw(const Engine* e, World* w, const math::vec2f& viewport)
 	{
+		//configure the camera
+		camera_viewport(w->cam, viewport);
+
 		//render all meshes in the world using engine mesh renderer
-		mesh_renderer_draw(e->mr, w->obj, viewport);
+		mesh_renderer_draw(e->mr, w->obj, w->cam);
 	}
 };

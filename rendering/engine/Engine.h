@@ -18,5 +18,5 @@ namespace rndr
 	engine_free(Engine* e);
 
 	void
-	engine_world_draw(const Engine* e, const world::World* w, const math::vec2f& viewport);
+	engine_world_draw(const Engine* e, world::World* w, const math::vec2f& viewport);
 }

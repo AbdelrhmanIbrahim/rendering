@@ -1,13 +1,14 @@
 #pragma once
 
 #include "world/3Dobject.h"
+#include "world/Camera.h"
 
 namespace world
 {
 	struct World
 	{
-		//revisit
 		object3D obj;
+		Camera cam;
 	};
 
 	World*

@@ -48,6 +48,12 @@ namespace math
 		}
 
 		inline vec3f
+		operator-() const
+		{
+			return vec3f{ -data[0], -data[1], -data[2]};
+		}
+
+		inline vec3f
 		operator*(const vec3f& other) const
 		{
 			return vec3f{ other.data[0]*data[0], other.data[1]*data[1], other.data[2]*data[2] };
@@ -110,6 +116,12 @@ namespace math
 		operator-(const vec4f& other) const
 		{
 			return vec4f{ data[0] - other.data[0], data[1] - other.data[1], data[2] - other.data[2], data[3] - other.data[3] };
+		}
+
+		inline vec4f
+		operator-() const
+		{
+			return vec4f{ -data[0], -data[1], -data[2], -data[3] };
 		}
 
 		inline vec4f

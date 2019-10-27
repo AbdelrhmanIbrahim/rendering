@@ -29,7 +29,7 @@ namespace rndr
 	}
 
 	void
-	mesh_renderer_draw(const Mesh_Renderer& mr, const world::object3D& object, const vec2f& viewport)
+	mesh_renderer_draw(const Mesh_Renderer& mr, const world::object3D& object, const Camera& cam)
 	{
 		color_clear(0.0f, 1.0f, 0.0f);
 		program_use(mr.prog);
@@ -39,10 +39,11 @@ namespace rndr
 		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
-		Mat4f transform = mat4_from_transform(object.model);
-		uniformmat4f_set(mr.prog, "transform", transform);
+		uniformmat4f_set(mr.prog, "model", mat4_from_transform(object.model));
+		uniformmat4f_set(mr.prog, "view_proj", camera_view_proj(cam));
 
 		//viewport
+		vec2f viewport = world::camera_viewport(cam);
 		view_port(0, 0, viewport[0], viewport[1]);
 
 		//draw geometry

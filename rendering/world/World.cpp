@@ -1,5 +1,6 @@
 #include "world/World.h"
 #include "world/3Dobject.h"
+#include "world/Camera.h"
 
 using namespace math;
 
@@ -29,7 +30,9 @@ namespace world
 	world_create()
 	{
 		World* self = new World;
-		self->obj = object3d_create(math::Z_AXIS, 0.785f, vec3f{1.0f, 1.0f, 1.0f}, vec3f{}, "../rendering/res/stls/cube.stl");
+		self->obj = object3d_create(math::Z_AXIS, 0.0f, vec3f{1.0f, 1.0f, 1.0f}, vec3f{}, "../rendering/res/stls/cube.stl");
+		self->cam = camera_new();
+
 		return self;
 	}
 

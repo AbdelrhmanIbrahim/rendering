@@ -43,19 +43,26 @@ namespace world
 		self.top = viewport[1] + self.bottom;
 	}
 
+	inline void
+	camera_view_config(Camera& self, const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
+	{
+		self.pos = eye;
+		self.target = target;
+		self.up = up;
+	}
+
 	inline math::Mat4f
 	camera_view_matrix(const Camera& self)
 	{
-		auto pos = self.pos;
-		auto forward = math::normalize(self.target - pos);
-		auto up = math::cross(math::vec3f{1,0,0}, forward);
-		auto right = math::cross(forward, up);
+		auto forward = math::normalize(self.target - self.pos);
+		auto right = math::normalize(math::cross(self.up, forward));
+		auto up = math::cross(forward, right);
 
 		math::Mat4f view{};
-		view[0] = math::vec4f{ right[0], right[1], right[2], 0 };
-		view[1] = math::vec4f{ up[0], up[1], up[2], 0 };
-		view[2] = math::vec4f{ forward[0], forward[1], forward[2], 0 };
-		view[3] = math::vec4f{ -pos[0], -pos[1], -pos[2], 0 };
+		view[0] = math::vec4f{ right[0], up[0], forward[0], 0 };
+		view[1] = math::vec4f{ right[1], up[1], forward[1], 0 };
+		view[2] = math::vec4f{ right[2], up[2], forward[2], 0 };
+		view[3] = math::vec4f{ -self.pos[0], -self.pos[1], -self.pos[2], 0 };
 
 		return view;
 	}

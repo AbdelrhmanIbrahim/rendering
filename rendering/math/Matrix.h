@@ -91,19 +91,20 @@ namespace math
 		float nx = axis_normal[0];
 		float ny = axis_normal[1];
 		float nz = axis_normal[2];
+		vec3f temp = axis_normal * (1 - cosine);
 
 		// Rodriguries formula
-		m[0][0] = nx * nx * (1 - cosine) + cosine;
-		m[0][1] = ny * nx * (1 - cosine) - nz * sine;
-		m[0][2] = nz * nx * (1 - cosine) + ny * sine;
+		m[0][0] = nx * temp[0] + cosine;
+		m[0][1] = ny * temp[0] + nz * sine;
+		m[0][2] = nz * temp[0] - ny * sine;
 
-		m[1][0] = nx * ny * (1 - cosine) + nz * sine;
-		m[1][1] = ny * ny * (1 - cosine) + cosine;
-		m[1][2] = nz * ny * (1 - cosine) - nx * sine;
+		m[1][0] = nx * temp[1] - nz * sine;
+		m[1][1] = ny * temp[1] + cosine;
+		m[1][2] = nz * temp[1] + nx * sine;
 
-		m[2][0] = nx * nz * (1 - cosine) - ny * sine;
-		m[2][1] = ny * nz * (1 - cosine) + nx * sine;
-		m[2][2] = nz * nz * (1 - cosine) + cosine;
+		m[2][0] = nx * temp[2] + ny * sine;
+		m[2][1] = ny * temp[2] - nx * sine;
+		m[2][2] = nz * temp[2] + cosine;
 
 		return m;
 	}

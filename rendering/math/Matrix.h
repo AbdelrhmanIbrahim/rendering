@@ -1,15 +1,17 @@
 #pragma once
 
 #include "math/Vector.h"
+#include "math/Gfx.h"
+
 #include <math.h>
 
 namespace math
 {
-	/* COL Major
-	X axis
-	Y axis
-	Z axis
-	translation
+	/* 
+	Xx Yx Zx 0 
+	Xy Yy Zy 0
+	Xz Yz Zz 0
+	Tx Ty Tz 1
 	*/
 	struct Mat4f
 	{
@@ -42,7 +44,13 @@ namespace math
 		inline vec4f
 		operator*(const vec4f& other)
 		{
-			return data[0] * other[0] + data[1] * other[1] + data[2] * other[2] + data[3] * other[3];
+			return vec4f
+			{
+				math::dot(math::vec4f{data[0][0], data[1][0], data[2][0], data[3][0]}, other),
+				math::dot(math::vec4f{data[0][1], data[1][1], data[2][1], data[3][1]}, other),
+				math::dot(math::vec4f{data[0][2], data[1][2], data[2][2], data[3][2]}, other),
+				math::dot(math::vec4f{data[0][3], data[1][3], data[2][3], data[3][3]}, other) 
+			};
 		}
 	};
 

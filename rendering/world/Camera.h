@@ -28,8 +28,8 @@ namespace world
 		self.right = 1;
 		self.bottom = -1;
 		self.top = 1;
-		self.near = 1000;
-		self.far = -1000;
+		self.near = 0.1;
+		self.far = 1000;
 
 		return self;
 	}
@@ -54,15 +54,15 @@ namespace world
 	inline math::Mat4f
 	camera_view_matrix(const Camera& self)
 	{
-		auto forward = math::normalize(self.target - self.pos);
-		auto right = math::normalize(math::cross(self.up, forward));
-		auto up = math::cross(forward, right);
+		auto fwd = math::normalize(self.target - self.pos);
+		auto right = math::normalize(math::cross(fwd, self.up));
+		auto up = math::cross(right, fwd);
 
 		math::Mat4f view{};
-		view[0] = math::vec4f{ right[0], up[0], forward[0], 0 };
-		view[1] = math::vec4f{ right[1], up[1], forward[1], 0 };
-		view[2] = math::vec4f{ right[2], up[2], forward[2], 0 };
-		view[3] = math::vec4f{ -self.pos[0], -self.pos[1], -self.pos[2], 0 };
+		view[0] = math::vec4f{ right[0], up[0], -fwd[0], 0 };
+		view[1] = math::vec4f{ right[1], up[1], -fwd[1], 0 };
+		view[2] = math::vec4f{ right[2], up[2], -fwd[2], 0 };
+		view[3] = math::vec4f{ -dot(self.pos, right), -dot(self.pos, self.up), dot(self.pos, fwd), 1 };
 
 		return view;
 	}

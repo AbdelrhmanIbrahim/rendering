@@ -33,7 +33,7 @@ namespace rndr
 	engine_world_draw(const Engine* e, World* w, const math::vec2f& viewport)
 	{
 		//configure the camera
-		camera_view_config(w->cam, math::vec3f{ 0, 1, 10 }, math::vec3f{ 0, 0, 0 }, math::vec3f{ 0, 0, 1});
+		camera_view_config(w->cam, math::vec3f{ 0, 0, 10 }, math::vec3f{ 0, 0, 0 }, math::vec3f{ 0, 1, 0});
 		camera_viewport(w->cam, viewport);
 
 		//render all meshes in the world using engine mesh renderer

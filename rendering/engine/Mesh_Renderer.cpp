@@ -39,6 +39,9 @@ namespace rndr
 		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
+		vec4f po{ 1,1,1,1 };
+		auto tets = mat4_from_transform(object.model) * po;
+		auto testss = camera_view_proj(cam)  * tets;
 		uniformmat4f_set(mr.prog, "mvp", camera_view_proj(cam) * mat4_from_transform(object.model));
 
 		//viewport

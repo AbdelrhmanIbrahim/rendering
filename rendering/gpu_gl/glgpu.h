@@ -65,6 +65,9 @@ namespace glgpu
 	color_clear(float r, float g, float b);
 
 	void
+	draw_strip(unsigned int vertices_count);
+
+	void
 	draw_indexed(unsigned int indcies_count);
 
 	void

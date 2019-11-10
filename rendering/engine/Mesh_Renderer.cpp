@@ -3,6 +3,10 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
+//#include <glm.hpp>
+//#include <gtc/matrix_transform.hpp>
+//#include <gtc/type_ptr.hpp>
+
 using namespace glgpu;
 using namespace math;
 using namespace world;
@@ -39,9 +43,19 @@ namespace rndr
 		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
-		vec4f po{ 1,1,1,1 };
-		auto tets = mat4_from_transform(object.model) * po;
-		auto testss = camera_view_proj(cam)  * tets;
+		/*vec4f po{ 0.5,0.5,0.5,1 };
+		auto pt = camera_proj_matrix(cam) * mat4_from_transform(object.model);
+		auto world = mat4_from_transform(object.model) * po;
+		auto cams = camera_view_matrix(cam) * world;
+		auto clip = camera_proj_matrix(cam) * cams;
+		auto ndc = clip / clip[3];
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(10.0f));
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.0f), 1.75f, 0.1f, 100.0f);
+		auto pm = projection * model;
+		auto out = projection * glm::vec4(cams[0], cams[1], cams[2],1);*/
 		uniformmat4f_set(mr.prog, "mvp", camera_view_proj(cam) * mat4_from_transform(object.model));
 
 		//viewport
@@ -50,7 +64,8 @@ namespace rndr
 
 		//draw geometry
 		vao_bind(object.mesh.va, object.mesh.vs, object.mesh.is);
-		draw_indexed(sizeof(object.mesh.indices));
+		draw_strip(object.mesh.vertices.size());
+		//draw_indexed(object.mesh.indices.size());
 		vao_unbind();
 	}
 }

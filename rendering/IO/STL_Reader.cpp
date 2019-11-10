@@ -50,7 +50,7 @@ namespace io
 			auto itr = unique_points_table.find(point);
 			if (itr == unique_points_table.end())
 			{
-				self.vertices.push_back(geo::Vertex{ point, normal, vec2f{} });
+				self.vertices.push_back(geo::Vertex{ point, vec2f{} });
 				unique_points_table.insert(std::make_pair(point, self.vertices.size() - 1));
 				self.indices.push_back(self.vertices.size() - 1);
 			}

@@ -120,6 +120,6 @@ namespace math
 	inline Mat4f
 	mat4_transform(const vec3f axis, float angle_rad, const vec3f& scale, const vec3f& translation)
 	{
-		return mat4_translate(translation) * mat4_scale(scale) * mat4f_rotate(axis, angle_rad);
+		return mat4_translate(translation) * mat4f_rotate(axis, angle_rad) * mat4_scale(scale);
 	}
 };

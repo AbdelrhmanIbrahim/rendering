@@ -161,13 +161,14 @@ namespace glgpu
 		//pos
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
-		//normal
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
 		//uv
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+
+		//normal
+		/*glEnableVertexAttribArray(2);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);*/
 	}
 
 	void
@@ -222,12 +223,19 @@ namespace glgpu
 	{
 		glClearColor(r, g, b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+	}
+
+	void
+	draw_strip(unsigned int vertices_count)
+	{
+		glDrawArrays(GL_TRIANGLES, 0, vertices_count);
 	}
 
 	void
 	draw_indexed(unsigned int indcies_count)
 	{
-		glDrawElements(GL_TRIANGLES, indcies_count, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
 	}
 
 	void

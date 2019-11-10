@@ -15,6 +15,7 @@ namespace world
 		float left, right, top, bottom;
 		float near;
 		float far;
+		float fov;
 	};
 
 	inline Camera
@@ -29,7 +30,8 @@ namespace world
 		self.bottom = -1;
 		self.top = 1;
 		self.near = 0.1;
-		self.far = 1000;
+		self.far = 100;
+		self.fov = 0.785398185;
 
 		return self;
 	}
@@ -73,8 +75,9 @@ namespace world
 		math::Mat4f proj{};
 		float distance = self.far - self.near;
 		float aspect_ratio = (self.right - self.left) / (self.top - self.bottom);
-		proj[0][0] = self.near / self.right;
-		proj[1][1] = self.near / self.top;
+		float tan_fov = tan(self.fov / 2.0f);
+		proj[0][0] = 1.0f / (aspect_ratio * tan_fov);
+		proj[1][1] = 1.0f / tan_fov;
 		proj[2][2] = -(self.near + self.far) / distance;
 		proj[2][3] = -1.0f;
 		proj[3][2] = -2.0f*self.far*self.near / distance;

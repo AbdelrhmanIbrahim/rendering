@@ -4,6 +4,9 @@ namespace backend
 {
 	struct callbacks
 	{
+		int c_mousex, c_mousey, p_frame, frame_delta;
+		bool first_mouse;
+
 		virtual void
 		update() = 0;
 
@@ -24,6 +27,8 @@ namespace backend
 	void
 	keyboard_handle(unsigned char c, int x, int y);
 
+	int
+	ticks();
 
 	void
 	callbacks_init(int argc, char** argv);

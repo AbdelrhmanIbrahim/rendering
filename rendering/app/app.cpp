@@ -11,15 +11,22 @@ using namespace rndr;
 
 namespace app
 {
+	math::vec2f window_size{1400, 800};
+
 	application::application(int argc, char** argv)
 	{
 		backend::callbacks_init(argc, argv);
-		win::window_create(1400, 800, "rendering journey");
+		win::window_create(window_size[0], window_size[1], "rendering journey");
 		backend::callbacks_set(this);
 		glgpu::graphics_init();
 
 		w = world_create();
 		e = engine_create();
+		c_mousex = window_size[0] / 2;
+		c_mousey = window_size[1] / 2;
+		p_frame = 0;
+		frame_delta = 0;
+		first_mouse = false;
 	}
 
 	application::~application()
@@ -38,19 +45,33 @@ namespace app
 	application::update()
 	{
 		//render the top world
-		engine_world_draw(e, w, math::vec2f{ 1400, 800 });
+		engine_world_draw(e, w, window_size);
 
 		//swap buffer
 		backend::callbacks_update();
+		int c_frame = backend::ticks();
+		frame_delta = c_frame - p_frame;
+		p_frame = c_frame;
 	}
 
 	void
 	application::mouse_handle(int x, int y)
 	{
+		if (first_mouse)
+		{
+			c_mousex = x;
+			c_mousey = y;
+			first_mouse = false;
+		}
+		math::vec2f delta{x-c_mousex, y-c_mousey };
+		camera_rotate(w->cam, delta);
+		c_mousex = x;
+		c_mousey = y;
 	}
 
 	void
 	application::keyboard_handle(unsigned char c, int x, int y)
 	{
+		camera_move(w->cam, c, 0.03f * frame_delta);
 	}
 };

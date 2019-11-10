@@ -23,6 +23,12 @@ namespace backend
 		cb->keyboard_handle(c, x, y);
 	}
 
+	int
+	ticks()
+	{
+		return glutGet(GLUT_ELAPSED_TIME);
+	}
+
 	void
 	callbacks_init(int argc, char** argv)
 	{

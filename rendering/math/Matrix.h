@@ -41,15 +41,14 @@ namespace math
 			};
 		}
 
-		inline vec4f
+		inline vec3f
 		operator*(const vec4f& other)
 		{
-			return vec4f
+			return vec3f
 			{
 				math::dot(math::vec4f{data[0][0], data[1][0], data[2][0], data[3][0]}, other),
 				math::dot(math::vec4f{data[0][1], data[1][1], data[2][1], data[3][1]}, other),
-				math::dot(math::vec4f{data[0][2], data[1][2], data[2][2], data[3][2]}, other),
-				math::dot(math::vec4f{data[0][3], data[1][3], data[2][3], data[3][3]}, other) 
+				math::dot(math::vec4f{data[0][2], data[1][2], data[2][2], data[3][2]}, other)
 			};
 		}
 	};

@@ -3,10 +3,6 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
-//#include <glm.hpp>
-//#include <gtc/matrix_transform.hpp>
-//#include <gtc/type_ptr.hpp>
-
 using namespace glgpu;
 using namespace math;
 using namespace world;
@@ -43,7 +39,11 @@ namespace rndr
 		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
-		/*vec4f po{ 0.5,0.5,0.5,1 };
+		/*
+		//#include <glm.hpp>
+		//#include <gtc/matrix_transform.hpp>
+		//#include <gtc/type_ptr.hpp>
+		vec4f po{ 0.5,0.5,0.5,1 };
 		auto pt = camera_proj_matrix(cam) * mat4_from_transform(object.model);
 		auto world = mat4_from_transform(object.model) * po;
 		auto cams = camera_view_matrix(cam) * world;

@@ -23,6 +23,12 @@ namespace backend
 		cb->keyboard_handle(c, x, y);
 	}
 
+	void
+	mouse_wheel_handle(int a, int b,int x, int y)
+	{
+		cb->mouse_wheel_handle(a, b, x, y);
+	}
+
 	int
 	ticks()
 	{
@@ -42,6 +48,7 @@ namespace backend
 		glutDisplayFunc(update);
 		glutPassiveMotionFunc(mouse_handle);
 		glutKeyboardFunc(keyboard_handle);
+		glutMouseWheelFunc(mouse_wheel_handle);
 		glutIdleFunc(update);
 	}
 

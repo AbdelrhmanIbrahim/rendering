@@ -15,6 +15,9 @@ namespace backend
 
 		virtual void
 		keyboard_handle(unsigned char c, int x, int y) = 0;
+
+		virtual void
+		mouse_wheel_handle(int a, int dir, int x, int y) = 0;
 	};
 
 	static callbacks* cb;
@@ -26,6 +29,9 @@ namespace backend
 
 	void
 	keyboard_handle(unsigned char c, int x, int y);
+
+	void
+	mouse_wheel_handle(int a, int dir, int x, int y);
 
 	int
 	ticks();

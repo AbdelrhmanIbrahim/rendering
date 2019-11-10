@@ -10,7 +10,6 @@ namespace world
 	{
 		//view
 		math::vec3f pos, fwd, right, up;
-		//float pitch, yaw;
 
 		//projection
 		float l, r, t, b;
@@ -34,8 +33,6 @@ namespace world
 		self.n = 0.1;
 		self.f = 100;
 		self.fov = 0.785398185;
-		self.pitch= 0;
-		self.yaw = 0;
 
 		return self;
 	}
@@ -92,29 +89,29 @@ namespace world
 	inline void
 	camera_rotate(Camera& self, const math::vec2f& mouse_delta)
 	{
-		/*self.yaw += mouse_delta[1];
-		self.pitch += mouse_delta[0];
+		/*self.pitch += 0.1*mouse_delta[0];
+		self.yaw += 0.1*mouse_delta[1];
 
 		if (self.pitch > 89.0f)
 			self.pitch = 89.0f;
 		if (self.pitch < -89.0f)
 			self.pitch = -89.0f;
 
-		self.fwd[0] = cos(self.yaw * 3.14 /180) * cos(self.pitch* 3.14 / 180);
-		self.fwd[1] = sin(self.pitch* 3.14 / 180);
+		self.fwd[1] = cos(self.yaw * 3.14 /180) * cos(self.pitch* 3.14 / 180);
+		self.fwd[0] = sin(self.pitch* 3.14 / 180);
 		self.fwd[2] = sin(self.yaw* 3.14 / 180) * cos(self.pitch* 3.14 / 180);
 		self.fwd = math::normalize(self.fwd);
-		self.right = math::cross(self.fwd, self.up);
-		self.up = math::cross(self.right, self.fwd);*/
+		self.right = math::normalize(math::cross(self.fwd, self.up));
+		self.up = math::normalize(math::cross(self.right, self.fwd));*/
 
+		//simplify to quaternions or to yaw-pitch
 		float hangle = -math::PI * mouse_delta[0] / 1800.0f;
-		float vangle = -math::PI * mouse_delta[1] / 1800.0f;
-		//simplify to quadternions or to yaw-pitch
+		float vangle = math::PI * mouse_delta[1] / 1800.0f;
 		self.fwd = math::mat4f_rotate(self.up, hangle) * math::vec4f { self.fwd[0], self.fwd[1], self.fwd[2], 0.0f };
 		self.right = math::mat4f_rotate(self.up, hangle) * math::vec4f{ self.right[0], self.right[1], self.right[2], 0.0f };
 		self.fwd = math::mat4f_rotate(self.right, vangle) * math::vec4f{ self.fwd[0], self.fwd[1], self.fwd[2], 0.0f };
 		self.up = math::mat4f_rotate(self.right, vangle) * math::vec4f{ self.up[0], self.up[1], self.up[2], 0.0f };
-		self.right = math::normalize(math::cross(self.fwd, self.up));
+		self.right = math::cross(self.fwd, self.up);
 	}
 
 	inline void
@@ -141,6 +138,20 @@ namespace world
 		default:
 			break;
 		}
+	}
+
+	inline void
+	camera_scroll(Camera& self, int scroll_offset)
+	{
+		if (scroll_offset > 0)
+			self.fov -= 0.05;
+		else
+			self.fov += 0.05;
+
+		if (self.fov <= 0.0174533f)
+			self.fov = 0.0174533f;
+		if (self.fov >= 0.785398185f)
+			self.fov = 0.785398185f;
 	}
 };
 

@@ -6,6 +6,8 @@
 #include "world/World.h"
 #include "engine/Engine.h"
 
+#include <iostream>
+
 using namespace world;
 using namespace rndr;
 
@@ -57,16 +59,23 @@ namespace app
 	void
 	application::mouse_handle(int x, int y)
 	{
+		//screen space origin == top left
 		if (first_mouse)
 		{
 			c_mousex = x;
 			c_mousey = y;
 			first_mouse = false;
 		}
-		math::vec2f delta{x-c_mousex, y-c_mousey };
+		math::vec2f delta{x-c_mousex, c_mousey-y};
 		camera_rotate(w->cam, delta);
 		c_mousex = x;
 		c_mousey = y;
+	}
+
+	void
+	application::mouse_wheel_handle(int a, int dir, int x, int y)
+	{
+		camera_scroll(w->cam, dir);
 	}
 
 	void

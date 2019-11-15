@@ -87,7 +87,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>F:\Abdo\cool_graphics\glm\glm\glm;$(rendering)\3rdparty\inc;$(rendering)\rendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(rendering)\3rdparty\inc;$(rendering)\rendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freeglut.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -147,6 +147,7 @@
     <ClInclude Include="IO\STL_Reader.h" />
     <ClInclude Include="math\Gfx.h" />
     <ClInclude Include="math\Matrix.h" />
+    <ClInclude Include="math\Quaternion.h" />
     <ClInclude Include="math\Transform.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="window\window.h" />

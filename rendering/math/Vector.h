@@ -17,6 +17,12 @@ namespace math
 		{
 			return data[index];
 		}
+
+		inline vec2f
+		operator*(float factor) const
+		{
+			return vec2f{ data[0] * factor, data[1] * factor};
+		}
 	};
 
 	struct vec3f
@@ -198,6 +204,24 @@ namespace math
 	operator==(const vec4f& first, const vec4f& second)
 	{
 		return first.data[0] == second.data[0] && first.data[1] == second.data[1] && first.data[2] == second.data[2] && first.data[3] == second.data[3];
+	}
+
+	inline vec2f
+	operator*(float factor, const vec2f& vec)
+	{
+		return vec * factor;
+	}
+
+	inline vec3f
+	operator*(float factor, const vec3f& vec)
+	{
+		return vec * factor;
+	}
+
+	inline vec4f
+	operator*(float factor, const vec4f& vec)
+	{
+		return vec * factor;
 	}
 
 	constexpr vec3f X_AXIS = vec3f{ 1.0f, 0.0f, 0.0f };

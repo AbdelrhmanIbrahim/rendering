@@ -158,6 +158,9 @@
     <ClInclude Include="world\Camera.h">
       <Filter>Header Files\world</Filter>
     </ClInclude>
+    <ClInclude Include="math\Quaternion.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\shaders\colored.pixel">

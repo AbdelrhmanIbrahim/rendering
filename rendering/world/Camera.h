@@ -3,6 +3,7 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 #include "math/Gfx.h"
+#include "math/Quaternion.h"
 
 namespace world
 {
@@ -90,29 +91,16 @@ namespace world
 	inline void
 	camera_rotate(Camera& self, const math::vec2f& mouse_delta)
 	{
-		/*self.pitch += 0.1*mouse_delta[0];
-		self.yaw += 0.1*mouse_delta[1];
+		//test with lookat
+		float hangle = -to_radian(mouse_delta[0]) / 10.0f;
+		float vangle = to_radian(mouse_delta[1]) / 10.0f;
+		math::Quat quath = math::quat_from_axis(self.up, hangle);
+		self.fwd = quath * self.fwd;
+		self.right = quath * self.right;
 
-		if (self.pitch > 89.0f)
-			self.pitch = 89.0f;
-		if (self.pitch < -89.0f)
-			self.pitch = -89.0f;
-
-		self.fwd[1] = cos(self.yaw * 3.14 /180) * cos(self.pitch* 3.14 / 180);
-		self.fwd[0] = sin(self.pitch* 3.14 / 180);
-		self.fwd[2] = sin(self.yaw* 3.14 / 180) * cos(self.pitch* 3.14 / 180);
-		self.fwd = math::normalize(self.fwd);
-		self.right = math::normalize(math::cross(self.fwd, self.up));
-		self.up = math::normalize(math::cross(self.right, self.fwd));*/
-
-		//simplify to quaternions or to yaw-pitch
-		float hangle = -math::PI * mouse_delta[0] / 1800.0f;
-		float vangle = math::PI * mouse_delta[1] / 1800.0f;
-		self.fwd = math::mat4f_rotate(self.up, hangle) * math::vec4f { self.fwd[0], self.fwd[1], self.fwd[2], 0.0f };
-		self.right = math::mat4f_rotate(self.up, hangle) * math::vec4f{ self.right[0], self.right[1], self.right[2], 0.0f };
-		self.fwd = math::mat4f_rotate(self.right, vangle) * math::vec4f{ self.fwd[0], self.fwd[1], self.fwd[2], 0.0f };
-		self.up = math::mat4f_rotate(self.right, vangle) * math::vec4f{ self.up[0], self.up[1], self.up[2], 0.0f };
-		self.right = math::cross(self.fwd, self.up);
+		math::Quat quatv = math::quat_from_axis(self.right, vangle);
+		self.fwd = quatv * self.fwd;
+		self.up = quatv * self.up;
 	}
 
 	inline void

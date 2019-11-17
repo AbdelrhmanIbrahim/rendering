@@ -4,9 +4,6 @@ namespace backend
 {
 	struct callbacks
 	{
-		int c_mousex, c_mousey, p_frame, frame_delta;
-		bool first_mouse;
-
 		virtual void
 		update() = 0;
 
@@ -14,7 +11,10 @@ namespace backend
 		mouse_handle(int x, int y) = 0;
 
 		virtual void
-		keyboard_handle(unsigned char c, int x, int y) = 0;
+		keyboard_press_handle(unsigned char c, int x, int y) = 0;
+
+		virtual void
+		keyboard_release_handle(unsigned char c, int x, int y) = 0;
 
 		virtual void
 		mouse_wheel_handle(int a, int dir, int x, int y) = 0;
@@ -28,7 +28,10 @@ namespace backend
 	mouse_handle(int x, int y);
 
 	void
-	keyboard_handle(unsigned char c, int x, int y);
+	keyboard_press(unsigned char c, int x, int y);
+
+	void
+	keyboard_release(unsigned char c, int x, int y);
 
 	void
 	mouse_wheel_handle(int a, int dir, int x, int y);

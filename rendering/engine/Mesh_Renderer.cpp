@@ -43,7 +43,7 @@ namespace rndr
 
 		//viewport
 		vec2f viewport = world::camera_viewport(cam);
-		view_port(0, 0, viewport[0], viewport[1]);
+		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 		//draw geometry
 		vao_bind(object.mesh.va, object.mesh.vs, object.mesh.is);

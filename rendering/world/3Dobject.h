@@ -57,7 +57,7 @@ namespace world
 		mesh.vertices.push_back(geo::Vertex{ 0.5f,  0.5f,  0.5f,  1.0f, 0.0f});
 		mesh.vertices.push_back(geo::Vertex{-0.5f,  0.5f,  0.5f,  0.0f, 0.0f});
 		mesh.vertices.push_back(geo::Vertex{-0.5f,  0.5f, -0.5f,  0.0f, 1.0f});
-		mesh.vs = glgpu::vertex_buffer_create(&mesh.vertices.front(), mesh.vertices.size());
+		mesh.vs = glgpu::vertex_buffer_create(&mesh.vertices.front(), (unsigned int)mesh.vertices.size());
 		mesh.va = glgpu::vao_create();
 		return mesh;
 	}

@@ -2,6 +2,8 @@
 
 #include "backend/backend.h"
 
+#include <IO/Input.h>
+
 namespace world
 {
 	struct World;
@@ -16,6 +18,7 @@ namespace app
 {
 	struct application : backend::callbacks
 	{
+		io::Input i;
 		world::World* w;
 		rndr::Engine* e;
 
@@ -36,6 +39,9 @@ namespace app
 		mouse_wheel_handle(int a, int dir, int x, int y) override;
 
 		void
-		keyboard_handle(unsigned char c, int x, int y) override;
+		keyboard_press_handle(unsigned char c, int x, int y) override;
+
+		void
+		keyboard_release_handle(unsigned char c, int x, int y) override;
 	};
 };

@@ -5,6 +5,8 @@
 #include "math/Gfx.h"
 #include "math/Quaternion.h"
 
+#include <IO/Input.h>
+
 namespace world
 {
 	struct Camera
@@ -32,9 +34,9 @@ namespace world
 		self.r = 1;
 		self.b = -1;
 		self.t = 1;
-		self.n = 0.1;
+		self.n = 0.1f;
 		self.f = 100;
-		self.fov = 0.785398185;
+		self.fov = 0.785398185f;
 		self.fov_tan = tan(self.fov / 2.0f);
 
 		return self;
@@ -94,48 +96,38 @@ namespace world
 		//test with lookat
 		float hangle = -to_radian(mouse_delta[0]) / 10.0f;
 		float vangle = to_radian(mouse_delta[1]) / 10.0f;
-		/*math::Quat quath = math::quat_from_axis(self.up, hangle);
+		math::Quat quath = math::quat_from_axis(self.up, hangle);
 		self.fwd = quath * self.fwd;
 		self.right = quath * self.right;
 
 		math::Quat quatv = math::quat_from_axis(self.right, vangle);
 		self.fwd = quatv * self.fwd;
-		self.up = quatv * self.up;*/
+		self.up = quatv * self.up;
 	}
 
 	inline void
-	camera_move(Camera& self, unsigned char c, float delta)
+	camera_move(Camera& self, const bool keys[], float delta)
 	{
-		switch (c)
-		{
-		case 'w':
+		if (keys['w'])
 			self.pos += self.fwd *delta;
-			break;
 
-		case 's':
+		if (keys['s'])
 			self.pos -= self.fwd* delta;
-			break;
 
-		case 'd':
+		if (keys['d'])
 			self.pos += self.right * delta;
-			break;
 
-		case 'a':
+		if (keys['a'])
 			self.pos -= self.right * delta;
-			break;
-
-		default:
-			break;
-		}
 	}
 
 	inline void
-	camera_scroll(Camera& self, int scroll_offset)
+	camera_zoom(Camera& self, int scroll_offset)
 	{
 		if (scroll_offset > 0)
-			self.fov -= 0.05;
+			self.fov -= 0.05f;
 		else
-			self.fov += 0.05;
+			self.fov += 0.05f;
 
 		//45 degree
 		if (self.fov <= 0.0174533f)

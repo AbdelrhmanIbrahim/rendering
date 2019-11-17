@@ -4,6 +4,8 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
+#include <cstddef>
+
 #define HANDLE(NAME) typedef struct NAME##__ { int unused; } *NAME;
 
 namespace glgpu
@@ -32,10 +34,10 @@ namespace glgpu
 	program_delete(program prog);
 
 	buffer
-	vertex_buffer_create(geo::Vertex vertices[], unsigned int count);
+	vertex_buffer_create(geo::Vertex vertices[], std::size_t count);
 
 	buffer
-	index_buffer_create(unsigned int indices[], unsigned int count);
+	index_buffer_create(unsigned int indices[], std::size_t count);
 
 	void
 	buffer_delete(buffer buf);
@@ -65,7 +67,7 @@ namespace glgpu
 	color_clear(float r, float g, float b);
 
 	void
-	draw_strip(unsigned int vertices_count);
+	draw_strip(std::size_t vertices_count);
 
 	void
 	draw_indexed(unsigned int indcies_count);

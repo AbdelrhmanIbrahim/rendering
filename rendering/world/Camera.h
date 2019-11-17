@@ -94,13 +94,13 @@ namespace world
 		//test with lookat
 		float hangle = -to_radian(mouse_delta[0]) / 10.0f;
 		float vangle = to_radian(mouse_delta[1]) / 10.0f;
-		math::Quat quath = math::quat_from_axis(self.up, hangle);
+		/*math::Quat quath = math::quat_from_axis(self.up, hangle);
 		self.fwd = quath * self.fwd;
 		self.right = quath * self.right;
 
 		math::Quat quatv = math::quat_from_axis(self.right, vangle);
 		self.fwd = quatv * self.fwd;
-		self.up = quatv * self.up;
+		self.up = quatv * self.up;*/
 	}
 
 	inline void

@@ -3,7 +3,6 @@
 
 using namespace glgpu;
 using namespace io;
-
 using namespace math;
 
 namespace geo

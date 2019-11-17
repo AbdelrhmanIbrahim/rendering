@@ -6,7 +6,7 @@
 
 namespace math
 {
-	constexpr float PI = 3.14159265358979;
+	constexpr float PI = 3.14159265358979f;
 
 	inline float
 	dot(const math::vec3f& first, const math::vec3f& second)

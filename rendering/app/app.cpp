@@ -18,14 +18,14 @@ namespace app
 	application::application(int argc, char** argv)
 	{
 		backend::callbacks_init(argc, argv);
-		win::window_create(window_size[0], window_size[1], "rendering journey");
+		win::window_create((unsigned int)window_size[0], (unsigned int)window_size[1], "rendering journey");
 		backend::callbacks_set(this);
 		glgpu::graphics_init();
 
 		w = world_create();
 		e = engine_create();
-		c_mousex = window_size[0] / 2;
-		c_mousey = window_size[1] / 2;
+		c_mousex = (unsigned int)window_size[0] / 2;
+		c_mousey = (unsigned int)window_size[1] / 2;
 		p_frame = 0;
 		frame_delta = 0;
 		first_mouse = false;
@@ -66,7 +66,7 @@ namespace app
 			c_mousey = y;
 			first_mouse = false;
 		}
-		math::vec2f delta{x-c_mousex, c_mousey-y};
+		math::vec2f delta{(float)x-c_mousex, (float)c_mousey-y};
 		camera_rotate(w->cam, delta);
 		c_mousex = x;
 		c_mousey = y;

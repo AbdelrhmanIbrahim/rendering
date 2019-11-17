@@ -93,12 +93,12 @@ namespace math
 	mat4f_rotate(const vec3f& axis_normal, float rad)
 	{
 		Mat4f m = mat4_id();
-		double cosine = cos(rad);
-		double sine = sin(rad);
+		float cosine = (float)cos(rad);
+		float sine = (float)sin(rad);
 		float nx = axis_normal[0];
 		float ny = axis_normal[1];
 		float nz = axis_normal[2];
-		vec3f temp = axis_normal * (1 - cosine);
+		vec3f temp = axis_normal * (1.0f - cosine);
 
 		// Rodriguries formula
 		m[0][0] = nx * temp[0] + cosine;

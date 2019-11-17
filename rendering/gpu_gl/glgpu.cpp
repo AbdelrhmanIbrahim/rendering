@@ -34,6 +34,7 @@ namespace glgpu
 			return GL_TEXTURE0;
 		default:
 			assert("undefined texture unit" && false);
+			return -1;
 		}
 	}
 
@@ -48,6 +49,7 @@ namespace glgpu
 			return GL_FRAGMENT_SHADER;
 		default:
 			assert("undefined shader stage" && false);
+			return -1;
 		}
 	}
 
@@ -69,7 +71,7 @@ namespace glgpu
 		GLchar* src[1];
 		GLint length[1];
 		src[0] = &str.front();
-		length[0] = str.size();
+		length[0] = (GLint)str.size();
 		GLuint obj = glCreateShader(_map(shader_stage));
 		glShaderSource(obj, 1, src, length);
 		glCompileShader(obj);
@@ -118,7 +120,7 @@ namespace glgpu
 	}
 
 	buffer
-	vertex_buffer_create(geo::Vertex vertices[], unsigned int count)
+	vertex_buffer_create(geo::Vertex vertices[], std::size_t count)
 	{
 		GLuint vbo;
 		glGenBuffers(1, &vbo);
@@ -128,7 +130,7 @@ namespace glgpu
 	}
 
 	buffer
-	index_buffer_create(unsigned int indices[], unsigned int count)
+	index_buffer_create(unsigned int indices[], std::size_t count)
 	{
 		GLuint ebo;
 		glGenBuffers(1, &ebo);
@@ -227,9 +229,9 @@ namespace glgpu
 	}
 
 	void
-	draw_strip(unsigned int vertices_count)
+	draw_strip(std::size_t vertices_count)
 	{
-		glDrawArrays(GL_TRIANGLES, 0, vertices_count);
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_count);
 	}
 
 	void

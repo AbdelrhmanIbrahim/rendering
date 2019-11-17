@@ -31,9 +31,9 @@ namespace world
 		self.r = 1;
 		self.b = -1;
 		self.t = 1;
-		self.n = 0.1;
+		self.n = 0.1f;
 		self.f = 100;
-		self.fov = 0.785398185;
+		self.fov = 0.785398185f;
 		self.fov_tan = tan(self.fov / 2.0f);
 
 		return self;
@@ -90,22 +90,6 @@ namespace world
 	inline void
 	camera_rotate(Camera& self, const math::vec2f& mouse_delta)
 	{
-		/*self.pitch += 0.1*mouse_delta[0];
-		self.yaw += 0.1*mouse_delta[1];
-
-		if (self.pitch > 89.0f)
-			self.pitch = 89.0f;
-		if (self.pitch < -89.0f)
-			self.pitch = -89.0f;
-
-		self.fwd[1] = cos(self.yaw * 3.14 /180) * cos(self.pitch* 3.14 / 180);
-		self.fwd[0] = sin(self.pitch* 3.14 / 180);
-		self.fwd[2] = sin(self.yaw* 3.14 / 180) * cos(self.pitch* 3.14 / 180);
-		self.fwd = math::normalize(self.fwd);
-		self.right = math::normalize(math::cross(self.fwd, self.up));
-		self.up = math::normalize(math::cross(self.right, self.fwd));*/
-
-		//simplify to quaternions or to yaw-pitch
 		float hangle = -math::PI * mouse_delta[0] / 1800.0f;
 		float vangle = math::PI * mouse_delta[1] / 1800.0f;
 		self.fwd = math::mat4f_rotate(self.up, hangle) * math::vec4f { self.fwd[0], self.fwd[1], self.fwd[2], 0.0f };
@@ -145,9 +129,9 @@ namespace world
 	camera_scroll(Camera& self, int scroll_offset)
 	{
 		if (scroll_offset > 0)
-			self.fov -= 0.05;
+			self.fov -= 0.05f;
 		else
-			self.fov += 0.05;
+			self.fov += 0.05f;
 
 		//45 degree
 		if (self.fov <= 0.0174533f)

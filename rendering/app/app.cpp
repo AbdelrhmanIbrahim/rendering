@@ -12,8 +12,7 @@ using namespace io;
 
 namespace app
 {
-	constexpr static math::vec2f window_size{1400, 800};
-
+	constexpr static math::vec2f window_size{WIN_WIDTH, WIN_HEIGHT};
 	application::application(int argc, char** argv)
 	{
 		backend::callbacks_init(argc, argv);

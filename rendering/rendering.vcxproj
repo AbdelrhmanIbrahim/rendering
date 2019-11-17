@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{CB6AC2EB-3BB8-4BB8-8BA4-F3A999071F58}</ProjectGuid>
     <RootNamespace>rendering</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="app\app.h" />
     <ClInclude Include="backend\backend.h" />
+    <ClInclude Include="Defs.h" />
     <ClInclude Include="engine\Engine.h" />
     <ClInclude Include="engine\Mesh_Renderer.h" />
     <ClInclude Include="geometry\Mesh.h" />

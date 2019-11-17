@@ -1,8 +1,5 @@
 #pragma once
 
-#define to_radian(degree) degree * 0.01745329251
-#define to_degree(radian) radian * 57.2957795131
-
 #include "math/Vector.h"
 
 #include <math.h>

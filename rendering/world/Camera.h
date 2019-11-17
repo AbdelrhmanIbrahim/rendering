@@ -5,6 +5,8 @@
 #include "math/Gfx.h"
 #include "math/Quaternion.h"
 
+#include <Defs.h>
+
 #include <IO/Input.h>
 
 namespace world

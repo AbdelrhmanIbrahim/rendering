@@ -164,6 +164,9 @@
     <ClInclude Include="IO\Input.h">
       <Filter>Header Files\IO</Filter>
     </ClInclude>
+    <ClInclude Include="Defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\shaders\colored.pixel">

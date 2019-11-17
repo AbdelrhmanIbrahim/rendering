@@ -143,6 +143,7 @@
     <ClInclude Include="geometry\vertex.h" />
     <ClInclude Include="gpu_gl\glgpu.h" />
     <ClInclude Include="IO\Image.h" />
+    <ClInclude Include="IO\Input.h" />
     <ClInclude Include="IO\Stb_Image.h" />
     <ClInclude Include="IO\STL_Reader.h" />
     <ClInclude Include="math\Gfx.h" />

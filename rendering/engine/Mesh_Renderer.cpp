@@ -15,7 +15,7 @@ namespace rndr
 		Mesh_Renderer self{};
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.prog = program_create("../rendering/engine/shaders/colored.vertex", "../rendering/engine/shaders/colored.pixel");
+		self.prog = program_create("../rendering/engine/shaders/texture.vertex", "../rendering/engine/shaders/texture.pixel");
 		self.tex = texture_create("../rendering/res/images/container.jpg");
 
 		return self;
@@ -35,8 +35,8 @@ namespace rndr
 		program_use(mr.prog);
 
 		//texture
-		/*texture_bind(mr.tex, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);*/
+		texture_bind(mr.tex, TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
 		uniformmat4f_set(mr.prog, "mvp", camera_view_proj(cam) * mat4_from_transform(object.model));

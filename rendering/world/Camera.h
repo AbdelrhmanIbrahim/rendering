@@ -4,6 +4,8 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
+#include <IO/Input.h>
+
 namespace world
 {
 	struct Camera
@@ -100,33 +102,23 @@ namespace world
 	}
 
 	inline void
-	camera_move(Camera& self, unsigned char c, float delta)
+	camera_move(Camera& self, const bool keys[], float delta)
 	{
-		switch (c)
-		{
-		case 'w':
+		if (keys['w'])
 			self.pos += self.fwd *delta;
-			break;
 
-		case 's':
+		if (keys['s'])
 			self.pos -= self.fwd* delta;
-			break;
 
-		case 'd':
+		if (keys['d'])
 			self.pos += self.right * delta;
-			break;
 
-		case 'a':
+		if (keys['a'])
 			self.pos -= self.right * delta;
-			break;
-
-		default:
-			break;
-		}
 	}
 
 	inline void
-	camera_scroll(Camera& self, int scroll_offset)
+	camera_zoom(Camera& self, int scroll_offset)
 	{
 		if (scroll_offset > 0)
 			self.fov -= 0.05f;

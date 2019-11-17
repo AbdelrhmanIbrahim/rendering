@@ -161,6 +161,9 @@
     <ClInclude Include="math\Quaternion.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
+    <ClInclude Include="IO\Input.h">
+      <Filter>Header Files\IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\shaders\colored.pixel">

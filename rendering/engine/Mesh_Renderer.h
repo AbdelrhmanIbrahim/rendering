@@ -5,8 +5,6 @@
 #include "world/3Dobject.h"
 #include "world/Camera.h"
 
-#include "math/Vector.h"
-
 namespace rndr
 {
 	struct Mesh_Renderer

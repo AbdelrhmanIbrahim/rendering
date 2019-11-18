@@ -169,16 +169,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="engine\shaders\colored.pixel">
-      <Filter>Header Files\engine\shaders</Filter>
-    </None>
-    <None Include="engine\shaders\colored.vertex">
-      <Filter>Header Files\engine\shaders</Filter>
-    </None>
     <None Include="engine\shaders\texture.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
     <None Include="engine\shaders\texture.vertex">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\phong.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\phong.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
   </ItemGroup>

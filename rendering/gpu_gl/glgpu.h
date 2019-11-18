@@ -73,6 +73,9 @@ namespace glgpu
 	draw_indexed(unsigned int indcies_count);
 
 	void
+	uniform3f_set(program prog, const char* uniform, math::vec3f& data);
+
+	void
 	uniform4f_set(program prog, const char* uniform, math::vec4f& data);
 
 	void

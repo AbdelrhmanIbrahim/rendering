@@ -160,17 +160,21 @@ namespace glgpu
 		GLuint v = (GLuint)va;
 		glBindVertexArray(v);
 		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
+
 		//pos
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
-		//uv
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
 
 		//normal
-		/*glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);*/
+
+		//uv
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
+
+		//no indexed triangles so far
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
 	}
 
 	void
@@ -238,6 +242,13 @@ namespace glgpu
 	draw_indexed(unsigned int indcies_count)
 	{
 		glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
+	}
+
+	void
+	uniform3f_set(program prog, const char * uniform, math::vec3f & data)
+	{
+		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		glUniform3f(uniform_loc, data[0], data[1], data[2]);
 	}
 
 	void

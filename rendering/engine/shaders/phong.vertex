@@ -9,6 +9,7 @@ uniform mat4 mvp;
 
 out vec3 frag_world_pos;
 out vec3 normal_world;
+out vec2 uv_coord;
 
 void main()
 {
@@ -17,4 +18,5 @@ void main()
 	//world (http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/) -- calc normal matrix on cpu (revisit)
 	frag_world_pos = (model * vec4(pos.x, pos.y, pos.z, 1.0)).xyz;
 	normal_world = mat3(transpose(inverse(model))) * normal;
+	uv_coord = uv;
 }

@@ -35,8 +35,8 @@ namespace rndr
 		program_use(mr.prog);
 
 		//texture
-		/*texture_bind(mr.tex, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(mr.prog, "texture_0", TEXTURE_UNIT::UNIT_0);*/
+		texture_bind(mr.tex, TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(mr.prog, "texture", TEXTURE_UNIT::UNIT_0);
 
 		//MVP
 		Mat4f model = mat4_from_transform(object.model);

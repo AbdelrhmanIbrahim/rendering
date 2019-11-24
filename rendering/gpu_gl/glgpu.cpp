@@ -246,21 +246,21 @@ namespace glgpu
 	}
 
 	void
-	uniform3f_set(program prog, const char * uniform, math::vec3f & data)
+	uniform3f_set(program prog, const char * uniform, const math::vec3f & data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform3f(uniform_loc, data[0], data[1], data[2]);
 	}
 
 	void
-	uniform4f_set(program prog, const char* uniform, math::vec4f& data)
+	uniform4f_set(program prog, const char* uniform, const math::vec4f& data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform4f(uniform_loc, data[0], data[1], data[2], data[3]);
 	}
 
 	void
-	uniformmat4f_set(program prog, const char* uniform, math::Mat4f& data)
+	uniformmat4f_set(program prog, const char* uniform, const math::Mat4f& data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, &data.data[0][0]);

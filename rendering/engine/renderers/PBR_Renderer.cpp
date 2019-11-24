@@ -36,14 +36,13 @@ namespace rndr
 		Mat4f model = mat4_from_transform(object.model);
 		Mat4f mvp = camera_view_proj(cam) * model;
 		vec3f light_pos_world = model * vec4f{ 1.0f, 1.0f, 0.0f, 1.0f };
-		vec3f cam_pos = cam.pos;
 
 		uniformmat4f_set(mr.prog, "mvp", mvp);
 		uniformmat4f_set(mr.prog, "model", model);
 		uniform3f_set(mr.prog, "object_color", vec3f{ 1.0, 0.5, 0.31 });
 		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
 		uniform3f_set(mr.prog, "light_world_pos", light_pos_world);
-		uniform3f_set(mr.prog, "camera_world_pos", cam_pos);
+		uniform3f_set(mr.prog, "camera_world_pos", cam.pos);
 
 		//viewport
 		vec2f viewport = world::camera_viewport(cam);

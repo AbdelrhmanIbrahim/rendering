@@ -13,8 +13,8 @@ out vec3 normal_world;
 void main()
 {
 	gl_Position = mvp * vec4(pos.x, pos.y, pos.z, 1.0);
-	
+
 	//world (http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/) -- calc normal matrix on cpu (revisit)
 	frag_pos_world = (model * vec4(pos.x, pos.y, pos.z, 1.0)).xyz;
-	normal_world = mat3(transpose(inverse(model))) * normal;
+	normal_world = normalize(mat3(transpose(inverse(model))) * normal);
 }

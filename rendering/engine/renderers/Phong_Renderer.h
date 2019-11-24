@@ -10,7 +10,6 @@ namespace rndr
 	struct Phong_Renderer
 	{
 		glgpu::program prog;
-		glgpu::texture tex;
 	};
 
 	Phong_Renderer

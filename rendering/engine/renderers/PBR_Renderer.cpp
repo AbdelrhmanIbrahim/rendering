@@ -35,7 +35,7 @@ namespace rndr
 		//MVP
 		Mat4f model = mat4_from_transform(object.model);
 		Mat4f mvp = camera_view_proj(cam) * model;
-		vec3f light_pos_world = model * vec4f{ 1.0f, 1.0f, 0.0f, 1.0f };
+		vec3f light_pos_world = model * vec4f{ 3.0f, 3.0f, 0.0f, 1.0f };
 
 		uniformmat4f_set(mr.prog, "mvp", mvp);
 		uniformmat4f_set(mr.prog, "model", model);

@@ -1,4 +1,4 @@
-#include "Mesh_Renderer.h"
+#include "Phong_Renderer.h"
 
 #include "math/Matrix.h"
 #include "math/Gfx.h"
@@ -9,10 +9,10 @@ using namespace world;
 
 namespace rndr
 {
-	Mesh_Renderer
-	mesh_renderer_create()
+	Phong_Renderer
+	phong_renderer_create()
 	{
-		Mesh_Renderer self{};
+		Phong_Renderer self{};
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../rendering/engine/shaders/phong.vertex", "../rendering/engine/shaders/phong.pixel");
@@ -22,14 +22,14 @@ namespace rndr
 	}
 
 	void
-	mesh_renderer_free(const Mesh_Renderer & mr)
+	phong_renderer_free(const Phong_Renderer & mr)
 	{
 		program_delete(mr.prog);
 		texture_free(mr.tex);
 	}
 
 	void
-	mesh_renderer_draw(const Mesh_Renderer& mr, const world::object3D& object, const Camera& cam)
+	phong_renderer_draw(const Phong_Renderer& mr, const world::object3D& object, const Camera& cam)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(mr.prog);

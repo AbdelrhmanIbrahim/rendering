@@ -125,7 +125,8 @@
     <ClCompile Include="app\app.cpp" />
     <ClCompile Include="backend\backend.cpp" />
     <ClCompile Include="engine\Engine.cpp" />
-    <ClCompile Include="engine\Mesh_Renderer.cpp" />
+    <ClCompile Include="engine\renderers\PBR_Renderer.cpp" />
+    <ClCompile Include="engine\renderers\Phong_Renderer.cpp" />
     <ClCompile Include="geometry\Mesh.cpp" />
     <ClCompile Include="gpu_gl\glgpu.cpp" />
     <ClCompile Include="IO\Image.cpp" />
@@ -139,7 +140,8 @@
     <ClInclude Include="backend\backend.h" />
     <ClInclude Include="Defs.h" />
     <ClInclude Include="engine\Engine.h" />
-    <ClInclude Include="engine\Mesh_Renderer.h" />
+    <ClInclude Include="engine\renderers\PBR_Renderer.h" />
+    <ClInclude Include="engine\renderers\Phong_Renderer.h" />
     <ClInclude Include="geometry\Mesh.h" />
     <ClInclude Include="geometry\vertex.h" />
     <ClInclude Include="gpu_gl\glgpu.h" />
@@ -158,10 +160,10 @@
     <ClInclude Include="world\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="engine\shaders\pbr.pixel" />
+    <None Include="engine\shaders\pbr.vertex" />
     <None Include="engine\shaders\phong.pixel" />
     <None Include="engine\shaders\phong.vertex" />
-    <None Include="engine\shaders\texture.pixel" />
-    <None Include="engine\shaders\texture.vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

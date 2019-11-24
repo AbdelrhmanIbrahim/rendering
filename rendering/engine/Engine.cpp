@@ -3,7 +3,7 @@
 #include "world/World.h"
 #include "world/Camera.h"
 
-#include "engine/Mesh_Renderer.h"
+#include "engine/renderers/PBR_Renderer.h"
 
 using namespace world;
 
@@ -11,21 +11,21 @@ namespace rndr
 {
 	struct Engine
 	{
-		Mesh_Renderer mr;
+		PBR_Renderer mr;
 	};
 
 	Engine*
 	engine_create()
 	{
 		Engine* self = new Engine;
-		self->mr = mesh_renderer_create();
+		self->mr = pbr_renderer_create();
 		return self;
 	}
 
 	void
 	engine_free(Engine* e)
 	{
-		mesh_renderer_free(e->mr);
+		pbr_renderer_free(e->mr);
 		delete e;
 	}
 
@@ -35,7 +35,7 @@ namespace rndr
 		//configure the camera
 		camera_viewport(w->cam, viewport);
 
-		//render all meshes in the world using engine mesh renderer
-		mesh_renderer_draw(e->mr, w->obj, w->cam);
+		//render all meshes in the world using engine mesh renderer (add a buffer of meshes to each renderer -- revisit)
+		pbr_renderer_draw(e->mr, w->obj, w->cam);
 	}
 };

@@ -67,6 +67,12 @@
     <Filter Include="Header Files\math">
       <UniqueIdentifier>{2d2172c1-6e6a-4f50-b2a3-0512a7b3d41f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\renderers">
+      <UniqueIdentifier>{35271922-ff38-4e7d-92f4-e5da6dfa7ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\renderers">
+      <UniqueIdentifier>{baa33733-7e54-4b9e-b953-1ab07e1429bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -93,14 +99,17 @@
     <ClCompile Include="engine\Engine.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="engine\Mesh_Renderer.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="IO\STL_Reader.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="IO\Image.cpp">
       <Filter>Source Files\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\renderers\PBR_Renderer.cpp">
+      <Filter>Source Files\engine\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\renderers\Phong_Renderer.cpp">
+      <Filter>Source Files\engine\renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -126,9 +135,6 @@
       <Filter>Header Files\world</Filter>
     </ClInclude>
     <ClInclude Include="engine\Engine.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\Mesh_Renderer.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="IO\STL_Reader.h">
@@ -167,18 +173,24 @@
     <ClInclude Include="Defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="engine\renderers\PBR_Renderer.h">
+      <Filter>Header Files\engine\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\renderers\Phong_Renderer.h">
+      <Filter>Header Files\engine\renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="engine\shaders\texture.pixel">
-      <Filter>Header Files\engine\shaders</Filter>
-    </None>
-    <None Include="engine\shaders\texture.vertex">
-      <Filter>Header Files\engine\shaders</Filter>
-    </None>
     <None Include="engine\shaders\phong.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
     <None Include="engine\shaders\phong.vertex">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\pbr.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\pbr.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
   </ItemGroup>

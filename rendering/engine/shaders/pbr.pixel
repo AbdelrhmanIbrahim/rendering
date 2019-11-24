@@ -1,0 +1,13 @@
+#version 330 core
+
+uniform vec3 object_color;
+uniform vec3 light_color;
+uniform vec3 light_world_pos;
+uniform vec3 camera_world_pos;
+
+out vec4 FragColor;
+
+void main()
+{
+  FragColor = vec4(1.0, 0.5, 0.31, 1);
+}

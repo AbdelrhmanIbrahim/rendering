@@ -5,6 +5,9 @@ uniform vec3 light_color;
 uniform vec3 light_world_pos;
 uniform vec3 camera_world_pos;
 
+in vec3 frag_world_pos;
+in vec3 normal_world;
+
 out vec4 FragColor;
 
 void main()

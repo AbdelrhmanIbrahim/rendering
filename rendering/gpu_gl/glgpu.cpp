@@ -241,7 +241,7 @@ namespace glgpu
 	void
 	draw_indexed(unsigned int indcies_count)
 	{
-		glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indcies_count, GL_UNSIGNED_INT, 0);
 	}
 
 	void

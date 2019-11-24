@@ -10,7 +10,7 @@ namespace world
 	world_create()
 	{
 		World* self = new World;
-		self->obj = object3d_create(math::Y_AXIS, 0.0f, vec3f{1.0f, 1.0f, 1.0f}, vec3f{0,0,0}, "../rendering/res/stls/cube.stl");
+		self->obj = object3d_create(math::Y_AXIS, 0.0f, vec3f{ 1,1,1 }, vec3f{ 0,0,0 }, "../rendering/res/stls/sphere.stl");
 		self->cam = camera_new();
 
 		return self;

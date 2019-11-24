@@ -114,7 +114,7 @@ namespace world
 	{
 		object3D self{};
 		self.model = math::Transform{ rot_axis, angle, scale, translate };
-		self.mesh = geo::mesh_create("D:/rendering_jo/rendering/rendering/res/stls/sphere.stl");
+		self.mesh = geo::mesh_create(path);
 		return self;
 	}
 

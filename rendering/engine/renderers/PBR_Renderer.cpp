@@ -51,8 +51,8 @@ namespace rndr
 
 		//draw geometry
 		vao_bind(object.mesh.va, object.mesh.vs, object.mesh.is);
-		draw_strip(object.mesh.vertices.size());
-		//draw_indexed(object.mesh.indices.size());
+		//draw_strip(object.mesh.vertices.size());
+		draw_indexed(object.mesh.indices.size());
 		vao_unbind();
 	}
 }

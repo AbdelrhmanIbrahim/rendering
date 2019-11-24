@@ -174,7 +174,7 @@ namespace glgpu
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 
 		//no indexed triangles so far
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
 	}
 
 	void
@@ -230,6 +230,9 @@ namespace glgpu
 		glClearColor(r, g, b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
+		//glFrontFace(GL_CCW);
 	}
 
 	void

@@ -39,12 +39,12 @@ namespace rndr
 
 		uniformmat4f_set(mr.prog, "mvp", mvp);
 		uniformmat4f_set(mr.prog, "model", model);
-		uniform3f_set(mr.prog, "object_color_albedo", vec3f{ 1.0, 0.0, 0.0 });
+		uniform3f_set(mr.prog, "camera_pos_world", cam.pos);
 		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
 		uniform3f_set(mr.prog, "light_pos_world", light_pos_world);
-		uniform3f_set(mr.prog, "camera_pos_world", cam.pos);
-		uniform1f_set(mr.prog, "metallic", 0);
-		uniform1f_set(mr.prog, "rough", 0);
+		uniform3f_set(mr.prog, "object_color_albedo", vec3f{ 1.0, 0.5, 0.31 });
+		uniform1f_set(mr.prog, "metallic", 0.5);
+		uniform1f_set(mr.prog, "rough", 0.5);
 
 		//viewport
 		vec2f viewport = world::camera_viewport(cam);

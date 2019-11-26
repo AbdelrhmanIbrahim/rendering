@@ -35,14 +35,16 @@ namespace rndr
 		//MVP
 		Mat4f model = mat4_from_transform(object.model);
 		Mat4f mvp = camera_view_proj(cam) * model;
-		vec3f light_pos_world = model * vec4f{ 3.0f, 3.0f, 0.0f, 1.0f };
+		vec3f light_pos_world = model * vec4f{3.0f, 3.0f, 0.0f, 1.0f };
 
 		uniformmat4f_set(mr.prog, "mvp", mvp);
 		uniformmat4f_set(mr.prog, "model", model);
-		uniform3f_set(mr.prog, "object_color", vec3f{ 1.0, 0.5, 0.31 });
+		uniform3f_set(mr.prog, "object_color_albedo", vec3f{ 1.0, 0.0, 0.0 });
 		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
-		uniform3f_set(mr.prog, "light_world_pos", light_pos_world);
-		uniform3f_set(mr.prog, "camera_world_pos", cam.pos);
+		uniform3f_set(mr.prog, "light_pos_world", light_pos_world);
+		uniform3f_set(mr.prog, "camera_pos_world", cam.pos);
+		uniform1f_set(mr.prog, "metallic", 0);
+		uniform1f_set(mr.prog, "rough", 0);
 
 		//viewport
 		vec2f viewport = world::camera_viewport(cam);
@@ -50,7 +52,6 @@ namespace rndr
 
 		//draw geometry
 		vao_bind(object.mesh.va, object.mesh.vs, object.mesh.is);
-		//draw_strip(object.mesh.vertices.size());
 		draw_indexed(object.mesh.indices.size());
 		vao_unbind();
 	}

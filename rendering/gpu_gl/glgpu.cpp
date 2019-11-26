@@ -246,6 +246,13 @@ namespace glgpu
 	}
 
 	void
+	uniform1f_set(program prog, const char* uniform, float data)
+	{
+		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		glUniform1f(uniform_loc, data);
+	}
+
+	void
 	uniform3f_set(program prog, const char * uniform, const math::vec3f & data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
@@ -269,9 +276,11 @@ namespace glgpu
 	void
 	uniform1i_set(program prog, const char* uniform, int data)
 	{
+		//samplers for example
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform1i(uniform_loc, data);
 	}
+
 
 	void
 	view_port(int x, int y, int width, int height)

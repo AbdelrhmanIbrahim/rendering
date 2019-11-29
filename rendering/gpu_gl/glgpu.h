@@ -21,6 +21,13 @@ namespace glgpu
 		UNIT_0
 	};
 
+	enum class DEPTH_TEST
+	{
+		LE,
+		L,
+		G
+	};
+
 	void
 	graphics_init();
 
@@ -34,7 +41,7 @@ namespace glgpu
 	program_delete(program prog);
 
 	buffer
-	vertex_buffer_create(geo::Vertex vertices[], std::size_t count);
+	vertex_buffer_create(const geo::Vertex vertices[], std::size_t count);
 
 	buffer
 	index_buffer_create(unsigned int indices[], std::size_t count);
@@ -55,16 +62,28 @@ namespace glgpu
 	vao_delete(vao va);
 
 	texture
-	texture_create(const char* image_path);
+	cubemap_create(const char** cubemap_paths);
 
 	void
-	texture_bind(texture texture, TEXTURE_UNIT texture_unit);
+	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
+
+	texture
+	texture2d_create(const char* image_path);
+
+	void
+	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);
 
 	void
 	texture_free(texture texture);
 
 	void
+	frame_start();
+
+	void
 	color_clear(float r, float g, float b);
+
+	void
+	depth_test(DEPTH_TEST test);
 
 	void
 	draw_strip(std::size_t vertices_count);

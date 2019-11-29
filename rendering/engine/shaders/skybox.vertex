@@ -1,0 +1,22 @@
+#version 330 core
+layout(location = 0) in vec3 pos;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec2 uv;
+
+out vec3 uvs;
+
+uniform mat4 view;
+uniform mat4 proj;
+
+
+void main()
+{
+	//remove translation from view --revisit--
+	uvs = pos;
+
+	//remove translation
+	mat3 view3 = mat3(view);
+	mat4 view4 = mat4(view3);
+	vec4 pos = proj * view4 * vec4(pos, 1.0);
+	gl_Position = pos.xyww;
+}

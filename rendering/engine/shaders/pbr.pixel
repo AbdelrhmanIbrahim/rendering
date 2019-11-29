@@ -16,7 +16,7 @@ out vec4 FragColor;
 const float PI = 3.14159265359f;
 
 /*
-Physically Based Rendering is all about simulate light interactions with surfaces in much more realistic and physical based way 
+Physically Based Rendering is all about simulating light interactions with surfaces in much more realistic and physical based way 
 taking surface structure and energy conservation law into consideration by calculating the emissive and reflectance part for a surface.
 
 This calculation is based on what's called Rendering Equation, which calculates how much light energy at a given point in space :
@@ -29,11 +29,11 @@ that's all about how many lighting rays hitting a certain point on a surface to 
 Phong is a much simplified eqn of the relectance eqn but not considering the surface micro-structure and not physically based 
 as it doesn't care about the energy conservation law (reflectance and refraction).
 
-All the incoming functions is used to determine what is know as a bidirectional reflective distribution function (BRDF)
-which is a major part of the reflectance eqn and determines how light rays interacts with the object and how much each individual light ray contributes
+All the incoming functions is used to determine what is known as a bidirectional reflective distribution function (BRDF)
+which is a major part of the reflectance eqn and determines how light rays interacts with the surface and how much each individual light ray contributes
 to the final reflected light of an opaque surface given its material properties.
 
-The following 3 functions used to determines BRDF. (we use Cook-Torrance BRDF)
+The following 3 functions used to determine BRDF. (we use Cook-Torrance BRDF)
 */
 
 /*

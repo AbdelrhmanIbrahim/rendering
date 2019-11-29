@@ -19,11 +19,28 @@ namespace glgpu
 		assert(gl_ok == GLEW_OK);
 	}
 
-	enum SHADER_STAGE
+	enum class SHADER_STAGE
 	{
 		VERTEX,
 		PIXEL
 	};
+
+	int
+	_map(DEPTH_TEST test)
+	{
+		switch (test)
+		{
+		case DEPTH_TEST::LE:
+			return GL_LEQUAL;
+		case DEPTH_TEST::L:
+			return GL_LESS;
+		case DEPTH_TEST::G:
+			return GL_GREATER;
+		default:
+			assert("undefined depth test" && false);
+			return -1;
+		}
+	}
 
 	int
 	_map(TEXTURE_UNIT unit)
@@ -120,7 +137,7 @@ namespace glgpu
 	}
 
 	buffer
-	vertex_buffer_create(geo::Vertex vertices[], std::size_t count)
+	vertex_buffer_create(const geo::Vertex vertices[], std::size_t count)
 	{
 		GLuint vbo;
 		glGenBuffers(1, &vbo);
@@ -191,7 +208,38 @@ namespace glgpu
 	}
 
 	texture
-	texture_create(const char* image_path)
+	cubemap_create(const char ** cubemap_paths)
+	{
+		GLuint cubemap;
+		glGenTextures(1, &cubemap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+
+		//righ, left, top, bottom, front, back
+		for (int i = 0; i < 6; ++i)
+		{
+			Image img = image_read(cubemap_paths[i]);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
+			image_free(img);
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
+
+		return (texture)cubemap;
+	}
+
+	void
+	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit)
+	{
+		glActiveTexture(_map(texture_unit));
+		glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)texture);
+	}
+
+	texture
+	texture2d_create(const char* image_path)
 	{
 		Image img = image_read(image_path);
 
@@ -211,7 +259,7 @@ namespace glgpu
 	}
 
 	void
-	texture_bind(texture texture, TEXTURE_UNIT texture_unit)
+	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit)
 	{
 		glActiveTexture(_map(texture_unit));
 		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
@@ -225,12 +273,24 @@ namespace glgpu
 	}
 
 	void
-	color_clear(float r, float g, float b)
+	frame_start()
 	{
-		glClearColor(r, g, b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
+		glDepthFunc(GL_LESS);
+	}
+
+	void
+	color_clear(float r, float g, float b)
+	{
+		glClearColor(r, g, b, 1.0f);
+	}
+
+	void
+	depth_test(DEPTH_TEST test)
+	{
+		glDepthFunc(_map(test));
 	}
 
 	void

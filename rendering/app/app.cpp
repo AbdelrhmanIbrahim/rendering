@@ -47,7 +47,7 @@ namespace app
 		int c_frame = backend::ticks();
 		int frame_delta = c_frame - i.p_frame;
 		i.p_frame = c_frame;
-		camera_move(w->cam, i.keys, 0.01f * frame_delta);
+		camera_move(w->cam, i.keys, 0.05f * frame_delta);
 
 		//render the top world
 		camera_viewport(w->cam, window_size);

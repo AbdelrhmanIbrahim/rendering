@@ -65,20 +65,20 @@ namespace rndr
 		//pack meshes to draw
 		for (const auto& mesh : w->meshes)
 		{
-			//phong_pack(e->phong, &mesh);
-			pbr_pack(e->pbr, &mesh);
+			phong_pack(e->phong, &mesh);
+			//pbr_pack(e->pbr, &mesh);
 		}
 
 		//flush renderers
 		{
-			//phong_draw(e->phong, w->cam);
-			pbr_draw(e->pbr, w->cam);
+			phong_draw(e->phong, w->cam);
+			//pbr_draw(e->pbr, w->cam);
 		}
 
 		//unpack meshes
 		{
-			//phong_unpack(e->phong);
-			pbr_unpack(e->pbr);
+			phong_unpack(e->phong);
+			//pbr_unpack(e->pbr);
 		}
 	
 		//skybox

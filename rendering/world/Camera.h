@@ -37,7 +37,7 @@ namespace world
 		self.b = -1;
 		self.t = 1;
 		self.n = 0.1f;
-		self.f = 100;
+		self.f = 1000;
 		self.fov = 0.785398185f;
 		self.fov_tan = tan(self.fov / 2.0f);
 

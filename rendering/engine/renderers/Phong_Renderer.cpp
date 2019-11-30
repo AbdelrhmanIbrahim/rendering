@@ -50,7 +50,7 @@ namespace rndr
 
 		//unifroms
 		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
-		uniform3f_set(mr.prog, "light_world_pos", vec3f{ 0.0f, 30.0f, 0.0f });
+		uniform3f_set(mr.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
 		uniform3f_set(mr.prog, "camera_world_pos", cam.pos);
 
 		for (const auto object : mr.meshes)

@@ -2,7 +2,7 @@
 
 uniform vec3 object_color;
 uniform vec3 light_color;
-uniform vec3 light_world_pos;
+uniform vec3 light_dir;
 uniform vec3 camera_world_pos;
 
 in vec3 frag_pos_world;
@@ -17,12 +17,11 @@ void main()
     vec3 ambient = ambient_strength * light_color;
 
 	//diffuse (interaction with light source)
-	vec3 light_dir = normalize(light_world_pos-frag_pos_world);
-	vec3 diffuse = max(dot(normal_world, light_dir), 0.0f) * light_color;
+	vec3 diffuse = max(dot(normal_world, -light_dir), 0.0f) * light_color;
 
 	//specular (shinning)
 	vec3 view_dir = normalize(camera_world_pos - frag_pos_world);
-	vec3 reflected_light = reflect(-light_dir, normal_world);
+	vec3 reflected_light = reflect(light_dir, normal_world);
 	vec3 specular = 0.5f * pow(max(dot(view_dir, reflected_light), 0.0), 128) * light_color;
 
     vec3 result = (ambient + diffuse + specular) * object_color;

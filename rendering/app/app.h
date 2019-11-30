@@ -1,8 +1,10 @@
 #pragma once
 
-#include "backend/backend.h"
+#include <backend/backend.h>
 
 #include <IO/Input.h>
+
+#include <math/Vector.h>
 
 namespace world
 {
@@ -18,10 +20,16 @@ namespace app
 {
 	struct application : backend::callbacks
 	{
+		//win res
+		math::vec2f window_size;
+
+		//input state
 		io::Input i;
+
+		//world and rendering engine
 		world::World* w;
 		rndr::Engine* e;
-
+		
 		application(int argc, char** argv);
 
 		~application();
@@ -43,5 +51,8 @@ namespace app
 
 		void
 		keyboard_release_handle(unsigned char c, int x, int y) override;
+
+		void
+		window_resize_handle(int width, int height) override;
 	};
 };

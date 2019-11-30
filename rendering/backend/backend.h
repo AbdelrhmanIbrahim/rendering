@@ -18,6 +18,9 @@ namespace backend
 
 		virtual void
 		mouse_wheel_handle(int a, int dir, int x, int y) = 0;
+
+		virtual void
+		window_resize_handle(int width, int height) = 0;
 	};
 
 	static callbacks* cb;

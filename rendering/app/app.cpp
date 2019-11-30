@@ -1,5 +1,6 @@
 #include "app/app.h"
 
+#include "Defs.h"
 #include "window/window.h"
 #include "gpu_gl/glgpu.h"
 
@@ -12,10 +13,10 @@ using namespace io;
 
 namespace app
 {
-	constexpr static math::vec2f window_size{WIN_WIDTH, WIN_HEIGHT};
 	application::application(int argc, char** argv)
 	{
 		backend::callbacks_init(argc, argv);
+		window_size = math::vec2f{ WIN_WIDTH, WIN_HEIGHT};
 		win::window_create((unsigned int)window_size[0], (unsigned int)window_size[1], "rendering journey");
 		backend::callbacks_set(this);
 		glgpu::graphics_init();
@@ -78,5 +79,12 @@ namespace app
 	application::keyboard_release_handle(unsigned char c, int x, int y)
 	{
 		i.keys[c] = false;
+	}
+
+	void
+	application::window_resize_handle(int width, int height)
+	{
+		window_size[0] = width;
+		window_size[1] = height;
 	}
 };

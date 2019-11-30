@@ -35,6 +35,12 @@ namespace backend
 		cb->mouse_wheel_handle(a, b, x, y);
 	}
 
+	void
+	window_resize_handle(int width, int height)
+	{
+		cb->window_resize_handle(width, height);
+	}
+
 	int
 	ticks()
 	{
@@ -56,6 +62,7 @@ namespace backend
 		glutKeyboardUpFunc(keyboard_release);
 		glutPassiveMotionFunc(mouse_handle);
 		glutMouseWheelFunc(mouse_wheel_handle);
+		glutReshapeFunc(window_resize_handle);
 		glutIdleFunc(update);
 	}
 

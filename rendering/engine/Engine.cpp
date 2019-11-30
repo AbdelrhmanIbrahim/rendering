@@ -26,6 +26,8 @@ namespace rndr
 	{
 		Engine* self = new Engine;
 		
+		//skybox
+		/*
 		static const char* skybox_paths[6]
 		{
 			"../rendering/res/imgs/skybox/right.jpg",
@@ -35,9 +37,10 @@ namespace rndr
 			"../rendering/res/imgs/skybox/front.jpg",
 			"../rendering/res/imgs/skybox/back.jpg"
 		};
-
 		self->skybox = skybox_renderer_create(skybox_paths);
-		self->phong = phong_renderer_create();
+		*/
+
+		self->phong = phong_create();
 		self->pbr = pbr_renderer_create();
 
 		return self;
@@ -46,25 +49,31 @@ namespace rndr
 	void
 	engine_free(Engine* e)
 	{
-		phong_renderer_free(e->phong);
+		//skybox_renderer_free(e->skybox);
+		phong_free(e->phong);
 		pbr_renderer_free(e->pbr);
-		skybox_renderer_free(e->skybox);
 
 		delete e;
 	}
 
 	void
-	engine_world_draw(const Engine* e, World* w, const math::vec2f& viewport)
+	engine_world_draw(Engine* e, const World* w)
 	{
-		//configure the camera
-		camera_viewport(w->cam, viewport);
-
 		//enable tests and clear color and depth buffers (refactor later)
 		glgpu::frame_start();
 
-		//render all meshes in the world using engine mesh renderer (add a buffer of meshes to each renderer -- revisit)
-		pbr_renderer_draw(e->pbr, w->obj, w->cam);
-		//phong_renderer_draw(e->phong, w->obj, w->cam);
-		skybox_renderer_draw(e->skybox, w->cam);
+		//pack meshes to draw
+		for(const auto& mesh : w->meshes)
+			phong_pack(e->phong, &mesh);
+
+
+		//flush renderers
+		phong_draw(e->phong, w->cam);
+		//pbr_renderer_draw(e->pbr, w->obj, w->cam);
+		//skybox_renderer_draw(e->skybox, w->cam);
+
+
+		//unpack meshes
+		phong_unpack(e->phong);
 	}
 };

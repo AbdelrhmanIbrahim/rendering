@@ -7,7 +7,7 @@ namespace world
 {
 	struct World
 	{
-		object3D obj;
+		std::vector<object3D> meshes;
 		Camera cam;
 	};
 

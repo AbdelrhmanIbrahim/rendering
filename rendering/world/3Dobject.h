@@ -119,7 +119,7 @@ namespace world
 	}
 
 	inline void
-	object3d_delete(const object3D& obj)
+	object3d_delete(object3D& obj)
 	{
 		geo::mesh_delete(obj.mesh);
 	}

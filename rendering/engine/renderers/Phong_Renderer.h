@@ -5,19 +5,28 @@
 #include "world/3Dobject.h"
 #include "world/Camera.h"
 
+#include <vector>
+
 namespace rndr
 {
 	struct Phong_Renderer
 	{
 		glgpu::program prog;
+		std::vector<const world::object3D*> meshes;
 	};
 
 	Phong_Renderer
-	phong_renderer_create();
+	phong_create();
 
 	void
-	phong_renderer_free(const Phong_Renderer& mr);
+	phong_free(Phong_Renderer& mr);
 
 	void
-	phong_renderer_draw(const Phong_Renderer& mr, const world::object3D& object, const world::Camera& cam);
+	phong_pack(Phong_Renderer& mr, const world::object3D* mesh);
+
+	void
+	phong_unpack(Phong_Renderer & mr);
+
+	void
+	phong_draw(const Phong_Renderer& mr, const world::Camera& cam);
 };

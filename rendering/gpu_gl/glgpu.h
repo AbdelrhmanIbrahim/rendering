@@ -6,7 +6,7 @@
 
 #include <cstddef>
 
-#define HANDLE(NAME) typedef struct NAME##__ { int unused; } *NAME;
+#include "Defs.h"
 
 namespace glgpu
 {

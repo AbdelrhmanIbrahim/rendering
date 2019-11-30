@@ -10,7 +10,8 @@ namespace world
 	world_create()
 	{
 		World* self = new World;
-		self->obj = object3d_create(math::Y_AXIS, 0.0f, vec3f{ 1,1,1 }, vec3f{ 0,0,0 }, "../rendering/res/stls/sphere.stl");
+		self->meshes.push_back(object3d_create(math::Y_AXIS, 0.0f, vec3f{ 1,1,1 }, vec3f{ 0,0,0 }, "../rendering/res/stls/sphere.stl"));
+		self->meshes.push_back(object3d_create(math::Y_AXIS, 0.0f, vec3f{ 1,1,1 }, vec3f{ 0,4,0 }, "../rendering/res/stls/sphere.stl"));
 		self->cam = camera_new();
 
 		return self;
@@ -19,8 +20,10 @@ namespace world
 	void
 	world_free(World* w)
 	{
-		//revisit
-		object3d_delete(w->obj);
+		for(auto mesh : w->meshes)
+			object3d_delete(mesh);
+		w->meshes.clear();
+
 		delete w;
 	}
 }

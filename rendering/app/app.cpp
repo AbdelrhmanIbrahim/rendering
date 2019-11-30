@@ -50,7 +50,8 @@ namespace app
 		camera_move(w->cam, i.keys, 0.01f * frame_delta);
 
 		//render the top world
-		engine_world_draw(e, w, window_size);
+		camera_viewport(w->cam, window_size);
+		engine_world_draw(e, w);
 		backend::callbacks_update();
 	}
 

@@ -17,7 +17,7 @@ namespace rndr
 	pbr_renderer_create();
 
 	void
-	pbr_renderer_free(const PBR_Renderer& mr);
+	pbr_renderer_free(PBR_Renderer& mr);
 
 	void
 	pbr_renderer_draw(const PBR_Renderer& mr, const world::object3D& object, const world::Camera& cam);

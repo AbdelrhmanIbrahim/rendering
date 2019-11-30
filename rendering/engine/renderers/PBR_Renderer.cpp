@@ -21,7 +21,7 @@ namespace rndr
 	}
 
 	void
-	pbr_renderer_free(const PBR_Renderer & mr)
+	pbr_renderer_free(PBR_Renderer & mr)
 	{
 		program_delete(mr.prog);
 	}

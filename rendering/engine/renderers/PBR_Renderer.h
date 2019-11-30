@@ -6,19 +6,28 @@
 #include "world/3Dobject.h"
 #include "world/Camera.h"
 
+#include <vector>
+
 namespace rndr
 {
 	struct PBR_Renderer
 	{
 		glgpu::program prog;
+		std::vector<const world::object3D*> meshes;
 	};
 
 	PBR_Renderer
-	pbr_renderer_create();
+	pbr_create();
 
 	void
-	pbr_renderer_free(PBR_Renderer& mr);
+	pbr_free(PBR_Renderer& mr);
 
 	void
-	pbr_renderer_draw(const PBR_Renderer& mr, const world::object3D& object, const world::Camera& cam);
+	pbr_pack(PBR_Renderer& mr, const world::object3D* mesh);
+
+	void
+	pbr_unpack(PBR_Renderer & mr);
+
+	void
+	pbr_draw(const PBR_Renderer& mr, const world::Camera& cam);
 };

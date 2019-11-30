@@ -41,7 +41,7 @@ namespace rndr
 		*/
 
 		self->phong = phong_create();
-		self->pbr = pbr_renderer_create();
+		self->pbr = pbr_create();
 
 		return self;
 	}
@@ -51,7 +51,7 @@ namespace rndr
 	{
 		//skybox_renderer_free(e->skybox);
 		phong_free(e->phong);
-		pbr_renderer_free(e->pbr);
+		pbr_free(e->pbr);
 
 		delete e;
 	}
@@ -63,17 +63,27 @@ namespace rndr
 		glgpu::frame_start();
 
 		//pack meshes to draw
-		for(const auto& mesh : w->meshes)
-			phong_pack(e->phong, &mesh);
-
+		for (const auto& mesh : w->meshes)
+		{
+			//phong_pack(e->phong, &mesh);
+			pbr_pack(e->pbr, &mesh);
+		}
 
 		//flush renderers
-		phong_draw(e->phong, w->cam);
-		//pbr_renderer_draw(e->pbr, w->obj, w->cam);
-		//skybox_renderer_draw(e->skybox, w->cam);
-
+		{
+			//phong_draw(e->phong, w->cam);
+			pbr_draw(e->pbr, w->cam);
+		}
 
 		//unpack meshes
-		phong_unpack(e->phong);
+		{
+			//phong_unpack(e->phong);
+			pbr_unpack(e->pbr);
+		}
+	
+		//skybox
+		{
+			//skybox_renderer_draw(e->skybox, w->cam);
+		}
 	}
 };

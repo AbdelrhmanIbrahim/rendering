@@ -70,6 +70,23 @@ namespace glgpu
 		}
 	}
 
+	int
+	_map(FRAMEBUFFER_ATTACHMENT attachment)
+	{
+		switch (attachment)
+		{
+		case FRAMEBUFFER_ATTACHMENT::COLOR0:
+			return GL_COLOR_ATTACHMENT0;
+		case FRAMEBUFFER_ATTACHMENT::COLOR1:
+			return GL_COLOR_ATTACHMENT1;
+		case FRAMEBUFFER_ATTACHMENT::DEPTH:
+			return GL_DEPTH_ATTACHMENT;
+		default:
+			assert("undefined fb attachment" && false);
+			return -1;
+		}
+	}
+
 	GLuint
 	_shader_obj(std::ifstream& stream, const char* shader_path, SHADER_STAGE shader_stage)
 	{
@@ -272,6 +289,40 @@ namespace glgpu
 		glDeleteTextures(1, &t);
 	}
 
+	framebuffer
+	framebuffer_create()
+	{
+		unsigned int fb;
+		glGenFramebuffers(1, &fb);
+
+		return (framebuffer)fb;
+	}
+
+	void
+	framebuffer_bind(framebuffer fb)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, (GLuint)fb);
+	}
+
+	void
+	framebuffer_attach(framebuffer fb, texture tex, FRAMEBUFFER_ATTACHMENT attachment)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, _map(attachment), GL_TEXTURE_2D, (GLuint)tex, 0);
+	}
+
+	void
+	framebuffer_unbind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	}
+
+	void
+	framebuffer_free(framebuffer fb)
+	{
+		GLuint t = (GLuint)fb;
+		glDeleteFramebuffers(1, &t);
+	}
+
 	void
 	frame_start()
 	{
@@ -340,7 +391,6 @@ namespace glgpu
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform1i(uniform_loc, data);
 	}
-
 
 	void
 	view_port(int x, int y, int width, int height)

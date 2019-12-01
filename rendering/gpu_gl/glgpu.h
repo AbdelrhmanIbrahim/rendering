@@ -15,6 +15,7 @@ namespace glgpu
 	HANDLE(buffer);
 	HANDLE(texture);
 	HANDLE(vao);
+	HANDLE(framebuffer);
 
 	enum TEXTURE_UNIT
 	{
@@ -26,6 +27,13 @@ namespace glgpu
 		LE,
 		L,
 		G
+	};
+
+	enum class FRAMEBUFFER_ATTACHMENT
+	{
+		COLOR0,
+		COLOR1,
+		DEPTH
 	};
 
 	void
@@ -75,6 +83,15 @@ namespace glgpu
 
 	void
 	texture_free(texture texture);
+
+	framebuffer
+	framebuffer_create();
+
+	void
+	framebuffer_attach(framebuffer fb, texture tex, FRAMEBUFFER_ATTACHMENT attachment);
+
+	void
+	framebuffer_free(framebuffer fb);
 
 	void
 	frame_start();

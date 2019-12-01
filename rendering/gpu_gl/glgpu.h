@@ -4,6 +4,8 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
+#include "IO/Image.h"
+
 #include <cstddef>
 
 #include "Defs.h"
@@ -97,6 +99,12 @@ namespace glgpu
 	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);
 
 	void
+	texture2d_unbind();
+
+	void
+	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type);
+
+	void
 	texture_free(texture texture);
 
 	framebuffer
@@ -116,6 +124,9 @@ namespace glgpu
 
 	void
 	disable_color_buffer_rw();
+
+	void
+	depth_clear();
 
 	void
 	frame_start();

@@ -114,7 +114,7 @@
     <ClCompile Include="engine\renderers\Skybox_Renderer.cpp">
       <Filter>Source Files\engine\renderers</Filter>
     </ClCompile>
-    <ClCompile Include="engine\renderers\Depth_Offline_Renderer.cpp">
+    <ClCompile Include="engine\renderers\Phong_Shadow_Renderer.cpp">
       <Filter>Source Files\engine\renderers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,8 +188,11 @@
     <ClInclude Include="engine\renderers\Skybox_Renderer.h">
       <Filter>Header Files\engine\renderers</Filter>
     </ClInclude>
-    <ClInclude Include="engine\renderers\Depth_Offline_Renderer.h">
+    <ClInclude Include="engine\renderers\Phong_Shadow_Renderer.h">
       <Filter>Header Files\engine\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\Stb_Image_Write.h">
+      <Filter>Header Files\IO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +218,12 @@
       <Filter>Header Files\engine\shaders</Filter>
     </None>
     <None Include="engine\shaders\depth.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\phong_shadow.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\phong_shadow.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
   </ItemGroup>

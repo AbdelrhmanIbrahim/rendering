@@ -1,7 +1,5 @@
 #include "gpu_gl/glgpu.h"
 
-#include "IO/Image.h"
-
 #include <glew.h>
 #include <assert.h>
 #include <fstream>
@@ -295,7 +293,7 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexImage2D(GL_TEXTURE_2D, 0, _map(format), width, height, 0, _map(format), _map(type), NULL);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
@@ -327,6 +325,20 @@ namespace glgpu
 	{
 		glActiveTexture(_map(texture_unit));
 		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
+	}
+
+	void
+	texture2d_unbind()
+	{
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+
+	void
+	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		glReadPixels(0, 0, image.width, image.height, _map(format) , _map(type), (void*)image.data);
 	}
 
 	void
@@ -375,6 +387,12 @@ namespace glgpu
 	{
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
+	}
+
+	void
+	depth_clear()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
 	void

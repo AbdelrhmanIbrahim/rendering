@@ -125,9 +125,9 @@
     <ClCompile Include="app\app.cpp" />
     <ClCompile Include="backend\backend.cpp" />
     <ClCompile Include="engine\Engine.cpp" />
-    <ClCompile Include="engine\renderers\Depth_Offline_Renderer.cpp" />
     <ClCompile Include="engine\renderers\PBR_Renderer.cpp" />
     <ClCompile Include="engine\renderers\Phong_Renderer.cpp" />
+    <ClCompile Include="engine\renderers\Phong_Shadow_Renderer.cpp" />
     <ClCompile Include="engine\renderers\Skybox_Renderer.cpp" />
     <ClCompile Include="geometry\Mesh.cpp" />
     <ClCompile Include="gpu_gl\glgpu.cpp" />
@@ -142,9 +142,9 @@
     <ClInclude Include="backend\backend.h" />
     <ClInclude Include="Defs.h" />
     <ClInclude Include="engine\Engine.h" />
-    <ClInclude Include="engine\renderers\Depth_Offline_Renderer.h" />
     <ClInclude Include="engine\renderers\PBR_Renderer.h" />
     <ClInclude Include="engine\renderers\Phong_Renderer.h" />
+    <ClInclude Include="engine\renderers\Phong_Shadow_Renderer.h" />
     <ClInclude Include="engine\renderers\Skybox_Renderer.h" />
     <ClInclude Include="geometry\Mesh.h" />
     <ClInclude Include="geometry\vertex.h" />
@@ -152,6 +152,7 @@
     <ClInclude Include="IO\Image.h" />
     <ClInclude Include="IO\Input.h" />
     <ClInclude Include="IO\Stb_Image.h" />
+    <ClInclude Include="IO\Stb_Image_Write.h" />
     <ClInclude Include="IO\STL_Reader.h" />
     <ClInclude Include="math\Gfx.h" />
     <ClInclude Include="math\Matrix.h" />
@@ -170,6 +171,8 @@
     <None Include="engine\shaders\pbr.vertex" />
     <None Include="engine\shaders\phong.pixel" />
     <None Include="engine\shaders\phong.vertex" />
+    <None Include="engine\shaders\phong_shadow.pixel" />
+    <None Include="engine\shaders\phong_shadow.vertex" />
     <None Include="engine\shaders\skybox.pixel" />
     <None Include="engine\shaders\skybox.vertex" />
   </ItemGroup>

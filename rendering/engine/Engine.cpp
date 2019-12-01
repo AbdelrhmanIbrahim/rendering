@@ -6,7 +6,7 @@
 #include "engine/renderers/Phong_Renderer.h"
 #include "engine/renderers/PBR_Renderer.h"
 #include "engine/renderers/Skybox_Renderer.h"
-#include "engine/renderers/Depth_Offline_Renderer.h"
+#include "engine/renderers/Phong_Shadow_Renderer.h"
 
 //nope (refactor later --revisit--)
 #include "gpu_gl/glgpu.h"
@@ -17,7 +17,7 @@ namespace rndr
 {
 	struct Engine
 	{
-		Depth_Offline_Renderer depth;
+		Phong_Shadow_Renderer phong_shadow;
 		Phong_Renderer phong;
 		PBR_Renderer pbr;
 		Skybox_Renderer skybox;
@@ -28,7 +28,7 @@ namespace rndr
 	{
 		Engine* self = new Engine;
 
-		self->depth = depth_offline_create();
+		self->phong_shadow = phong_shadow_create();
 		self->phong = phong_create();
 		self->pbr = pbr_create();
 
@@ -52,7 +52,7 @@ namespace rndr
 	void
 	engine_free(Engine* e)
 	{
-		depth_offline_free(e->depth);
+		phong_shadow_free(e->phong_shadow);
 		phong_free(e->phong);
 		pbr_free(e->pbr);
 		//skybox_renderer_free(e->skybox);
@@ -63,38 +63,31 @@ namespace rndr
 	void
 	engine_world_draw(Engine* e, const World* w)
 	{
-		//pack meshes to draw
-		for (const auto& mesh : w->meshes)
-		{
-			depth_offline_pack(e->depth, &mesh);
-			//phong_shadow_pack(e->phong, &mesh);
-		}
-
-		//get shadow map using depth renderer to calc shadows
-		{
-			//get shadow map (flush depth offline renderer from light prespective)
-
-			//draw it using quad renderer or print it using stlb to make sure shadow map is fine
-		}
-
-
 		//render scene normally
 		{
 			//enable tests and clear color and depth buffers (refactor later)
 			glgpu::frame_start();
 
+			//pack meshes to draw
+			for (const auto& mesh : w->meshes)
+			{
+				//phong_shadow_pack(e->phong_shadow, &mesh);
+				//phong_pack(e->phong, &mesh);
+				pbr_pack(e->pbr, &mesh);
+			}
+
 			//flush renderers
 			{
-				//phong_shadow_draw(e->phong_shadow, w->cam, shadow_map);
+				//phong_shadow_draw(e->phong_shadow, math::vec3f{0,30,0}, w->cam);
 				//phong_draw(e->phong, w->cam);
-				//pbr_draw(e->pbr, w->cam);
+				pbr_draw(e->pbr, w->cam);
 			}
 
 			//unpack meshes
 			{
 				//phong_shadow_unpack(e->phong_shadow);
 				//phong_unpack(e->phong);
-				//pbr_unpack(e->pbr);
+				pbr_unpack(e->pbr);
 			}
 			//skybox
 			{

@@ -30,7 +30,7 @@ namespace math
 		}
 
 		inline Mat4f
-		operator*(const Mat4f& other)
+		operator*(const Mat4f& other) const
 		{
 			return Mat4f 
 			{

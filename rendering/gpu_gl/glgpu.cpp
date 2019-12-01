@@ -87,6 +87,36 @@ namespace glgpu
 		}
 	}
 
+	int
+	_map(TEXTURE_FORMAT format)
+	{
+		switch (format)
+		{
+		case TEXTURE_FORMAT::RGB:
+			return GL_RGB;
+		case TEXTURE_FORMAT::DEPTH:
+			return GL_DEPTH_COMPONENT;
+		default:
+			assert("undefined format" && false);
+			return -1;
+		}
+	}
+
+	int
+	_map(DATA_TYPE type)
+	{
+		switch (type)
+		{
+		case DATA_TYPE::UBYTE:
+			return GL_UNSIGNED_BYTE;
+		case DATA_TYPE::FLOAT:
+			return GL_FLOAT;
+		default:
+			assert("undefined data type" && false);
+			return -1;
+		}
+	}
+
 	GLuint
 	_shader_obj(std::ifstream& stream, const char* shader_path, SHADER_STAGE shader_stage)
 	{
@@ -256,6 +286,23 @@ namespace glgpu
 	}
 
 	texture
+	texture2d_create(int width, int height, TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		GLuint tex;
+		glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, _map(format), width, height, 0, _map(format), _map(type), NULL);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+
+		return (texture)tex;
+	}
+
+	texture
 	texture2d_create(const char* image_path)
 	{
 		Image img = image_read(image_path);
@@ -321,6 +368,13 @@ namespace glgpu
 	{
 		GLuint t = (GLuint)fb;
 		glDeleteFramebuffers(1, &t);
+	}
+
+	void
+	disable_color_buffer_rw()
+	{
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
 	}
 
 	void

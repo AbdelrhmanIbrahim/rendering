@@ -1,0 +1,6 @@
+#version 330 core
+
+void main()
+{
+	//no need to do anything, as calculating the depth buffer value happens already
+}

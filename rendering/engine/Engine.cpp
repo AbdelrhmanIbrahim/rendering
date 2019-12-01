@@ -6,6 +6,7 @@
 #include "engine/renderers/Phong_Renderer.h"
 #include "engine/renderers/PBR_Renderer.h"
 #include "engine/renderers/Skybox_Renderer.h"
+#include "engine/renderers/Depth_Offline_Renderer.h"
 
 //nope (refactor later --revisit--)
 #include "gpu_gl/glgpu.h"
@@ -16,6 +17,7 @@ namespace rndr
 {
 	struct Engine
 	{
+		Depth_Offline_Renderer depth;
 		Phong_Renderer phong;
 		PBR_Renderer pbr;
 		Skybox_Renderer skybox;
@@ -25,7 +27,11 @@ namespace rndr
 	engine_create()
 	{
 		Engine* self = new Engine;
-		
+
+		self->depth = depth_offline_create();
+		self->phong = phong_create();
+		self->pbr = pbr_create();
+
 		//skybox
 		/*
 		static const char* skybox_paths[6]
@@ -40,18 +46,16 @@ namespace rndr
 		self->skybox = skybox_renderer_create(skybox_paths);
 		*/
 
-		self->phong = phong_create();
-		self->pbr = pbr_create();
-
 		return self;
 	}
 
 	void
 	engine_free(Engine* e)
 	{
-		//skybox_renderer_free(e->skybox);
+		depth_offline_free(e->depth);
 		phong_free(e->phong);
 		pbr_free(e->pbr);
+		//skybox_renderer_free(e->skybox);
 
 		delete e;
 	}
@@ -59,31 +63,43 @@ namespace rndr
 	void
 	engine_world_draw(Engine* e, const World* w)
 	{
-		//enable tests and clear color and depth buffers (refactor later)
-		glgpu::frame_start();
-
 		//pack meshes to draw
 		for (const auto& mesh : w->meshes)
 		{
-			phong_pack(e->phong, &mesh);
-			//pbr_pack(e->pbr, &mesh);
+			depth_offline_pack(e->depth, &mesh);
+			//phong_shadow_pack(e->phong, &mesh);
 		}
 
-		//flush renderers
+		//get shadow map using depth renderer to calc shadows
 		{
-			phong_draw(e->phong, w->cam);
-			//pbr_draw(e->pbr, w->cam);
+			//get shadow map (flush depth offline renderer from light prespective)
+
+			//draw it using quad renderer or print it using stlb to make sure shadow map is fine
 		}
 
-		//unpack meshes
+
+		//render scene normally
 		{
-			phong_unpack(e->phong);
-			//pbr_unpack(e->pbr);
-		}
-	
-		//skybox
-		{
-			//skybox_renderer_draw(e->skybox, w->cam);
+			//enable tests and clear color and depth buffers (refactor later)
+			glgpu::frame_start();
+
+			//flush renderers
+			{
+				//phong_shadow_draw(e->phong_shadow, w->cam, shadow_map);
+				//phong_draw(e->phong, w->cam);
+				//pbr_draw(e->pbr, w->cam);
+			}
+
+			//unpack meshes
+			{
+				//phong_shadow_unpack(e->phong_shadow);
+				//phong_unpack(e->phong);
+				//pbr_unpack(e->pbr);
+			}
+			//skybox
+			{
+				//skybox_renderer_draw(e->skybox, w->cam);
+			}
 		}
 	}
 };

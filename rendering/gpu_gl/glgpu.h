@@ -36,6 +36,18 @@ namespace glgpu
 		DEPTH
 	};
 
+	enum class TEXTURE_FORMAT
+	{
+		RGB,
+		DEPTH
+	};
+	
+	enum class DATA_TYPE
+	{
+		UBYTE,
+		FLOAT
+	};
+
 	void
 	graphics_init();
 
@@ -76,6 +88,9 @@ namespace glgpu
 	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
 
 	texture
+	texture2d_create(int width, int height, TEXTURE_FORMAT format, DATA_TYPE type);
+
+	texture
 	texture2d_create(const char* image_path);
 
 	void
@@ -88,10 +103,19 @@ namespace glgpu
 	framebuffer_create();
 
 	void
+	framebuffer_bind(framebuffer fb);
+
+	void
 	framebuffer_attach(framebuffer fb, texture tex, FRAMEBUFFER_ATTACHMENT attachment);
 
 	void
+	framebuffer_unbind();
+
+	void
 	framebuffer_free(framebuffer fb);
+
+	void
+	disable_color_buffer_rw();
 
 	void
 	frame_start();

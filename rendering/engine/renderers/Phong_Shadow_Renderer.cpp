@@ -24,7 +24,7 @@ namespace rndr
 		self.depth_prog = program_create("../rendering/engine/shaders/depth.vertex", "../rendering/engine/shaders/depth.pixel");
 		self.phong_shadow_prog = program_create("../rendering/engine/shaders/phong_shadow.vertex", "../rendering/engine/shaders/phong_shadow.pixel");
 		self.fb = framebuffer_create();
-		self.depth = texture2d_create(SHADOW_WIDTH, SHADOW_HEIGHT, INTERNAL_TEXTURE_FORMAT::RGBA, TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+		self.depth = texture2d_create(SHADOW_WIDTH, SHADOW_HEIGHT, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8);
 
 		return self;
 	}
@@ -64,7 +64,7 @@ namespace rndr
 			//bind framebuffer (render color buffer to color tex for testing)
 			framebuffer_bind(mr.fb);
 			texture2d_bind(mr.depth, TEXTURE_UNIT::UNIT_0);
-			framebuffer_attach(mr.fb, mr.depth, FRAMEBUFFER_ATTACHMENT::COLOR0);
+			framebuffer_attach(mr.fb, mr.depth, FRAMEBUFFER_ATTACHMENT::DEPTH_STENCIL);
 			//disable_color_buffer_rw();
 
 			//render scene
@@ -87,7 +87,7 @@ namespace rndr
 			{
 				io::Image img{ SHADOW_WIDTH, SHADOW_HEIGHT, 4 };
 				img.data = new unsigned char[SHADOW_WIDTH * SHADOW_HEIGHT * 4];
-				texture2d_unpack(mr.depth, img, TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+				texture2d_unpack(mr.depth, img, TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8);
 
 				/*unsigned int* dep = (unsigned int*)img.data;
 				for (int x = 0; x < 4 * img.width * img.height; x += 4)

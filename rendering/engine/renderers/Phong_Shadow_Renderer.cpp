@@ -55,9 +55,6 @@ namespace rndr
 	{
 		//calc shadow map (depth buffer from light prespective) -- for now we render to color framebuffer color attachment as depth attachment does not work right (TODO)
 		{
-			//clear depth buffer
-			depth_clear();
-
 			//viewport
 			view_port(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
@@ -65,7 +62,10 @@ namespace rndr
 			framebuffer_bind(mr.fb);
 			texture2d_bind(mr.depth, TEXTURE_UNIT::UNIT_0);
 			framebuffer_attach(mr.fb, mr.depth, FRAMEBUFFER_ATTACHMENT::DEPTH_STENCIL);
-			//disable_color_buffer_rw();
+			
+			//clear depth buffer
+			depth_clear();
+			disable_color_buffer_rw();
 
 			//render scene
 			program_use(mr.depth_prog);

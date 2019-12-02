@@ -4,9 +4,4 @@ out vec4 FragColor;
 void main()
 {
 	//no need to do anything, as calculating the depth buffer value happens already
-	//float depth = gl_FragCoord.z * gl_FragCoord.w;
-	//FragColor = vec4(depth, depth, depth, 1.0f);
-
-	//for color offline texture testing for now
-	//FragColor = vec4(1,0,0,1);
 }

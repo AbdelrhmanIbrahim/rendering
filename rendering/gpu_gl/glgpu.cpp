@@ -321,15 +321,6 @@ namespace glgpu
 		return (texture)tex;
 	}
 
-	void
-	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type)
-	{
-		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
-		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
-		/*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glReadPixels(0, 0, image.width,image.height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, image.data);*/
-	}
-
 	texture
 	texture2d_create(const char* image_path)
 	{
@@ -361,6 +352,13 @@ namespace glgpu
 	texture2d_unbind()
 	{
 		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+
+	void
+	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
+		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
 	}
 
 	void

@@ -35,19 +35,28 @@ namespace glgpu
 	{
 		COLOR0,
 		COLOR1,
-		DEPTH
+		DEPTH_STENCIL
 	};
 
 	enum class TEXTURE_FORMAT
 	{
 		RGB,
-		DEPTH
+		RGBA,
+		DEPTH_STENCIL
 	};
 	
+	enum class INTERNAL_TEXTURE_FORMAT
+	{
+		RGB,
+		RGBA,
+		DEPTH_STENCIL
+	};
+
 	enum class DATA_TYPE
 	{
 		UBYTE,
-		FLOAT
+		FLOAT,
+		UINT_24_8
 	};
 
 	void
@@ -90,7 +99,7 @@ namespace glgpu
 	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
 
 	texture
-	texture2d_create(int width, int height, TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_create(int width, int height, INTERNAL_TEXTURE_FORMAT internal_format, TEXTURE_FORMAT format, DATA_TYPE type);
 
 	texture
 	texture2d_create(const char* image_path);

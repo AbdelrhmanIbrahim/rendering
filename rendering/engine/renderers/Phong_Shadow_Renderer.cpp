@@ -24,7 +24,7 @@ namespace rndr
 		self.depth_prog = program_create("../rendering/engine/shaders/depth.vertex", "../rendering/engine/shaders/depth.pixel");
 		self.phong_shadow_prog = program_create("../rendering/engine/shaders/phong_shadow.vertex", "../rendering/engine/shaders/phong_shadow.pixel");
 		self.fb = framebuffer_create();
-		self.depth = texture2d_create(SHADOW_WIDTH, SHADOW_HEIGHT, TEXTURE_FORMAT::RGB, DATA_TYPE::UBYTE);
+		self.depth = texture2d_create(SHADOW_WIDTH, SHADOW_HEIGHT, INTERNAL_TEXTURE_FORMAT::RGBA, TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
 
 		return self;
 	}
@@ -53,11 +53,10 @@ namespace rndr
 	void
 	phong_shadow_draw(const Phong_Shadow_Renderer& mr, const vec3f& light_pos, const world::Camera& viewer)
 	{
-		//calc shadow map (depth buffer from light prespective)
+		//calc shadow map (depth buffer from light prespective) -- for now we render to color framebuffer color attachment as depth attachment does not work right (TODO)
 		{
 			//clear depth buffer
 			depth_clear();
-			program_use(mr.depth_prog);
 
 			//viewport
 			view_port(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -68,6 +67,8 @@ namespace rndr
 			framebuffer_attach(mr.fb, mr.depth, FRAMEBUFFER_ATTACHMENT::COLOR0);
 			//disable_color_buffer_rw();
 
+			//render scene
+			program_use(mr.depth_prog);
 			for (const auto object : mr.meshes)
 			{
 				//MVP
@@ -82,21 +83,24 @@ namespace rndr
 			framebuffer_unbind();
 			texture2d_unbind();
 
-			io::Image img{ SHADOW_WIDTH, SHADOW_HEIGHT, 4};
-			img.data = new unsigned char[SHADOW_WIDTH * SHADOW_HEIGHT * 4];
-			texture2d_unpack(mr.depth, img, TEXTURE_FORMAT::RGB, DATA_TYPE::UBYTE);
-
-			/*for (int x = 0; x < 4 * img.width * img.height; x+=4)
+			//testing the output texture
 			{
-				img.data[x] *= 255.0f;
-				img.data[x+1] *= 255.0f;
-				img.data[x+2] *= 255.0f;
-				img.data[x+3] = 255.0f;
-			}
-			io::image_write(img, "F:/Abdo/rendering_jo/rendering/rendering/IO/shadow_map.jpg", io::FORMAT::JPG);
-			io::image_free(img);*/
-		}
+				io::Image img{ SHADOW_WIDTH, SHADOW_HEIGHT, 4 };
+				img.data = new unsigned char[SHADOW_WIDTH * SHADOW_HEIGHT * 4];
+				texture2d_unpack(mr.depth, img, TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
 
+				/*unsigned int* dep = (unsigned int*)img.data;
+				for (int x = 0; x < 4 * img.width * img.height; x += 4)
+				{
+					if (*dep !=0 && *dep != 4294967040)
+						std::cout << *dep << std::endl;
+					dep++;
+				}*/
+
+				io::image_write(img, "../rendering/IO/shadow_map.jpg", io::FORMAT::JPG);
+				io::image_free(img);
+			}
+		}
 		//now do phong lighting but with the shadow map to calc shadows
 		{
 			//depth_clear();

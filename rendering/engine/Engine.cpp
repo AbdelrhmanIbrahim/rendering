@@ -33,8 +33,8 @@ namespace rndr
 		self->pbr = pbr_create();
 
 		//skybox
-		/*
-		static const char* skybox_paths[6]
+		
+		/*static const char* skybox_paths[6]
 		{
 			"../rendering/res/imgs/skybox/right.jpg",
 			"../rendering/res/imgs/skybox/left.jpg",
@@ -43,8 +43,8 @@ namespace rndr
 			"../rendering/res/imgs/skybox/front.jpg",
 			"../rendering/res/imgs/skybox/back.jpg"
 		};
-		self->skybox = skybox_renderer_create(skybox_paths);
-		*/
+		self->skybox = skybox_renderer_create(skybox_paths);*/
+		
 
 		return self;
 	}
@@ -71,23 +71,23 @@ namespace rndr
 			//pack meshes to draw
 			for (const auto& mesh : w->meshes)
 			{
-				//phong_shadow_pack(e->phong_shadow, &mesh);
+				phong_shadow_pack(e->phong_shadow, &mesh);
 				//phong_pack(e->phong, &mesh);
-				pbr_pack(e->pbr, &mesh);
+				//pbr_pack(e->pbr, &mesh);
 			}
 
 			//flush renderers
 			{
-				//phong_shadow_draw(e->phong_shadow, math::vec3f{0,30,0}, w->cam);
+				phong_shadow_draw(e->phong_shadow, math::vec3f{0,30,0}, w->cam);
 				//phong_draw(e->phong, w->cam);
-				pbr_draw(e->pbr, w->cam);
+				//pbr_draw(e->pbr, w->cam);
 			}
 
 			//unpack meshes
 			{
-				//phong_shadow_unpack(e->phong_shadow);
+				phong_shadow_unpack(e->phong_shadow);
 				//phong_unpack(e->phong);
-				pbr_unpack(e->pbr);
+				//pbr_unpack(e->pbr);
 			}
 			//skybox
 			{

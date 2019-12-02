@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <fstream>
 #include <string>
+#include <iostream>
 
 using namespace io;
 
@@ -77,8 +78,8 @@ namespace glgpu
 			return GL_COLOR_ATTACHMENT0;
 		case FRAMEBUFFER_ATTACHMENT::COLOR1:
 			return GL_COLOR_ATTACHMENT1;
-		case FRAMEBUFFER_ATTACHMENT::DEPTH:
-			return GL_DEPTH_ATTACHMENT;
+		case FRAMEBUFFER_ATTACHMENT::DEPTH_STENCIL:
+			return GL_DEPTH_STENCIL_ATTACHMENT;
 		default:
 			assert("undefined fb attachment" && false);
 			return -1;
@@ -92,8 +93,27 @@ namespace glgpu
 		{
 		case TEXTURE_FORMAT::RGB:
 			return GL_RGB;
-		case TEXTURE_FORMAT::DEPTH:
-			return GL_DEPTH_COMPONENT;
+		case TEXTURE_FORMAT::RGBA:
+			return GL_RGBA;
+		case TEXTURE_FORMAT::DEPTH_STENCIL:
+			return GL_DEPTH_STENCIL;
+		default:
+			assert("undefined format" && false);
+			return -1;
+		}
+	}
+
+	int
+	_map(INTERNAL_TEXTURE_FORMAT format)
+	{
+		switch (format)
+		{
+		case INTERNAL_TEXTURE_FORMAT::RGB:
+			return GL_RGB;
+		case INTERNAL_TEXTURE_FORMAT::RGBA:
+			return GL_RGBA;
+		case INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL:
+			return GL_DEPTH24_STENCIL8;
 		default:
 			assert("undefined format" && false);
 			return -1;
@@ -109,6 +129,8 @@ namespace glgpu
 			return GL_UNSIGNED_BYTE;
 		case DATA_TYPE::FLOAT:
 			return GL_FLOAT;
+		case DATA_TYPE::UINT_24_8:
+			return GL_UNSIGNED_INT_24_8;
 		default:
 			assert("undefined data type" && false);
 			return -1;
@@ -284,20 +306,28 @@ namespace glgpu
 	}
 
 	texture
-	texture2d_create(int width, int height, TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_create(int width, int height, INTERNAL_TEXTURE_FORMAT internal_format, TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		GLuint tex;
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, _map(format), width, height, 0, _map(format), _map(type), NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), width, height, 0, _map(format), _map(type), NULL);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
 		return (texture)tex;
+	}
+
+	void
+	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
+		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
+		/*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glReadPixels(0, 0, image.width,image.height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, image.data);*/
 	}
 
 	texture
@@ -313,7 +343,7 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.data);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 		image_free(img);
 
@@ -331,14 +361,6 @@ namespace glgpu
 	texture2d_unbind()
 	{
 		glBindTexture(GL_TEXTURE_2D, NULL);
-	}
-
-	void
-	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type)
-	{
-		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-		glReadPixels(0, 0, image.width, image.height, _map(format) , _map(type), (void*)image.data);
 	}
 
 	void
@@ -367,6 +389,7 @@ namespace glgpu
 	framebuffer_attach(framebuffer fb, texture tex, FRAMEBUFFER_ATTACHMENT attachment)
 	{
 		glFramebufferTexture2D(GL_FRAMEBUFFER, _map(attachment), GL_TEXTURE_2D, (GLuint)tex, 0);
+		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Error while creating framebuffer");
 	}
 
 	void

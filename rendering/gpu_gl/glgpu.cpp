@@ -300,23 +300,70 @@ namespace glgpu
 	texture
 	cubemap_hdr_create(const io::Image& img)
 	{
-		//GLuint cubemap;
-		//glGenTextures(1, &cubemap);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+		//create hdr texture
+		texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
 
-		////righ, left, top, bottom, front, back
-		//for (int i = 0; i < 6; ++i)
-		//	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, imgs[6].width, imgs[6].height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgs[6].data);
+		//create env cubemap
+		GLuint cube_map;
+		glGenTextures(1, &cube_map);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map);
+		for (unsigned int i = 0; i < 6; ++i)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
+		//float framebuffer to render to 
+		//(HDR is a 32 bit for each channel, actually they do make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
+		GLuint fbo, rbo;
+		glGenFramebuffers(1, &fbo);
+		glGenRenderbuffers(1, &rbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		//return (texture)cubemap;
-		return nullptr;
+		//convert HDR equirectangular environment map to cubemap
+		//create 6 cameras for the 6 views that will be rendered to the cubemap using equarectangular shader
+		/*
+		Mat4f proj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+		glm::mat4 captureViews[] =
+		{
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+		};
+
+		//create equirectangular to cubemap shader prog
+		program prog = program_create("../rendering/engine/shaders/equarectangular_to_cubemap.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel")
+		equirectangularToCubemapShader.use();
+		equirectangularToCubemapShader.setInt("equirectangular_map", 0);
+		equirectangularToCubemapShader.setMat4("projection", captureProjection);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, hdrTexture);
+
+		glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions
+		glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+		for (unsigned int i = 0; i < 6; ++i)
+		{
+			equirectangularToCubemapShader.setMat4("view", captureViews[i]);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubemap, 0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			//the cube must be a unit cube
+			renderCube();
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		program_delete(peog);
+		*/
+		texture_free(hdr);
+
+		return (texture)cube_map;
 	}
 
 	void
@@ -343,23 +390,21 @@ namespace glgpu
 	}
 
 	texture
-	texture2d_create(const char* image_path, IMAGE_FORMAT format)
+	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
 	{
-		Image img = image_read(image_path, format);
-
 		INTERNAL_TEXTURE_FORMAT internal_format;
 		TEXTURE_FORMAT tex_format;
 		DATA_TYPE type;
 		switch (format)
 		{
-		case io::IMAGE_FORMAT::BMP:
-		case io::IMAGE_FORMAT::PNG:
-		case io::IMAGE_FORMAT::JPG:
+		case IMAGE_FORMAT::BMP:
+		case IMAGE_FORMAT::PNG:
+		case IMAGE_FORMAT::JPG:
 			internal_format = INTERNAL_TEXTURE_FORMAT::RGB;
 			tex_format = TEXTURE_FORMAT::RGB;
 			type = DATA_TYPE::UBYTE;
 			break;
-		case io::IMAGE_FORMAT::HDR:
+		case IMAGE_FORMAT::HDR:
 			internal_format = INTERNAL_TEXTURE_FORMAT::RGB16F;
 			tex_format = TEXTURE_FORMAT::RGB;
 			type = DATA_TYPE::FLOAT;
@@ -379,9 +424,17 @@ namespace glgpu
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), img.width, img.height, 0, _map(tex_format), _map(type), img.data);
 		glBindTexture(GL_TEXTURE_2D, NULL);
-		image_free(img);
 
 		return (texture)tex;
+	}
+
+	texture
+	texture2d_create(const char* image_path, IMAGE_FORMAT format)
+	{
+		Image img = image_read(image_path, format);
+		texture tex = texture2d_create(img, format);
+		image_free(img);
+		return tex;
 	}
 
 	void

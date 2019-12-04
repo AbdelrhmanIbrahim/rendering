@@ -226,5 +226,11 @@
     <None Include="engine\shaders\phong_shadow.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
+    <None Include="engine\shaders\equarectangular_to_cubemap.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\equarectangular_to_cubemap.vertex">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

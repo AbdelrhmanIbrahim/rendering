@@ -103,6 +103,9 @@ namespace glgpu
 	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
 
 	texture
+	texture2d_create(const io::Image& img, io::IMAGE_FORMAT format);
+
+	texture
 	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
 
 	texture

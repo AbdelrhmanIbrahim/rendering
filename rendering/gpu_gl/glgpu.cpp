@@ -112,6 +112,8 @@ namespace glgpu
 			return GL_RGB;
 		case INTERNAL_TEXTURE_FORMAT::RGBA:
 			return GL_RGBA;
+		case INTERNAL_TEXTURE_FORMAT::RGB16F:
+			return GL_RGB16F;
 		case INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL:
 			return GL_DEPTH24_STENCIL8;
 		default:
@@ -275,7 +277,7 @@ namespace glgpu
 	}
 
 	texture
-	cubemap_create(const char ** cubemap_paths)
+	cubemap_rgba_create(const io::Image imgs[6])
 	{
 		GLuint cubemap;
 		glGenTextures(1, &cubemap);
@@ -283,11 +285,8 @@ namespace glgpu
 
 		//righ, left, top, bottom, front, back
 		for (int i = 0; i < 6; ++i)
-		{
-			Image img = image_read(cubemap_paths[i]);
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.data);
-			image_free(img);
-		}
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, imgs[i].width, imgs[i].height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgs[i].data);
+
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -296,6 +295,28 @@ namespace glgpu
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
 		return (texture)cubemap;
+	}
+
+	texture
+	cubemap_hdr_create(const io::Image& img)
+	{
+		//GLuint cubemap;
+		//glGenTextures(1, &cubemap);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+
+		////righ, left, top, bottom, front, back
+		//for (int i = 0; i < 6; ++i)
+		//	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, imgs[6].width, imgs[6].height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgs[6].data);
+
+		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
+
+		//return (texture)cubemap;
+		return nullptr;
 	}
 
 	void
@@ -322,9 +343,31 @@ namespace glgpu
 	}
 
 	texture
-	texture2d_create(const char* image_path)
+	texture2d_create(const char* image_path, IMAGE_FORMAT format)
 	{
-		Image img = image_read(image_path);
+		Image img = image_read(image_path, format);
+
+		INTERNAL_TEXTURE_FORMAT internal_format;
+		TEXTURE_FORMAT tex_format;
+		DATA_TYPE type;
+		switch (format)
+		{
+		case io::IMAGE_FORMAT::BMP:
+		case io::IMAGE_FORMAT::PNG:
+		case io::IMAGE_FORMAT::JPG:
+			internal_format = INTERNAL_TEXTURE_FORMAT::RGB;
+			tex_format = TEXTURE_FORMAT::RGB;
+			type = DATA_TYPE::UBYTE;
+			break;
+		case io::IMAGE_FORMAT::HDR:
+			internal_format = INTERNAL_TEXTURE_FORMAT::RGB16F;
+			tex_format = TEXTURE_FORMAT::RGB;
+			type = DATA_TYPE::FLOAT;
+			break;
+		default:
+			assert("unsuported image format" && false);
+			break;
+		}
 
 		GLuint tex;
 		glGenTextures(1, &tex);
@@ -334,7 +377,7 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.data);
+		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), img.width, img.height, 0, _map(tex_format), _map(type), img.data);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 		image_free(img);
 

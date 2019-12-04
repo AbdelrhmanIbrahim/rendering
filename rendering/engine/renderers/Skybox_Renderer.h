@@ -5,6 +5,8 @@
 #include "world/3Dobject.h"
 #include "world/Camera.h"
 
+#include "IO/Image.h"
+
 namespace rndr
 {
 	struct Skybox_Renderer
@@ -16,7 +18,10 @@ namespace rndr
 	};
 
 	Skybox_Renderer
-	skybox_renderer_create(const char** skybox_paths);
+	skybox_renderer_rgba_create(const char** skybox_imgs_paths, io::IMAGE_FORMAT format);
+
+	Skybox_Renderer
+	skybox_renderer_hdr_create(const char* skybox_hdr_path);
 
 	void
 	skybox_renderer_free(const Skybox_Renderer& sbr);

@@ -26,12 +26,19 @@ namespace io
 		}
 	};
 
+	struct Vertex_Data
+	{
+		vec3f normal;
+		unsigned int faces_count;
+		unsigned int vertex_index;
+	};
+
 	Indexed_Triangles
 	stl_binary_read(const char * stl_path)
 	{
 		Indexed_Triangles self{};
 		ifstream file(stl_path, ios::binary);
-		unordered_map<vec3f, unsigned int, Point_Hash> unique_points_table;
+		unordered_map<vec3f, Vertex_Data, Point_Hash> unique_points_table;
 
 		auto read_point = [](ifstream& file) -> vec3f
 		{
@@ -50,14 +57,19 @@ namespace io
 			auto itr = unique_points_table.find(point);
 			if (itr == unique_points_table.end())
 			{
-				//revisit --wrong vertices normals--
-				self.vertices.push_back(geo::Vertex{ point, normal, vec2f{} });
-				unique_points_table.insert(std::make_pair(point, self.vertices.size() - 1));
+				self.vertices.push_back(geo::Vertex{ point, vec3f{}, vec2f{} });
+				Vertex_Data data{};
+				data.normal += normal;
+				data.faces_count++;
+				data.vertex_index = self.vertices.size() - 1;
+				unique_points_table.insert(std::make_pair(point, data));
 				self.indices.push_back(self.vertices.size() - 1);
 			}
 			else
 			{
-				self.indices.push_back(itr->second);
+				itr->second.normal += normal;
+				itr->second.faces_count++;
+				self.indices.push_back(itr->second.vertex_index);
 			}
 		};
 
@@ -68,9 +80,11 @@ namespace io
 			char count[4];
 			file.read(header, header_size);
 			file.read(count, 4);
+
 			unsigned int tris_count = *(unsigned int*)count;
 			self.vertices.reserve(3 * tris_count);
 			self.indices.reserve(2 * tris_count);
+			unique_points_table.reserve(self.vertices.size());
 
 			for (unsigned int i = 0; i < tris_count; ++i)
 			{
@@ -84,6 +98,13 @@ namespace io
 		}
 		else
 			assert("can't read stl");
+
+		//calc weighted vertex normal
+		for (auto& vertex : self.vertices)
+		{
+			auto data = unique_points_table[vertex.pos];
+			vertex.normal = data.normal / data.faces_count;
+		}
 
 		return self;
 	}

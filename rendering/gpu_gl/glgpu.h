@@ -6,9 +6,9 @@
 
 #include "IO/Image.h"
 
-#include <cstddef>
-
 #include "Defs.h"
+
+#include <cstddef>
 
 namespace glgpu
 {
@@ -49,6 +49,7 @@ namespace glgpu
 	{
 		RGB,
 		RGBA,
+		RGB16F,
 		DEPTH_STENCIL
 	};
 
@@ -93,16 +94,19 @@ namespace glgpu
 	vao_delete(vao va);
 
 	texture
-	cubemap_create(const char** cubemap_paths);
+	cubemap_rgba_create(const io::Image imgs[6]);
+
+	texture
+	cubemap_hdr_create(const io::Image& img);
 
 	void
 	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
 
 	texture
-	texture2d_create(int width, int height, INTERNAL_TEXTURE_FORMAT internal_format, TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
 
 	texture
-	texture2d_create(const char* image_path);
+	texture2d_create(int width, int height, INTERNAL_TEXTURE_FORMAT internal_format, TEXTURE_FORMAT format, DATA_TYPE type);
 
 	void
 	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);

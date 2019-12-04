@@ -9,27 +9,44 @@
 namespace io
 {
 	Image
-	image_read(const char* path)
+	image_read(const char* path, IMAGE_FORMAT format)
 	{
 		Image self{};
-		self.data = stbi_load(path, &self.width, &self.height, &self.channels, 0);
+
+		switch (format)
+		{
+		case IMAGE_FORMAT::BMP:
+		case IMAGE_FORMAT::PNG:
+		case IMAGE_FORMAT::JPG:
+			self.data = stbi_load(path, &self.width, &self.height, &self.channels, 0);
+			break;
+		case IMAGE_FORMAT::HDR:
+			stbi_set_flip_vertically_on_load(true);
+			self.data = stbi_loadf(path, &self.width, &self.height, &self.channels, 0);
+			break;
+		default:
+			break;
+		}
 		return self;
 	}
 
 	void
-	image_write(const Image& img, const char* path, FORMAT format)
+	image_write(const Image& img, const char* path, IMAGE_FORMAT format)
 	{
 		stbi_flip_vertically_on_write(true);
 		switch (format)
 		{
-		case io::FORMAT::BMP:
+		case IMAGE_FORMAT::BMP:
 			stbi_write_bmp(path, img.width, img.height, img.channels, img.data);
 			break;
-		case io::FORMAT::PNG:
+		case IMAGE_FORMAT::PNG:
 			stbi_write_png(path, img.width, img.height, img.channels, img.data, img.width * img.channels);
 			break;
-		case io::FORMAT::JPG:
+		case IMAGE_FORMAT::JPG:
 			stbi_write_jpg(path, img.width, img.height, 4, img.data, 100);
+			break;
+		case IMAGE_FORMAT::HDR:
+			stbi_write_hdr(path, img.width, img.height, 4, (float*)img.data);
 			break;
 		default:
 			assert("unsupported image format" && false);

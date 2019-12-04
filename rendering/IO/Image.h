@@ -5,21 +5,22 @@ namespace io
 	struct Image
 	{
 		int width, height, channels;
-		unsigned char* data;
+		void* data;
 	};
 
-	enum class FORMAT
+	enum class IMAGE_FORMAT
 	{
 		BMP,
 		PNG,
-		JPG
+		JPG,
+		HDR
 	};
 
 	Image
-	image_read(const char* path);
+	image_read(const char* path, IMAGE_FORMAT format);
 
 	void
-	image_write(const Image& img, const char* path, FORMAT format);
+	image_write(const Image& img, const char* path, IMAGE_FORMAT format);
 
 	void
 	image_free(Image& img);

@@ -8,6 +8,8 @@
 #include "engine/renderers/Skybox_Renderer.h"
 #include "engine/renderers/Phong_Shadow_Renderer.h"
 
+#include "IO/Image.h"
+
 //nope (refactor later --revisit--)
 #include "gpu_gl/glgpu.h"
 
@@ -33,8 +35,7 @@ namespace rndr
 		self->pbr = pbr_create();
 
 		//skybox
-		
-		/*static const char* skybox_paths[6]
+		static const char* skybox_paths[6]
 		{
 			"../rendering/res/imgs/skybox/right.jpg",
 			"../rendering/res/imgs/skybox/left.jpg",
@@ -43,8 +44,7 @@ namespace rndr
 			"../rendering/res/imgs/skybox/front.jpg",
 			"../rendering/res/imgs/skybox/back.jpg"
 		};
-		self->skybox = skybox_renderer_create(skybox_paths);*/
-		
+		self->skybox = skybox_renderer_rgba_create(skybox_paths, io::IMAGE_FORMAT::JPG);
 
 		return self;
 	}
@@ -91,7 +91,7 @@ namespace rndr
 			}
 			//skybox
 			{
-				//skybox_renderer_draw(e->skybox, w->cam);
+				skybox_renderer_draw(e->skybox, w->cam);
 			}
 		}
 	}

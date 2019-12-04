@@ -88,15 +88,7 @@ namespace rndr
 				/*io::Image img{ SHADOW_WIDTH, SHADOW_HEIGHT, 4 };
 				img.data = new unsigned char[SHADOW_WIDTH * SHADOW_HEIGHT * 4];
 				texture2d_unpack(mr.depth, img, TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8);
-
-				unsigned int* dep = (unsigned int*)img.data;
-				for (int x = 0; x < 4 * img.width * img.height; x += 4)
-				{
-					if (*dep !=0 && *dep != 4294967040)
-						std::cout << *dep << std::endl;
-					dep++;
-				}
-				io::image_write(img, "../rendering/IO/shadow_map.jpg", io::FORMAT::JPG);
+				io::image_write(img, "../rendering/IO/shadow_map.jpg", io::IMAGE_FORMAT::JPG);
 				io::image_free(img);*/
 			}
 		}

@@ -9,6 +9,7 @@ using namespace glgpu;
 using namespace math;
 using namespace world;
 using namespace geo;
+using namespace io;
 
 namespace rndr
 {
@@ -57,16 +58,43 @@ namespace rndr
 		Vertex{ 1.0f, -1.0f,  1.0f}
 	};
 
-	Skybox_Renderer
-	skybox_renderer_create(const char** skybox_paths)
+	void
+	skybox_init(Skybox_Renderer& self)
 	{
-		Skybox_Renderer self{};
-
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../rendering/engine/shaders/skybox.vertex", "../rendering/engine/shaders/skybox.pixel");
 		self.cube = vao_create();
 		self.cube_vs = vertex_buffer_create(skybox, 36);
-		self.cubemap = cubemap_create(skybox_paths);
+	}
+
+	Skybox_Renderer
+	skybox_renderer_rgba_create(const char** skybox_paths, io::IMAGE_FORMAT format)
+	{
+		Skybox_Renderer self{};
+		skybox_init(self);
+
+		//load skybox faces
+		io::Image imgs[6];
+		for (int i = 0; i < 6; ++i)
+			imgs[i] = image_read(skybox_paths[i], format);
+		self.cubemap = cubemap_rgba_create(imgs);
+		for (int i = 0; i < 6; ++i)
+			image_free(imgs[i]);
+
+		return self;
+	}
+
+	Skybox_Renderer
+	skybox_renderer_hdr_create(const char* skybox_hdr_path)
+	{
+		Skybox_Renderer self{};
+		skybox_init(self);
+
+		//load skybox hdr
+		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
+		self.cubemap = cubemap_hdr_create(img);
+		image_free(img);
+
 		return self;
 	}
 

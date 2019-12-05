@@ -36,7 +36,7 @@ namespace rndr
 		//self->skybox = skybox_renderer_hdr_create("../rendering/res/imgs/hdr/apartment.hdr");
 
 		//skybox
-		/*static const char* skybox_paths[6]
+		static const char* skybox_paths[6]
 		{
 			"../rendering/res/imgs/skybox/right.jpg",
 			"../rendering/res/imgs/skybox/left.jpg",
@@ -45,7 +45,7 @@ namespace rndr
 			"../rendering/res/imgs/skybox/front.jpg",
 			"../rendering/res/imgs/skybox/back.jpg"
 		};
-		self->skybox = skybox_renderer_rgba_create(skybox_paths, io::IMAGE_FORMAT::JPG);*/
+		self->skybox = skybox_renderer_rgba_create(skybox_paths, io::IMAGE_FORMAT::JPG);
 
 
 		return self;

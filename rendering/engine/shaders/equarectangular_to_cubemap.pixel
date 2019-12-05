@@ -1,10 +1,11 @@
 #version 330 core
-out vec4 FragColor;
-in vec3 WorldPos;
+
+in vec3 world_pos;
+out vec4 frag_color;
 
 uniform sampler2D equirectangular_map;
 
-// this is just vec2(1/2*PI , 1/PI) to convert from radian pitch and yaw of the spherical coord to equirectangular_map uv coord
+//this is just vec2(1/2*PI , 1/PI) to convert from radian pitch and yaw of the spherical coord to equirectangular_map uv coord
 //(think of the equirectangular_map as a projected sphere onto a plane, read about geographic projection)
 const vec2 map = vec2(0.1591, 0.3183);
 
@@ -22,5 +23,5 @@ void main()
 {
 	vec2 uv = sample_spherical_map(normalize(world_pos));
 	vec3 color = texture(equirectangular_map, uv).rgb;
-	FragColor = vec4(color, 1.0);
+	frag_color = vec4(color, 1.0);
 }

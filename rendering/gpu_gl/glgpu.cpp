@@ -331,7 +331,7 @@ namespace glgpu
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
 		/*Mat4f proj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-		glm::mat4 captureViews[] =
+		Mat
 		{
 			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
 			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
@@ -362,9 +362,9 @@ namespace glgpu
 			renderCube();
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		program_delete(peog);
 		*/
 
+		//delete fbo, rbo, prog -revisit-
 		texture_free(hdr);
 		error();
 

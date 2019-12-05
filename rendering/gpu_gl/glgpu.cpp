@@ -310,25 +310,27 @@ namespace glgpu
 		texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
 
 		//create env cubemap
-		//(HDR is a 32 bit for each channel, they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
+		//(HDR should a 32 bit for each channel to cover a wide range of colors,
+		//they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
 		GLuint cube_map;
+		vec2f view_size{ 800, 800 };
 		glGenTextures(1, &cube_map);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map);
 		for (unsigned int i = 0; i < 6; ++i)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, view_size[0], view_size[1], 0, GL_RGB, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		//float framebuffer to render to 
+		//float framebuffer to render to
 		GLuint fbo, rbo;
 		glGenFramebuffers(1, &fbo);
 		glGenRenderbuffers(1, &rbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, view_size[0], view_size[1]);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//convert HDR equirectangular environment map to cubemap
@@ -344,64 +346,61 @@ namespace glgpu
 			view_lookat_matrix(vec3f{0.0f,  0.0f, -1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
-
-		//render offline to the fb and attach each of the cubemap face texture then render from each angle of the six
+		//render the unit cube offline to the fb and attach each of the cubemap face texture then render from each angle of the six
 		constexpr static Vertex unit_cube[36] =
 		{
-			Vertex{-1.0f,  1.0f, -1.0f},
 			Vertex{-1.0f, -1.0f, -1.0f},
-			Vertex{ 1.0f, -1.0f, -1.0f},
-			Vertex{ 1.0f, -1.0f, -1.0f},
-			Vertex{ 1.0f,  1.0f, -1.0f},
-			Vertex{-1.0f,  1.0f, -1.0f},
-
-			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{1.0f, 1.0f, -1.0f},
+			Vertex{1.0f, -1.0f, -1.0f},
+			Vertex{1.0f, 1.0f, -1.0f},
 			Vertex{-1.0f, -1.0f, -1.0f},
-			Vertex{-1.0f,  1.0f, -1.0f},
-			Vertex{-1.0f,  1.0f, -1.0f},
-			Vertex{-1.0f,  1.0f,  1.0f},
-			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{-1.0f, 1.0f, -1.0},
 
-			Vertex{ 1.0f, -1.0f, -1.0f},
-			Vertex{ 1.0f, -1.0f,  1.0f},
-			Vertex{ 1.0f,  1.0f,  1.0f},
-			Vertex{ 1.0f,  1.0f,  1.0f},
-			Vertex{ 1.0f,  1.0f, -1.0f},
-			Vertex{ 1.0f, -1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f, 1.0},
+			Vertex{1.0f, -1.0f, 1.0f},
+			Vertex{1.0f, 1.0f, 1.0f,},
+			Vertex{1.0f, 1.0f, 1.0f,},
+			Vertex{-1.0f, 1.0f, 1.0f},
+			Vertex{-1.0f, -1.0f, 1.0},
 
-			Vertex{-1.0f, -1.0f,  1.0f},
-			Vertex{-1.0f,  1.0f,  1.0f},
-			Vertex{ 1.0f,  1.0f,  1.0f},
-			Vertex{ 1.0f,  1.0f,  1.0f},
-			Vertex{ 1.0f, -1.0f,  1.0f},
-			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{-1.0f, 1.0f, 1.0f},
+			Vertex{-1.0f, 1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f, 1.0},
+			Vertex{-1.0f, 1.0f, 1.0f},
 
-			Vertex{-1.0f,  1.0f, -1.0f},
-			Vertex{ 1.0f,  1.0f, -1.0f},
-			Vertex{ 1.0f,  1.0f,  1.0f},
-			Vertex{ 1.0f,  1.0f,  1.0f},
-			Vertex{-1.0f,  1.0f,  1.0f},
-			Vertex{-1.0f,  1.0f, -1.0f},
+			Vertex{1.0f, 1.0f, 1.0f,},
+			Vertex{1.0f, -1.0f, -1.0},
+			Vertex{1.0f, 1.0f, -1.0f},
+			Vertex{1.0f, -1.0f, -1.0f},
+			Vertex{1.0f, 1.0f, 1.0f,},
+			Vertex{1.0f, -1.0f, 1.0f},
 
 			Vertex{-1.0f, -1.0f, -1.0f},
-			Vertex{-1.0f, -1.0f,  1.0f},
-			Vertex{ 1.0f, -1.0f, -1.0f},
-			Vertex{ 1.0f, -1.0f, -1.0f},
-			Vertex{-1.0f, -1.0f,  1.0f},
-			Vertex{ 1.0f, -1.0f,  1.0f}
+			Vertex{1.0f, -1.0f, -1.0f},
+			Vertex{1.0f, -1.0f, 1.0f},
+			Vertex{1.0f, -1.0f, 1.0f},
+			Vertex{-1.0f, -1.0f, 1.0f},
+			Vertex{-1.0f, -1.0f, -1.0f},
+
+			Vertex{-1.0f, 1.0f, -1.0f},
+			Vertex{1.0f, 1.0f, 1.0f,},
+			Vertex{1.0f, 1.0f, -1.0f},
+			Vertex{1.0f, 1.0f, 1.0f,},
+			Vertex{-1.0f, 1.0f, -1.0f},
+			Vertex{-1.0f, 1.0f, 1.0f}
 		};
 
-		glViewport(0, 0, 512, 512); 
+		glViewport(0, 0, view_size[0], view_size[1]);
 		vao cube_vao = vao_create();
 		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
 		program prog = program_create("../rendering/engine/shaders/equarectangular_to_cubemap.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
-
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 			for (unsigned int i = 0; i < 6; ++i)
 			{
-				//render unit cube
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map, 0);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				uniformmat4f_set(prog, "vp", proj * views[i]);

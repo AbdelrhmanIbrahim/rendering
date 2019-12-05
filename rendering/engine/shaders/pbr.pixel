@@ -11,7 +11,7 @@ uniform float rough;
 in vec3 frag_pos_world;
 in vec3 normal_world;
 
-out vec4 FragColor;
+out vec4 frag_color;
 
 const float PI = 3.14159265359f;
 
@@ -127,5 +127,5 @@ void main()
 	float ao = 1.0f;
     vec3 ambient = vec3(0.1) * object_color_albedo * ao;
     vec3 color = ambient + Lo;
-    FragColor = vec4(color, 1.0);
+    frag_color = vec4(color, 1.0);
 }

@@ -8,8 +8,11 @@
 
 #include <math/Matrix.h>
 
+#include <math/Gfx.h>
+
 using namespace io;
 using namespace math;
+using namespace geo;
 
 namespace glgpu
 {
@@ -307,6 +310,7 @@ namespace glgpu
 		texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
 
 		//create env cubemap
+		//(HDR is a 32 bit for each channel, they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
 		GLuint cube_map;
 		glGenTextures(1, &cube_map);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map);
@@ -319,7 +323,6 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		//float framebuffer to render to 
-		//(HDR is a 32 bit for each channel, actually they do make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
 		GLuint fbo, rbo;
 		glGenFramebuffers(1, &fbo);
 		glGenRenderbuffers(1, &rbo);
@@ -330,43 +333,91 @@ namespace glgpu
 
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
-		/*Mat4f proj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-		Mat
+		Mat4f proj = proj_matrix(1000, 0.1, 1, -1, 1, -1, tan(0.785398185f));
+		Mat4f views[6] =
 		{
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+			view_lookat_matrix(vec3f{1.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{-1.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,-1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  1.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
+			view_lookat_matrix(vec3f{0.0f, -1.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
-		
-		//create equirectangular to cubemap shader prog
-		program prog = program_create("../rendering/engine/shaders/equarectangular_to_cubemap.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel")
-		equirectangularToCubemapShader.use();
-		equirectangularToCubemapShader.setInt("equirectangular_map", 0);
-		equirectangularToCubemapShader.setMat4("projection", captureProjection);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, hdrTexture);
 
-		glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions
-		glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-		for (unsigned int i = 0; i < 6; ++i)
+		//render offline to the fb and attach each of the cubemap face texture then render from each angle of the six
+		constexpr static Vertex unit_cube[36] =
 		{
-			equirectangularToCubemapShader.setMat4("view", captureViews[i]);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubemap, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			Vertex{-1.0f,  1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f, -1.0f},
+			Vertex{ 1.0f, -1.0f, -1.0f},
+			Vertex{ 1.0f, -1.0f, -1.0f},
+			Vertex{ 1.0f,  1.0f, -1.0f},
+			Vertex{-1.0f,  1.0f, -1.0f},
 
-			//the cube must be a unit cube
-			renderCube();
-		}
+			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{-1.0f, -1.0f, -1.0f},
+			Vertex{-1.0f,  1.0f, -1.0f},
+			Vertex{-1.0f,  1.0f, -1.0f},
+			Vertex{-1.0f,  1.0f,  1.0f},
+			Vertex{-1.0f, -1.0f,  1.0f},
+
+			Vertex{ 1.0f, -1.0f, -1.0f},
+			Vertex{ 1.0f, -1.0f,  1.0f},
+			Vertex{ 1.0f,  1.0f,  1.0f},
+			Vertex{ 1.0f,  1.0f,  1.0f},
+			Vertex{ 1.0f,  1.0f, -1.0f},
+			Vertex{ 1.0f, -1.0f, -1.0f},
+
+			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{-1.0f,  1.0f,  1.0f},
+			Vertex{ 1.0f,  1.0f,  1.0f},
+			Vertex{ 1.0f,  1.0f,  1.0f},
+			Vertex{ 1.0f, -1.0f,  1.0f},
+			Vertex{-1.0f, -1.0f,  1.0f},
+
+			Vertex{-1.0f,  1.0f, -1.0f},
+			Vertex{ 1.0f,  1.0f, -1.0f},
+			Vertex{ 1.0f,  1.0f,  1.0f},
+			Vertex{ 1.0f,  1.0f,  1.0f},
+			Vertex{-1.0f,  1.0f,  1.0f},
+			Vertex{-1.0f,  1.0f, -1.0f},
+
+			Vertex{-1.0f, -1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{ 1.0f, -1.0f, -1.0f},
+			Vertex{ 1.0f, -1.0f, -1.0f},
+			Vertex{-1.0f, -1.0f,  1.0f},
+			Vertex{ 1.0f, -1.0f,  1.0f}
+		};
+
+		glViewport(0, 0, 512, 512); 
+		vao cube_vao = vao_create();
+		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
+		program prog = program_create("../rendering/engine/shaders/equarectangular_to_cubemap.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel");
+		program_use(prog);
+		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+			for (unsigned int i = 0; i < 6; ++i)
+			{
+				//render unit cube
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map, 0);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				uniformmat4f_set(prog, "vp", proj * views[i]);
+				vao_bind(cube_vao, cube_vs, NULL);
+				draw_strip(36);
+				vao_unbind();
+			}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		*/
 
-		//delete fbo, rbo, prog -revisit-
+		//free
+		glDeleteRenderbuffers(1, &rbo);
+		glDeleteFramebuffers(1, &fbo);
+		vao_delete(cube_vao);
+		buffer_delete(cube_vs);
+		program_delete(prog);
 		texture_free(hdr);
-		error();
 
 		return (texture)cube_map;
 	}
@@ -422,8 +473,8 @@ namespace glgpu
 		GLuint tex;
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

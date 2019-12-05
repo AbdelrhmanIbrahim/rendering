@@ -1,7 +1,6 @@
 #pragma once
 
 #include "math/Vector.h"
-#include "math/Gfx.h"
 
 #include <math.h>
 
@@ -46,9 +45,9 @@ namespace math
 		{
 			return vec3f
 			{
-				math::dot(math::vec4f{data[0][0], data[1][0], data[2][0], data[3][0]}, other),
-				math::dot(math::vec4f{data[0][1], data[1][1], data[2][1], data[3][1]}, other),
-				math::dot(math::vec4f{data[0][2], data[1][2], data[2][2], data[3][2]}, other)
+				data[0][0] * other[0] + data[1][0] * other[1] + data[2][0] * other[2] + data[3][0] * other[3],
+				data[0][1] * other[0] + data[1][1] * other[1] + data[2][1] * other[2] + data[3][1] * other[3],
+				data[0][2] * other[0] + data[1][2] * other[1] + data[2][2] * other[2] + data[3][2] * other[3]
 			};
 		}
 	};

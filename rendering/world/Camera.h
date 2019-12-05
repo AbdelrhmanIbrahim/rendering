@@ -56,28 +56,23 @@ namespace world
 	inline math::Mat4f
 	camera_view_matrix(const Camera& self)
 	{
-		math::Mat4f view{};
-		view[0] = math::vec4f{ self.right[0], self.up[0], -self.fwd[0], 0 };
-		view[1] = math::vec4f{ self.right[1], self.up[1], -self.fwd[1], 0 };
-		view[2] = math::vec4f{ self.right[2], self.up[2], -self.fwd[2], 0 };
-		view[3] = math::vec4f{ -dot(self.pos, self.right), -dot(self.pos, self.up), dot(self.pos, self.fwd), 1 };
+		return math::view_matrix(self.fwd, self.right, self.up, self.pos);
+	}
 
-		return view;
+	inline math::Mat4f
+	camera_lookat(Camera& self, const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
+	{
+		self.pos = eye;
+		self.fwd = math::normalize(target - eye);
+		self.right = math::normalize(math::cross(self.fwd, up));
+		self.up = math::normalize(math::cross(self.right, self.fwd));
+		return math::view_matrix(self.fwd, self.right, self.up, self.pos);
 	}
 
 	inline math::Mat4f
 	camera_proj_matrix(const Camera& self)
 	{
-		math::Mat4f proj{};
-		float distance = self.f - self.n;
-		float aspect_ratio = (self.r - self.l) / (self.t - self.b);
-		proj[0][0] = 1.0f / (aspect_ratio * self.fov_tan);
-		proj[1][1] = 1.0f / self.fov_tan;
-		proj[2][2] = -(self.n + self.f) / distance;
-		proj[2][3] = -1.0f;
-		proj[3][2] = -2.0f*self.f*self.n / distance;
-
-		return proj;
+		return math::proj_matrix(self.f, self.n, self.r, self.l, self.t, self.b, self.fov_tan);
 	}
 
 	inline math::Mat4f

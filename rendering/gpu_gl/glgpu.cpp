@@ -6,7 +6,10 @@
 #include <string>
 #include <iostream>
 
+#include <math/Matrix.h>
+
 using namespace io;
+using namespace math;
 
 namespace glgpu
 {
@@ -326,9 +329,8 @@ namespace glgpu
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//convert HDR equirectangular environment map to cubemap
-		//create 6 cameras for the 6 views that will be rendered to the cubemap using equarectangular shader
-		/*
-		Mat4f proj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+		//create 6 views that will be rendered to the cubemap using equarectangular shader
+		/*Mat4f proj = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 		glm::mat4 captureViews[] =
 		{
 			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
@@ -339,6 +341,7 @@ namespace glgpu
 			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 		};
 
+		
 		//create equirectangular to cubemap shader prog
 		program prog = program_create("../rendering/engine/shaders/equarectangular_to_cubemap.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel")
 		equirectangularToCubemapShader.use();
@@ -361,7 +364,9 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		program_delete(peog);
 		*/
+
 		texture_free(hdr);
+		error();
 
 		return (texture)cube_map;
 	}

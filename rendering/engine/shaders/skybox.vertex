@@ -14,8 +14,7 @@ void main()
 	uvs = pos;
 
 	//remove translation
-	mat3 view3 = mat3(view);
-	mat4 view4 = mat4(view3);
-	vec4 pos = proj * view4 * vec4(pos, 1.0);
+	mat4 rot = mat4(mat3(view));
+	vec4 pos = proj * rot * vec4(pos, 1.0);
 	gl_Position = pos.xyww;
 }

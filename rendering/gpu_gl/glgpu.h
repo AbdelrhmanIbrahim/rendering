@@ -99,6 +99,9 @@ namespace glgpu
 	texture
 	cubemap_hdr_create(const io::Image& img);
 
+	texture
+	cubemap_convolute(texture cubemap, const char* convolution_shader);
+
 	void
 	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
 

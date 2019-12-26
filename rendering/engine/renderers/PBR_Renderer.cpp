@@ -17,13 +17,17 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../rendering/engine/shaders/pbr.vertex", "../rendering/engine/shaders/pbr.pixel");
 
+		//no irriadiance
+		io::Image img = image_read("../rendering/res/imgs/hdr/Alexs_Apt_Env.hdr", io::IMAGE_FORMAT::HDR);
+		self.irradiance = cubemap_hdr_create(img);
+
 		//create irriadiance map
-		io::Image img = image_read("../rendering/res/imgs/hdr/apartment.hdr", io::IMAGE_FORMAT::HDR);
+		/*io::Image img = image_read("../rendering/res/imgs/hdr/Alexs_Apt.hdr", io::IMAGE_FORMAT::HDR);
 		texture env = cubemap_hdr_create(img);
 		self.irradiance = cubemap_postprocess(env, "../rendering/engine/shaders/irradiance_convolution.pixel");
+		texture_free(env);*/
 
 		//free
-		texture_free(env);
 		image_free(img);
 
 		return self;
@@ -74,7 +78,7 @@ namespace rndr
 			uniformmat4f_set(mr.prog, "mvp", mvp);
 			uniformmat4f_set(mr.prog, "model", model);
 			uniform3f_set(mr.prog, "object_color_albedo", vec3f{ 0.75f, 0.75f, 0.75f});
-			uniform1f_set(mr.prog, "metallic", 1.0);
+			uniform1f_set(mr.prog, "metallic", 0.7);
 			uniform1f_set(mr.prog, "rough", 0.4);
 
 			//draw geometry

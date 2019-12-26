@@ -17,6 +17,15 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../rendering/engine/shaders/pbr.vertex", "../rendering/engine/shaders/pbr.pixel");
 
+		//create irriadiance map
+		io::Image img = image_read("../rendering/res/imgs/hdr/apartment.hdr", io::IMAGE_FORMAT::HDR);
+		texture env = cubemap_hdr_create(img);
+		self.irradiance = cubemap_postprocess(env, "../rendering/engine/shaders/irradiance_convolution.pixel");
+
+		//free
+		texture_free(env);
+		image_free(img);
+
 		return self;
 	}
 
@@ -24,6 +33,7 @@ namespace rndr
 	pbr_free(PBR_Renderer & mr)
 	{
 		program_delete(mr.prog);
+		texture_free(mr.irradiance);
 	}
 	
 	void
@@ -52,6 +62,8 @@ namespace rndr
 		uniform3f_set(mr.prog, "camera_pos_world", cam.pos);
 		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
 		uniform3f_set(mr.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
+		cubemap_bind(mr.irradiance, TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(mr.prog, "irradiance_map", TEXTURE_UNIT::UNIT_0);
 
 		for (const auto object : mr.meshes)
 		{

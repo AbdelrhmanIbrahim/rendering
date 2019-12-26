@@ -422,10 +422,10 @@ namespace glgpu
 	}
 
 	texture
-	cubemap_convolute(texture cubemap, const char* convolution_shader)
+	cubemap_postprocess(texture cubemap, const char* pixel_shader)
 	{
-		GLuint conv_cubemap;
-		
+		GLuint cubemap_pp;
+
 		Mat4f proj = proj_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
 		Mat4f views[6] =
 		{
@@ -438,8 +438,8 @@ namespace glgpu
 		};
 
 		vec2f view_size{ 512, 512 };
-		glGenTextures(1, &conv_cubemap);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, conv_cubemap);
+		glGenTextures(1, &cubemap_pp);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_pp);
 		for (unsigned int i = 0; i < 6; ++i)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, view_size[0], view_size[1], 0, GL_RGB, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -468,15 +468,14 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, conv_cubemap, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubemap_pp, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			vao_bind(cube_vao, cube_vs, NULL);
 			draw_strip(36);
 			vao_unbind();
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free
 		glDeleteRenderbuffers(1, &rbo);
@@ -485,7 +484,7 @@ namespace glgpu
 		buffer_delete(cube_vs);
 		program_delete(prog);
 
-		return (texture)conv_cubemap;
+		return (texture)cubemap_pp;
 	}
 
 	void

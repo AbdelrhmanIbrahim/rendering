@@ -92,12 +92,12 @@ namespace rndr
 
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
-		//self.cubemap = cubemap_hdr_create(img);
+		self.cubemap = cubemap_hdr_create(img);
 
 		//get irridiance map
-		texture env = cubemap_hdr_create(img);
-		self.cubemap = cubemap_convolute(env, "../rendering/engine/shaders/irradiance_convolution.pixel");
-		texture_free(env);
+		//texture env = cubemap_hdr_create(img);
+		//self.cubemap = cubemap_postprocess(env, "../rendering/engine/shaders/irradiance_convolution.pixel");
+		//texture_free(env);
 
 		image_free(img);
 

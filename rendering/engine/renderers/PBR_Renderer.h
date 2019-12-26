@@ -13,6 +13,7 @@ namespace rndr
 	struct PBR_Renderer
 	{
 		glgpu::program prog;
+		glgpu::texture irradiance;
 		std::vector<const world::object3D*> meshes;
 	};
 

@@ -360,12 +360,12 @@ namespace glgpu
 		Mat4f proj = proj_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{1.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{-1.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,-1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  1.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
-			view_lookat_matrix(vec3f{0.0f, -1.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
+			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
 		//create env cubemap
@@ -429,12 +429,12 @@ namespace glgpu
 		Mat4f proj = proj_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{1.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{-1.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,-1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  1.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
-			view_lookat_matrix(vec3f{0.0f, -1.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -1.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
+			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
 		vec2f view_size{ 512, 512 };

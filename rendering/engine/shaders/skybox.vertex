@@ -14,6 +14,5 @@ void main()
 
 	//remove translation
 	mat4 rot = mat4(mat3(view));
-	vec4 pos = proj * rot * vec4(pos, 1.0);
-	gl_Position = pos.xyww;
+	gl_Position = (proj * rot * vec4(pos, 1.0)).xyww;
 }

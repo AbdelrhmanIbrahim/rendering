@@ -65,7 +65,7 @@ namespace math
 	}
 
 	inline math::Mat4f
-	proj_matrix(float f, float n, float r, float l, float t, float b, float fov_tan)
+	proj_prespective_matrix(float f, float n, float r, float l, float t, float b, float fov_tan)
 	{
 		math::Mat4f proj{};
 		float distance = f - n;
@@ -75,6 +75,21 @@ namespace math
 		proj[2][2] = -(n + f) / distance;
 		proj[2][3] = -1.0f;
 		proj[3][2] = -2.0f*f*n / distance;
+
+		return proj;
+	}
+
+	inline math::Mat4f
+	proj_ortho_matrix(float f, float n, float r, float l, float t, float b)
+	{
+		math::Mat4f proj{};
+		proj[0][0] = 2 / (r - l);
+		proj[1][1] = 2 / (t - b);
+		proj[2][2] = -1 / (f - n);
+		proj[3][0] = -(r + l) / (r - l);
+		proj[3][1] = -(t + b) / (t - b);
+		proj[3][2] = -(n) / (f - n);
+		proj[3][3] = 1;
 
 		return proj;
 	}

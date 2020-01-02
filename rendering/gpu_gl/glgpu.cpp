@@ -19,53 +19,58 @@ namespace glgpu
 	//unit cube can be used in some algorithms like equirectangle mapping, irradiance map, etc..
 	constexpr static Vertex unit_cube[36] =
 	{
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, 1.0f, -1.0},
-
+		//front
 		Vertex{-1.0f, -1.0f, 1.0},
 		Vertex{1.0f, -1.0f, 1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{1.0f, 1.0f, 1.0f,},
 		Vertex{-1.0f, 1.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, 1.0},
+		Vertex{-1.0f, 1.0f, 1.0f},
+		Vertex{1.0f, -1.0f, 1.0f},
+		Vertex{1.0f, 1.0f, 1.0},
 
-		Vertex{-1.0f, 1.0f, 1.0f},
-		Vertex{-1.0f, 1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, 1.0},
-		Vertex{-1.0f, 1.0f, 1.0f},
-
-		Vertex{1.0f, 1.0f, 1.0f,},
+		//right
+		Vertex{1.0f, -1.0f, 1.0f},
+		Vertex{1.0f, 1.0f, -1.0f},
+		Vertex{1.0f, 1.0f, 1.0f},
+		Vertex{1.0f, 1.0f, -1.0f},
+		Vertex{1.0f, -1.0f, 1.0f},
 		Vertex{1.0f, -1.0f, -1.0},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{1.0f, -1.0f, 1.0f},
 
-		Vertex{-1.0f, -1.0f, -1.0f},
+		//bottom
 		Vertex{1.0f, -1.0f, -1.0f},
 		Vertex{1.0f, -1.0f, 1.0f},
-		Vertex{1.0f, -1.0f, 1.0f},
+		Vertex{-1.0f, -1.0f, -1.0f},
+		Vertex{-1.0f, -1.0f, -1.0f},
+		Vertex{1.0f, -1.0f, 1.0},
 		Vertex{-1.0f, -1.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
 
+		//left
+		Vertex{-1.0f, -1.0f, -1.0f},
+		Vertex{-1.0f, -1.0f, 1.0},
 		Vertex{-1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
+		Vertex{-1.0f, 1.0f, -1.0f},
+		Vertex{-1.0f, -1.0f, 1.0f,},
+		Vertex{-1.0f, 1.0f, 1.0f},
+
+		//top
+		Vertex{-1.0f, 1.0f, -1.0f},
+		Vertex{-1.0f, 1.0f, 1.0f},
 		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
+		Vertex{1.0f, 1.0f, -1.0f},
+		Vertex{-1.0f, 1.0f, 1.0f},
+		Vertex{1.0f, 1.0f, 1.0f},
+
+		//back
 		Vertex{-1.0f, 1.0f, -1.0f},
-		Vertex{-1.0f, 1.0f, 1.0f}
+		Vertex{1.0f, 1.0f, -1.0f,},
+		Vertex{1.0f, -1.0f, -1.0f},
+		Vertex{-1.0f, 1.0f, -1.0f,},
+		Vertex{1.0f, -1.0f, -1.0f},
+		Vertex{-1.0f, -1.0f, -1.0f}
 	};
 
 	void
 	graphics_init()
 	{
-
 		GLenum gl_ok = glewInit();
 		assert(gl_ok == GLEW_OK);
 	}
@@ -361,15 +366,15 @@ namespace glgpu
 
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
-		Mat4f proj = proj_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
+		Mat4f proj = proj_ortho_matrix(100, 0.1, 1, -1, 1, -1);
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
-			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //X+
+			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //X-
+			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}), //Y+
+			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, 1.0f}), //Y-
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //Z-
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}) //Z+
 		};
 
 		//create env cubemap
@@ -430,15 +435,17 @@ namespace glgpu
 	{
 		GLuint cubemap_pp;
 
-		Mat4f proj = proj_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
+		//convert HDR equirectangular environment map to cubemap
+		//create 6 views that will be rendered to the cubemap using equarectangular shader
+		Mat4f proj = proj_ortho_matrix(100, 0.1, 1, -1, 1, -1);
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
-			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //X+
+			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //X-
+			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}), //Y+
+			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, 1.0f}), //Y-
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //Z+
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}) //Z-
 		};
 
 		vec2f view_size{ 512, 512 };

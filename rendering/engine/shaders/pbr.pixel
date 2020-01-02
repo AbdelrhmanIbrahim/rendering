@@ -7,7 +7,7 @@ uniform vec3 camera_pos_world;
 
 uniform float metallic;
 uniform float rough;
-uniform samplerCube irradiance_map;
+uniform samplerCube diffuse_irradiance_map;
 
 in vec3 frag_pos_world;
 in vec3 normal_world;
@@ -142,7 +142,7 @@ void main()
 	vec3 F0 = vec3(0.04);
 	vec3 kD = 1.0 - Fresnel_Schlick_Roughness(max(dot(normal_world, view_dir), 0.0), F0);
 	kD *= 1.0 - metallic;
-	vec3 indirect_IBL_irradiance = texture(irradiance_map, normal_world).rgb;
+	vec3 indirect_IBL_irradiance = texture(diffuse_irradiance_map, normal_world).rgb;
 	vec3 diffuse = indirect_IBL_irradiance * object_color_albedo;
 	vec3 ambient = (kD * diffuse) * ao;
 	

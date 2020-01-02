@@ -72,7 +72,7 @@ namespace world
 	inline math::Mat4f
 	camera_proj_matrix(const Camera& self)
 	{
-		return math::proj_matrix(self.f, self.n, self.r, self.l, self.t, self.b, self.fov_tan);
+		return math::proj_prespective_matrix(self.f, self.n, self.r, self.l, self.t, self.b, self.fov_tan);
 	}
 
 	inline math::Mat4f

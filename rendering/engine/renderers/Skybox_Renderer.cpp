@@ -15,27 +15,7 @@ namespace rndr
 {
 	constexpr static Vertex skybox[36] = 
 	{
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
-
-		Vertex{-1.0f, -1.0f,  1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f,  1.0f},
-		Vertex{-1.0f, -1.0f,  1.0f},
-
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-
+		//front
 		Vertex{-1.0f, -1.0f,  1.0f},
 		Vertex{-1.0f,  1.0f,  1.0f},
 		Vertex{ 1.0f,  1.0f,  1.0f},
@@ -43,6 +23,31 @@ namespace rndr
 		Vertex{ 1.0f, -1.0f,  1.0f},
 		Vertex{-1.0f, -1.0f,  1.0f},
 
+		//back
+		Vertex{-1.0f,  1.0f, -1.0f},
+		Vertex{-1.0f, -1.0f, -1.0f},
+		Vertex{ 1.0f, -1.0f, -1.0f},
+		Vertex{ 1.0f, -1.0f, -1.0f},
+		Vertex{ 1.0f,  1.0f, -1.0f},
+		Vertex{-1.0f,  1.0f, -1.0f},
+
+		//right
+		Vertex{ 1.0f, -1.0f, -1.0f},
+		Vertex{ 1.0f, -1.0f,  1.0f},
+		Vertex{ 1.0f,  1.0f,  1.0f},
+		Vertex{ 1.0f,  1.0f,  1.0f},
+		Vertex{ 1.0f,  1.0f, -1.0f},
+		Vertex{ 1.0f, -1.0f, -1.0f},
+
+		//left
+		Vertex{-1.0f, -1.0f,  1.0f},
+		Vertex{-1.0f, -1.0f, -1.0f},
+		Vertex{-1.0f,  1.0f, -1.0f},
+		Vertex{-1.0f,  1.0f, -1.0f},
+		Vertex{-1.0f,  1.0f,  1.0f},
+		Vertex{-1.0f, -1.0f,  1.0f},
+
+		//top
 		Vertex{-1.0f,  1.0f, -1.0f},
 		Vertex{ 1.0f,  1.0f, -1.0f},
 		Vertex{ 1.0f,  1.0f,  1.0f},
@@ -50,6 +55,7 @@ namespace rndr
 		Vertex{-1.0f,  1.0f,  1.0f},
 		Vertex{-1.0f,  1.0f, -1.0f},
 
+		//bottom
 		Vertex{-1.0f, -1.0f, -1.0f},
 		Vertex{-1.0f, -1.0f,  1.0f},
 		Vertex{ 1.0f, -1.0f, -1.0f},
@@ -93,11 +99,6 @@ namespace rndr
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
 		self.cubemap = cubemap_hdr_create(img);
-
-		//get irridiance map
-		//texture env = cubemap_hdr_create(img);
-		//self.cubemap = cubemap_postprocess(env, "../rendering/engine/shaders/irradiance_convolution.pixel");
-		//texture_free(env);
 
 		image_free(img);
 

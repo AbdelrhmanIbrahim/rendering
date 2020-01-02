@@ -100,6 +100,9 @@ namespace glgpu
 		{
 		case TEXTURE_UNIT::UNIT_0:
 			return GL_TEXTURE0;
+		case TEXTURE_UNIT::UNIT_1:
+			return GL_TEXTURE1;
+
 		default:
 			assert("undefined texture unit" && false);
 			return -1;
@@ -312,7 +315,8 @@ namespace glgpu
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 
 		//no indexed triangles so far
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
+		if(ebo != NULL)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
 	}
 
 	void
@@ -398,7 +402,6 @@ namespace glgpu
 		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map, 0);
@@ -408,7 +411,8 @@ namespace glgpu
 			draw_strip(36);
 			vao_unbind();
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		texture2d_unbind();
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free
 		glDeleteRenderbuffers(1, &rbo);
@@ -465,7 +469,6 @@ namespace glgpu
 
 		cubemap_bind(cubemap, TEXTURE_UNIT::UNIT_0);
 		uniform1i_set(prog, "cubemap", TEXTURE_UNIT::UNIT_0);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubemap_pp, 0);
@@ -475,6 +478,7 @@ namespace glgpu
 			draw_strip(36);
 			vao_unbind();
 		}
+		texture2d_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free

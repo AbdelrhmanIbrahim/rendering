@@ -18,17 +18,9 @@ namespace rndr
 		self.prog = program_create("../rendering/engine/shaders/pbr.vertex", "../rendering/engine/shaders/pbr.pixel");
 
 		//no irriadiance
-		//io::Image img = image_read("../rendering/res/imgs/hdr/Alexs_Apt_Env.hdr", io::IMAGE_FORMAT::HDR);
-		//self.irradiance = cubemap_hdr_create(img);
-
-		//create irriadiance map
-		io::Image img = image_read("../rendering/res/imgs/hdr/Alexs_Apt.hdr", io::IMAGE_FORMAT::HDR);
-		texture env = cubemap_hdr_create(img);
-		self.irradiance = cubemap_postprocess(env, "../rendering/engine/shaders/irradiance_convolution.pixel");
-		texture_free(env);
-
-		//free
-	//	image_free(img);
+		io::Image img = image_read("../rendering/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
+		self.irradiance = cubemap_hdr_create(img);
+		image_free(img);
 
 		return self;
 	}

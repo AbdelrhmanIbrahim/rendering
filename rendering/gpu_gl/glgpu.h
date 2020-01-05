@@ -62,6 +62,12 @@ namespace glgpu
 		UINT_24_8
 	};
 
+	enum class TARGET
+	{
+		TEXTURE_2D,
+		CUBEMAP,
+	};
+
 	void
 	graphics_init();
 
@@ -94,24 +100,6 @@ namespace glgpu
 
 	void
 	vao_delete(vao va);
-	
-	cubemap
-	cubemap_create(INTERNAL_TEXTURE_FORMAT format, math::vec2f view_size);
-
-	cubemap
-	cubemap_rgba_create(const io::Image imgs[6]);
-
-	cubemap
-	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
-
-	cubemap
-	cubemap_postprocess(cubemap cubemap, math::vec2f view_size, const char* pixel_shader);
-
-	void
-	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);
-
-	void
-	cubemap_free(cubemap cmap);
 
 	texture
 	texture2d_create(const io::Image& img, io::IMAGE_FORMAT format);
@@ -133,6 +121,27 @@ namespace glgpu
 
 	void
 	texture_free(texture texture);
+
+	cubemap
+	cubemap_create(math::vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type);
+
+	cubemap
+	cubemap_rgba_create(const io::Image imgs[6]);
+
+	cubemap
+	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
+
+	cubemap
+	cubemap_postprocess(cubemap cubemap, math::vec2f view_size, const char* pixel_shader);
+
+	void
+	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);
+
+	void
+	cubemap_free(cubemap cmap);
+
+	void
+	mipmap_generate(TARGET target);
 
 	framebuffer
 	framebuffer_create();

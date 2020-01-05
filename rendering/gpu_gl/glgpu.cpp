@@ -201,6 +201,21 @@ namespace glgpu
 		}
 	}
 
+	int
+	_map(TARGET target)
+	{
+		switch (target)
+		{
+		case TARGET::TEXTURE_2D:
+			return GL_TEXTURE_2D;
+		case TARGET::CUBEMAP:
+			return GL_TEXTURE_CUBE_MAP;
+		default:
+			assert("undefined target type" && false);
+			return -1;
+		}
+	}
+
 	GLuint
 	_shader_obj(std::ifstream& stream, const char* shader_path, SHADER_STAGE shader_stage)
 	{
@@ -337,6 +352,97 @@ namespace glgpu
 	{
 		GLuint v = (GLuint)va;
 		glDeleteVertexArrays(1, &v);
+	}
+
+	texture
+	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		GLuint tex;
+		glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), size[0], size[1], 0, _map(format), _map(type), NULL);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+
+		return (texture)tex;
+	}
+
+	texture
+	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
+	{
+		INTERNAL_TEXTURE_FORMAT internal_format;
+		EXTERNAL_TEXTURE_FORMAT tex_format;
+		DATA_TYPE type;
+		switch (format)
+		{
+		case IMAGE_FORMAT::BMP:
+		case IMAGE_FORMAT::PNG:
+		case IMAGE_FORMAT::JPG:
+			internal_format = INTERNAL_TEXTURE_FORMAT::RGB;
+			tex_format = EXTERNAL_TEXTURE_FORMAT::RGB;
+			type = DATA_TYPE::UBYTE;
+			break;
+		case IMAGE_FORMAT::HDR:
+			internal_format = INTERNAL_TEXTURE_FORMAT::RGB16F;
+			tex_format = EXTERNAL_TEXTURE_FORMAT::RGB;
+			type = DATA_TYPE::FLOAT;
+			break;
+		default:
+			assert("unsuported image format" && false);
+			break;
+		}
+
+		GLuint tex;
+		glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), img.width, img.height, 0, _map(tex_format), _map(type), img.data);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+
+		return (texture)tex;
+	}
+
+	texture
+	texture2d_create(const char* image_path, IMAGE_FORMAT format)
+	{
+		Image img = image_read(image_path, format);
+		texture tex = texture2d_create(img, format);
+		image_free(img);
+		return tex;
+	}
+
+	void
+	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit)
+	{
+		glActiveTexture(_map(texture_unit));
+		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
+	}
+
+	void
+	texture2d_unbind()
+	{
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+
+	void
+	texture2d_unpack(texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
+		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
+	}
+
+	void
+	texture_free(texture texture)
+	{
+		GLuint t = (GLuint)texture;
+		glDeleteTextures(1, &t);
 	}
 
 	cubemap
@@ -479,7 +585,7 @@ namespace glgpu
 		uniform1i_set(prog, "cubemap", TEXTURE_UNIT::UNIT_0);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint) cubemap_pp, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cubemap_pp, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			vao_bind(cube_vao, cube_vs, NULL);
@@ -513,95 +619,10 @@ namespace glgpu
 		glDeleteTextures(1, &t);
 	}
 
-	texture
-	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
-	{
-		GLuint tex;
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), size[0], size[1], 0, _map(format), _map(type), NULL);
-		glBindTexture(GL_TEXTURE_2D, NULL);
-
-		return (texture)tex;
-	}
-
-	texture
-	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
-	{
-		INTERNAL_TEXTURE_FORMAT internal_format;
-		EXTERNAL_TEXTURE_FORMAT tex_format;
-		DATA_TYPE type;
-		switch (format)
-		{
-		case IMAGE_FORMAT::BMP:
-		case IMAGE_FORMAT::PNG:
-		case IMAGE_FORMAT::JPG:
-			internal_format = INTERNAL_TEXTURE_FORMAT::RGB;
-			tex_format = EXTERNAL_TEXTURE_FORMAT::RGB;
-			type = DATA_TYPE::UBYTE;
-			break;
-		case IMAGE_FORMAT::HDR:
-			internal_format = INTERNAL_TEXTURE_FORMAT::RGB16F;
-			tex_format = EXTERNAL_TEXTURE_FORMAT::RGB;
-			type = DATA_TYPE::FLOAT;
-			break;
-		default:
-			assert("unsuported image format" && false);
-			break;
-		}
-
-		GLuint tex;
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), img.width, img.height, 0, _map(tex_format), _map(type), img.data);
-		glBindTexture(GL_TEXTURE_2D, NULL);
-
-		return (texture)tex;
-	}
-
-	texture
-	texture2d_create(const char* image_path, IMAGE_FORMAT format)
-	{
-		Image img = image_read(image_path, format);
-		texture tex = texture2d_create(img, format);
-		image_free(img);
-		return tex;
-	}
-
 	void
-	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit)
+	mipmap_generate(TARGET target)
 	{
-		glActiveTexture(_map(texture_unit));
-		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
-	}
-
-	void
-	texture2d_unbind()
-	{
-		glBindTexture(GL_TEXTURE_2D, NULL);
-	}
-
-	void
-	texture2d_unpack(texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
-	{
-		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
-		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
-	}
-
-	void
-	texture_free(texture texture)
-	{
-		GLuint t = (GLuint)texture;
-		glDeleteTextures(1, &t);
+		glGenerateMipmap(_map(target));
 	}
 
 	framebuffer

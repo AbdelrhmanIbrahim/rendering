@@ -22,13 +22,26 @@ namespace rndr
 		self.diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512});
 		image_free(diff);
 
-		//specular prefiltered (part 1)
+		//specular prefiltered convoluted map (Part 1 from the specular integration of the reflectance equation)
+		//1) create specular env cubemap
 		io::Image env = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
 		cubemap env_cmap = cubemap_hdr_create(env, vec2f{512, 512});
 
+		//2) create prefiltered convolution map with mipmap generated 
+		//(for different roughness -> different reflective specular properties, rougher = blurrier reflections)
+		vec2f size{ 128, 128 };
+		self.specular_prefiltered_map = cubemap_create(size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT);
+		mipmap_generate(TARGET::CUBEMAP);
 
-		//convolute it 5 times using prefiltering shader (mipmap)
-		//self.specular_prefiltered_map = cubemap_postprocess(env_cmap, vec2f{ 128, 128 });
+		//3) convolute env_cmap 5 times using prefiltering shader (mipmap) and save them to specular_prefiltered_map mipmaps
+		for (unsigned int mip_level = 0; mip_level < 5; ++mip_level)
+		{
+			unsigned int mipw = size[0] * std::pow(0.5, mip_level);
+			unsigned int miph = size[1] * std::pow(0.5, mip_level);
+			vec2f mipmap_size{ mipw , miph};
+			//convolute and attach the convoluted cubemap to each level of mip and roughness
+			//cubemap_postprocess(env_cmap, self.specular_prefiltered_map, mipmap_size, mip_level, "../rendering/engine/shaders/specular_prefiltering_convolution.pixel", uniforms);
+		}
 
 		cubemap_free(env_cmap);
 		image_free(env);

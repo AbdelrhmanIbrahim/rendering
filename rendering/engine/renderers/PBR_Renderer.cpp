@@ -19,7 +19,7 @@ namespace rndr
 
 		//no irriadiance
 		io::Image img = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
-		self.diffuse_irradiance = cubemap_hdr_create(img);
+		self.diffuse_irradiance_map = cubemap_hdr_create(img);
 		image_free(img);
 
 		return self;
@@ -29,7 +29,7 @@ namespace rndr
 	pbr_free(PBR_Renderer & mr)
 	{
 		program_delete(mr.prog);
-		texture_free(mr.diffuse_irradiance);
+		cubemap_free(mr.diffuse_irradiance_map);
 	}
 	
 	void
@@ -58,7 +58,7 @@ namespace rndr
 		uniform3f_set(mr.prog, "camera_pos_world", cam.pos);
 		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
 		uniform3f_set(mr.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
-		cubemap_bind(mr.diffuse_irradiance, TEXTURE_UNIT::UNIT_0);
+		cubemap_bind(mr.diffuse_irradiance_map, TEXTURE_UNIT::UNIT_0);
 		uniform1i_set(mr.prog, "irradiance_map", TEXTURE_UNIT::UNIT_0);
 
 		for (const auto object : mr.meshes)

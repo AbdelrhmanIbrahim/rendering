@@ -14,7 +14,7 @@ namespace rndr
 		glgpu::program prog;
 		glgpu::vao cube;
 		glgpu::buffer cube_vs;
-		glgpu::texture cubemap;
+		glgpu::cubemap cubemap;
 	};
 
 	Skybox_Renderer

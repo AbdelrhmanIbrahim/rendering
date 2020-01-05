@@ -111,7 +111,7 @@ namespace rndr
 		program_delete(sbr.prog);
 		vao_delete(sbr.cube);
 		buffer_delete(sbr.cube_vs);
-		texture_free(sbr.cubemap);
+		cubemap_free(sbr.cubemap);
 	}
 
 	void

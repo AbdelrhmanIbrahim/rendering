@@ -16,6 +16,7 @@ namespace glgpu
 	HANDLE(program);
 	HANDLE(buffer);
 	HANDLE(texture);
+	HANDLE(cubemap);
 	HANDLE(vao);
 	HANDLE(framebuffer);
 
@@ -94,17 +95,20 @@ namespace glgpu
 	void
 	vao_delete(vao va);
 
-	texture
+	cubemap
 	cubemap_rgba_create(const io::Image imgs[6]);
 
-	texture
+	cubemap
 	cubemap_hdr_create(const io::Image& img);
 
-	texture
-	cubemap_postprocess(texture cubemap, const char* pixel_shader);
+	cubemap
+	cubemap_postprocess(cubemap cubemap, const char* pixel_shader);
 
 	void
-	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit);
+	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);
+
+	void
+	cubemap_free(cubemap cmap);
 
 	texture
 	texture2d_create(const io::Image& img, io::IMAGE_FORMAT format);

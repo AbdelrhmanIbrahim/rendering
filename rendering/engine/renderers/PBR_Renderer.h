@@ -13,7 +13,12 @@ namespace rndr
 	struct PBR_Renderer
 	{
 		glgpu::program prog;
-		glgpu::texture diffuse_irradiance;
+		/*the diffuse part of the reflectance integral equation : irradiance convoluted cubemap that corresponds to the contribution of
+		all incoming light rays from the enviroment map through the hemipshere surronding a given point*/
+ 		glgpu::cubemap diffuse_irradiance_map;
+		/*the first part of the specular part of the reflectance integral equation : prefiltered convoluted map that corresponds to the contribution of
+		the outcoming reflected rays contained by the specular lobe according to the surface roughness at a given point*/
+		glgpu::cubemap specular_prefiltered_map;
 		std::vector<const world::object3D*> meshes;
 	};
 

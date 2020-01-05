@@ -339,12 +339,12 @@ namespace glgpu
 		glDeleteVertexArrays(1, &v);
 	}
 
-	texture
+	cubemap
 	cubemap_rgba_create(const io::Image imgs[6])
 	{
-		GLuint cubemap;
-		glGenTextures(1, &cubemap);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+		GLuint cmap;
+		glGenTextures(1, &cmap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap);
 
 		//righ, left, top, bottom, front, back
 		for (int i = 0; i < 6; ++i)
@@ -357,10 +357,10 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
-		return (texture)cubemap;
+		return (cubemap)cmap;
 	}
 
-	texture
+	cubemap
 	cubemap_hdr_create(const io::Image& img)
 	{
 		//create hdr texture
@@ -432,11 +432,11 @@ namespace glgpu
 		program_delete(prog);
 		texture_free(hdr);
 
-		return (texture)cube_map;
+		return (cubemap)cube_map;
 	}
 
-	texture
-	cubemap_postprocess(texture cubemap, const char* pixel_shader)
+	cubemap
+	cubemap_postprocess(cubemap cmap, const char* pixel_shader)
 	{
 		GLuint cubemap_pp;
 
@@ -479,7 +479,7 @@ namespace glgpu
 		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/irradiance_convolution.pixel");
 		program_use(prog);
 
-		cubemap_bind(cubemap, TEXTURE_UNIT::UNIT_0);
+		cubemap_bind(cmap, TEXTURE_UNIT::UNIT_0);
 		uniform1i_set(prog, "cubemap", TEXTURE_UNIT::UNIT_0);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
@@ -500,14 +500,21 @@ namespace glgpu
 		buffer_delete(cube_vs);
 		program_delete(prog);
 
-		return (texture)cubemap_pp;
+		return (cubemap)cubemap_pp;
 	}
 
 	void
-	cubemap_bind(texture texture, TEXTURE_UNIT texture_unit)
+	cubemap_bind(cubemap cmap, TEXTURE_UNIT texture_unit)
 	{
 		glActiveTexture(_map(texture_unit));
-		glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)texture);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)cmap);
+	}
+
+	void
+	cubemap_free(cubemap cmap)
+	{
+		GLuint t = (GLuint)cmap;
+		glDeleteTextures(1, &t);
 	}
 
 	texture

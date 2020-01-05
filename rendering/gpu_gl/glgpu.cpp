@@ -149,15 +149,15 @@ namespace glgpu
 	}
 
 	int
-	_map(TEXTURE_FORMAT format)
+	_map(EXTERNAL_TEXTURE_FORMAT format)
 	{
 		switch (format)
 		{
-		case TEXTURE_FORMAT::RGB:
+		case EXTERNAL_TEXTURE_FORMAT::RGB:
 			return GL_RGB;
-		case TEXTURE_FORMAT::RGBA:
+		case EXTERNAL_TEXTURE_FORMAT::RGBA:
 			return GL_RGBA;
-		case TEXTURE_FORMAT::DEPTH_STENCIL:
+		case EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL:
 			return GL_DEPTH_STENCIL;
 		default:
 			assert("undefined format" && false);
@@ -340,6 +340,23 @@ namespace glgpu
 	}
 
 	cubemap
+	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type)
+	{
+		GLuint cmap;
+		glGenTextures(1, &cmap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap);
+		for (unsigned int i = 0; i < 6; ++i)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, _map(texture_format), view_size[0], view_size[1], 0, _map(ext_format), _map(type), NULL);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		return (cubemap)cmap;
+	}
+
+	cubemap
 	cubemap_rgba_create(const io::Image imgs[6])
 	{
 		GLuint cmap;
@@ -383,16 +400,7 @@ namespace glgpu
 		//create env cubemap
 		//(HDR should a 32 bit for each channel to cover a wide range of colors,
 		//they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
-		GLuint cube_map;
-		glGenTextures(1, &cube_map);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map);
-		for (unsigned int i = 0; i < 6; ++i)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, view_size[0], view_size[1], 0, GL_RGB, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT);
 
 		//float framebuffer to render to
 		GLuint fbo, rbo;
@@ -413,7 +421,7 @@ namespace glgpu
 		auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			vao_bind(mesh.va, mesh.vs, mesh.is);
@@ -431,37 +439,26 @@ namespace glgpu
 		program_delete(prog);
 		texture_free(hdr);
 
-		return (cubemap)cube_map;
+		return cube_map;
 	}
 
 	cubemap
-	cubemap_postprocess(cubemap cmap, const char* pixel_shader)
+	cubemap_postprocess(cubemap cmap, vec2f view_size, const char* pixel_shader)
 	{
-		GLuint cubemap_pp;
-
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
-		Mat4f proj = proj_ortho_matrix(100, 0.1, 1, -1, 1, -1);
+		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{-0.1f, 0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.1f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f, -0.1f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.1f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -0.1f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.1f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(vec3f{-0.001f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.001f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f, -0.001f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.001f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
-		vec2f view_size{ 512, 512 };
-		glGenTextures(1, &cubemap_pp);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_pp);
-		for (unsigned int i = 0; i < 6; ++i)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, view_size[0], view_size[1], 0, GL_RGB, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		cubemap cubemap_pp = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT);
 
 		GLuint fbo, rbo;
 		glGenFramebuffers(1, &fbo);
@@ -482,7 +479,7 @@ namespace glgpu
 		uniform1i_set(prog, "cubemap", TEXTURE_UNIT::UNIT_0);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubemap_pp, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint) cubemap_pp, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			vao_bind(cube_vao, cube_vs, NULL);
@@ -499,7 +496,7 @@ namespace glgpu
 		buffer_delete(cube_vs);
 		program_delete(prog);
 
-		return (cubemap)cubemap_pp;
+		return cubemap_pp;
 	}
 
 	void
@@ -517,7 +514,7 @@ namespace glgpu
 	}
 
 	texture
-	texture2d_create(int width, int height, INTERNAL_TEXTURE_FORMAT internal_format, TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		GLuint tex;
 		glGenTextures(1, &tex);
@@ -526,7 +523,7 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), width, height, 0, _map(format), _map(type), NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), size[0], size[1], 0, _map(format), _map(type), NULL);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
 		return (texture)tex;
@@ -536,7 +533,7 @@ namespace glgpu
 	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
 	{
 		INTERNAL_TEXTURE_FORMAT internal_format;
-		TEXTURE_FORMAT tex_format;
+		EXTERNAL_TEXTURE_FORMAT tex_format;
 		DATA_TYPE type;
 		switch (format)
 		{
@@ -544,12 +541,12 @@ namespace glgpu
 		case IMAGE_FORMAT::PNG:
 		case IMAGE_FORMAT::JPG:
 			internal_format = INTERNAL_TEXTURE_FORMAT::RGB;
-			tex_format = TEXTURE_FORMAT::RGB;
+			tex_format = EXTERNAL_TEXTURE_FORMAT::RGB;
 			type = DATA_TYPE::UBYTE;
 			break;
 		case IMAGE_FORMAT::HDR:
 			internal_format = INTERNAL_TEXTURE_FORMAT::RGB16F;
-			tex_format = TEXTURE_FORMAT::RGB;
+			tex_format = EXTERNAL_TEXTURE_FORMAT::RGB;
 			type = DATA_TYPE::FLOAT;
 			break;
 		default:
@@ -594,7 +591,7 @@ namespace glgpu
 	}
 
 	void
-	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_unpack(texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
 		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);

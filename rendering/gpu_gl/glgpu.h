@@ -40,7 +40,7 @@ namespace glgpu
 		DEPTH_STENCIL
 	};
 
-	enum class TEXTURE_FORMAT
+	enum class EXTERNAL_TEXTURE_FORMAT
 	{
 		RGB,
 		RGBA,
@@ -94,6 +94,9 @@ namespace glgpu
 
 	void
 	vao_delete(vao va);
+	
+	cubemap
+	cubemap_create(INTERNAL_TEXTURE_FORMAT format, math::vec2f view_size);
 
 	cubemap
 	cubemap_rgba_create(const io::Image imgs[6]);
@@ -102,7 +105,7 @@ namespace glgpu
 	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
 
 	cubemap
-	cubemap_postprocess(cubemap cubemap, const char* pixel_shader);
+	cubemap_postprocess(cubemap cubemap, math::vec2f view_size, const char* pixel_shader);
 
 	void
 	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);
@@ -117,7 +120,7 @@ namespace glgpu
 	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
 
 	texture
-	texture2d_create(int width, int height, INTERNAL_TEXTURE_FORMAT internal_format, TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
 
 	void
 	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);
@@ -126,7 +129,7 @@ namespace glgpu
 	texture2d_unbind();
 
 	void
-	texture2d_unpack(texture texture, io::Image& image, TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_unpack(texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
 
 	void
 	texture_free(texture texture);

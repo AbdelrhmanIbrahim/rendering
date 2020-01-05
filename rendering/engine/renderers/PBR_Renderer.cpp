@@ -23,11 +23,15 @@ namespace rndr
 		image_free(diff);
 
 		//specular prefiltered (part 1)
-		io::Image spec_1 = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
-		self.specular_prefiltered_map = cubemap_hdr_create(spec_1, vec2f{ 128, 128 });
-		//convolute it 5 times using prefiltering shader (mipmap)
+		io::Image env = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
+		cubemap env_cmap = cubemap_hdr_create(env, vec2f{512, 512});
 
-		image_free(spec_1);
+
+		//convolute it 5 times using prefiltering shader (mipmap)
+		//self.specular_prefiltered_map = cubemap_postprocess(env_cmap, vec2f{ 128, 128 });
+
+		cubemap_free(env_cmap);
+		image_free(env);
 
 		return self;
 	}

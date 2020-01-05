@@ -33,7 +33,7 @@ namespace rndr
 		self->phong_shadow = phong_shadow_create();
 		self->phong = phong_create();
 		self->pbr = pbr_create();
-		self->skybox = skybox_renderer_hdr_create("../rendering/res/imgs/hdr/Tokyo_spec.hdr");
+		self->skybox = skybox_renderer_hdr_create("../rendering/res/imgs/hdr/Alexs_spec.hdr");
 
 		//skybox
 		/*static const char* skybox_paths[6]

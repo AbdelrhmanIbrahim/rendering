@@ -63,10 +63,10 @@ float
 Geomtery_Schlick_GGX(float dot, float roughness)
 {
 	//Direct source lights
-    //float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
+    float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
 	
 	//IBL
-	float k = (roughness * roughness)/2;
+	//float k = (roughness * roughness)/2;
 
 	float nom   = dot;
 	float denom = dot * (1.0 - k) + k;

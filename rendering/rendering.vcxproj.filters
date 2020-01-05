@@ -229,10 +229,10 @@
     <None Include="engine\shaders\equarectangular_to_cubemap.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
-    <None Include="engine\shaders\irradiance_convolution.pixel">
+    <None Include="engine\shaders\cube.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
-    <None Include="engine\shaders\cube.vertex">
+    <None Include="engine\shaders\diffuse_irradiance_convolution.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
   </ItemGroup>

@@ -117,6 +117,7 @@ namespace rndr
 	void
 	skybox_renderer_draw(const Skybox_Renderer& sbr, const Camera& cam)
 	{
+		auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
 		depth_test(DEPTH_TEST::LE);
 		{
 			program_use(sbr.prog);
@@ -139,6 +140,14 @@ namespace rndr
 			vao_bind(sbr.cube, sbr.cube_vs, NULL);
 			draw_strip(36);
 			vao_unbind();
+
+			//for testing on small cube
+			/*auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
+			vao_bind(mesh.va, mesh.vs, mesh.is);
+			draw_indexed(mesh.indices.size());
+			vao_unbind();
+			mesh_delete(mesh);*/
+			
 		}
 		depth_test(DEPTH_TEST::L);
 	}

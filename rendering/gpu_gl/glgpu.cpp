@@ -14,11 +14,14 @@ using namespace io;
 using namespace math;
 using namespace geo;
 
+#include <geometry/Mesh.h>
+
 namespace glgpu
 {
 	//unit cube can be used in some algorithms like equirectangle mapping, irradiance map, etc..
 	constexpr static Vertex unit_cube[36] =
 	{
+		//back
 		Vertex{-1.0f, -1.0f, -1.0f},
 		Vertex{1.0f, 1.0f, -1.0f},
 		Vertex{1.0f, -1.0f, -1.0f},
@@ -26,6 +29,7 @@ namespace glgpu
 		Vertex{-1.0f, -1.0f, -1.0f},
 		Vertex{-1.0f, 1.0f, -1.0},
 
+		//front
 		Vertex{-1.0f, -1.0f, 1.0},
 		Vertex{1.0f, -1.0f, 1.0f},
 		Vertex{1.0f, 1.0f, 1.0f,},
@@ -33,6 +37,7 @@ namespace glgpu
 		Vertex{-1.0f, 1.0f, 1.0f},
 		Vertex{-1.0f, -1.0f, 1.0},
 
+		//left
 		Vertex{-1.0f, 1.0f, 1.0f},
 		Vertex{-1.0f, 1.0f, -1.0f},
 		Vertex{-1.0f, -1.0f, -1.0f},
@@ -40,6 +45,7 @@ namespace glgpu
 		Vertex{-1.0f, -1.0f, 1.0},
 		Vertex{-1.0f, 1.0f, 1.0f},
 
+		//right
 		Vertex{1.0f, 1.0f, 1.0f,},
 		Vertex{1.0f, -1.0f, -1.0},
 		Vertex{1.0f, 1.0f, -1.0f},
@@ -47,6 +53,7 @@ namespace glgpu
 		Vertex{1.0f, 1.0f, 1.0f,},
 		Vertex{1.0f, -1.0f, 1.0f},
 
+		//bottom
 		Vertex{-1.0f, -1.0f, -1.0f},
 		Vertex{1.0f, -1.0f, -1.0f},
 		Vertex{1.0f, -1.0f, 1.0f},
@@ -54,6 +61,7 @@ namespace glgpu
 		Vertex{-1.0f, -1.0f, 1.0f},
 		Vertex{-1.0f, -1.0f, -1.0f},
 
+		//top
 		Vertex{-1.0f, 1.0f, -1.0f},
 		Vertex{1.0f, 1.0f, 1.0f,},
 		Vertex{1.0f, 1.0f, -1.0f},
@@ -360,15 +368,16 @@ namespace glgpu
 
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
+		//don't use ortho projection as this will make z in NDC the same so your captures will look like duplicated
 		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
-			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(vec3f{-0.1f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.1f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f, -0.1f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.1f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -0.1f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.1f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
 		//create env cubemap
@@ -401,13 +410,15 @@ namespace glgpu
 		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
+
+		auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
-			vao_bind(cube_vao, cube_vs, NULL);
-			draw_strip(36);
+			vao_bind(mesh.va, mesh.vs, mesh.is);
+			draw_indexed(mesh.indices.size());
 			vao_unbind();
 		}
 		texture2d_unbind();
@@ -434,12 +445,12 @@ namespace glgpu
 		Mat4f proj = proj_ortho_matrix(100, 0.1, 1, -1, 1, -1);
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{2.0f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //X+
-			view_lookat_matrix(vec3f{-2.0f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //X-
-			view_lookat_matrix(vec3f{0.0f,  2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, -1.0f}), //Y+
-			view_lookat_matrix(vec3f{0.0f, -2.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f, 1.0f}), //Y-
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}), //Z+
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -2.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f, 0.0f}) //Z-
+			view_lookat_matrix(vec3f{-0.1f, 0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.1f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f, -0.1f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.1f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f, -0.1f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.1f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
 		vec2f view_size{ 512, 512 };

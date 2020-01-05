@@ -10,8 +10,8 @@ void main()
 {
 	// The world vector acts as the normal of a tangent surface
 	// from the origin, aligned to world_pos. Given this normal, calculate all
-	// incoming radiance of the environment. The result of this radiance
-	// is the radiance of light coming from normal direction, which is what
+	// incoming radiance of the environment. The result of this
+	// is the irradiance of incoming light rays from normal direction, which is what
 	// we use in the PBR shader to sample irradiance.
 	vec3 N = normalize(world_pos);
 

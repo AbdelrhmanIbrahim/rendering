@@ -18,7 +18,7 @@ namespace rndr
 		self.prog = program_create("../rendering/engine/shaders/pbr.vertex", "../rendering/engine/shaders/pbr.pixel");
 
 		//no irriadiance
-		io::Image img = image_read("../rendering/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
+		io::Image img = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
 		self.diffuse_irradiance = cubemap_hdr_create(img);
 		image_free(img);
 

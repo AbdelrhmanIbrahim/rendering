@@ -56,7 +56,7 @@ namespace rndr
 		phong_shadow_free(e->phong_shadow);
 		phong_free(e->phong);
 		pbr_free(e->pbr);
-		//skybox_renderer_free(e->skybox);
+		skybox_renderer_free(e->skybox);
 
 		delete e;
 	}

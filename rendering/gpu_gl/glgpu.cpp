@@ -361,7 +361,7 @@ namespace glgpu
 	}
 
 	cubemap
-	cubemap_hdr_create(const io::Image& img)
+	cubemap_hdr_create(const io::Image& img, vec2f view_size)
 	{
 		//create hdr texture
 		texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
@@ -384,7 +384,6 @@ namespace glgpu
 		//(HDR should a 32 bit for each channel to cover a wide range of colors,
 		//they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
 		GLuint cube_map;
-		vec2f view_size{ 800, 800 };
 		glGenTextures(1, &cube_map);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map);
 		for (unsigned int i = 0; i < 6; ++i)

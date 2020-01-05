@@ -24,8 +24,8 @@ namespace rndr
 	skybox_renderer_hdr_create(const char* skybox_hdr_path);
 
 	void
-	skybox_renderer_free(const Skybox_Renderer& sbr);
+	skybox_renderer_free(const Skybox_Renderer& self);
 
 	void
-	skybox_renderer_draw(const Skybox_Renderer& sbr, const world::Camera& cam);
+	skybox_renderer_draw(const Skybox_Renderer& self, const world::Camera& cam);
 };

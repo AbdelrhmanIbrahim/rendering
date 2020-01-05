@@ -26,14 +26,14 @@ namespace rndr
 	pbr_create();
 
 	void
-	pbr_free(PBR_Renderer& mr);
+	pbr_free(PBR_Renderer& self);
 
 	void
-	pbr_pack(PBR_Renderer& mr, const world::object3D* mesh);
+	pbr_pack(PBR_Renderer& self, const world::object3D* mesh);
 
 	void
-	pbr_unpack(PBR_Renderer & mr);
+	pbr_unpack(PBR_Renderer & self);
 
 	void
-	pbr_draw(const PBR_Renderer& mr, const world::Camera& cam);
+	pbr_draw(const PBR_Renderer& self, const world::Camera& cam);
 };

@@ -98,7 +98,7 @@ namespace rndr
 
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
-		self.cubemap = cubemap_hdr_create(img);
+		self.cubemap = cubemap_hdr_create(img, vec2f{800, 800});
 
 		image_free(img);
 
@@ -106,38 +106,38 @@ namespace rndr
 	}
 
 	void
-	skybox_renderer_free(const Skybox_Renderer & sbr)
+	skybox_renderer_free(const Skybox_Renderer & self)
 	{
-		program_delete(sbr.prog);
-		vao_delete(sbr.cube);
-		buffer_delete(sbr.cube_vs);
-		cubemap_free(sbr.cubemap);
+		program_delete(self.prog);
+		vao_delete(self.cube);
+		buffer_delete(self.cube_vs);
+		cubemap_free(self.cubemap);
 	}
 
 	void
-	skybox_renderer_draw(const Skybox_Renderer& sbr, const Camera& cam)
+	skybox_renderer_draw(const Skybox_Renderer& self, const Camera& cam)
 	{
 		auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
 		depth_test(DEPTH_TEST::LE);
 		{
-			program_use(sbr.prog);
+			program_use(self.prog);
 
 			//MVP
 			Mat4f view = camera_view_matrix(cam);
 			Mat4f proj = camera_proj_matrix(cam);
-			uniformmat4f_set(sbr.prog, "view", view);
-			uniformmat4f_set(sbr.prog, "proj", proj);
+			uniformmat4f_set(self.prog, "view", view);
+			uniformmat4f_set(self.prog, "proj", proj);
 
 			//viewport
 			vec2f viewport = camera_viewport(cam);
 			view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 			//cubemap
-			cubemap_bind(sbr.cubemap, TEXTURE_UNIT::UNIT_0);
-			uniform1i_set(sbr.prog, "cubemap", TEXTURE_UNIT::UNIT_0);
+			cubemap_bind(self.cubemap, TEXTURE_UNIT::UNIT_0);
+			uniform1i_set(self.prog, "cubemap", TEXTURE_UNIT::UNIT_0);
 
 			//draw world cube
-			vao_bind(sbr.cube, sbr.cube_vs, NULL);
+			vao_bind(self.cube, self.cube_vs, NULL);
 			draw_strip(36);
 			vao_unbind();
 

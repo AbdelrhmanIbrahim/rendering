@@ -17,61 +17,69 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../rendering/engine/shaders/pbr.vertex", "../rendering/engine/shaders/pbr.pixel");
 
-		//no irriadiance
-		io::Image img = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
-		self.diffuse_irradiance_map = cubemap_hdr_create(img);
-		image_free(img);
+		//irriadiance
+		io::Image diff = image_read("../rendering/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
+		self.diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512});
+		image_free(diff);
+
+		//specular prefiltered (part 1)
+		io::Image spec_1 = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
+		self.specular_prefiltered_map = cubemap_hdr_create(spec_1, vec2f{ 128, 128 });
+		//convolute it 5 times using prefiltering shader (mipmap)
+
+		image_free(spec_1);
 
 		return self;
 	}
 
 	void
-	pbr_free(PBR_Renderer & mr)
+	pbr_free(PBR_Renderer & self)
 	{
-		program_delete(mr.prog);
-		cubemap_free(mr.diffuse_irradiance_map);
+		program_delete(self.prog);
+		cubemap_free(self.diffuse_irradiance_map);
+		cubemap_free(self.specular_prefiltered_map);
 	}
 	
 	void
-	pbr_pack(PBR_Renderer& mr, const world::object3D* mesh)
+	pbr_pack(PBR_Renderer& self, const world::object3D* mesh)
 	{
-		mr.meshes.push_back(mesh);
+		self.meshes.push_back(mesh);
 	}
 
 	void
-	pbr_unpack(PBR_Renderer & mr) 
+	pbr_unpack(PBR_Renderer & self)
 	{
-		mr.meshes.clear();
+		self.meshes.clear();
 	}
 
 	void
-	pbr_draw(const PBR_Renderer& mr, const Camera& cam)
+	pbr_draw(const PBR_Renderer& self, const Camera& cam)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
-		program_use(mr.prog);
+		program_use(self.prog);
 
 		//viewport
 		vec2f viewport = world::camera_viewport(cam);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 		//uniforms
-		uniform3f_set(mr.prog, "camera_pos_world", cam.pos);
-		uniform3f_set(mr.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
-		uniform3f_set(mr.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
-		cubemap_bind(mr.diffuse_irradiance_map, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(mr.prog, "irradiance_map", TEXTURE_UNIT::UNIT_0);
+		uniform3f_set(self.prog, "camera_pos_world", cam.pos);
+		uniform3f_set(self.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
+		uniform3f_set(self.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
+		cubemap_bind(self.diffuse_irradiance_map, TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(self.prog, "irradiance_map", TEXTURE_UNIT::UNIT_0);
 
-		for (const auto object : mr.meshes)
+		for (const auto object : self.meshes)
 		{
 			//MVP
 			Mat4f model = mat4_from_transform(object->model);
 			Mat4f mvp = camera_view_proj(cam) * model;
 
-			uniformmat4f_set(mr.prog, "mvp", mvp);
-			uniformmat4f_set(mr.prog, "model", model);
-			uniform3f_set(mr.prog, "object_color_albedo", vec3f{ 0.75f, 0.75f, 0.75f});
-			uniform1f_set(mr.prog, "metallic", 0.7);
-			uniform1f_set(mr.prog, "rough", 0.4);
+			uniformmat4f_set(self.prog, "mvp", mvp);
+			uniformmat4f_set(self.prog, "model", model);
+			uniform3f_set(self.prog, "object_color_albedo", vec3f{ 0.75f, 0.75f, 0.75f});
+			uniform1f_set(self.prog, "metallic", 0.7);
+			uniform1f_set(self.prog, "rough", 0.4);
 
 			//draw geometry
 			vao_bind(object->mesh.va, object->mesh.vs, object->mesh.is);

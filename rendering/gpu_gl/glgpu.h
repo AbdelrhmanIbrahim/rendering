@@ -99,7 +99,7 @@ namespace glgpu
 	cubemap_rgba_create(const io::Image imgs[6]);
 
 	cubemap
-	cubemap_hdr_create(const io::Image& img);
+	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
 
 	cubemap
 	cubemap_postprocess(cubemap cubemap, const char* pixel_shader);

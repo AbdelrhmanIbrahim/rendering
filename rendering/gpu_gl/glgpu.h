@@ -68,6 +68,12 @@ namespace glgpu
 		CUBEMAP,
 	};
 
+	struct Unifrom_Float
+	{
+		const char* uniform;
+		float value;
+	};
+
 	void
 	graphics_init();
 
@@ -131,8 +137,9 @@ namespace glgpu
 	cubemap
 	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
 
-	cubemap
-	cubemap_postprocess(cubemap cmap, program postprocessor, math::vec2f view_size);
+	//TODO -- ability to send array of different uniforms types table (revisit)
+	void
+	cubemap_postprocess(cubemap input, cubemap output, program postprocessor, Unifrom_Float uniform, math::vec2f view_size, int mipmap_level);
 
 	void
 	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);

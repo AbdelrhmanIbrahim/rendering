@@ -527,13 +527,15 @@ namespace glgpu
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, view_size[0], view_size[1]);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-		glViewport(0, 0, view_size[0], view_size[1]);
-		vao cube_vao = vao_create();
-		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
+		//setup
 		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
 
+		//render offline to the output cubemap texs
+		glViewport(0, 0, view_size[0], view_size[1]);
+		vao cube_vao = vao_create();
+		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
@@ -557,8 +559,8 @@ namespace glgpu
 		return cube_map;
 	}
 
-	cubemap
-	cubemap_postprocess(cubemap cmap, program postprocessor, vec2f view_size)
+	void
+	cubemap_postprocess(cubemap input, cubemap output, program postprocessor, Unifrom_Float uniform, vec2f view_size, int mipmap_level)
 	{
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
@@ -574,8 +576,6 @@ namespace glgpu
 			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
-		cubemap cubemap_pp = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, false);
-
 		GLuint fbo, rbo;
 		glGenFramebuffers(1, &fbo);
 		glGenRenderbuffers(1, &rbo);
@@ -585,16 +585,18 @@ namespace glgpu
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//convolute
+		program_use(postprocessor);
+		cubemap_bind(input, TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(postprocessor, "cubemap", TEXTURE_UNIT::UNIT_0);
+		uniform1f_set(postprocessor, uniform.uniform, uniform.value);
+
+		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		vao cube_vao = vao_create();
 		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
-
-		program_use(postprocessor);
-		cubemap_bind(cmap, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(postprocessor, "cubemap", TEXTURE_UNIT::UNIT_0);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cubemap_pp, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)output, mipmap_level);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
 			vao_bind(cube_vao, cube_vs, NULL);
@@ -609,8 +611,6 @@ namespace glgpu
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
 		buffer_delete(cube_vs);
-
-		return cubemap_pp;
 	}
 
 	void

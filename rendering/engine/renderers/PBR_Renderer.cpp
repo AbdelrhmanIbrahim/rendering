@@ -17,18 +17,17 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../rendering/engine/shaders/pbr.vertex", "../rendering/engine/shaders/pbr.pixel");
 
-		//Diffuse irriadiance convoluted map
+		/*Diffuse irriadiance convoluted map*/
 		io::Image diff = image_read("../rendering/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
 		self.diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512});
 		image_free(diff);
 
-		//Specular prefiltered convoluted map (Part 1 from the specular integration of the reflectance equation)
-		//1) create prefiltered convolution map with mipmap generated,
-		//for different roughness -> different reflective specular properties, rougher = blurrier reflections
+		/*Specular prefiltered convoluted map (Part 1 from the specular integration of the reflectance equation)*/
+		//1) create prefiltered convolution map with mipmap generated, rougher = blurrier reflections
 		vec2f prefiltered_initial_size{ 128, 128 };
 		self.specular_prefiltered_map = cubemap_create(prefiltered_initial_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, true);
 
-		//2) create env cubemap that will be used for convolution to create prefilterd map
+		//2) create env_cubemap that will be used for convolution to create prefilterd map
 		io::Image env = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
 		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 });
 
@@ -39,7 +38,7 @@ namespace rndr
 		{
 			float roughness = mip_level / max_mipmaps;
 			vec2f mipmap_size{ prefiltered_initial_size[0] * std::pow(0.5, mip_level) , prefiltered_initial_size[0] * std::pow(0.5, mip_level) };
-			cubemap_postprocess(env_cmap, self.diffuse_irradiance_map, prefiltering_prog, Unifrom_Float{"roughness", roughness}, mipmap_size, mip_level);
+			cubemap_postprocess(env_cmap, self.specular_prefiltered_map, prefiltering_prog, Unifrom_Float{"roughness", roughness}, mipmap_size, mip_level);
 		}
 		program_delete(prefiltering_prog);
 		cubemap_free(env_cmap);
@@ -82,9 +81,11 @@ namespace rndr
 		uniform3f_set(self.prog, "camera_pos_world", cam.pos);
 		uniform3f_set(self.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
 		uniform3f_set(self.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
+		
 		cubemap_bind(self.diffuse_irradiance_map, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(self.prog, "irradiance_map", TEXTURE_UNIT::UNIT_0);
-
+		uniform1i_set(self.prog, "diffuse_irradiance_map", TEXTURE_UNIT::UNIT_0);
+		cubemap_bind(self.specular_prefiltered_map, TEXTURE_UNIT::UNIT_1);
+		uniform1i_set(self.prog, "specular_prefiltered_map", TEXTURE_UNIT::UNIT_1);
 		for (const auto object : self.meshes)
 		{
 			//MVP
@@ -94,7 +95,7 @@ namespace rndr
 			uniformmat4f_set(self.prog, "mvp", mvp);
 			uniformmat4f_set(self.prog, "model", model);
 			uniform3f_set(self.prog, "object_color_albedo", vec3f{ 0.75f, 0.75f, 0.75f});
-			uniform1f_set(self.prog, "metallic", 0.7);
+			uniform1f_set(self.prog, "metallic", 0.8);
 			uniform1f_set(self.prog, "rough", 0.4);
 
 			//draw geometry

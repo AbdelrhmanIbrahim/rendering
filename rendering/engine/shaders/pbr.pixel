@@ -1,27 +1,9 @@
-#version 330 core
-
-uniform vec3 object_color_albedo;
-uniform vec3 light_color;
-uniform vec3 light_dir;
-uniform vec3 camera_pos_world;
-
-uniform float metallic;
-uniform float rough;
-uniform samplerCube diffuse_irradiance_map;
-
-in vec3 frag_pos_world;
-in vec3 normal_world;
-
-out vec4 frag_color;
-
-const float PI = 3.14159265359f;
-
 /*
 Physically Based Rendering is all about simulating light interactions with surfaces in much more realistic and physical based way 
 taking surface structure and energy conservation law into consideration by calculating the emissive and reflectance part for a surface.
 
 This calculation is based on what's called Rendering Equation, which calculates how much light energy at a given point in space :
-1) Irradiance : how much flux of all the incoming light waves at a certain area (reflectance)
+1) Irradiance : how much flux of all the incoming and reflected light waves at a certain area (reflectance = diffuse + specular)
 2) Emission : how much energy the body emits, in case of the surface is emissive which is not in our cases (emission)
 
 Usually in our case, we work on a simplified eqn of the Rendering eqn which ignores the emission part, we call it Reflectance eqn
@@ -30,12 +12,36 @@ that's all about how many lighting rays hitting a certain point on a surface to 
 Phong is a much simplified eqn of the relectance eqn but not considering the surface micro-structure and not physically based 
 as it doesn't care about the energy conservation law (reflectance and refraction).
 
-All the incoming functions is used to determine what is known as a bidirectional reflective distribution function (BRDF)
-which is a major part of the reflectance eqn and determines how light rays interacts with the surface and how much each individual light ray contributes
-to the final reflected light of an opaque surface given its material properties.
+Many of the following functions is used to determine what is known as a bidirectional reflective distribution function (BRDF)
+which is a major part of the specualr part of the reflectance eqn, how surface structure and light rays interacts with the surface.
 
-The following 3 functions used to determine BRDF. (we use Cook-Torrance BRDF)
+Lighting can happen using two techniques : 
+1) Direct source lights
+2) Image Based Lighting (IBL) which is an indirect surrounding enviroment lights
+
+In a realistic rendering we must use the second, so for each part of the integral eqn, the diffuse and specular parts, 
+there's precomputed enviroment maps that corresponds to each which we use in sampling to get a Physically Based Rendering.
+
+To understand the precomputed enviroment maps, read the comments section in the PBR renderer explaining each.
 */
+
+#version 330 core
+
+uniform vec3 object_color_albedo;
+uniform vec3 light_color;
+uniform vec3 light_dir;
+uniform vec3 camera_pos_world;
+uniform float metallic;
+uniform float rough;
+uniform samplerCube diffuse_irradiance_map;
+uniform samplerCube specular_prefiltered_map;
+
+in vec3 frag_pos_world;
+in vec3 normal_world;
+
+out vec4 frag_color;
+
+const float PI = 3.14159265359f;
 
 /*
 1) Normal Distribution Function that shows how many of the microfaces of the object is aligned to the halfway vector.
@@ -59,49 +65,52 @@ NDF_GGX(vec3 normal, vec3 halfway, float roughness)
 geometry shadowing with light dir through the microfaces + geometry obstruction with view dir which is blocking the reflected light dir from viewer
 contributes in the shadowing through the surface, we use Smith's method
 */
+
 float
-Geomtery_Schlick_GGX(float dot, float roughness)
+Geomtery_Schlick_GGX(float dot, float roughness, bool IBL)
 {
-	//Direct source lights
-	float k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
-	
-	//IBL
-	//float k = (roughness * roughness)/2;
+	//Direct source lights or IBL
+	float k;
+	if(IBL == false)
+		k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
+	else
+		k = (roughness * roughness) / 2;
 
 	float nom   = dot;
 	float denom = dot * (1.0 - k) + k;
 	return nom / denom;
 }
+
 float
-Geometry_Smith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness)
+Geometry_Smith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness, bool IBL)
 {
 	float nv = max(dot(normal, view_dir), 0.0);
 	float nl = max(dot(normal, light_dir), 0.0);
-	float ggx1 = Geomtery_Schlick_GGX(nv, roughness);
-	float ggx2 = Geomtery_Schlick_GGX(nl, roughness);
+	float ggx1 = Geomtery_Schlick_GGX(nv, roughness, IBL);
+	float ggx2 = Geomtery_Schlick_GGX(nl, roughness, IBL);
 	return ggx1 * ggx2;
 }
 
 /*
 3) Fresnel Function calculates how reflective the surface is which is the ratio of the reflections to the refractions
-according to the viewer angle, we use Fresnel-Schlick method. (google Fresnel effect and check any image)
-
-F0 is the base reflectivity
+according to the viewer angle, we use Fresnel-Schlick method. (google Fresnel effect and check any image), F0 is the base reflectivity.
 */
+
 vec3
 Fresnel_Schlick(float halfway_view_dot, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(1.0 - halfway_view_dot, 5.0);
 }
 
-vec3 Fresnel_Schlick_Roughness(float cos_theta, vec3 F0)
+vec3
+Fresnel_Schlick_Roughness(float cos_theta, vec3 F0)
 {
     return F0 + (max(vec3(1.0 - rough), F0) - F0) * pow(1.0 - cos_theta, 5.0);
 }
 
 //Cook-Torrance BRDF
 vec3
-BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
+Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 {
 	//NDF
 	vec3 halfway = normalize(view_dir + light_dir);
@@ -114,7 +123,7 @@ BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 	vec3 F = Fresnel_Schlick(clamp(dot(halfway, view_dir), 0.0, 1.0), F0);
 
 	//Geometry
-	float G = Geometry_Smith(normal, view_dir, light_dir, roughness);
+	float G = Geometry_Smith(normal, view_dir, light_dir, roughness, false);
 
 	//specular
 	vec3 nom = D * F * G;
@@ -135,19 +144,18 @@ void main()
 	float nl = max(dot(normal_world, -light_dir), 0.0);
 
 	//calc diffuse and specular of direct lighting
-	vec3 direct_light_irradiance = BRDF(normal_world, -light_dir, view_dir, rough) * light_color * nl;
+	vec3 direct_light_irradiance = Direct_Light_BRDF(normal_world, -light_dir, view_dir, rough) * light_color * nl;
 
 	//calc diffuse and specular of indirect enviroment lighting (IBL) 
-	float ao = 1.0f;
 	vec3 F0 = vec3(0.04);
 	vec3 kD = 1.0 - Fresnel_Schlick_Roughness(max(dot(normal_world, view_dir), 0.0), F0);
 	kD *= 1.0 - metallic;
-	vec3 indirect_IBL_irradiance = texture(diffuse_irradiance_map, normal_world).rgb;
-	vec3 diffuse = indirect_IBL_irradiance * object_color_albedo;
-	vec3 ambient = (kD * diffuse) * ao;
+	vec3 env_irradiance = texture(diffuse_irradiance_map, normal_world).rgb;
+	vec3 diffuse = env_irradiance * object_color_albedo;
+	vec3 IBL_irradiance = (kD * diffuse);
 	
 	//direct and indirect lighting irradiance
-	vec3 color = ambient + direct_light_irradiance;
+	vec3 color = IBL_irradiance + direct_light_irradiance;
 	
 	// HDR tonemapping and gamma correction
 	color = color / (color + vec3(1.0));

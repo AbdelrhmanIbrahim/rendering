@@ -1,0 +1,102 @@
+/*
+USAGE:
+	This shader is used to generate the convoluted prefiltered specular map which is the solution of the first part of the
+	specular integral equation in the reflectance equation. which is what we use in the PBR shader to sample a part from the specular part of the rendering eqn integral.
+
+HOW TO:
+	To convolute the env map to generate the prefiltered specular map, we need to know average of all the reflected rays of a surface, 
+	reflectd light rays are not simply reflected around the normal at this point with same angle but with a different direction,
+	this will be only in smooth non rough surfaces at all, mirrors for example. In real life, the reflected rays are contained
+	by some kind of lobe we call the specular lobe which is oriented around a direction we call halfway vector determind according 
+	surface microfaces structure which roughness contributes to determine. Reflected light rays are random but somehow uniformaly distributed within the lobe
+	according to the roughness and the micro structure of the surface. Rougher surfaces give Blurrer reflections and Smooth (metallic for example) surfaces 
+	give clear non distorted reflections.
+
+	So, to generate those semi-random reflected outcoming rays (samples number we determine) that are constrained through
+	a certain lobe we use various concepts from statistics and probablity :
+	1) Monte Carlo integration : used to give an approx average value for a given huge set without taking the whole set into consideration + weight for each sample.
+	2) Low-discrepancy Hammersley sequence : used to generate random - uniformly distrubtion of the samples.
+	3) Van Der Corpus sequence : used to mirror a decimal binary representation around its decimal point, to generate Low-discrepancy Hammersley sequence.
+
+	then we generate the sampling vectors (the reflected light rays used to sample the env map) using sampling called 
+	GGX importance sampling which is generating the samples biased and constrained around an orientation using both concepts above. (inside the specular lobe)
+*/
+
+#version 330 core
+out vec4 frag_color;
+in vec3 world_pos;
+
+uniform samplerCube cubemap;
+uniform float roughness;
+
+const float PI = 3.14159265359;
+
+// Van Der Corpus sequence to mirror a decimal binary representation around its decimal point. (good luck figuring this out)
+float
+VDC(uint bits) 
+{
+	bits = (bits << 16u) | (bits >> 16u);
+	bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+	bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+	bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+	bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+	return float(bits) * 2.3283064365386963e-10; //0x100000000
+}
+
+// Low-discrepancy sequence to generate low-discrepancy sample i of the total sample set of size N.
+vec2
+Hammersley(uint i, uint N)
+{
+	return vec2(float(i)/float(N), VDC(i));
+}
+
+vec3
+GGX_Importance_Sampling(vec2 Xi, vec3 N, float roughness)
+{
+	float a = roughness*roughness;
+
+	float phi = 2.0 * PI * Xi.x;
+	float cos_theta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));
+	float sin_theta = sqrt(1.0 - cos_theta*cos_theta);
+
+	// from spherical coordinates to cartesian coordinates
+	vec3 H;
+	H.x = cos(phi) * sin_theta;
+	H.y = sin(phi) * sin_theta;
+	H.z = cos_theta;
+
+	// from tangent-space vector to world-space sample vector
+	vec3 up        = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
+	vec3 tangent   = normalize(cross(up, N));
+	vec3 bitangent = cross(N, tangent);
+
+	vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
+	return normalize(sampleVec);
+}
+
+void
+main()
+{
+	vec3 N = normalize(world_pos);
+	vec3 R = N;
+	vec3 V = R;
+
+	const uint SAMPLE_COUNT = 1024u;
+	float weight = 0.0;
+	vec3 prefiltered_color = vec3(0.0);
+	for(uint i = 0u; i < SAMPLE_COUNT; ++i)
+	{
+		vec2 Xi = Hammersley(i, SAMPLE_COUNT);
+		vec3 H  = GGX_Importance_Sampling(Xi, N, roughness);
+		vec3 L  = normalize(2.0 * dot(V, H) * H - V);
+
+		float NdotL = max(dot(N, L), 0.0);
+		if(NdotL > 0.0)
+		{
+			prefiltered_color += texture(cubemap, L).rgb * NdotL;
+			weight += NdotL;
+		}
+	}
+	prefiltered_color = prefiltered_color / weight;
+	frag_color = vec4(prefiltered_color, 1.0);
+}

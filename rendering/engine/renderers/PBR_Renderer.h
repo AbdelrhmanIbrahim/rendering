@@ -13,11 +13,21 @@ namespace rndr
 	struct PBR_Renderer
 	{
 		glgpu::program prog;
-		/*the diffuse part of the reflectance integral equation : irradiance convoluted cubemap that corresponds to the contribution of
-		all incoming light rays from the enviroment map through the hemipshere surronding a given point*/
+
+		//PBR is based on solving the rendering equation integral, for our case solving the diffuse and specular integrations only (excluding the emission part)
+		/* 1) DIFFUSE : we solve the diffuse part of the reflectance integral equation using irradiance convoluted cubemap (diffuse_irradiance_map) 
+			that corresponds to the contributions of all incoming light rays from the enviroment map 
+			through the hemipshere surrounding a given normal at a given point*/
  		glgpu::cubemap diffuse_irradiance_map;
-		/*the first part of the specular part of the reflectance integral equation : prefiltered convoluted map that corresponds to the contribution of
-		the outcoming reflected rays contained by the specular lobe according to the surface roughness at a given point*/
+
+		/* 2) SPECULAR : we solve the specular part of the reflectance integral equation using split sum approx algorithm by EPIC Games, 
+			split sum approx algorithm splits the specular integral part of the reflectance equation to a simpler two integral parts : 
+			A) we solve the first part of the specular part of the reflectance integral equation using prefiltered convoluted map that
+				corresponds to the contribution of the outcoming reflected rays at a given point of the surface contained by the specular lobe
+				which changes according to the surface roughness (specular_prefiltered_map)
+			B) we solve the second part of the integral using Lookup Texture of the normal-the incoming light ray angle and surface roughness, 
+				which represents the BRDF of the specular integral (specular_BRDF_LUT)
+		*/
 		glgpu::cubemap specular_prefiltered_map;
 		std::vector<const world::object3D*> meshes;
 	};

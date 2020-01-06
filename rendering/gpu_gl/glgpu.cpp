@@ -588,6 +588,8 @@ namespace glgpu
 		program_use(postprocessor);
 		cubemap_bind(input, TEXTURE_UNIT::UNIT_0);
 		uniform1i_set(postprocessor, "cubemap", TEXTURE_UNIT::UNIT_0);
+
+		//assign float uniforms (move to arrays)
 		uniform1f_set(postprocessor, uniform.uniform, uniform.value);
 
 		//render offline to the output cubemap texs

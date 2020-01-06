@@ -235,5 +235,8 @@
     <None Include="engine\shaders\diffuse_irradiance_convolution.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
+    <None Include="engine\shaders\specular_prefiltering_convolution.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -4,17 +4,13 @@
 #include <assert.h>
 #include <fstream>
 #include <string>
-#include <iostream>
 
 #include <math/Matrix.h>
-
 #include <math/Gfx.h>
 
 using namespace io;
 using namespace math;
 using namespace geo;
-
-#include <geometry/Mesh.h>
 
 namespace glgpu
 {
@@ -355,7 +351,7 @@ namespace glgpu
 	}
 
 	texture
-	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap)
 	{
 		GLuint tex;
 		glGenTextures(1, &tex);
@@ -365,6 +361,10 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), size[0], size[1], 0, _map(format), _map(type), NULL);
+
+		if (mipmap)
+			glGenerateMipmap(GL_TEXTURE_2D);
+
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
 		return (texture)tex;
@@ -446,7 +446,7 @@ namespace glgpu
 	}
 
 	cubemap
-	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type)
+	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap)
 	{
 		GLuint cmap;
 		glGenTextures(1, &cmap);
@@ -456,8 +456,17 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		if (mipmap)
+		{
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		}
+		else
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
 		return (cubemap)cmap;
 	}
@@ -492,7 +501,8 @@ namespace glgpu
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
 		//don't use ortho projection as this will make z in NDC the same so your captures will look like duplicated
-		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
+		//1.00000004321 is tan(45 degrees)
+		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, 1.00000004321);
 		Mat4f views[6] =
 		{
 			view_lookat_matrix(vec3f{-0.001f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
@@ -506,7 +516,7 @@ namespace glgpu
 		//create env cubemap
 		//(HDR should a 32 bit for each channel to cover a wide range of colors,
 		//they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
-		cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT);
+		cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, false);
 
 		//float framebuffer to render to
 		GLuint fbo, rbo;
@@ -524,14 +534,13 @@ namespace glgpu
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
 
-		auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
-			vao_bind(mesh.va, mesh.vs, mesh.is);
-			draw_indexed(mesh.indices.size());
+			vao_bind(cube_vao, cube_vs, NULL);
+			draw_strip(36);
 			vao_unbind();
 		}
 		texture2d_unbind();
@@ -549,11 +558,12 @@ namespace glgpu
 	}
 
 	cubemap
-	cubemap_postprocess(cubemap cmap, vec2f view_size, const char* pixel_shader)
+	cubemap_postprocess(cubemap cmap, program postprocessor, vec2f view_size)
 	{
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
-		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, tan(0.785398185f));
+		//1.00000004321 is tan(45 degrees)
+		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, 1.00000004321);
 		Mat4f views[6] =
 		{
 			view_lookat_matrix(vec3f{-0.001f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
@@ -564,7 +574,7 @@ namespace glgpu
 			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
-		cubemap cubemap_pp = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT);
+		cubemap cubemap_pp = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, false);
 
 		GLuint fbo, rbo;
 		glGenFramebuffers(1, &fbo);
@@ -578,16 +588,15 @@ namespace glgpu
 		glViewport(0, 0, view_size[0], view_size[1]);
 		vao cube_vao = vao_create();
 		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
-		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/irradiance_convolution.pixel");
-		program_use(prog);
 
+		program_use(postprocessor);
 		cubemap_bind(cmap, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(prog, "cubemap", TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(postprocessor, "cubemap", TEXTURE_UNIT::UNIT_0);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cubemap_pp, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			uniformmat4f_set(prog, "vp", proj * views[i]);
+			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
 			vao_bind(cube_vao, cube_vs, NULL);
 			draw_strip(36);
 			vao_unbind();
@@ -600,7 +609,6 @@ namespace glgpu
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
 		buffer_delete(cube_vs);
-		program_delete(prog);
 
 		return cubemap_pp;
 	}
@@ -617,12 +625,6 @@ namespace glgpu
 	{
 		GLuint t = (GLuint)cmap;
 		glDeleteTextures(1, &t);
-	}
-
-	void
-	mipmap_generate(TARGET target)
-	{
-		glGenerateMipmap(_map(target));
 	}
 
 	framebuffer

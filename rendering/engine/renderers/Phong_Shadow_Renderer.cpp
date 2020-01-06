@@ -21,7 +21,7 @@ namespace rndr
 		self.depth_prog = program_create("../rendering/engine/shaders/depth.vertex", "../rendering/engine/shaders/depth.pixel");
 		self.phong_shadow_prog = program_create("../rendering/engine/shaders/phong_shadow.vertex", "../rendering/engine/shaders/phong_shadow.pixel");
 		self.fb = framebuffer_create();
-		self.depth = texture2d_create(vec2f{ SHADOW_WIDTH, SHADOW_HEIGHT}, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8);
+		self.depth = texture2d_create(vec2f{ SHADOW_WIDTH, SHADOW_HEIGHT}, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8, false);
 
 		return self;
 	}

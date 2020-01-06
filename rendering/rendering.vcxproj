@@ -178,6 +178,7 @@
     <None Include="engine\shaders\phong_shadow.vertex" />
     <None Include="engine\shaders\skybox.pixel" />
     <None Include="engine\shaders\skybox.vertex" />
+    <None Include="engine\shaders\specular_prefiltering_convolution.pixel" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

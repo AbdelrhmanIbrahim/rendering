@@ -108,7 +108,7 @@ namespace glgpu
 	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
 
 	texture
-	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
 
 	void
 	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);
@@ -123,7 +123,7 @@ namespace glgpu
 	texture_free(texture texture);
 
 	cubemap
-	cubemap_create(math::vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type);
+	cubemap_create(math::vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap);
 
 	cubemap
 	cubemap_rgba_create(const io::Image imgs[6]);
@@ -132,16 +132,13 @@ namespace glgpu
 	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
 
 	cubemap
-	cubemap_postprocess(cubemap cubemap, math::vec2f view_size, const char* pixel_shader);
+	cubemap_postprocess(cubemap cmap, program postprocessor, math::vec2f view_size);
 
 	void
 	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);
 
 	void
 	cubemap_free(cubemap cmap);
-
-	void
-	mipmap_generate(TARGET target);
 
 	framebuffer
 	framebuffer_create();

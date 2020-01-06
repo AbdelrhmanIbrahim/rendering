@@ -30,7 +30,7 @@ namespace rndr
 
 		//2) convolute env_cmap 5 times using prefiltering shader (mipmap) and save them to specular_prefiltered_map mipmaps
 		//create specular env cubemap
-		io::Image env = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
+		io::Image env = image_read("../rendering/res/imgs/hdr/Alexs_spec.hdr", io::IMAGE_FORMAT::HDR);
 		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 });
 		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/diffuse_irradiance_convolution.pixel");
 		for (unsigned int mip_level = 0; mip_level < 5; ++mip_level)

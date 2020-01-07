@@ -95,8 +95,8 @@ namespace rndr
 			uniformmat4f_set(self.prog, "mvp", mvp);
 			uniformmat4f_set(self.prog, "model", model);
 			uniform3f_set(self.prog, "object_color_albedo", vec3f{ 0.75f, 0.75f, 0.75f});
-			uniform1f_set(self.prog, "metallic", 0.8);
-			uniform1f_set(self.prog, "rough", 0.4);
+			uniform1f_set(self.prog, "metallic", 0.9);
+			uniform1f_set(self.prog, "rough", 0.2);
 
 			//draw geometry
 			vao_bind(object->mesh.va, object->mesh.vs, object->mesh.is);

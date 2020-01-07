@@ -7,7 +7,7 @@ layout(location = 2) in vec2 uv;
 uniform mat4 model;
 uniform mat4 mvp;
 
-out vec3 frag_pos_world;
+out vec3 pos_world;
 out vec3 normal_world;
 
 void main()
@@ -15,6 +15,6 @@ void main()
 	gl_Position = mvp * vec4(pos.x, pos.y, pos.z, 1.0);
 
 	//world (http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/) -- calc normal matrix on cpu (revisit)
-	frag_pos_world = (model * vec4(pos.x, pos.y, pos.z, 1.0)).xyz;
+	pos_world = (model * vec4(pos.x, pos.y, pos.z, 1.0)).xyz;
 	normal_world = normalize(mat3(transpose(inverse(model))) * normal);
 }

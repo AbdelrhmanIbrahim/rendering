@@ -143,7 +143,8 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 	return (diffuse + specular);
 }
 
-void main()
+void
+main()
 {
 	//reflectance eqn (irradiance)
 	vec3 view_dir = normalize(camera_pos_world - pos_world);
@@ -160,12 +161,12 @@ void main()
 	vec3 diffuse = env_irradiance * object_color_albedo;
 	vec3 IBL_irradiance = (kD * diffuse);
 	
-	//direct and indirect lighting irradiance
+	//calc direct and indirect lighting irradiance
 	vec3 color = IBL_irradiance + direct_light_irradiance;
 	
-	// HDR tonemapping and gamma correction
+	//HDR tonemapping and gamma correction
 	color = color / (color + vec3(1.0));
 	color = pow(color, vec3(1.0/2.2));
-	
+
 	frag_color = vec4(color, 1.0);
 }

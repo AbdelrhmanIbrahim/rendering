@@ -53,48 +53,56 @@ Hammersley(uint i, uint N)
 vec3
 GGX_Importance_Sampling(vec2 Xi, vec3 N, float roughness)
 {
+	//calc userd to generate a sample vector that somehow oriented around the microfaces halfway vector and constrained inside the specular lobe
 	float a = roughness*roughness;
-
 	float phi = 2.0 * PI * Xi.x;
 	float cos_theta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));
 	float sin_theta = sqrt(1.0 - cos_theta*cos_theta);
 
 	// from spherical coordinates to cartesian coordinates
-	vec3 H;
-	H.x = cos(phi) * sin_theta;
-	H.y = sin(phi) * sin_theta;
-	H.z = cos_theta;
+	vec3 H(cos(phi) * sin_theta,
+		   sin(phi) * sin_theta,
+		   cos_theta);
 
 	// from tangent-space vector to world-space sample vector
 	vec3 up        = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
 	vec3 tangent   = normalize(cross(up, N));
-	vec3 bitangent = cross(N, tangent);
+	vec3 bitangent = normalize(cross(N, tangent));
 
-	vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
-	return normalize(sampleVec);
+	vec3 sample = tangent * H.x + bitangent * H.y + N * H.z;
+	return normalize(sample);
 }
 
 void
 main()
 {
+	//split sum algorithm assumes the view direction to be the normal to give a decent approx result and simplifying the calc
 	vec3 N = normalize(world_pos);
-	vec3 R = N;
-	vec3 V = R;
+	vec3 view = N;
 
 	const uint SAMPLE_COUNT = 1024u;
 	float weight = 0.0;
 	vec3 prefiltered_color = vec3(0.0);
 	for(uint i = 0u; i < SAMPLE_COUNT; ++i)
 	{
+		//for each sample we generate a random - uniformaly distrbuted vector used in importance sampling to get the sample vector 
+		//that should be biased and constrained towards the specular lobe according to the surface roughness
 		vec2 Xi = Hammersley(i, SAMPLE_COUNT);
 		vec3 H  = GGX_Importance_Sampling(Xi, N, roughness);
-		vec3 L  = normalize(2.0 * dot(V, H) * H - V);
 
-		float NdotL = max(dot(N, L), 0.0);
+		//H should be our sample vector (reflected ray inside the loop), I am trying to figure this L sample out, he uses L instead for sampling.
+		//as far as I understood, a scaling (pos or neg) for the H vector happens here then adds the negated normal of the fragment, like getting 
+		//the sample more oriented oround the fragment normal inside the lobe (as the view is assumed as the normal), not sure tho.
+		//needs to debug impotance sampling vector on a testcase on CPU to figure this out correctly.
+		vec3 L  = normalize(2.0 * dot(view, H) * H - view);
+
+		//sample vector oriented around the normal? if yes then it contributes to our reflections at this pixel
+		float cos_theta = max(dot(N, L), 0.0);
 		if(NdotL > 0.0)
 		{
-			prefiltered_color += texture(env_map, L).rgb * NdotL;
-			weight += NdotL;
+			//think of it as the summation of monte carlo as each sample is weighted for how much it contributes to the final color
+			prefiltered_color += texture(env_map, L).rgb * cos_theta;
+			weight += cos_theta;
 		}
 	}
 	prefiltered_color = prefiltered_color / weight;

@@ -117,7 +117,6 @@ namespace rndr
 	void
 	skybox_renderer_draw(const Skybox_Renderer& self, const Camera& cam)
 	{
-		auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
 		depth_test(DEPTH_TEST::LE);
 		{
 			program_use(self.prog);

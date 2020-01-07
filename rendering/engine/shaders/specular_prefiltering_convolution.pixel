@@ -87,21 +87,19 @@ main()
 	for(uint i = 0u; i < SAMPLE_COUNT; ++i)
 	{
 		//for each sample we generate a random - uniformaly distrbuted vector used in importance sampling to get the sample vector 
-		//that should be biased and constrained towards the specular lobe according to the surface roughness
+		//that should be biased, oriented around the halfway vector and constrained by the specular lobe according to the surface roughness
 		vec2 Xi = Hammersley(i, SAMPLE_COUNT);
-		vec3 H  = GGX_Importance_Sampling(Xi, N, roughness);
+		vec3 halfway  = GGX_Importance_Sampling(Xi, N, roughness);
 
-		//H should be our sample vector (reflected ray inside the loop), I am trying to figure this L sample out, he uses L instead for sampling.
-		//as far as I understood, a scaling (pos or neg) for the H vector happens here then adds the negated normal of the fragment, like getting 
-		//the sample more oriented oround the fragment normal inside the lobe (as the view is assumed as the normal), not sure tho.
-		//needs to debug impotance sampling vector on a testcase on CPU to figure this out correctly.
-		vec3 L  = normalize(2.0 * dot(view, H) * H - view);
+		//is this somekind of orienting around the halfway?
+		//needs to debug impotance sampling vector on a testcase on CPU to figure this out correctly. (revisit)
+		vec3 L  = normalize(2.0 * dot(view, halfway) * halfway - view);
 
 		//sample vector oriented around the normal? if yes then it contributes to our reflections at this pixel
 		float cos_theta = max(dot(N, L), 0.0);
 		if(cos_theta > 0.0)
 		{
-			//think of it as the summation of monte carlo as each sample is weighted for how much it contributes to the final color
+			//think of it as the pdf of monte carlo as each sample is weighted for how much it contributes to the final color
 			prefiltered_color += texture(env_map, L).rgb * cos_theta;
 			weight += cos_theta;
 		}

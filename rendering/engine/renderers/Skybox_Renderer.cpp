@@ -98,7 +98,7 @@ namespace rndr
 
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
-		self.cubemap = cubemap_hdr_create(img, vec2f{800, 800});
+		self.cubemap = cubemap_hdr_create(img, vec2f{800, 800}, false);
 
 		image_free(img);
 

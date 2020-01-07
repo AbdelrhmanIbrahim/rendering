@@ -135,7 +135,7 @@ namespace glgpu
 	cubemap_rgba_create(const io::Image imgs[6]);
 
 	cubemap
-	cubemap_hdr_create(const io::Image& img, math::vec2f view_size);
+	cubemap_hdr_create(const io::Image& img, math::vec2f view_size, bool mipmap);
 
 	//TODO -- ability to send array of different uniforms types table (revisit)
 	void

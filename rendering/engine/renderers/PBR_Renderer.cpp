@@ -19,7 +19,7 @@ namespace rndr
 
 		/*Diffuse irriadiance convoluted map*/
 		io::Image diff = image_read("../rendering/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
-		self.diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512});
+		self.diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512}, false);
 		image_free(diff);
 
 		/*Specular prefiltered convoluted map (Part 1 from the specular integration of the reflectance equation)*/
@@ -29,7 +29,7 @@ namespace rndr
 
 		//2) create env_cubemap that will be used for convolution to create prefilterd map
 		io::Image env = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
-		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 });
+		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, false);
 
 		//3) convolute env_cmap 5 times (mipmaps) using prefiltering shader and save them to specular_prefiltered_map mipmaps, diff roughness = diff prefiltered map
 		program prefiltering_prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/specular_prefiltering_convolution.pixel");

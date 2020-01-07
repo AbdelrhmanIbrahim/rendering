@@ -23,8 +23,8 @@ HOW TO:
 */
 
 #version 330 core
-out vec4 frag_color;
 in vec3 world_pos;
+out vec4 frag_color;
 
 uniform samplerCube env_map;
 uniform float roughness;
@@ -60,9 +60,10 @@ GGX_Importance_Sampling(vec2 Xi, vec3 N, float roughness)
 	float sin_theta = sqrt(1.0 - cos_theta*cos_theta);
 
 	// from spherical coordinates to cartesian coordinates
-	vec3 H(cos(phi) * sin_theta,
-		   sin(phi) * sin_theta,
-		   cos_theta);
+	vec3 H;
+	H.x = cos(phi) * sin_theta;
+	H.y = sin(phi) * sin_theta;
+	H.z = cos_theta;
 
 	// from tangent-space vector to world-space sample vector
 	vec3 up        = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
@@ -98,7 +99,7 @@ main()
 
 		//sample vector oriented around the normal? if yes then it contributes to our reflections at this pixel
 		float cos_theta = max(dot(N, L), 0.0);
-		if(NdotL > 0.0)
+		if(cos_theta > 0.0)
 		{
 			//think of it as the summation of monte carlo as each sample is weighted for how much it contributes to the final color
 			prefiltered_color += texture(env_map, L).rgb * cos_theta;

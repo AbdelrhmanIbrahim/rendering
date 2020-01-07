@@ -36,7 +36,7 @@ namespace rndr
 		unsigned int max_mipmaps = 5;
 		for (unsigned int mip_level = 0; mip_level < max_mipmaps; ++mip_level)
 		{
-			float roughness = mip_level / max_mipmaps;
+			float roughness = (float)mip_level / max_mipmaps;
 			vec2f mipmap_size{ prefiltered_initial_size[0] * std::pow(0.5, mip_level) , prefiltered_initial_size[0] * std::pow(0.5, mip_level) };
 			cubemap_postprocess(env_cmap, self.specular_prefiltered_map, prefiltering_prog, Unifrom_Float{"roughness", roughness}, mipmap_size, mip_level);
 		}

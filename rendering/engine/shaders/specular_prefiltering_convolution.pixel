@@ -26,12 +26,12 @@ HOW TO:
 out vec4 frag_color;
 in vec3 world_pos;
 
-uniform samplerCube cubemap;
+uniform samplerCube env_map;
 uniform float roughness;
 
 const float PI = 3.14159265359;
 
-// Van Der Corpus sequence to mirror a decimal binary representation around its decimal point. (good luck figuring this out)
+// Van Der Corpus sequence to mirror a decimal binary representation around its decimal point. (I didn't deepen into these masks much)
 float
 VDC(uint bits) 
 {
@@ -93,7 +93,7 @@ main()
 		float NdotL = max(dot(N, L), 0.0);
 		if(NdotL > 0.0)
 		{
-			prefiltered_color += texture(cubemap, L).rgb * NdotL;
+			prefiltered_color += texture(env_map, L).rgb * NdotL;
 			weight += NdotL;
 		}
 	}

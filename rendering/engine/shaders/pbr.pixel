@@ -36,7 +36,7 @@ uniform float rough;
 uniform samplerCube diffuse_irradiance_map;
 uniform samplerCube specular_prefiltered_map;
 
-in vec3 frag_pos_world;
+in vec3 pos_world;
 in vec3 normal_world;
 
 out vec4 frag_color;
@@ -67,27 +67,32 @@ contributes in the shadowing through the surface, we use Smith's method
 */
 
 float
-Geomtery_Schlick_GGX(float dot, float roughness, bool IBL)
+_GGX_Direct(float roughness)
 {
-	//Direct source lights or IBL
-	float k;
-	if(IBL == false)
-		k = (roughness + 1.0) * (roughness + 1.0) / 8.0;
-	else
-		k = (roughness * roughness) / 2;
+	return (roughness + 1.0) * (roughness + 1.0) / 8.0;
+}
 
+float
+_GGX_IBL(float roughness)
+{
+	return (roughness * roughness) / 2;
+}
+
+float
+Geomtery_Schlick_GGX(float dot, float k)
+{
 	float nom   = dot;
 	float denom = dot * (1.0 - k) + k;
 	return nom / denom;
 }
 
 float
-Geometry_Smith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness, bool IBL)
+Geometry_Smith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness, float k)
 {
 	float nv = max(dot(normal, view_dir), 0.0);
 	float nl = max(dot(normal, light_dir), 0.0);
-	float ggx1 = Geomtery_Schlick_GGX(nv, roughness, IBL);
-	float ggx2 = Geomtery_Schlick_GGX(nl, roughness, IBL);
+	float ggx1 = Geomtery_Schlick_GGX(nv, k);
+	float ggx2 = Geomtery_Schlick_GGX(nl, k);
 	return ggx1 * ggx2;
 }
 
@@ -123,7 +128,8 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 	vec3 F = Fresnel_Schlick(clamp(dot(halfway, view_dir), 0.0, 1.0), F0);
 
 	//Geometry
-	float G = Geometry_Smith(normal, view_dir, light_dir, roughness, false);
+	float k = _GGX_Direct(roughness);
+	float G = Geometry_Smith(normal, view_dir, light_dir, roughness, k);
 
 	//specular
 	vec3 nom = D * F * G;
@@ -140,7 +146,7 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 void main()
 {
 	//reflectance eqn (irradiance)
-	vec3 view_dir = normalize(camera_pos_world - frag_pos_world);
+	vec3 view_dir = normalize(camera_pos_world - pos_world);
 	float nl = max(dot(normal_world, -light_dir), 0.0);
 
 	//calc diffuse and specular of direct lighting

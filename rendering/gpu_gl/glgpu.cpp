@@ -598,14 +598,14 @@ namespace glgpu
 		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
 
 		//TEST
-		io::Image imgs[6];
+		/*io::Image imgs[6];
 		for (int i = 0; i < 6; ++i)
 		{
 			imgs[i].data = new unsigned char[4 * view_size[0] * view_size[1]];
 			imgs[i].width = view_size[0];
 			imgs[i].height = view_size[1];
 			imgs[i].channels = 4;
-		}
+		}*/
 
 		for (unsigned int i = 0; i < 6; ++i)
 		{
@@ -617,14 +617,14 @@ namespace glgpu
 			vao_unbind();
 
 			//TEST
-			glReadPixels(0, 0, view_size[0], view_size[1], GL_RGBA, GL_UNSIGNED_BYTE, imgs[i].data);
+			/*glReadPixels(0, 0, view_size[0], view_size[1], GL_RGBA, GL_UNSIGNED_BYTE, imgs[i].data);
 			std::string name = "../rendering/res/imgs/specular_test/img_" + std::to_string(i) + std::to_string(mipmap_level) +".png";
-			io::image_write(imgs[i], name.c_str(), io::IMAGE_FORMAT::PNG);
+			io::image_write(imgs[i], name.c_str(), io::IMAGE_FORMAT::PNG);*/
 		}
 
 		//TEST - free
-		for (int i = 0; i < 6; ++i)
-			io::image_free(imgs[i]);
+		/*for (int i = 0; i < 6; ++i)
+			io::image_free(imgs[i]);*/
 
 		texture2d_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);

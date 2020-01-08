@@ -232,10 +232,16 @@
     <None Include="engine\shaders\cube.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
+    <None Include="engine\shaders\specular_prefiltering_convolution.pixel">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
     <None Include="engine\shaders\diffuse_irradiance_convolution.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
-    <None Include="engine\shaders\specular_prefiltering_convolution.pixel">
+    <None Include="engine\shaders\quad_ndc.vertex">
+      <Filter>Header Files\engine\shaders</Filter>
+    </None>
+    <None Include="engine\shaders\specular_BRDF_convloution.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
   </ItemGroup>

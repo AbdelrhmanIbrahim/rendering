@@ -31,7 +31,8 @@ uniform float roughness;
 
 const float PI = 3.14159265359;
 
-// Van Der Corpus sequence to mirror a decimal binary representation around its decimal point. (I didn't deepen into these masks much)
+//Van Der Corpus sequence to mirror a decimal binary representation around its decimal point.
+//read this to understand : http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
 float
 VDC(uint bits) 
 {
@@ -96,12 +97,12 @@ main()
 		vec3 L  = normalize(2.0 * dot(view, halfway) * halfway - view);
 
 		//sample vector oriented around the normal? if yes then it contributes to our reflections at this pixel
-		float cos_theta = max(dot(N, L), 0.0);
-		if(cos_theta > 0.0)
+		float NL = max(dot(N, L), 0.0);
+		if(NL > 0.0)
 		{
 			//think of it as the pdf of monte carlo as each sample is weighted for how much it contributes to the final color
-			prefiltered_color += texture(env_map, L).rgb * cos_theta;
-			weight += cos_theta;
+			prefiltered_color += texture(env_map, L).rgb * NL;
+			weight += NL;
 		}
 	}
 	prefiltered_color = prefiltered_color / weight;

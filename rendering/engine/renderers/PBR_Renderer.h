@@ -20,15 +20,18 @@ namespace rndr
 			through the hemipshere surrounding a given normal at a given point*/
  		glgpu::cubemap diffuse_irradiance_map;
 
-		/* 2) SPECULAR : we solve the specular part of the reflectance integral equation using split sum approx algorithm by EPIC Games, 
-			split sum approx algorithm splits the specular integral part of the reflectance equation to a simpler two integral parts : 
+		/* 2) SPECULAR : we solve the specular part of the reflectance integral equation using split sum approx algorithm by EPIC Games.
+			Split sum approx algorithm splits the specular integral part of the reflectance equation to a simpler two integral parts : 
 			A) we solve the first part of the specular part of the reflectance integral equation using prefiltered convoluted map that
 				corresponds to the contribution of the outcoming reflected rays at a given point of the surface contained by the specular lobe
 				which changes according to the surface roughness (specular_prefiltered_map)
 			B) we solve the second part of the integral using Lookup Texture of the normal-the incoming light ray angle and surface roughness, 
 				which represents the BRDF of the specular integral (specular_BRDF_LUT)
+			Read till page 7 for more understanding : https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 		*/
 		glgpu::cubemap specular_prefiltered_map;
+		glgpu::texture specular_BRDF_LUT;
+
 		std::vector<const world::object3D*> meshes;
 	};
 

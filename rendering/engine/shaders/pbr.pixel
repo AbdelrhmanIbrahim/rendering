@@ -73,13 +73,7 @@ _GGX_Direct(float roughness)
 }
 
 float
-_GGX_IBL(float roughness)
-{
-	return (roughness * roughness) / 2;
-}
-
-float
-Geomtery_Schlick_GGX(float dot, float k)
+_Geomtery_Schlick_GGX(float dot, float k)
 {
 	float nom   = dot;
 	float denom = dot * (1.0 - k) + k;
@@ -91,8 +85,8 @@ Geometry_Smith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness, floa
 {
 	float nv = max(dot(normal, view_dir), 0.0);
 	float nl = max(dot(normal, light_dir), 0.0);
-	float ggx1 = Geomtery_Schlick_GGX(nv, k);
-	float ggx2 = Geomtery_Schlick_GGX(nl, k);
+	float ggx1 = _Geomtery_Schlick_GGX(nv, k);
+	float ggx2 = _Geomtery_Schlick_GGX(nl, k);
 	return ggx1 * ggx2;
 }
 
@@ -128,8 +122,7 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 	vec3 F = Fresnel_Schlick(clamp(dot(halfway, view_dir), 0.0, 1.0), F0);
 
 	//Geometry
-	float k = _GGX_Direct(roughness);
-	float G = Geometry_Smith(normal, view_dir, light_dir, roughness, k);
+	float G = Geometry_Smith(normal, view_dir, light_dir, roughness, _GGX_Direct(roughness));
 
 	//specular
 	vec3 nom = D * F * G;

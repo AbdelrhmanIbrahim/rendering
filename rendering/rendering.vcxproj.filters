@@ -241,7 +241,7 @@
     <None Include="engine\shaders\quad_ndc.vertex">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
-    <None Include="engine\shaders\specular_BRDF_convloution.pixel">
+    <None Include="engine\shaders\specular_BRDF_convolution.pixel">
       <Filter>Header Files\engine\shaders</Filter>
     </None>
   </ItemGroup>

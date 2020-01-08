@@ -42,6 +42,7 @@ namespace glgpu
 
 	enum class EXTERNAL_TEXTURE_FORMAT
 	{
+		RG,
 		RGB,
 		RGBA,
 		DEPTH_STENCIL
@@ -49,6 +50,7 @@ namespace glgpu
 	
 	enum class INTERNAL_TEXTURE_FORMAT
 	{
+		RG16F,
 		RGB,
 		RGBA,
 		RGB16F,
@@ -115,6 +117,9 @@ namespace glgpu
 
 	texture
 	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
+
+	void
+	texture2d_render_offline_to(texture output, program prog, math::vec2f view_size);
 
 	void
 	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);

@@ -179,7 +179,7 @@
     <None Include="engine\shaders\quad_ndc.vertex" />
     <None Include="engine\shaders\skybox.pixel" />
     <None Include="engine\shaders\skybox.vertex" />
-    <None Include="engine\shaders\specular_BRDF_convloution.pixel" />
+    <None Include="engine\shaders\specular_BRDF_convolution.pixel" />
     <None Include="engine\shaders\specular_prefiltering_convolution.pixel" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -66,6 +66,17 @@ namespace glgpu
 		Vertex{-1.0f, 1.0f, 1.0f}
 	};
 
+	constexpr static Vertex quad_ndc[6] =
+	{
+		Vertex{-1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 1.0f},
+		Vertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
+		Vertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
+
+		Vertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
+		Vertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
+		Vertex{ 1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 0.0f}
+	};
+
 	void
 	graphics_init()
 	{
@@ -149,6 +160,8 @@ namespace glgpu
 	{
 		switch (format)
 		{
+		case EXTERNAL_TEXTURE_FORMAT::RG:
+			return GL_RG;
 		case EXTERNAL_TEXTURE_FORMAT::RGB:
 			return GL_RGB;
 		case EXTERNAL_TEXTURE_FORMAT::RGBA:
@@ -166,6 +179,8 @@ namespace glgpu
 	{
 		switch (format)
 		{
+		case INTERNAL_TEXTURE_FORMAT::RG16F:
+			return GL_RG16F;
 		case INTERNAL_TEXTURE_FORMAT::RGB:
 			return GL_RGB;
 		case INTERNAL_TEXTURE_FORMAT::RGBA:
@@ -416,6 +431,36 @@ namespace glgpu
 		texture tex = texture2d_create(img, format);
 		image_free(img);
 		return tex;
+	}
+
+	void
+	texture2d_render_offline_to(texture output, program prog, vec2f view_size)
+	{
+		GLuint fbo, rbo;
+		glGenFramebuffers(1, &fbo);
+		glGenRenderbuffers(1, &rbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, view_size[0], view_size[1]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, (GLuint)output, 0);
+
+		//setup
+		program_use(prog);
+		glViewport(0, 0, view_size[0], view_size[1]);
+
+		//render to output attached texture
+		vao quad_vao = vao_create();
+		buffer quad_vs = vertex_buffer_create(quad_ndc, 6);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		vao_bind(quad_vao, quad_vs, NULL);
+		draw_strip(6);
+		vao_unbind();
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+
+		glDeleteRenderbuffers(1, &rbo);
+		glDeleteFramebuffers(1, &fbo);
+		vao_delete(quad_vao);
+		buffer_delete(quad_vs);
 	}
 
 	void

@@ -116,6 +116,8 @@ namespace glgpu
 			return GL_TEXTURE0;
 		case TEXTURE_UNIT::UNIT_1:
 			return GL_TEXTURE1;
+		case TEXTURE_UNIT::UNIT_2:
+			return GL_TEXTURE2;
 
 		default:
 			assert("undefined texture unit" && false);

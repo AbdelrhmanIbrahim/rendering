@@ -93,7 +93,8 @@ namespace rndr
 		uniform1i_set(self.prog, "diffuse_irradiance_map", TEXTURE_UNIT::UNIT_0);
 		cubemap_bind(self.specular_prefiltered_map, TEXTURE_UNIT::UNIT_1);
 		uniform1i_set(self.prog, "specular_prefiltered_map", TEXTURE_UNIT::UNIT_1);
-
+		texture2d_bind(self.specular_BRDF_LUT, TEXTURE_UNIT::UNIT_2);
+		uniform1i_set(self.prog, "specular_BRDF_LUT", TEXTURE_UNIT::UNIT_2);
 		for (const auto object : self.meshes)
 		{
 			//MVP

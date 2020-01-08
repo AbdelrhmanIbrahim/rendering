@@ -23,7 +23,8 @@ namespace glgpu
 	enum TEXTURE_UNIT
 	{
 		UNIT_0,
-		UNIT_1
+		UNIT_1,
+		UNIT_2
 	};
 
 	enum class DEPTH_TEST

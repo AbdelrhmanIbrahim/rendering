@@ -35,6 +35,7 @@ uniform float metallic;
 uniform float rough;
 uniform samplerCube diffuse_irradiance_map;
 uniform samplerCube specular_prefiltered_map;
+uniform sampler2D specular_BRDF_LUT;
 
 in vec3 pos_world;
 in vec3 normal_world;
@@ -148,14 +149,21 @@ main()
 
 	//calc diffuse and specular of indirect enviroment lighting (IBL) 
 	vec3 F0 = vec3(0.04);
-	vec3 kD = 1.0 - Fresnel_Schlick_Roughness(max(dot(normal_world, view_dir), 0.0), F0);
+	vec3 F = Fresnel_Schlick_Roughness(max(dot(normal_world, view_dir), 0.0), F0);
+	vec3 kD = 1.0 - F;
 	kD *= 1.0 - metallic;
 	vec3 env_irradiance = texture(diffuse_irradiance_map, normal_world).rgb;
 	vec3 diffuse = env_irradiance * object_color_albedo;
 	vec3 IBL_irradiance = (kD * diffuse);
 	
+	vec3 R = reflect(-view_dir, normal_world); 
+	const float MAX_REFLECTION_LOD = 4.0;
+	vec3 prefiltered_color = textureLod(specular_prefiltered_map, R,  rough * MAX_REFLECTION_LOD).rgb;
+	vec2 brdf  = texture(specular_BRDF_LUT, vec2(max(dot(normal_world, view_dir), 0.0), rough)).rg;
+	vec3 specular = prefiltered_color * (F * brdf.x + brdf.y); //scaling and translation for the base reflectivity value (see the BRDF integration)
+
 	//calc direct and indirect lighting irradiance
-	vec3 color = IBL_irradiance + direct_light_irradiance;
+	vec3 color = (IBL_irradiance + direct_light_irradiance) + specular;
 	
 	//HDR tonemapping and gamma correction
 	color = color / (color + vec3(1.0));

@@ -54,7 +54,8 @@ Hammersley(uint i, uint N)
 vec3
 GGX_Importance_Sampling(vec2 Xi, vec3 N, float roughness)
 {
-	//calc userd to generate a sample vector that somehow oriented around the microfaces halfway vector and constrained inside the specular lobe
+	//somehow a cosinus weighted distribution mapping from 2d point set to a 3d points on hemisphere that will be used to generate the sample
+	//read http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html for more understanding
 	float a = roughness*roughness;
 	float phi = 2.0 * PI * Xi.x;
 	float cos_theta = sqrt((1.0 - Xi.y) / (1.0 + (a*a - 1.0) * Xi.y));

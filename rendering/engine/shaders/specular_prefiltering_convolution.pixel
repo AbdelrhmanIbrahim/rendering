@@ -31,7 +31,7 @@ uniform float roughness;
 
 const float PI = 3.14159265359;
 
-//Van Der Corpus sequence to mirror a decimal binary representation around its decimal point.
+//Van Der Corpus sequence to mirror a decimal binary representation around its decimal point to get a value between 0 <-> 1
 //read this to understand : http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
 float
 VDC(uint bits) 

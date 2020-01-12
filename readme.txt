@@ -5,7 +5,9 @@ WINDOWS:
 
 
 TODO:
-1) support GLFW instead of GLUT
+1) add GLFW instead of GLUT
 2) support renderdoc by creating context using wglCreateContextAttribsARB then init glew
-3) support imGui
+3) add imGui
 4) make a shadow renderer only that outputs a texture with shadows then merge it later
+5) add ambient occlusion
+

@@ -30,7 +30,7 @@ namespace rndr
 		self.specular_prefiltered_map = cubemap_create(prefiltered_initial_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, true);
 
 		io::Image env = image_read("../rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
-		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, false);
+		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, true);
 
 		program prefiltering_prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/specular_prefiltering_convolution.pixel");
 		unsigned int max_mipmaps = 5;

@@ -592,6 +592,14 @@ namespace glgpu
 			draw_strip(36);
 			vao_unbind();
 		}
+
+		if (mipmap)
+		{
+			glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)cube_map);
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
+		}
+
 		texture2d_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 

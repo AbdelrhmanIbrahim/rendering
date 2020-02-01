@@ -307,4 +307,19 @@ namespace win
 	{
 		return win->dc;
 	}
+
+	Window_Event
+	window_poll(Window win)
+	{
+		win->event = Window_Event{};
+		MSG msg{};
+
+		//PeekMessageA dispatches incoming msgs, then SendMessage to the win, then this triggers the window procedure
+		if (PeekMessageA(&msg, win->handle, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessageA(&msg);
+		}
+		return win->event;
+	}
 };

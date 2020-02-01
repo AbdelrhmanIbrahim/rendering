@@ -16,9 +16,9 @@ namespace app
 		win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
 		ctx = glgpu::context_attach(4, 0, win);
 
-		i = Input{};
-		i.mouse_x = WIN_WIDTH / 2;
-		i.mouse_y = WIN_HEIGHT / 2;
+		//i = Input{};
+		//i.mouse_x = WIN_WIDTH / 2;
+		//i.mouse_y = WIN_HEIGHT / 2;
 
 		//e = engine_create();
 		//w = world_create();
@@ -36,9 +36,23 @@ namespace app
 	void
 	application::run()
 	{
-		//backend::callbacks_run();
-		glgpu::frame_start();
-		glgpu::color_clear(0, 1, 0);
+		//get the window input event
+		auto event = window_poll(win);
+
+		//send event to input
+
+		//call the right procedures according to the input state to update the data
+
+		//render the data
+		{
+			//set camera viewport to window's viewport
+
+			//render
+			glgpu::frame_start();
+			glgpu::color_clear(0, 1, 0);
+		}
+
+		//swap window buffers
 		window_swap(win);
 	}
 

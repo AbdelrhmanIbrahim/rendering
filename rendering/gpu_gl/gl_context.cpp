@@ -122,7 +122,6 @@ namespace glgpu
 		};
 
 		HDC dc = (HDC)win::window_dc(win);
-
 		int pixel_format_id;
 		UINT num_formats;
 		bool status = wglChoosePixelFormatARB(dc,

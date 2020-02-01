@@ -7,6 +7,11 @@ main(int argc, char** argv)
 	while (1)
 	{
 		app.run();
+		//input, break if input is ESC
+
+		//update data
+
+		//render
 	}
 	return 0;
 }

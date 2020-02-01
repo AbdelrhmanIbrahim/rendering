@@ -1,7 +1,7 @@
 #include "app/app.h"
 
 #include "Defs.h"
-#include "window/window.h"
+
 #include "gpu_gl/glgpu.h"
 
 #include "world/World.h"
@@ -16,8 +16,10 @@ namespace app
 	application::application(int argc, char** argv)
 	{
 		//backend::callbacks_init(argc, argv);
-		window_size = math::vec2f{ WIN_WIDTH, WIN_HEIGHT};
-		win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
+		win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
+		ctx = glgpu::context_new(4, 0, win);
+		//win::window_attach(win, ctx);
+
 		//backend::callbacks_set(this);
 		//glgpu::graphics_init();
 
@@ -25,20 +27,26 @@ namespace app
 		i.mouse_x = WIN_WIDTH / 2;
 		i.mouse_y = WIN_HEIGHT / 2;
 
-		w = world_create();
-		e = engine_create();
+		//w = world_create();
+		//e = engine_create();
 	}
 
 	application::~application()
 	{
-		world_free(w);
-		engine_free(e);
+		//world_free(w);
+		//engine_free(e);
+
+		win::window_free(win);
+		glgpu::context_free(ctx);
 	}
 
 	void
 	application::run()
 	{
 		//backend::callbacks_run();
+		glgpu::frame_start();
+		glgpu::color_clear(0, 1, 0);
+		window_swap(win);
 	}
 
 	void

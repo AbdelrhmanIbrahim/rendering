@@ -132,6 +132,7 @@
     <ClCompile Include="engine\renderers\Skybox_Renderer.cpp" />
     <ClCompile Include="geometry\Mesh.cpp" />
     <ClCompile Include="gpu_gl\glgpu.cpp" />
+    <ClCompile Include="gpu_gl\gl_context.cpp" />
     <ClCompile Include="IO\Image.cpp" />
     <ClCompile Include="IO\STL_Reader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="geometry\Mesh.h" />
     <ClInclude Include="geometry\vertex.h" />
     <ClInclude Include="gpu_gl\glgpu.h" />
+    <ClInclude Include="gpu_gl\gl_context.h" />
     <ClInclude Include="IO\Image.h" />
     <ClInclude Include="IO\Input.h" />
     <ClInclude Include="IO\Stb_Image.h" />

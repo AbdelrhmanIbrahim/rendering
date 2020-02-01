@@ -284,4 +284,35 @@ namespace win
 
 		return self;
 	}
+
+	void
+	window_free(Window win)
+	{
+		bool result = ReleaseDC(win->handle, win->dc);
+		assert(result && "ReleaseDC Failed");
+		result = DestroyWindow(win->handle);
+		assert(result && "DestroyWindow Failed");
+		delete win;
+	}
+
+	void*
+	window_dc(Window win)
+	{
+		return win->dc;
+	}
+
+	void
+	window_swap(Window win)
+	{
+		bool result = SwapBuffers(win->dc);
+		assert(result && "SwapBuffers failed");
+	}
+
+	//void
+	//window_attach(Window win, glgpu::Context ctx)
+	//{
+	//	HGLRC hgl = (HGLRC)glgpu::context_hgl(ctx);
+	//	auto result = wglMakeCurrent(win->dc, hgl);
+	//	assert(result && "wglMakeCurrent failed");
+	//}
 };

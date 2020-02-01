@@ -6,6 +6,9 @@
 
 #include <math/Vector.h>
 
+#include "window/window.h"
+#include "gpu_gl/gl_context.h"
+
 namespace world
 {
 	struct World;
@@ -20,6 +23,10 @@ namespace app
 {
 	struct application : backend::callbacks
 	{
+		//win and ogl context
+		win::Window win;
+		glgpu::Context ctx;
+
 		//win res
 		math::vec2f window_size;
 

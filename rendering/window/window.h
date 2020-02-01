@@ -1,4 +1,7 @@
 #pragma once
+
+//#include "gpu_gl/gl_context.h"
+
 namespace win
 {
 	//create window and set its callbacks 
@@ -180,4 +183,16 @@ namespace win
 
 	Window
 	window_new(unsigned int width, unsigned int height, const char* title);
+
+	void
+	window_free(Window win);
+
+	void*
+	window_dc(Window win);
+	
+	void
+	window_swap(Window win);
+
+	//void
+	//window_attach(Window win, glgpu::Context ctx);
 };

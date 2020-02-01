@@ -117,6 +117,9 @@
     <ClCompile Include="engine\renderers\Phong_Shadow_Renderer.cpp">
       <Filter>Source Files\engine\renderers</Filter>
     </ClCompile>
+    <ClCompile Include="gpu_gl\gl_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="IO\Stb_Image_Write.h">
       <Filter>Header Files\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_gl\gl_context.h">
+      <Filter>Header Files\glgpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

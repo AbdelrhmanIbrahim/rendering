@@ -2,9 +2,9 @@
 
 #include <backend/backend.h>
 
-#include <IO/Input.h>
+#include "IO/Input.h"
 
-#include <math/Vector.h>
+#include "math/Vector.h"
 
 #include "window/window.h"
 #include "gpu_gl/gl_context.h"
@@ -17,16 +17,14 @@ namespace app
 	struct application : backend::callbacks
 	{
 		//win and ogl context
+		math::vec2f window_size;
 		win::Window win;
 		glgpu::Context ctx;
-
-		//win res
-		math::vec2f window_size;
 
 		//input state
 		io::Input i;
 
-		//world and rendering engine
+		//rendering engine and world
 		rndr::Engine e;
 		world::World* w;
 		

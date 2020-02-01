@@ -224,7 +224,7 @@ namespace win
 		case WM_SIZE:
 			if (self)
 			{
-				self->event.kind = Window_Event::KIND::KIND_RESIZE;
+				self->event.kind = Window_Event::KIND::KIND_WINDOW_RESIZE;
 				self->event.window_resize.width = LOWORD(lparam);
 				self->event.window_resize.height = HIWORD(lparam);
 			}

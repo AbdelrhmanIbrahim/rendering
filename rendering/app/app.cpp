@@ -40,6 +40,7 @@ namespace app
 		auto event = window_poll(win);
 
 		//send event to input
+		input_process_event(i, event);
 
 		//call the right procedures according to the input state to update the data
 

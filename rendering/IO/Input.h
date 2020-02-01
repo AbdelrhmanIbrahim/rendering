@@ -1,12 +1,16 @@
 #pragma once
 
+#include "window/window.h"
+
 namespace io
 {
-	//due to glut callback not poll you cant use an Input state well to know when a stream of events finished or not (revisit)
 	struct Input
 	{
-		//keys/mouse
-		bool keys[256];
+		//keyboard
+		bool keyboard[(int)win::KEYBOARD::COUNT];
+
+		//mouse
+		bool mouse[(int)win::MOUSE::COUNT];
 
 		//cursor
 		int mouse_x, mouse_y;
@@ -14,4 +18,7 @@ namespace io
 		//current frame ticks
 		int p_frame;
 	};
+
+	void
+	input_process_event(Input input, win::Window_Event event);
 }

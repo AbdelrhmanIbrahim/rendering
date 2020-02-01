@@ -134,6 +134,7 @@
     <ClCompile Include="gpu_gl\glgpu.cpp" />
     <ClCompile Include="gpu_gl\gl_context.cpp" />
     <ClCompile Include="IO\Image.cpp" />
+    <ClCompile Include="IO\Input.cpp" />
     <ClCompile Include="IO\STL_Reader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window\window.cpp" />

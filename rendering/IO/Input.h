@@ -2,6 +2,8 @@
 
 #include "window/window.h"
 
+#include "math/Vector.h"
+
 namespace io
 {
 	struct Input
@@ -21,5 +23,11 @@ namespace io
 	};
 
 	void
-	input_process_event(Input input, win::Window_Event event);
+	input_process_event(Input& input, win::Window_Event event);
+
+	math::vec2f
+	input_mouse_delta(const Input& i);
+
+	void
+	input_mouse_update(Input& i);
 }

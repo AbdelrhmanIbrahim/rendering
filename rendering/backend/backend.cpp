@@ -12,18 +12,6 @@ namespace backend
 	}
 
 	void
-	keyboard_press(unsigned char c, int x, int y)
-	{
-		cb->keyboard_press_handle(c, x, y);
-	}
-
-	void
-	keyboard_release(unsigned char c, int x, int y)
-	{
-		cb->keyboard_release_handle(c, x, y);
-	}
-
-	void
 	mouse_wheel_handle(int a, int b,int x, int y)
 	{
 		cb->mouse_wheel_handle(a, b, x, y);
@@ -46,8 +34,6 @@ namespace backend
 	{
 		backend::cb = cb;
 		glutDisplayFunc(update);
-		glutKeyboardFunc(keyboard_press);
-		glutKeyboardUpFunc(keyboard_release);
 		glutMouseWheelFunc(mouse_wheel_handle);
 		glutIdleFunc(update);
 	}

@@ -5,7 +5,7 @@ using namespace win;
 namespace io
 {
 	void
-	input_process_event(Input input, Window_Event event)
+	input_process_event(Input& input, Window_Event event)
 	{
 		switch (event.kind)
 		{
@@ -36,5 +36,18 @@ namespace io
 			default:
 				break;
 		}
+	}
+
+	math::vec2f
+	input_mouse_delta(const Input & i)
+	{
+		return math::vec2f{ (float)i.mouse_x - i.pmouse_x, (float)i.pmouse_y - i.mouse_y };
+	}
+
+	void
+	input_mouse_update(Input & i)
+	{
+		i.pmouse_x = i.mouse_x;
+		i.pmouse_y = i.mouse_y;
 	}
 };

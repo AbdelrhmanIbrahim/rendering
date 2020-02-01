@@ -40,11 +40,5 @@ namespace app
 
 		void
 		mouse_wheel_handle(int a, int dir, int x, int y) override;
-
-		void
-		keyboard_press_handle(unsigned char c, int x, int y) override;
-
-		void
-		keyboard_release_handle(unsigned char c, int x, int y) override;
 	};
 };

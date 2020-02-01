@@ -8,24 +8,12 @@ namespace backend
 		update() = 0;
 
 		virtual void
-		keyboard_press_handle(unsigned char c, int x, int y) = 0;
-
-		virtual void
-		keyboard_release_handle(unsigned char c, int x, int y) = 0;
-
-		virtual void
 		mouse_wheel_handle(int a, int dir, int x, int y) = 0;
 	};
 
 	static callbacks* cb;
 	void
 	update();
-
-	void
-	keyboard_press(unsigned char c, int x, int y);
-
-	void
-	keyboard_release(unsigned char c, int x, int y);
 
 	void
 	mouse_wheel_handle(int a, int dir, int x, int y);

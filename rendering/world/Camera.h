@@ -9,6 +9,9 @@
 
 #include <IO/Input.h>
 
+//move enums to another defs file -- TODO
+#include "window/window.h"
+
 namespace world
 {
 	struct Camera
@@ -105,16 +108,16 @@ namespace world
 	inline void
 	camera_move(Camera& self, const bool keys[], float delta)
 	{
-		if (keys['w'])
+		if (keys[(int)win::KEYBOARD::W])
 			self.pos += self.fwd *delta;
 
-		if (keys['s'])
+		if (keys[(int)win::KEYBOARD::S])
 			self.pos -= self.fwd* delta;
 
-		if (keys['d'])
+		if (keys[(int)win::KEYBOARD::D])
 			self.pos += self.right * delta;
 
-		if (keys['a'])
+		if (keys[(int)win::KEYBOARD::A])
 			self.pos -= self.right * delta;
 	}
 

@@ -13,55 +13,57 @@ using namespace io;
 namespace app
 {
 	void
-	_input_act(Input& i, World* w)
+	_input_act(const Input& i, World* w)
 	{
 		//Mouse
 		{
 			if (i.mouse[(int)win::MOUSE::RIGHT] == true)
 				std::cout << "mouse right down";
-			else if (i.mouse[(int)win::MOUSE::RIGHT] == false)
-				std::cout << "mouse right up";
+			/*else if (i.mouse[(int)win::MOUSE::RIGHT] == false)
+				std::cout << "mouse right up";*/
 
 			if (i.mouse[(int)win::MOUSE::LEFT] == true)
 				std::cout << "mouse left down";
-			else if (i.mouse[(int)win::MOUSE::LEFT] == false)
-				std::cout << "mouse left up";
+			/*else if (i.mouse[(int)win::MOUSE::LEFT] == false)
+				std::cout << "mouse left up";*/
 
 			if (i.mouse[(int)win::MOUSE::MIDDLE] == true)
 				std::cout << "mouse middle down";
-			else if (i.mouse[(int)win::MOUSE::MIDDLE] == false)
-				std::cout << "mouse middle up";
+			/*else if (i.mouse[(int)win::MOUSE::MIDDLE] == false)
+				std::cout << "mouse middle up";*/
 		}
 
 		//Keyboard
 		{
 			if (i.keyboard[(int)win::KEYBOARD::W] == true)
 				std::cout << "move forward";
-			else if (i.keyboard[(int)win::KEYBOARD::W] == false)
-				std::cout << "stop W";
+			/*else if (i.keyboard[(int)win::KEYBOARD::W] == false)
+				std::cout << "stop W";*/
 
 			if (i.keyboard[(int)win::KEYBOARD::S] == true)
 				std::cout << "move back";
-			else if (i.keyboard[(int)win::KEYBOARD::S] == false)
-				std::cout << "stop S";
+			/*else if (i.keyboard[(int)win::KEYBOARD::S] == false)
+				std::cout << "stop S";*/
 
 			if (i.keyboard[(int)win::KEYBOARD::A] == true)
 				std::cout << "move left";
-			else if (i.keyboard[(int)win::KEYBOARD::A] == false)
-				std::cout << "stop A";
+			/*else if (i.keyboard[(int)win::KEYBOARD::A] == false)
+				std::cout << "stop A";*/
 
 			if (i.keyboard[(int)win::KEYBOARD::D] == true)
 				std::cout << "move right";
-			else if (i.keyboard[(int)win::KEYBOARD::D] == false)
-				std::cout << "stop D";
+			/*else if (i.keyboard[(int)win::KEYBOARD::D] == false)
+				std::cout << "stop D";*/
+
+			float delta = 2.0f; //TODO
+			//camera_move(w->cam, i.keyboard, 0.05f * delta);
 		}
 
 		//Mouse move
 		{
-			std::cout << "mouse move";
-			camera_rotate(w->cam, math::vec2f{ (float)i.mouse_x - i.pmouse_x, (float)i.mouse_y - i.mouse_y });
-			i.pmouse_x = i.mouse_x;
-			i.pmouse_y = i.mouse_y;
+			//std::cout << "mouse move";
+			//camera_rotate(w->cam, input_mouse_delta(i));
+			//input_mouse_update(i);
 		}
 	}
 
@@ -148,17 +150,5 @@ namespace app
 	application::mouse_wheel_handle(int a, int dir, int x, int y)
 	{
 		camera_zoom(w->cam, dir);
-	}
-
-	void
-	application::keyboard_press_handle(unsigned char c, int x, int y)
-	{
-		i.keyboard[c] = true;
-	}
-
-	void
-	application::keyboard_release_handle(unsigned char c, int x, int y)
-	{
-		i.keyboard[c] = false;
 	}
 };

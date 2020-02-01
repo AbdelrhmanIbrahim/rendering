@@ -15,15 +15,15 @@ namespace app
 {
 	application::application(int argc, char** argv)
 	{
-		backend::callbacks_init(argc, argv);
+		//backend::callbacks_init(argc, argv);
 		window_size = math::vec2f{ WIN_WIDTH, WIN_HEIGHT};
-		win::window_create((unsigned int)window_size[0], (unsigned int)window_size[1], "rendering journey");
-		backend::callbacks_set(this);
-		glgpu::graphics_init();
+		win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
+		//backend::callbacks_set(this);
+		//glgpu::graphics_init();
 
 		i = Input{};
-		i.mouse_x = (unsigned int)window_size[0] / 2;
-		i.mouse_y = (unsigned int)window_size[1] / 2;
+		i.mouse_x = WIN_WIDTH / 2;
+		i.mouse_y = WIN_HEIGHT / 2;
 
 		w = world_create();
 		e = engine_create();
@@ -38,7 +38,7 @@ namespace app
 	void
 	application::run()
 	{
-		backend::callbacks_run();
+		//backend::callbacks_run();
 	}
 
 	void

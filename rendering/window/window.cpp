@@ -1,6 +1,18 @@
+//winos
+#ifdef WINOS
+	#define NOMINMAX
+	#define WIN32_LEAN_AND_MEAN
+	#include <Windows.h>
+	#include <windowsx.h>
+#endif
+
 #include "window.h"
 
 #include <freeglut.h>
+
+#include <assert.h>
+
+//#define HAND(name) struct name##__{int unused;}; typedef struct name##__ *name
 
 namespace win
 {
@@ -11,5 +23,265 @@ namespace win
 		glutInitWindowPosition(0, 0);
 		glutInitWindowSize(width, height);
 		glutCreateWindow(name);
+	}
+
+	struct IWindow
+	{
+		HWND handle;
+		HDC dc;
+		int width;
+		int height;
+		const char* title;
+		Window_Event event;
+	};
+
+	inline static KEYBOARD
+	_map_keyboard_key(WPARAM k)
+	{
+		switch (k)
+		{
+			//letters
+		case 0x41:		return KEYBOARD::A;
+		case 0x42:		return KEYBOARD::B;
+		case 0x43:		return KEYBOARD::C;
+		case 0x44:		return KEYBOARD::D;
+		case 0x45:		return KEYBOARD::E;
+		case 0x46:		return KEYBOARD::F;
+		case 0x47:		return KEYBOARD::G;
+		case 0x48:		return KEYBOARD::H;
+		case 0x49:		return KEYBOARD::I;
+		case 0x4A:		return KEYBOARD::J;
+		case 0x4B:		return KEYBOARD::K;
+		case 0x4C:		return KEYBOARD::L;
+		case 0x4D:		return KEYBOARD::M;
+		case 0x4E:		return KEYBOARD::N;
+		case 0x4F:		return KEYBOARD::O;
+		case 0x50:		return KEYBOARD::P;
+		case 0x51:		return KEYBOARD::Q;
+		case 0x52:		return KEYBOARD::R;
+		case 0x53:		return KEYBOARD::S;
+		case 0x54:		return KEYBOARD::T;
+		case 0x55:		return KEYBOARD::U;
+		case 0x56:		return KEYBOARD::V;
+		case 0x57:		return KEYBOARD::W;
+		case 0x58:		return KEYBOARD::X;
+		case 0x59:		return KEYBOARD::Y;
+		case 0x5A:		return KEYBOARD::Z;
+
+			//numbers
+		case 0x30:		return KEYBOARD::NUM_0;
+		case 0x31:		return KEYBOARD::NUM_1;
+		case 0x32:		return KEYBOARD::NUM_2;
+		case 0x33:		return KEYBOARD::NUM_3;
+		case 0x34:		return KEYBOARD::NUM_4;
+		case 0x35:		return KEYBOARD::NUM_5;
+		case 0x36:		return KEYBOARD::NUM_6;
+		case 0x37:		return KEYBOARD::NUM_7;
+		case 0x38:		return KEYBOARD::NUM_8;
+		case 0x39:		return KEYBOARD::NUM_9;
+
+			//misc
+		case 0x1B:		return KEYBOARD::ESC;
+		case 0xBD:		return KEYBOARD::MINUS;
+		case 0xBC:		return KEYBOARD::COMMA;
+		case 0xBB:		return KEYBOARD::EQUAL;
+		case 0xBE:		return KEYBOARD::PERIOD;
+		case 0x20:		return KEYBOARD::SPACE;
+		case 0x0D:		return KEYBOARD::ENTER;
+		case 0x08:		return KEYBOARD::BACKSPACE;
+		case 0x09:		return KEYBOARD::TAB;
+		case 0xBF:		return KEYBOARD::FORWARD_SLASH;
+		case 0xE2:		return KEYBOARD::BACKSLASH;
+		case 0x2E:		return KEYBOARD::DLT;
+		case 0xA0:		return KEYBOARD::LEFT_SHIFT;
+		case 0xA1:		return KEYBOARD::RIGHT_SHIFT;
+		case 0x12:		return KEYBOARD::LEFT_ALT;
+		case 0xA2:		return KEYBOARD::LEFT_CTRL;
+		case 0xA3:		return KEYBOARD::RIGHT_CTRL;
+		case 0x23:		return KEYBOARD::END;
+		case 0x24:		return KEYBOARD::HOME;
+		case 0x2D:		return KEYBOARD::INSERT;
+		case 0x21:		return KEYBOARD::PAGEUP;
+		case 0x22:		return KEYBOARD::PAGEDOWN;
+		case 0x25:		return KEYBOARD::LEFT;
+		case 0x26:		return KEYBOARD::UP;
+		case 0x27:		return KEYBOARD::RIGHT;
+		case 0x28:		return KEYBOARD::DOWN;
+		case 0x70:		return KEYBOARD::F1;
+		case 0x71:		return KEYBOARD::F2;
+		case 0x72:		return KEYBOARD::F3;
+		case 0x73:		return KEYBOARD::F4;
+		case 0x74:		return KEYBOARD::F5;
+		case 0x75:		return KEYBOARD::F6;
+		case 0x76:		return KEYBOARD::F7;
+		case 0x77:		return KEYBOARD::F8;
+		case 0x78:		return KEYBOARD::F9;
+		case 0x79:		return KEYBOARD::F10;
+		case 0x7A:		return KEYBOARD::F11;
+		case 0x7B:		return KEYBOARD::F12;
+		default:		return KEYBOARD::COUNT;
+		}
+	}
+
+	LRESULT CALLBACK
+	_window_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		IWindow* self = (IWindow*)GetWindowLongPtrA(hwnd, GWLP_USERDATA);
+
+		switch (msg)
+		{
+		case WM_CLOSE:
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_WINDOW_CLOSE;
+				self->event.window_close.close = true;
+			}
+			return 0;
+
+		case WM_KEYDOWN:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
+				self->event.keyboard_key.k = _map_keyboard_key(wparam);
+				self->event.keyboard_key.s = KEY_STATE::DOWN;
+			}
+			break;
+
+		case WM_KEYUP:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
+				self->event.keyboard_key.k = _map_keyboard_key(wparam);
+				self->event.keyboard_key.s = KEY_STATE::UP;
+			}
+			break;
+
+		case WM_LBUTTONDOWN:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+				self->event.mouse_button.b = MOUSE::LEFT;
+				self->event.mouse_button.s = KEY_STATE::DOWN;
+			}
+			break;
+
+		case WM_LBUTTONUP:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+				self->event.mouse_button.b = MOUSE::LEFT;
+				self->event.mouse_button.s = KEY_STATE::UP;
+			}
+			break;
+
+		case WM_RBUTTONDOWN:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+				self->event.mouse_button.b = MOUSE::RIGHT;
+				self->event.mouse_button.s = KEY_STATE::DOWN;
+			}
+			break;
+
+		case WM_RBUTTONUP:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+				self->event.mouse_button.b = MOUSE::RIGHT;
+				self->event.mouse_button.s = KEY_STATE::UP;
+			}
+			break;
+
+		case WM_MBUTTONDOWN:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+				self->event.mouse_button.b = MOUSE::MIDDLE;
+				self->event.mouse_button.s = KEY_STATE::DOWN;
+			}
+			break;
+
+		case WM_MBUTTONUP:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+				self->event.mouse_button.b = MOUSE::MIDDLE;
+				self->event.mouse_button.s = KEY_STATE::UP;
+			}
+			break;
+
+		case WM_MOUSEMOVE:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_MOUSE_MOVE;
+				self->event.mouse_move.x = GET_X_LPARAM(lparam);
+				self->event.mouse_move.y = GET_Y_LPARAM(lparam);
+			}
+			break;
+
+		case WM_SIZE:
+			if (self)
+			{
+				self->event.kind = Window_Event::KIND::KIND_RESIZE;
+				self->event.window_resize.width = LOWORD(lparam);
+				self->event.window_resize.height = HIWORD(lparam);
+			}
+			break;
+
+		default:
+			break;
+		}
+
+		return DefWindowProcA(hwnd, msg, wparam, lparam);
+	}
+
+	Window
+	window_new(unsigned int width, unsigned int height, const char* title)
+	{
+		IWindow* self = new IWindow;
+		self->width = width;
+		self->height = height;
+		self->title = title;
+
+		WNDCLASSEXA wc;
+		ZeroMemory(&wc, sizeof(WNDCLASSEXA));
+		wc.cbSize = sizeof(WNDCLASSEXA);
+		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+		wc.lpfnWndProc = _window_proc;
+		wc.hInstance = NULL;
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+		wc.lpszClassName = "msgpuWindowClass";
+
+		RegisterClassExA(&wc);
+
+		RECT wr = { 0, 0, LONG(self->width), LONG(self->height) };
+		AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
+
+		self->handle = CreateWindowExA(NULL,
+			"msgpuWindowClass",
+			self->title,
+			WS_OVERLAPPEDWINDOW,
+			100,
+			100,
+			wr.right - wr.left,
+			wr.bottom - wr.top,
+			NULL,
+			NULL,
+			NULL,
+			NULL);
+
+		assert(self->handle != NULL && "ERROR CREATING A WINDOW");
+
+		self->dc = GetDC(self->handle);
+
+		ShowWindow(self->handle, SW_SHOW);
+		SetForegroundWindow(self->handle);
+		SetFocus(self->handle);
+		SetWindowLongPtrA(self->handle, GWLP_USERDATA, (LONG_PTR)self);
+
+		return self;
 	}
 };

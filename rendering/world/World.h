@@ -1,5 +1,4 @@
 #pragma once
-
 #include "world/3Dobject.h"
 #include "world/Camera.h"
 

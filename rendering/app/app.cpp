@@ -4,9 +4,6 @@
 
 #include "gpu_gl/glgpu.h"
 
-#include "world/World.h"
-#include "engine/Engine.h"
-
 using namespace world;
 using namespace rndr;
 using namespace io;
@@ -17,18 +14,14 @@ namespace app
 	{
 		//backend::callbacks_init(argc, argv);
 		win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
-		ctx = glgpu::context_new(4, 0, win);
-		//win::window_attach(win, ctx);
-
-		//backend::callbacks_set(this);
-		//glgpu::graphics_init();
+		ctx = glgpu::context_attach(4, 0, win);
 
 		i = Input{};
 		i.mouse_x = WIN_WIDTH / 2;
 		i.mouse_y = WIN_HEIGHT / 2;
 
-		//w = world_create();
 		//e = engine_create();
+		//w = world_create();
 	}
 
 	application::~application()

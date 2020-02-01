@@ -10,6 +10,8 @@
 
 #include "IO/Image.h"
 
+#include "math/Vector.h"
+
 //nope (refactor later --revisit--)
 #include "gpu_gl/glgpu.h"
 
@@ -17,7 +19,7 @@ using namespace world;
 
 namespace rndr
 {
-	struct Engine
+	struct IEngine
 	{
 		Phong_Shadow_Renderer phong_shadow;
 		Phong_Renderer phong;
@@ -25,10 +27,10 @@ namespace rndr
 		Skybox_Renderer skybox;
 	};
 
-	Engine*
+	Engine
 	engine_create()
 	{
-		Engine* self = new Engine;
+		IEngine* self = new IEngine;
 
 		self->phong_shadow = phong_shadow_create();
 		self->phong = phong_create();
@@ -51,7 +53,7 @@ namespace rndr
 	}
 
 	void
-	engine_free(Engine* e)
+	engine_free(Engine e)
 	{
 		phong_shadow_free(e->phong_shadow);
 		phong_free(e->phong);
@@ -62,7 +64,7 @@ namespace rndr
 	}
 
 	void
-	engine_world_draw(Engine* e, const World* w)
+	engine_world_draw(Engine e, const World* w)
 	{
 		//render scene normally
 		{

@@ -1,6 +1,4 @@
 #include "world/World.h"
-#include "world/3Dobject.h"
-#include "world/Camera.h"
 
 using namespace math;
 
@@ -27,4 +25,6 @@ namespace world
 
 		delete w;
 	}
+
+
 }

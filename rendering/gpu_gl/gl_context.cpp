@@ -37,9 +37,8 @@ namespace glgpu
 		return DefWindowProcA(hwnd, msg, wparam, lparam);
 	}
 
-	//you can't create an opengl context without a window handle/device context, because windows manager system I guess 
 	Context
-	context_new(unsigned int gl_major, unsigned int gl_minor, win::Window win)
+	context_attach(unsigned int gl_major, unsigned int gl_minor, win::Window win)
 	{
 		IContext* self = new IContext;
 
@@ -176,11 +175,5 @@ namespace glgpu
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(self->context);
 		delete self;
-	}
-
-	void*
-	context_hgl(Context self)
-	{
-		return self->context;
 	}
 };

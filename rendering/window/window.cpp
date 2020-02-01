@@ -295,12 +295,6 @@ namespace win
 		delete win;
 	}
 
-	void*
-	window_dc(Window win)
-	{
-		return win->dc;
-	}
-
 	void
 	window_swap(Window win)
 	{
@@ -308,11 +302,9 @@ namespace win
 		assert(result && "SwapBuffers failed");
 	}
 
-	//void
-	//window_attach(Window win, glgpu::Context ctx)
-	//{
-	//	HGLRC hgl = (HGLRC)glgpu::context_hgl(ctx);
-	//	auto result = wglMakeCurrent(win->dc, hgl);
-	//	assert(result && "wglMakeCurrent failed");
-	//}
+	void*
+	window_dc(Window win)
+	{
+		return win->dc;
+	}
 };

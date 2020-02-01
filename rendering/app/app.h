@@ -9,15 +9,8 @@
 #include "window/window.h"
 #include "gpu_gl/gl_context.h"
 
-namespace world
-{
-	struct World;
-}
-
-namespace rndr
-{
-	struct Engine;
-}
+#include "world/World.h"
+#include "engine/Engine.h"
 
 namespace app
 {
@@ -34,8 +27,8 @@ namespace app
 		io::Input i;
 
 		//world and rendering engine
+		rndr::Engine e;
 		world::World* w;
-		rndr::Engine* e;
 		
 		application(int argc, char** argv);
 

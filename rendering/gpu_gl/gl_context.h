@@ -6,13 +6,10 @@ namespace glgpu
 {
 	typedef struct IContext* Context;
 
+	//you can't create an opengl context without a window handle/device context, because windows manager system I guess 
 	Context
-	context_new(unsigned int gl_major, unsigned int gl_minor, win::Window win);
+	context_attach(unsigned int gl_major, unsigned int gl_minor, win::Window win);
 
 	void
 	context_free(Context self);
-
-	//return HGLRC handle of the context (make it better later)
-	void*
-	context_hgl(Context self);
 };

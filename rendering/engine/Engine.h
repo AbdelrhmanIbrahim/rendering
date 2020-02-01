@@ -1,7 +1,5 @@
 #pragma once
 
-#include "math/Vector.h"
-
 namespace world
 {
 	struct World;
@@ -9,14 +7,14 @@ namespace world
 
 namespace rndr
 {
-	struct Engine;
+	typedef struct IEngine* Engine;
 
-	Engine*
+	Engine
 	engine_create();
 
 	void
-	engine_free(Engine* e);
+	engine_free(Engine e);
 
 	void
-	engine_world_draw(Engine* e, const world::World* w);
+	engine_world_draw(Engine e, const world::World* w);
 }

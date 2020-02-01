@@ -121,7 +121,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IO\Input.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

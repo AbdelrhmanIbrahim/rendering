@@ -14,6 +14,7 @@ namespace io
 
 		//cursor
 		int mouse_x, mouse_y;
+		int pmouse_x, pmouse_y;
 
 		//current frame ticks
 		int p_frame;

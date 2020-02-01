@@ -39,9 +39,6 @@ namespace app
 		update() override;
 
 		void
-		mouse_handle(int x, int y) override;
-
-		void
 		mouse_wheel_handle(int a, int dir, int x, int y) override;
 
 		void
@@ -49,8 +46,5 @@ namespace app
 
 		void
 		keyboard_release_handle(unsigned char c, int x, int y) override;
-
-		void
-		window_resize_handle(int width, int height) override;
 	};
 };

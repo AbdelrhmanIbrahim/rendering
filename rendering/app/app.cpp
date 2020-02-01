@@ -13,7 +13,7 @@ using namespace io;
 namespace app
 {
 	void
-	_input_act(const Input& i)
+	_input_act(Input& i, World* w)
 	{
 		//Mouse
 		{
@@ -58,7 +58,10 @@ namespace app
 
 		//Mouse move
 		{
-			//std::cout << "mouse move";
+			std::cout << "mouse move";
+			camera_rotate(w->cam, math::vec2f{ (float)i.mouse_x - i.pmouse_x, (float)i.mouse_y - i.mouse_y });
+			i.pmouse_x = i.mouse_x;
+			i.pmouse_y = i.mouse_y;
 		}
 	}
 
@@ -111,12 +114,11 @@ namespace app
 		input_process_event(i, event);
 
 		//call the right procedures according to the input state to update the data
-		_input_act(i);
+		_input_act(i, w);
 
 		//render the data
 		{
 			//set camera viewport to window's viewport
-
 
 			//render
 			glgpu::frame_start();
@@ -143,14 +145,6 @@ namespace app
 	}
 
 	void
-	application::mouse_handle(int x, int y)
-	{
-		camera_rotate(w->cam, math::vec2f{ (float)i.mouse_x - i.pmouse_x, (float)i.mouse_y - i.mouse_y });
-		i.pmouse_x = i.mouse_x;
-		i.pmouse_y = i.mouse_y;
-	}
-
-	void
 	application::mouse_wheel_handle(int a, int dir, int x, int y)
 	{
 		camera_zoom(w->cam, dir);
@@ -166,12 +160,5 @@ namespace app
 	application::keyboard_release_handle(unsigned char c, int x, int y)
 	{
 		i.keyboard[c] = false;
-	}
-
-	void
-	application::window_resize_handle(int width, int height)
-	{
-		window_size[0] = width;
-		window_size[1] = height;
 	}
 };

@@ -8,9 +8,6 @@ namespace backend
 		update() = 0;
 
 		virtual void
-		mouse_handle(int x, int y) = 0;
-
-		virtual void
 		keyboard_press_handle(unsigned char c, int x, int y) = 0;
 
 		virtual void
@@ -18,17 +15,11 @@ namespace backend
 
 		virtual void
 		mouse_wheel_handle(int a, int dir, int x, int y) = 0;
-
-		virtual void
-		window_resize_handle(int width, int height) = 0;
 	};
 
 	static callbacks* cb;
 	void
 	update();
-
-	void
-	mouse_handle(int x, int y);
 
 	void
 	keyboard_press(unsigned char c, int x, int y);

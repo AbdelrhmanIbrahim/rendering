@@ -12,12 +12,6 @@ namespace backend
 	}
 
 	void
-	mouse_handle(int x, int y)
-	{
-		cb->mouse_handle(x, y);
-	}
-
-	void
 	keyboard_press(unsigned char c, int x, int y)
 	{
 		cb->keyboard_press_handle(c, x, y);
@@ -33,12 +27,6 @@ namespace backend
 	mouse_wheel_handle(int a, int b,int x, int y)
 	{
 		cb->mouse_wheel_handle(a, b, x, y);
-	}
-
-	void
-	window_resize_handle(int width, int height)
-	{
-		cb->window_resize_handle(width, height);
 	}
 
 	int
@@ -60,9 +48,7 @@ namespace backend
 		glutDisplayFunc(update);
 		glutKeyboardFunc(keyboard_press);
 		glutKeyboardUpFunc(keyboard_release);
-		glutPassiveMotionFunc(mouse_handle);
 		glutMouseWheelFunc(mouse_wheel_handle);
-		glutReshapeFunc(window_resize_handle);
 		glutIdleFunc(update);
 	}
 

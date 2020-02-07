@@ -18,6 +18,9 @@ namespace io
 		int mouse_x, mouse_y;
 		int pmouse_x, pmouse_y;
 
+		//wheel
+		int wheel_dir;
+
 		//current frame ticks
 		int p_frame;
 	};

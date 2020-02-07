@@ -27,8 +27,6 @@ namespace app
 		//rendering engine and world
 		rndr::Engine e;
 		world::World* w;
-		
-		bool is_running;
 
 		application(int argc, char** argv);
 

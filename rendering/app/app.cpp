@@ -2,9 +2,7 @@
 
 #include "Defs.h"
 
-#include "gpu_gl/glgpu.h"
-
-#include <iostream>
+//#include <iostream>
 
 using namespace world;
 using namespace rndr;
@@ -15,55 +13,31 @@ namespace app
 	void
 	_input_act(const Input& i, World* w)
 	{
-		//Mouse
+		//Mouse move
 		{
-			if (i.mouse[(int)win::MOUSE::RIGHT] == true)
-				std::cout << "mouse right down";
-			/*else if (i.mouse[(int)win::MOUSE::RIGHT] == false)
-				std::cout << "mouse right up";*/
-
-			if (i.mouse[(int)win::MOUSE::LEFT] == true)
-				std::cout << "mouse left down";
-			/*else if (i.mouse[(int)win::MOUSE::LEFT] == false)
-				std::cout << "mouse left up";*/
-
-			if (i.mouse[(int)win::MOUSE::MIDDLE] == true)
-				std::cout << "mouse middle down";
-			/*else if (i.mouse[(int)win::MOUSE::MIDDLE] == false)
-				std::cout << "mouse middle up";*/
+			camera_rotate(w->cam, input_mouse_delta(i));
 		}
 
 		//Keyboard
 		{
+			float delta = 2.0f; //TODO
 			if (i.keyboard[(int)win::KEYBOARD::W] == true)
-				std::cout << "move forward";
-			/*else if (i.keyboard[(int)win::KEYBOARD::W] == false)
-				std::cout << "stop W";*/
+				camera_move_forward(w->cam, 0.05f * delta);
 
 			if (i.keyboard[(int)win::KEYBOARD::S] == true)
-				std::cout << "move back";
-			/*else if (i.keyboard[(int)win::KEYBOARD::S] == false)
-				std::cout << "stop S";*/
+				camera_move_backward(w->cam, 0.05f * delta);
 
 			if (i.keyboard[(int)win::KEYBOARD::A] == true)
-				std::cout << "move left";
-			/*else if (i.keyboard[(int)win::KEYBOARD::A] == false)
-				std::cout << "stop A";*/
+				camera_move_left(w->cam, 0.05f * delta);
 
 			if (i.keyboard[(int)win::KEYBOARD::D] == true)
-				std::cout << "move right";
-			/*else if (i.keyboard[(int)win::KEYBOARD::D] == false)
-				std::cout << "stop D";*/
-
-			float delta = 2.0f; //TODO
-			//camera_move(w->cam, i.keyboard, 0.05f * delta);
+				camera_move_right(w->cam, 0.05f * delta);
 		}
 
-		//Mouse move
+		//Wheel
 		{
-			//std::cout << "mouse move";
-			//camera_rotate(w->cam, input_mouse_delta(i));
-			//input_mouse_update(i);
+			//std::cout << i.wheel_dir << std::endl;
+			camera_zoom(w->cam, i.wheel_dir);
 		}
 	}
 
@@ -83,8 +57,6 @@ namespace app
 
 		e = engine_create();
 		w = world_create();
-
-		is_running = true;
 	}
 
 	application::~application()
@@ -99,7 +71,7 @@ namespace app
 	void
 	application::run()
 	{
-		while (is_running)
+		while (true)
 		{
 			//get the window input event
 			auto event = window_poll(win);
@@ -111,13 +83,14 @@ namespace app
 				window_size[1] = event.window_resize.height;
 			}
 			else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
-				is_running = false;
+				break;
 
 			//send event to input
 			input_process_event(i, event);
 
 			//call the right procedures according to the input state to update the data
 			_input_act(i, w);
+			input_mouse_update(i);
 
 			//render the data
 			{
@@ -125,8 +98,6 @@ namespace app
 				camera_viewport(w->cam, window_size);
 
 				//render
-				//glgpu::frame_start();
-				//glgpu::color_clear(1, 1, 0);
 				engine_world_draw(e, w);
 			}
 
@@ -142,7 +113,7 @@ namespace app
 		int c_frame = backend::ticks();
 		int frame_delta = c_frame - i.p_frame;
 		i.p_frame = c_frame;
-		camera_move(w->cam, i.keyboard, 0.05f * frame_delta);
+		//camera_move(w->cam, i.keyboard, 0.05f * frame_delta);
 
 		//render the top world
 		camera_viewport(w->cam, window_size);

@@ -141,94 +141,94 @@ namespace win
 			return 0;
 
 		case WM_KEYDOWN:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
-				self->event.keyboard_key.k = _map_keyboard_key(wparam);
-				self->event.keyboard_key.s = KEY_STATE::DOWN;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
+			self->event.keyboard_key.k = _map_keyboard_key(wparam);
+			self->event.keyboard_key.s = KEY_STATE::DOWN;
 			break;
+		}
 
 		case WM_KEYUP:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
-				self->event.keyboard_key.k = _map_keyboard_key(wparam);
-				self->event.keyboard_key.s = KEY_STATE::UP;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
+			self->event.keyboard_key.k = _map_keyboard_key(wparam);
+			self->event.keyboard_key.s = KEY_STATE::UP;
 			break;
+		}
 
 		case WM_LBUTTONDOWN:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
-				self->event.mouse_button.b = MOUSE::LEFT;
-				self->event.mouse_button.s = KEY_STATE::DOWN;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.mouse_button.b = MOUSE::LEFT;
+			self->event.mouse_button.s = KEY_STATE::DOWN;
 			break;
+		}
 
 		case WM_LBUTTONUP:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
-				self->event.mouse_button.b = MOUSE::LEFT;
-				self->event.mouse_button.s = KEY_STATE::UP;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.mouse_button.b = MOUSE::LEFT;
+			self->event.mouse_button.s = KEY_STATE::UP;
 			break;
+		}
 
 		case WM_RBUTTONDOWN:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
-				self->event.mouse_button.b = MOUSE::RIGHT;
-				self->event.mouse_button.s = KEY_STATE::DOWN;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.mouse_button.b = MOUSE::RIGHT;
+			self->event.mouse_button.s = KEY_STATE::DOWN;
 			break;
+		}
 
 		case WM_RBUTTONUP:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
-				self->event.mouse_button.b = MOUSE::RIGHT;
-				self->event.mouse_button.s = KEY_STATE::UP;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.mouse_button.b = MOUSE::RIGHT;
+			self->event.mouse_button.s = KEY_STATE::UP;
 			break;
+		}
 
 		case WM_MBUTTONDOWN:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
-				self->event.mouse_button.b = MOUSE::MIDDLE;
-				self->event.mouse_button.s = KEY_STATE::DOWN;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.mouse_button.b = MOUSE::MIDDLE;
+			self->event.mouse_button.s = KEY_STATE::DOWN;
 			break;
+		}
 
 		case WM_MBUTTONUP:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
-				self->event.mouse_button.b = MOUSE::MIDDLE;
-				self->event.mouse_button.s = KEY_STATE::UP;
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.mouse_button.b = MOUSE::MIDDLE;
+			self->event.mouse_button.s = KEY_STATE::UP;
 			break;
+		}
 
 		case WM_MOUSEMOVE:
-			if (self)
-			{
-				self->event.kind = Window_Event::KIND::KIND_MOUSE_MOVE;
-				self->event.mouse_move.x = GET_X_LPARAM(lparam);
-				self->event.mouse_move.y = GET_Y_LPARAM(lparam);
-			}
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_MOVE;
+			self->event.mouse_move.x = GET_X_LPARAM(lparam);
+			self->event.mouse_move.y = GET_Y_LPARAM(lparam);
 			break;
+		}
+
+		case WM_MOUSEWHEEL:
+		{
+			self->event.kind = Window_Event::KIND::KIND_MOUSE_WHEEL;
+			self->event.mouse_wheel.dir = GET_WHEEL_DELTA_WPARAM(wparam);
+			break;
+		}
 
 		case WM_SIZE:
+		{
 			if (self)
 			{
 				self->event.kind = Window_Event::KIND::KIND_WINDOW_RESIZE;
 				self->event.window_resize.width = LOWORD(lparam);
 				self->event.window_resize.height = HIWORD(lparam);
+				break;
 			}
-			break;
+		}
 
 		default:
 			break;

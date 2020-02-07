@@ -33,6 +33,12 @@ namespace io
 				input.mouse_y = event.mouse_move.y;
 				break;
 			}
+
+			case Window_Event::KIND::KIND_MOUSE_WHEEL:
+			{
+				input.wheel_dir = event.mouse_wheel.dir;
+				break;
+			}
 			default:
 				break;
 		}

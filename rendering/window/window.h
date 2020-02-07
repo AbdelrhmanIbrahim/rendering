@@ -142,6 +142,7 @@ namespace win
 			KIND_KEYBOARD_KEY,
 			KIND_MOUSE_BUTTON,
 			KIND_MOUSE_MOVE,
+			KIND_MOUSE_WHEEL,
 			KIND_WINDOW_RESIZE,
 			KIND_WINDOW_CLOSE
 		};
@@ -166,6 +167,11 @@ namespace win
 			{
 				int x, y;
 			} mouse_move;
+
+			struct
+			{
+				short dir;
+			} mouse_wheel;
 
 			struct
 			{

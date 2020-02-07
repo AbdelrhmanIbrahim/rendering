@@ -106,19 +106,27 @@ namespace world
 	}
 
 	inline void
-	camera_move(Camera& self, const bool keys[], float delta)
+	camera_move_forward(Camera& self, float delta)
 	{
-		if (keys[(int)win::KEYBOARD::W])
-			self.pos += self.fwd *delta;
+		self.pos += self.fwd *delta;
+	}
 
-		if (keys[(int)win::KEYBOARD::S])
-			self.pos -= self.fwd* delta;
+	inline void
+	camera_move_backward(Camera& self, float delta)
+	{
+		self.pos -= self.fwd* delta;
+	}
 
-		if (keys[(int)win::KEYBOARD::D])
-			self.pos += self.right * delta;
+	inline void
+	camera_move_right(Camera& self, float delta)
+	{
+		self.pos += self.right * delta;
+	}
 
-		if (keys[(int)win::KEYBOARD::A])
-			self.pos -= self.right * delta;
+	inline void
+	camera_move_left(Camera& self, float delta)
+	{
+		self.pos -= self.right * delta;
 	}
 
 	inline void

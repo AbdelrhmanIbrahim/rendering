@@ -1,44 +1,15 @@
 #pragma once
 
-#include <backend/backend.h>
-
-#include "IO/Input.h"
-
-#include "math/Vector.h"
-
-#include "window/window.h"
-#include "gpu_gl/gl_context.h"
-
-#include "world/World.h"
-#include "engine/Engine.h"
-
 namespace app
 {
-	struct application : backend::callbacks
-	{
-		//win and ogl context
-		math::vec2f window_size;
-		win::Window win;
-		glgpu::Context ctx;
+	typedef struct IApp* App;
 
-		//input state
-		io::Input i;
+	App
+	app_new();
 
-		//rendering engine and world
-		rndr::Engine e;
-		world::World* w;
+	void
+	app_run(App app);
 
-		application(int argc, char** argv);
-
-		~application();
-
-		void
-		run();
-
-		void
-		update() override;
-
-		void
-		mouse_wheel_handle(int a, int dir, int x, int y) override;
-	};
+	void
+	app_free(App app);
 };

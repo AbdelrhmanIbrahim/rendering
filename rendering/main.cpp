@@ -1,15 +1,12 @@
 #include "app/app.h"
 
+using namespace app;
+
 int
 main(int argc, char** argv)
 {
-	app::application app(argc, argv);
-	app.run();
-	//input, break if input is ESC
-
-	//update data
-
-	//render
-
+	App app = app_new();
+	app_run(app);
+	app_free(app);
 	return 0;
 }

@@ -28,6 +28,8 @@ namespace app
 		rndr::Engine e;
 		world::World* w;
 		
+		bool is_running;
+
 		application(int argc, char** argv);
 
 		~application();

@@ -81,14 +81,16 @@ namespace app
 		i.pmouse_x = WIN_WIDTH / 2;
 		i.pmouse_y = WIN_HEIGHT / 2;
 
-		//e = engine_create();
-		//w = world_create();
+		e = engine_create();
+		w = world_create();
+
+		is_running = true;
 	}
 
 	application::~application()
 	{
-		//world_free(w);
-		//engine_free(e);
+		world_free(w);
+		engine_free(e);
 
 		win::window_free(win);
 		glgpu::context_free(ctx);
@@ -97,38 +99,40 @@ namespace app
 	void
 	application::run()
 	{
-		//get the window input event
-		auto event = window_poll(win);
-
-		//resize or close window
-		if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
+		while (is_running)
 		{
-			window_size[0] = event.window_resize.width;
-			window_size[1] = event.window_resize.height;
+			//get the window input event
+			auto event = window_poll(win);
+
+			//resize or close window
+			if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
+			{
+				window_size[0] = event.window_resize.width;
+				window_size[1] = event.window_resize.height;
+			}
+			else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
+				is_running = false;
+
+			//send event to input
+			input_process_event(i, event);
+
+			//call the right procedures according to the input state to update the data
+			_input_act(i, w);
+
+			//render the data
+			{
+				//set camera viewport to window's viewport
+				camera_viewport(w->cam, window_size);
+
+				//render
+				//glgpu::frame_start();
+				//glgpu::color_clear(1, 1, 0);
+				engine_world_draw(e, w);
+			}
+
+			//swap window buffers
+			window_swap(win);
 		}
-		else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
-		{
-			//break the main loop
-			//destruct app
-		}
-
-		//send event to input
-		input_process_event(i, event);
-
-		//call the right procedures according to the input state to update the data
-		_input_act(i, w);
-
-		//render the data
-		{
-			//set camera viewport to window's viewport
-
-			//render
-			glgpu::frame_start();
-			glgpu::color_clear(0, 1, 0);
-		}
-
-		//swap window buffers
-		window_swap(win);
 	}
 
 	void

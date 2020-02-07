@@ -4,14 +4,12 @@ int
 main(int argc, char** argv)
 {
 	app::application app(argc, argv);
-	while (1)
-	{
-		app.run();
-		//input, break if input is ESC
+	app.run();
+	//input, break if input is ESC
 
-		//update data
+	//update data
 
-		//render
-	}
+	//render
+
 	return 0;
 }

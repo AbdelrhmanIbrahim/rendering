@@ -124,7 +124,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
-    <ClCompile Include="backend\backend.cpp" />
     <ClCompile Include="engine\Engine.cpp" />
     <ClCompile Include="engine\renderers\PBR_Renderer.cpp" />
     <ClCompile Include="engine\renderers\Phong_Renderer.cpp" />
@@ -142,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\app.h" />
-    <ClInclude Include="backend\backend.h" />
     <ClInclude Include="Defs.h" />
     <ClInclude Include="engine\Engine.h" />
     <ClInclude Include="engine\renderers\PBR_Renderer.h" />

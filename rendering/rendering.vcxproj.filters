@@ -25,12 +25,6 @@
     <Filter Include="Source Files\app">
       <UniqueIdentifier>{c8ca0e94-ecf2-450f-a311-4bdce5b49c1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\backend">
-      <UniqueIdentifier>{6bc6247b-4be5-4591-8513-1791c93181f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\backend">
-      <UniqueIdentifier>{9b47eab4-a6bb-4f85-af74-11de48f39cd7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\glgpu">
       <UniqueIdentifier>{e95a6cae-efd3-4546-9b81-26c074125def}</UniqueIdentifier>
     </Filter>
@@ -84,9 +78,6 @@
     <ClCompile Include="app\app.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
-    <ClCompile Include="backend\backend.cpp">
-      <Filter>Source Files\backend</Filter>
-    </ClCompile>
     <ClCompile Include="gpu_gl\glgpu.cpp">
       <Filter>Source Files\glgpu</Filter>
     </ClCompile>
@@ -130,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="app\app.h">
       <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="backend\backend.h">
-      <Filter>Header Files\backend</Filter>
     </ClInclude>
     <ClInclude Include="gpu_gl\glgpu.h">
       <Filter>Header Files\glgpu</Filter>

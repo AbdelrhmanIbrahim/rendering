@@ -5,7 +5,7 @@ WINDOWS:
 
 
 TODO:
-1) removeGLUT
+1) remove GLUT - ?
 2) cmake
 3) support renderdoc by creating context using wglCreateContextAttribsARB then init glew
 4) add imGui

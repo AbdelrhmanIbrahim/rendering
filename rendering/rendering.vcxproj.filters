@@ -114,6 +114,9 @@
     <ClCompile Include="IO\Input.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
+    <ClCompile Include="gpu_gl\glew.c">
+      <Filter>Source Files\glgpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window\window.h">
@@ -189,6 +192,12 @@
       <Filter>Header Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="gpu_gl\gl_context.h">
+      <Filter>Header Files\glgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_gl\glew.h">
+      <Filter>Header Files\glgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_gl\wglew.h">
       <Filter>Header Files\glgpu</Filter>
     </ClInclude>
   </ItemGroup>

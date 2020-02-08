@@ -1,14 +1,11 @@
-﻿
-WINDOWS:
-1) add an enviroment path called "rendering" pointing to this directory
-2) add to "Path" variable "%rendering%\3rdparty\glew\bin"
-
+﻿Windows: add an enviroment path called "rendering" pointing to this directory
 
 TODO:
 1) remove GLUT - ✔
-2) cmake
-3) support renderdoc by creating context using wglCreateContextAttribsARB then init glew
-4) add imGui
-5) make a shadow renderer only that outputs a texture with shadows then merge it later
-6) add ambient occlusion
-7) main loop indpendent frame rate
+2) remove prebuilt glew binaries, add glew.c to the project - ✔
+3) cmake
+4) support renderdoc by creating context using wglCreateContextAttribsARB then init glew
+5) add imGui
+6) make a shadow renderer only that outputs a texture with shadows then merge it later
+7) add ambient occlusion
+8) main loop indpendent frame rate

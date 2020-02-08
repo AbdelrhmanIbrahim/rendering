@@ -87,12 +87,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(rendering)\3rdparty\glew\inc;$(rendering)\rendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(rendering)\rendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINOS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(rendering)/3rdparty/glew/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -130,6 +130,7 @@
     <ClCompile Include="engine\renderers\Phong_Shadow_Renderer.cpp" />
     <ClCompile Include="engine\renderers\Skybox_Renderer.cpp" />
     <ClCompile Include="geometry\Mesh.cpp" />
+    <ClCompile Include="gpu_gl\glew.c" />
     <ClCompile Include="gpu_gl\glgpu.cpp" />
     <ClCompile Include="gpu_gl\gl_context.cpp" />
     <ClCompile Include="IO\Image.cpp" />
@@ -149,8 +150,10 @@
     <ClInclude Include="engine\renderers\Skybox_Renderer.h" />
     <ClInclude Include="geometry\Mesh.h" />
     <ClInclude Include="geometry\vertex.h" />
+    <ClInclude Include="gpu_gl\glew.h" />
     <ClInclude Include="gpu_gl\glgpu.h" />
     <ClInclude Include="gpu_gl\gl_context.h" />
+    <ClInclude Include="gpu_gl\wglew.h" />
     <ClInclude Include="IO\Image.h" />
     <ClInclude Include="IO\Input.h" />
     <ClInclude Include="IO\Stb_Image.h" />

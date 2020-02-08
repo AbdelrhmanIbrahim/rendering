@@ -1,6 +1,7 @@
 #include "gpu_gl/glgpu.h"
 
-#include <glew.h>
+#include "glew.h"
+
 #include <assert.h>
 #include <fstream>
 #include <string>

@@ -10,8 +10,8 @@
 
 #include <assert.h>
 
-#include <glew.h>
-#include <wglew.h>
+#include "glew.h"
+#include "wglew.h"
 
 namespace glgpu
 {

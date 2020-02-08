@@ -32,20 +32,20 @@ namespace rndr
 	{
 		IEngine* self = new IEngine;
 
-		self->phong = phong_create();
-		//self->phong_shadow = phong_shadow_create();
-		//self->pbr = pbr_create();
-		//self->skybox = skybox_renderer_hdr_create("../rendering/res/imgs/hdr/Tokyo_spec.hdr");
+		//self->phong = phong_create();
+		self->phong_shadow = phong_shadow_create();
+		self->pbr = pbr_create();
+		self->skybox = skybox_renderer_hdr_create("../rendering/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//skybox
 		/*static const char* skybox_paths[6]
 		{
-			"../rendering/res/imgs/skybox/right.jpg",
-			"../rendering/res/imgs/skybox/left.jpg",
-			"../rendering/res/imgs/skybox/top.jpg",
-			"../rendering/res/imgs/skybox/bottom.jpg",
-			"../rendering/res/imgs/skybox/front.jpg",
-			"../rendering/res/imgs/skybox/back.jpg"
+			"../rendering/res/imgs/skybox/sky/right.jpg",
+			"../rendering/res/imgs/skybox/sky/left.jpg",
+			"../rendering/res/imgs/skybox/sky/bottom.jpg",
+			"../rendering/res/imgs/skybox/sky/top.jpg",
+			"../rendering/res/imgs/skybox/sky/front.jpg",
+			"../rendering/res/imgs/skybox/sky/back.jpg"
 		};
 		self->skybox = skybox_renderer_rgba_create(skybox_paths, io::IMAGE_FORMAT::JPG);*/
 
@@ -55,10 +55,10 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		phong_free(e->phong);
+		//phong_free(e->phong);
 		//phong_shadow_free(e->phong_shadow);
-		//pbr_free(e->pbr);
-		//skybox_renderer_free(e->skybox);
+		pbr_free(e->pbr);
+		skybox_renderer_free(e->skybox);
 
 		delete e;
 	}
@@ -75,27 +75,27 @@ namespace rndr
 			for (const auto& mesh : w->meshes)
 			{
 				//phong_shadow_pack(e->phong_shadow, &mesh);
-				phong_pack(e->phong, &mesh);
-				//pbr_pack(e->pbr, &mesh);
+				//phong_pack(e->phong, &mesh);
+				pbr_pack(e->pbr, &mesh);
 			}
 
 			//flush renderers
 			{
 				//phong_shadow_draw(e->phong_shadow, math::vec3f{0,30,0}, w->cam);
-				phong_draw(e->phong, w->cam);
-				//pbr_draw(e->pbr, w->cam);
+				//phong_draw(e->phong, w->cam);
+				pbr_draw(e->pbr, w->cam);
 			}
 
 			//unpack meshes
 			{
 				//phong_shadow_unpack(e->phong_shadow);
-				phong_unpack(e->phong);
-				//pbr_unpack(e->pbr);
+				//phong_unpack(e->phong);
+				pbr_unpack(e->pbr);
 			}
 
 			//skybox
 			{
-				//skybox_renderer_draw(e->skybox, w->cam);
+				skybox_renderer_draw(e->skybox, w->cam);
 			}
 		}
 	}

@@ -108,13 +108,13 @@
     <ClCompile Include="engine\renderers\Phong_Shadow_Renderer.cpp">
       <Filter>Source Files\engine\renderers</Filter>
     </ClCompile>
-    <ClCompile Include="gpu_gl\gl_context.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IO\Input.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="gpu_gl\glew.c">
+      <Filter>Source Files\glgpu</Filter>
+    </ClCompile>
+    <ClCompile Include="gpu_gl\gl_context.cpp">
       <Filter>Source Files\glgpu</Filter>
     </ClCompile>
   </ItemGroup>

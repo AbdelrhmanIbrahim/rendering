@@ -43,18 +43,18 @@ namespace app
 
 		//Keyboard
 		{
-			float delta = 2.0f; //TODO
+			constexpr float speed = 0.005f * 2.0f;
 			if (i.keyboard[(int)win::KEYBOARD::W] == true)
-				camera_move_forward(w->cam, 0.05f * delta);
+				camera_move_forward(w->cam, speed);
 
 			if (i.keyboard[(int)win::KEYBOARD::S] == true)
-				camera_move_backward(w->cam, 0.05f * delta);
+				camera_move_backward(w->cam, speed);
 
 			if (i.keyboard[(int)win::KEYBOARD::A] == true)
-				camera_move_left(w->cam, 0.05f * delta);
+				camera_move_left(w->cam, speed);
 
 			if (i.keyboard[(int)win::KEYBOARD::D] == true)
-				camera_move_right(w->cam, 0.05f * delta);
+				camera_move_right(w->cam, speed);
 		}
 
 		//Wheel

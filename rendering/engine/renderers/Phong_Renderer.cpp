@@ -15,7 +15,7 @@ namespace rndr
 		Phong_Renderer self{};
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.prog = program_create("../rendering/engine/shaders/phong.vertex", "../rendering/engine/shaders/phong.pixel");
+		self.prog = program_create("../engine/shaders/phong.vertex", "../engine/shaders/phong.pixel");
 
 		return self;
 	}

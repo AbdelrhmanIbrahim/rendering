@@ -576,7 +576,7 @@ namespace glgpu
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//setup
-		program prog = program_create("../rendering/engine/shaders/cube.vertex", "../rendering/engine/shaders/equarectangular_to_cubemap.pixel");
+		program prog = program_create("../engine/shaders/cube.vertex", "../engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
 
@@ -674,7 +674,7 @@ namespace glgpu
 
 			//TEST
 			/*glReadPixels(0, 0, view_size[0], view_size[1], GL_RGBA, GL_UNSIGNED_BYTE, imgs[i].data);
-			std::string name = "../rendering/res/imgs/specular_test/img_" + std::to_string(i) + std::to_string(mipmap_level) +".png";
+			std::string name = "../res/imgs/specular_test/img_" + std::to_string(i) + std::to_string(mipmap_level) +".png";
 			io::image_write(imgs[i], name.c_str(), io::IMAGE_FORMAT::PNG);*/
 		}
 

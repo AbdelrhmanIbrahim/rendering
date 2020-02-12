@@ -18,8 +18,8 @@ namespace rndr
 		Phong_Shadow_Renderer self{};
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.depth_prog = program_create("../rendering/engine/shaders/depth.vertex", "../rendering/engine/shaders/depth.pixel");
-		self.phong_shadow_prog = program_create("../rendering/engine/shaders/phong_shadow.vertex", "../rendering/engine/shaders/phong_shadow.pixel");
+		self.depth_prog = program_create("../engine/shaders/depth.vertex", "../engine/shaders/depth.pixel");
+		self.phong_shadow_prog = program_create("../engine/shaders/phong_shadow.vertex", "../engine/shaders/phong_shadow.pixel");
 		self.fb = framebuffer_create();
 		self.depth = texture2d_create(vec2f{ SHADOW_WIDTH, SHADOW_HEIGHT}, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8, false);
 
@@ -85,13 +85,14 @@ namespace rndr
 				/*io::Image img{ SHADOW_WIDTH, SHADOW_HEIGHT, 4 };
 				img.data = new unsigned char[SHADOW_WIDTH * SHADOW_HEIGHT * 4];
 				texture2d_unpack(mr.depth, img, TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8);
-				io::image_write(img, "../rendering/IO/shadow_map.jpg", io::IMAGE_FORMAT::JPG);
+				io::image_write(img, "../IO/shadow_map.jpg", io::IMAGE_FORMAT::JPG);
 				io::image_free(img);*/
 			}
 		}
 
 		//now do phong lighting but with the shadow map to calc shadows
 		{
+
 			//depth_clear();
 			//program_use(mr.phong_shadow_prog);
 

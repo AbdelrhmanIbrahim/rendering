@@ -1,6 +1,6 @@
 #include "app/app.h"
 
-#include "Defs.h"
+#include "Defs/Defs.h"
 
 #include "IO/Input.h"
 

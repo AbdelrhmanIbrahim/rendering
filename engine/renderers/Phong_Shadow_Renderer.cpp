@@ -4,7 +4,7 @@
 #include <math/Matrix.h>
 #include <math/Gfx.h>
 
-#include "Defs.h"
+#include "Defs/Defs.h"
 
 using namespace glgpu;
 using namespace math;

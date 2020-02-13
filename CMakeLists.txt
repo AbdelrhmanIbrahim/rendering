@@ -34,7 +34,7 @@ set(HEADERS
 	world/World.h
 	world/Camera.h
 	world/3Dobject.h
-	Defs.h
+	Defs/Defs.h
 	)
 
 #src
@@ -55,7 +55,7 @@ set(SOURCES
 	window/window.cpp
 	world/World.cpp
 	world/3Dobject.h
-	main.cpp
+	main/main.cpp
 	)
 
 #resources

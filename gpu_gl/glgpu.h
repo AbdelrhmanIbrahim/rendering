@@ -6,7 +6,7 @@
 
 #include "IO/Image.h"
 
-#include "Defs.h"
+#include "Defs/Defs.h"
 
 #include <cstddef>
 

@@ -32,20 +32,20 @@ namespace rndr
 	{
 		IEngine* self = new IEngine;
 
-		//self->phong = phong_create();
-		self->phong_shadow = phong_shadow_create();
+		self->phong = phong_create();
 		self->pbr = pbr_create();
-		self->skybox = skybox_renderer_hdr_create("../rendering/res/imgs/hdr/Tokyo_spec.hdr");
+		self->skybox = skybox_renderer_hdr_create("../res/imgs/hdr/Tokyo_spec.hdr");
+		//self->phong_shadow = phong_shadow_create();
 
 		//skybox
 		/*static const char* skybox_paths[6]
 		{
-			"../rendering/res/imgs/skybox/sky/right.jpg",
-			"../rendering/res/imgs/skybox/sky/left.jpg",
-			"../rendering/res/imgs/skybox/sky/bottom.jpg",
-			"../rendering/res/imgs/skybox/sky/top.jpg",
-			"../rendering/res/imgs/skybox/sky/front.jpg",
-			"../rendering/res/imgs/skybox/sky/back.jpg"
+			"../res/imgs/skybox/sky/right.jpg",
+			"../res/imgs/skybox/sky/left.jpg",
+			"../res/imgs/skybox/sky/bottom.jpg",
+			"../res/imgs/skybox/sky/top.jpg",
+			"../res/imgs/skybox/sky/front.jpg",
+			"../res/imgs/skybox/sky/back.jpg"
 		};
 		self->skybox = skybox_renderer_rgba_create(skybox_paths, io::IMAGE_FORMAT::JPG);*/
 
@@ -55,10 +55,10 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		//phong_free(e->phong);
-		//phong_shadow_free(e->phong_shadow);
+		phong_free(e->phong);
 		pbr_free(e->pbr);
 		skybox_renderer_free(e->skybox);
+		//phong_shadow_free(e->phong_shadow);
 
 		delete e;
 	}

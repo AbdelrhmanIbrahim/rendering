@@ -68,7 +68,7 @@ namespace rndr
 	skybox_init(Skybox_Renderer& self)
 	{
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.prog = program_create("../rendering/engine/shaders/skybox.vertex", "../rendering/engine/shaders/skybox.pixel");
+		self.prog = program_create("../engine/shaders/skybox.vertex", "../engine/shaders/skybox.pixel");
 		self.cube = vao_create();
 		self.cube_vs = vertex_buffer_create(skybox, 36);
 	}
@@ -141,7 +141,7 @@ namespace rndr
 			vao_unbind();
 
 			//for testing on small cube
-			/*auto mesh = geo::mesh_create("../rendering/res/stls/cube.stl");
+			/*auto mesh = geo::mesh_create("../res/stls/cube.stl");
 			vao_bind(mesh.va, mesh.vs, mesh.is);
 			draw_indexed(mesh.indices.size());
 			vao_unbind();

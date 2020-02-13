@@ -3,7 +3,7 @@
 TODO:
 1) remove GLUT - ✔
 2) remove prebuilt glew binaries, add glew.c to the project - ✔
-3) cmake
+3) cmake - ✔
 4) support renderdoc by creating context using wglCreateContextAttribsARB then init glew
 5) fix rotation+movement events bug
 6) add imGui

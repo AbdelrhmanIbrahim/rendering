@@ -43,7 +43,7 @@ namespace app
 
 		//Keyboard
 		{
-			constexpr float speed = 0.005f * 2.0f;
+			constexpr float speed = 0.05f * 2.0f;
 			if (i.keyboard[(int)win::KEYBOARD::W] == true)
 				camera_move_forward(w->cam, speed);
 

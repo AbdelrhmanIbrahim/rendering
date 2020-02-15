@@ -34,6 +34,7 @@ uniform vec3 light_dir;
 uniform vec3 camera_pos_world;
 uniform float metallic;
 uniform float rough;
+
 uniform samplerCube diffuse_irradiance_map;
 uniform samplerCube specular_prefiltered_map;
 uniform sampler2D specular_BRDF_LUT;

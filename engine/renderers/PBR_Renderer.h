@@ -13,6 +13,7 @@ namespace rndr
 	struct PBR_Renderer
 	{
 		glgpu::program prog;
+		glgpu::buffer uniform_space;
 
 		//PBR is based on solving the rendering equation integral, for our case solving the diffuse and specular integrations only (excluding the emission part)
 		/* 1) DIFFUSE : we solve the diffuse part of the reflectance integral equation using irradiance convoluted cubemap (diffuse_irradiance_map) 

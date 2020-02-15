@@ -4,8 +4,9 @@
 - remove GLUT ✔
 - remove prebuilt glew binaries ✔
 - cmake ✔
-- renderdoc
+- renderdoc ✔
 - get samplers in
+- hide renderers impl inside and clean the interface
 - define _DEBUG macro in debug mode only (cmake)
 - fix rotation + movement events bug
 - add imGui

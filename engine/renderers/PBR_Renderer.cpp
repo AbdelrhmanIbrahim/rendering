@@ -9,16 +9,23 @@ using namespace world;
 
 namespace rndr
 {
+	struct Space_Uniform
+	{
+		Mat4f model;
+		Mat4f vp;
+	};
+
 	PBR_Renderer
 	pbr_create()
 	{
 		PBR_Renderer self{};
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.prog = program_create("../engine/shaders/pbr.vertex", "../engine/shaders/pbr.pixel");
+		self.prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/pbr.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/pbr.pixel");
+		self.uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 
 		/*Diffuse irriadiance convoluted map*/
-		io::Image diff = image_read("../res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
+		io::Image diff = image_read("F:/Abdo/rendering_jo/rendering/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
 		self.diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512}, false);
 		image_free(diff);
 
@@ -29,10 +36,10 @@ namespace rndr
 		vec2f prefiltered_initial_size{ 128, 128 };
 		self.specular_prefiltered_map = cubemap_create(prefiltered_initial_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, true);
 
-		io::Image env = image_read("../res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
+		io::Image env = image_read("F:/Abdo/rendering_jo/rendering/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
 		cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, true);
 
-		program prefiltering_prog = program_create("../engine/shaders/cube.vertex", "../engine/shaders/specular_prefiltering_convolution.pixel");
+		program prefiltering_prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/cube.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/specular_prefiltering_convolution.pixel");
 		unsigned int max_mipmaps = 5;
 		for (unsigned int mip_level = 0; mip_level < max_mipmaps; ++mip_level)
 		{
@@ -45,7 +52,7 @@ namespace rndr
 		image_free(env);
 
 		//Specular BRDF convoluted LUT (Part 2 from the specular integration of the reflectance equation)
-		program BRDF_prog = program_create("../engine/shaders/quad_ndc.vertex", "../engine/shaders/specular_BRDF_convolution.pixel");
+		program BRDF_prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/quad_ndc.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/specular_BRDF_convolution.pixel");
 		vec2f BRDF_LUT_size{ 512, 512 };
 		self.specular_BRDF_LUT = texture2d_create(BRDF_LUT_size, INTERNAL_TEXTURE_FORMAT::RG16F, EXTERNAL_TEXTURE_FORMAT::RG, DATA_TYPE::FLOAT, false);
 		texture2d_render_offline_to(self.specular_BRDF_LUT, BRDF_prog, BRDF_LUT_size);
@@ -58,6 +65,7 @@ namespace rndr
 	pbr_free(PBR_Renderer & self)
 	{
 		program_delete(self.prog);
+		buffer_delete(self.uniform_space);
 		cubemap_free(self.diffuse_irradiance_map);
 		cubemap_free(self.specular_prefiltered_map);
 	}
@@ -84,25 +92,28 @@ namespace rndr
 		vec2f viewport = world::camera_viewport(cam);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
+		//uniform blocks
+		buffer_uniform_bind(0, self.uniform_space);
+
 		//uniforms
 		uniform3f_set(self.prog, "camera_pos_world", cam.pos);
 		uniform3f_set(self.prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
 		uniform3f_set(self.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
 		
+		//till we get sampler objects in
 		cubemap_bind(self.diffuse_irradiance_map, TEXTURE_UNIT::UNIT_0);
 		uniform1i_set(self.prog, "diffuse_irradiance_map", TEXTURE_UNIT::UNIT_0);
 		cubemap_bind(self.specular_prefiltered_map, TEXTURE_UNIT::UNIT_1);
 		uniform1i_set(self.prog, "specular_prefiltered_map", TEXTURE_UNIT::UNIT_1);
 		texture2d_bind(self.specular_BRDF_LUT, TEXTURE_UNIT::UNIT_2);
 		uniform1i_set(self.prog, "specular_BRDF_LUT", TEXTURE_UNIT::UNIT_2);
+
 		for (const auto object : self.meshes)
 		{
-			//MVP
-			Mat4f model = mat4_from_transform(object->model);
-			Mat4f mvp = camera_view_proj(cam) * model;
+			//uniform blocks
+			Space_Uniform mvp{ mat4_from_transform(object->model), camera_view_proj(cam) };
+			buffer_uniform_set(self.uniform_space, &mvp, sizeof(mvp));
 
-			uniformmat4f_set(self.prog, "mvp", mvp);
-			uniformmat4f_set(self.prog, "model", model);
 			uniform3f_set(self.prog, "object_color_albedo", vec3f{ 0.75f, 0.75f, 0.75f});
 			uniform1f_set(self.prog, "metallic", 0.9);
 			uniform1f_set(self.prog, "rough", 0.2);

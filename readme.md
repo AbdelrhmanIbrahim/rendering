@@ -7,6 +7,7 @@
 - renderdoc ✔
 - get samplers in
 - hide renderers impl inside and clean the interface
+- propagate uniform blocks to phong_shadow
 - define _DEBUG macro in debug mode only (cmake)
 - fix rotation + movement events bug
 - add imGui

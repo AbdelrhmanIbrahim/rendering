@@ -21,10 +21,10 @@ namespace rndr
 {
 	struct IEngine
 	{
-		Phong_Shadow_Renderer phong_shadow;
 		Phong_Renderer phong;
 		PBR_Renderer pbr;
 		Skybox_Renderer skybox;
+		Phong_Shadow_Renderer phong_shadow;
 	};
 
 	Engine

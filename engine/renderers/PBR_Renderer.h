@@ -14,6 +14,10 @@ namespace rndr
 	{
 		glgpu::program prog;
 		glgpu::buffer uniform_space;
+		glgpu::buffer uniform_object_color;
+		glgpu::buffer uniform_light;
+		glgpu::buffer uniform_camera;
+		glgpu::buffer uniform_material;
 
 		//PBR is based on solving the rendering equation integral, for our case solving the diffuse and specular integrations only (excluding the emission part)
 		/* 1) DIFFUSE : we solve the diffuse part of the reflectance integral equation using irradiance convoluted cubemap (diffuse_irradiance_map) 
@@ -49,5 +53,5 @@ namespace rndr
 	pbr_unpack(PBR_Renderer & self);
 
 	void
-	pbr_draw(const PBR_Renderer& self, const world::Camera& cam);
+	pbr_draw(const PBR_Renderer& self, const world::Camera& camera);
 };

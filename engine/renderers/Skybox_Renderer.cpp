@@ -138,7 +138,7 @@ namespace rndr
 			vec2f viewport = camera_viewport(cam);
 			view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
-			//cubemap
+			//cubemap, till we get sampler objects in
 			cubemap_bind(self.cubemap, TEXTURE_UNIT::UNIT_0);
 			uniform1i_set(self.prog, "cubemap", TEXTURE_UNIT::UNIT_0);
 

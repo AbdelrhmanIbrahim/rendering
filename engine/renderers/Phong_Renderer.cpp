@@ -89,7 +89,7 @@ namespace rndr
 			buffer_uniform_set(mr.uniform_object_color, &color_test, sizeof(color_test));
 			Light_Uniform light{ vec4f{ 1.0f, 1.0f, 1.0f,1.0f }, vec4f{ 0.0f, -1.0f, 0.0f, 0.0f } };
 			buffer_uniform_set(mr.uniform_light, &light, sizeof(light));
-			Camera_Uniform cam{ camera.pos[0], camera.pos[1], camera.pos[1], 0.0f };
+			Camera_Uniform cam{ camera.pos[0], camera.pos[1], camera.pos[2], 0.0f };
 			buffer_uniform_set(mr.uniform_camera, &cam, sizeof(cam));
 
 			//draw geometry

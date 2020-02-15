@@ -28,21 +28,36 @@ To understand the precomputed enviroment maps, read the comments section in the 
 #version 400 core
 #extension GL_ARB_shading_language_420pack : require
 
-uniform vec3 object_color_albedo;
-uniform vec3 light_color;
-uniform vec3 light_dir;
-uniform vec3 camera_pos_world;
-uniform float metallic;
-uniform float rough;
-
-uniform samplerCube diffuse_irradiance_map;
-uniform samplerCube specular_prefiltered_map;
-uniform sampler2D specular_BRDF_LUT;
-
 in vec3 pos_world;
 in vec3 normal_world;
 
 out vec4 frag_color;
+
+layout (std140, binding = 1) uniform Object_Color
+{
+	vec4 object_color_albedo;
+};
+
+layout (std140, binding = 2) uniform Light
+{
+	vec4 light_color;
+	vec4 light_dir;
+};
+
+layout (std140, binding = 3) uniform Camera
+{
+	vec4 camera_pos_world;
+};
+
+layout (std140, binding = 4) uniform Material
+{
+	float metallic;
+	float rough;
+};
+
+uniform samplerCube diffuse_irradiance_map;
+uniform samplerCube specular_prefiltered_map;
+uniform sampler2D specular_BRDF_LUT;
 
 const float PI = 3.14159265359f;
 
@@ -121,7 +136,7 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 	//Fresnel, calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)
 	vec3 F0 = vec3(0.04); 
-    F0 = mix(F0, object_color_albedo, metallic);
+    F0 = mix(F0, object_color_albedo.xyz, metallic);
 	vec3 F = Fresnel_Schlick(clamp(dot(halfway, view_dir), 0.0, 1.0), F0);
 
 	//Geometry
@@ -134,7 +149,7 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 
 	//diffuse (taking metallic surfaces into consideration, metallic surfaces doesn't has diffuse part as it reflects all the light)
 	vec3 kD = (vec3(1.0) - F) * (1.0 - metallic); 
-	vec3 diffuse = (kD * object_color_albedo / PI);
+	vec3 diffuse = (kD * object_color_albedo.xyz / PI);
 
 	return (diffuse + specular);
 }
@@ -142,12 +157,15 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 void
 main()
 {
+	vec3 light_c = light_color.xyz;
+	vec3 light_d = light_dir.xyz;
+
 	//reflectance eqn (irradiance)
-	vec3 view_dir = normalize(camera_pos_world - pos_world);
-	float nl = max(dot(normal_world, -light_dir), 0.0);
+	vec3 view_dir = normalize(camera_pos_world.xyz - pos_world);
+	float nl = max(dot(normal_world, -light_d), 0.0);
 
 	//calc diffuse and specular of direct lighting
-	vec3 direct_light_irradiance = Direct_Light_BRDF(normal_world, -light_dir, view_dir, rough) * light_color * nl;
+	vec3 direct_light_irradiance = Direct_Light_BRDF(normal_world, -light_d, view_dir, rough) * light_c * nl;
 
 	//calc diffuse and specular of indirect enviroment lighting (IBL) 
 	vec3 F0 = vec3(0.04);
@@ -155,7 +173,7 @@ main()
 	vec3 kD = 1.0 - F;
 	kD *= 1.0 - metallic;
 	vec3 env_irradiance = texture(diffuse_irradiance_map, normal_world).rgb;
-	vec3 diffuse = env_irradiance * object_color_albedo;
+	vec3 diffuse = env_irradiance * object_color_albedo.xyz;
 	vec3 IBL_irradiance = (kD * diffuse);
 	
 	vec3 R = reflect(-view_dir, normal_world); 

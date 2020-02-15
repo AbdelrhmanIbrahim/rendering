@@ -13,6 +13,9 @@ namespace rndr
 	{
 		glgpu::program prog;
 		glgpu::buffer uniform_object_color;
+		glgpu::buffer uniform_space;
+		glgpu::buffer uniform_light;
+		glgpu::buffer uniform_camera;
 		std::vector<const world::object3D*> meshes;
 	};
 

@@ -341,6 +341,7 @@ namespace glgpu
 		glBindBuffer(GL_UNIFORM_BUFFER, (GLuint)buf);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size_in_bytes, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
+		error();
 	}
 
 	void

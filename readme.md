@@ -4,15 +4,15 @@
 - remove GLUT ✔
 - remove prebuilt glew binaries ✔
 - cmake ✔
-- renderdoc ✔
+- renderdoc ✔ (uniforms are always zero when reading *shrugging*)
 - fix pbr new bug after refactor, diff roughness ✔
+- hide renderers impl inside and clean the interface ✔
 - get samplers in
-- hide renderers impl inside and clean the interface
-- propagate uniform blocks to phong_shadow
 - define _DEBUG macro in debug mode only (cmake)
 - fix rotation + movement events bug
 - add imGui
 - make a shadow renderer only that outputs a texture with shadows then merge it later
+- propagate uniform blocks to phong_shadow
 - deferred shading
 - ambient occlusion
 - main loop indpendent frame rate

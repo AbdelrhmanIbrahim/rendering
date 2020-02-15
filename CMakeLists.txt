@@ -10,10 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(HEADERS
 	app/app.h
 	engine/Engine.h
-	engine/renderers/Phong_Renderer.h
-	engine/renderers/Phong_Shadow_Renderer.h
-	engine/renderers/PBR_Renderer.h
-	engine/renderers/Skybox_Renderer.h
+	engine/renderers/Phong.h
+	engine/renderers/Phong_Shadow.h
+	engine/renderers/PBR.h
+	engine/renderers/Skybox.h
 	geometry/vertex.h
 	geometry/Mesh.h
 	gpu_gl/glgpu.h
@@ -41,10 +41,10 @@ set(HEADERS
 set(SOURCES
 	app/app.cpp
 	engine/Engine.cpp
-	engine/renderers/Phong_Renderer.cpp
-	engine/renderers/Phong_Shadow_Renderer.cpp
-	engine/renderers/PBR_Renderer.cpp
-	engine/renderers/Skybox_Renderer.cpp
+	engine/renderers/Phong.cpp
+	engine/renderers/Phong_Shadow.cpp
+	engine/renderers/PBR.cpp
+	engine/renderers/Skybox.cpp
 	geometry/Mesh.cpp
 	gpu_gl/glgpu.cpp
 	gpu_gl/gl_context.cpp

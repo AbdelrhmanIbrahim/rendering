@@ -14,8 +14,8 @@ namespace geo
 		std::vector<unsigned int> indices;
 
 		//gpu
-		glgpu::vao va;
-		glgpu::buffer vs, is;
+		glgpu::Vao va;
+		glgpu::Buffer vs, is;
 	};
 
 	Mesh

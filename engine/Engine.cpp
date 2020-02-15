@@ -3,10 +3,10 @@
 #include "world/World.h"
 #include "world/Camera.h"
 
-#include "engine/renderers/Phong_Renderer.h"
-#include "engine/renderers/PBR_Renderer.h"
-#include "engine/renderers/Skybox_Renderer.h"
-#include "engine/renderers/Phong_Shadow_Renderer.h"
+#include "engine/renderers/Phong.h"
+#include "engine/renderers/PBR.h"
+#include "engine/renderers/Skybox.h"
+#include "engine/renderers/Phong_Shadow.h"
 
 #include "IO/Image.h"
 
@@ -21,10 +21,11 @@ namespace rndr
 {
 	struct IEngine
 	{
-		Phong_Renderer phong;
-		PBR_Renderer pbr;
-		Skybox_Renderer skybox;
-		Phong_Shadow_Renderer phong_shadow;
+		//renderers
+		Phong phong;
+		PBR pbr;
+		Skybox skybox;
+		Phong_Shadow phong_shadow;
 	};
 
 	Engine
@@ -32,7 +33,7 @@ namespace rndr
 	{
 		IEngine* self = new IEngine;
 
-		self->phong = phong_create();
+		//self->phong = phong_create();
 		self->pbr = pbr_create();
 		self->skybox = skybox_renderer_hdr_create("F:/Abdo/rendering_jo/rendering/res/imgs/hdr/Tokyo_spec.hdr");
 		//self->phong_shadow = phong_shadow_create();
@@ -55,7 +56,7 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		phong_free(e->phong);
+		//phong_free(e->phong);
 		pbr_free(e->pbr);
 		skybox_renderer_free(e->skybox);
 		//phong_shadow_free(e->phong_shadow);

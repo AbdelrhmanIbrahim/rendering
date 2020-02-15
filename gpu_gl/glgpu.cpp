@@ -266,7 +266,7 @@ namespace glgpu
 		return obj;
 	}
 
-	program
+	Program
 	program_create(const char* vertex_shader_path, const char* pixel_shader_path)
 	{
 		std::ifstream stream;
@@ -279,24 +279,24 @@ namespace glgpu
 		glDeleteShader(vobj);
 		glDeleteShader(pobj);
 
-		return (program)prog;
+		return (Program)prog;
 	}
 
 	void
-	program_use(program prog)
+	program_use(Program prog)
 	{
 		GLuint p = (GLuint)prog;
 		glUseProgram(p);
 	}
 
 	void
-	program_delete(program prog)
+	program_delete(Program prog)
 	{
 		GLuint p = (GLuint)prog;
 		glDeleteProgram(p);
 	}
 
-	buffer
+	Buffer
 	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count)
 	{
 		GLuint vbo;
@@ -304,10 +304,10 @@ namespace glgpu
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(geo::Vertex), vertices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, NULL);
-		return (buffer)vbo;
+		return (Buffer)vbo;
 	}
 
-	buffer
+	Buffer
 	buffer_index_create(unsigned int indices[], std::size_t count)
 	{
 		GLuint ebo;
@@ -315,10 +315,10 @@ namespace glgpu
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
-		return (buffer)ebo;
+		return (Buffer)ebo;
 	}
 
-	buffer
+	Buffer
 	buffer_uniform_create(unsigned int size_in_bytes)
 	{
 		GLuint uniform;
@@ -326,41 +326,40 @@ namespace glgpu
 		glBindBuffer(GL_UNIFORM_BUFFER, uniform);
 		glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, NULL, GL_STATIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
-		return (buffer)uniform;
+		return (Buffer)uniform;
 	}
 
 	void
-	buffer_uniform_bind(unsigned int binding_point, buffer data)
+	buffer_uniform_bind(unsigned int binding_point, Buffer data)
 	{
 		glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, (GLuint)data);
 	}
 
 	void
-	buffer_uniform_set(buffer buf, void* data, unsigned int size_in_bytes)
+	buffer_uniform_set(Buffer buf, void* data, unsigned int size_in_bytes)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, (GLuint)buf);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size_in_bytes, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
-		error();
 	}
 
 	void
-	buffer_delete(buffer buf)
+	buffer_delete(Buffer buf)
 	{
 		GLuint b = (GLuint)buf;
 		glDeleteBuffers(1, &b);
 	}
 
-	vao
+	Vao
 	vao_create()
 	{
 		unsigned int VAO;
 		glGenVertexArrays(1, &VAO);
-		return vao(VAO);
+		return Vao(VAO);
 	}
 
 	void
-	vao_bind(vao va, buffer vbo, buffer ebo)
+	vao_bind(Vao va, Buffer vbo, Buffer ebo)
 	{
 		GLuint v = (GLuint)va;
 		glBindVertexArray(v);
@@ -390,13 +389,13 @@ namespace glgpu
 	}
 
 	void
-	vao_delete(vao va)
+	vao_delete(Vao va)
 	{
 		GLuint v = (GLuint)va;
 		glDeleteVertexArrays(1, &v);
 	}
 
-	texture
+	Texture
 	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap)
 	{
 		GLuint tex;
@@ -413,10 +412,10 @@ namespace glgpu
 
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
-		return (texture)tex;
+		return (Texture)tex;
 	}
 
-	texture
+	Texture
 	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
 	{
 		INTERNAL_TEXTURE_FORMAT internal_format;
@@ -452,20 +451,20 @@ namespace glgpu
 		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), img.width, img.height, 0, _map(tex_format), _map(type), img.data);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
-		return (texture)tex;
+		return (Texture)tex;
 	}
 
-	texture
+	Texture
 	texture2d_create(const char* image_path, IMAGE_FORMAT format)
 	{
 		Image img = image_read(image_path, format);
-		texture tex = texture2d_create(img, format);
+		Texture tex = texture2d_create(img, format);
 		image_free(img);
 		return tex;
 	}
 
 	void
-	texture2d_render_offline_to(texture output, program prog, vec2f view_size)
+	texture2d_render_offline_to(Texture output, Program prog, vec2f view_size)
 	{
 		GLuint fbo, rbo;
 		glGenFramebuffers(1, &fbo);
@@ -480,8 +479,8 @@ namespace glgpu
 		glViewport(0, 0, view_size[0], view_size[1]);
 
 		//render to output attached texture
-		vao quad_vao = vao_create();
-		buffer quad_vs = buffer_vertex_create(quad_ndc, 6);
+		Vao quad_vao = vao_create();
+		Buffer quad_vs = buffer_vertex_create(quad_ndc, 6);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		vao_bind(quad_vao, quad_vs, NULL);
 		draw_strip(6);
@@ -495,7 +494,7 @@ namespace glgpu
 	}
 
 	void
-	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit)
+	texture2d_bind(Texture texture, TEXTURE_UNIT texture_unit)
 	{
 		glActiveTexture(_map(texture_unit));
 		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
@@ -508,20 +507,20 @@ namespace glgpu
 	}
 
 	void
-	texture2d_unpack(texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
 		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
 	}
 
 	void
-	texture_free(texture texture)
+	texture_free(Texture texture)
 	{
 		GLuint t = (GLuint)texture;
 		glDeleteTextures(1, &t);
 	}
 
-	cubemap
+	Cubemap
 	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap)
 	{
 		GLuint cmap;
@@ -544,10 +543,10 @@ namespace glgpu
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
-		return (cubemap)cmap;
+		return (Cubemap)cmap;
 	}
 
-	cubemap
+	Cubemap
 	cubemap_rgba_create(const io::Image imgs[6])
 	{
 		GLuint cmap;
@@ -565,14 +564,14 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
-		return (cubemap)cmap;
+		return (Cubemap)cmap;
 	}
 
-	cubemap
+	Cubemap
 	cubemap_hdr_create(const io::Image& img, vec2f view_size, bool mipmap)
 	{
 		//create hdr texture
-		texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
+		Texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
 
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
@@ -592,7 +591,7 @@ namespace glgpu
 		//create env cubemap
 		//(HDR should a 32 bit for each channel to cover a wide range of colors,
 		//they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
-		cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, mipmap);
+		Cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, mipmap);
 
 		//float framebuffer to render to
 		GLuint fbo, rbo;
@@ -604,14 +603,14 @@ namespace glgpu
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//setup
-		program prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/cube.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/equarectangular_to_cubemap.pixel");
+		Program prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/cube.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		vao cube_vao = vao_create();
-		buffer cube_vs = buffer_vertex_create(unit_cube, 36);
+		Vao cube_vao = vao_create();
+		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
@@ -644,7 +643,7 @@ namespace glgpu
 	}
 
 	void
-	cubemap_postprocess(cubemap input, cubemap output, program postprocessor, Unifrom_Float uniform, vec2f view_size, int mipmap_level)
+	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, vec2f view_size, int mipmap_level)
 	{
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
@@ -678,8 +677,8 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		vao cube_vao = vao_create();
-		buffer cube_vs = buffer_vertex_create(unit_cube, 36);
+		Vao cube_vao = vao_create();
+		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
 
 		//TEST
 		/*io::Image imgs[6];
@@ -721,36 +720,36 @@ namespace glgpu
 	}
 
 	void
-	cubemap_bind(cubemap cmap, TEXTURE_UNIT texture_unit)
+	cubemap_bind(Cubemap cmap, TEXTURE_UNIT texture_unit)
 	{
 		glActiveTexture(_map(texture_unit));
 		glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)cmap);
 	}
 
 	void
-	cubemap_free(cubemap cmap)
+	cubemap_free(Cubemap cmap)
 	{
 		GLuint t = (GLuint)cmap;
 		glDeleteTextures(1, &t);
 	}
 
-	framebuffer
+	Framebuffer
 	framebuffer_create()
 	{
 		unsigned int fb;
 		glGenFramebuffers(1, &fb);
 
-		return (framebuffer)fb;
+		return (Framebuffer)fb;
 	}
 
 	void
-	framebuffer_bind(framebuffer fb)
+	framebuffer_bind(Framebuffer fb)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, (GLuint)fb);
 	}
 
 	void
-	framebuffer_attach(framebuffer fb, texture tex, FRAMEBUFFER_ATTACHMENT attachment)
+	framebuffer_attach(Framebuffer fb, Texture tex, FRAMEBUFFER_ATTACHMENT attachment)
 	{
 		glFramebufferTexture2D(GL_FRAMEBUFFER, _map(attachment), GL_TEXTURE_2D, (GLuint)tex, 0);
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Error while creating framebuffer");
@@ -763,7 +762,7 @@ namespace glgpu
 	}
 
 	void
-	framebuffer_free(framebuffer fb)
+	framebuffer_free(Framebuffer fb)
 	{
 		GLuint t = (GLuint)fb;
 		glDeleteFramebuffers(1, &t);
@@ -817,35 +816,35 @@ namespace glgpu
 	}
 
 	void
-	uniform1f_set(program prog, const char* uniform, float data)
+	uniform1f_set(Program prog, const char* uniform, float data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform1f(uniform_loc, data);
 	}
 
 	void
-	uniform3f_set(program prog, const char * uniform, const math::vec3f & data)
+	uniform3f_set(Program prog, const char * uniform, const math::vec3f & data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform3f(uniform_loc, data[0], data[1], data[2]);
 	}
 
 	void
-	uniform4f_set(program prog, const char* uniform, const math::vec4f& data)
+	uniform4f_set(Program prog, const char* uniform, const math::vec4f& data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniform4f(uniform_loc, data[0], data[1], data[2], data[3]);
 	}
 
 	void
-	uniformmat4f_set(program prog, const char* uniform, const math::Mat4f& data)
+	uniformmat4f_set(Program prog, const char* uniform, const math::Mat4f& data)
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, &data.data[0][0]);
 	}
 
 	void
-	uniform1i_set(program prog, const char* uniform, int data)
+	uniform1i_set(Program prog, const char* uniform, int data)
 	{
 		//samplers for example
 		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);

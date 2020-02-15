@@ -13,12 +13,13 @@
 namespace glgpu
 {
 	//make an internal handle instead of casting to an address ofc
-	HANDLE(program);
-	HANDLE(buffer);
-	HANDLE(texture);
-	HANDLE(cubemap);
-	HANDLE(vao);
-	HANDLE(framebuffer);
+	HANDLE(Program);
+	HANDLE(Buffer);
+	HANDLE(Texture);
+	HANDLE(Cubemap);
+	HANDLE(Vao);
+	HANDLE(Framebuffer);
+	HANDLE(Sampler);
 
 	enum TEXTURE_UNIT
 	{
@@ -80,102 +81,108 @@ namespace glgpu
 	void
 	graphics_init();
 
-	program
+	Program
 	program_create(const char* vertex_shader_path, const char* pixel_shader_path);
 
 	void
-	program_use(program prog);
+	program_use(Program prog);
 
 	void
-	program_delete(program prog);
+	program_delete(Program prog);
 
-	buffer
+	Buffer
 	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count);
 
-	buffer
+	Buffer
 	buffer_index_create(unsigned int indices[], std::size_t count);
 
-	buffer
+	Buffer
 	buffer_uniform_create(unsigned int size_in_bytes);
 
 	void
-	buffer_uniform_bind(unsigned int binding_point, buffer data);
+	buffer_uniform_bind(unsigned int binding_point, Buffer data);
 
 	void
-	buffer_uniform_set(buffer buf, void* data, unsigned int size_in_bytes);
+	buffer_uniform_set(Buffer buf, void* data, unsigned int size_in_bytes);
 
 	void
-	buffer_delete(buffer buf);
+	buffer_delete(Buffer buf);
 
-	vao
+	Vao
 	vao_create();
 
 	void
-	vao_bind(vao v, buffer vbo, buffer ebo);
+	vao_bind(Vao v, Buffer vbo, Buffer ebo);
 
 	void
 	vao_unbind();
 
 	void
-	vao_delete(vao va);
+	vao_delete(Vao va);
 
-	texture
+	Texture
 	texture2d_create(const io::Image& img, io::IMAGE_FORMAT format);
 
-	texture
+	Texture
 	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
 
-	texture
+	Texture
 	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
 
 	void
-	texture2d_render_offline_to(texture output, program prog, math::vec2f view_size);
+	texture2d_render_offline_to(Texture output, Program prog, math::vec2f view_size);
 
 	void
-	texture2d_bind(texture texture, TEXTURE_UNIT texture_unit);
+	texture2d_bind(Texture texture, TEXTURE_UNIT texture_unit);
 
 	void
 	texture2d_unbind();
 
 	void
-	texture2d_unpack(texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
 
 	void
-	texture_free(texture texture);
+	texture_free(Texture texture);
 
-	cubemap
+	Sampler
+	sampler_create();
+
+	void
+	sampler_free(Sampler self);
+
+	Cubemap
 	cubemap_create(math::vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap);
 
-	cubemap
+	Cubemap
 	cubemap_rgba_create(const io::Image imgs[6]);
 
-	cubemap
+	Cubemap
 	cubemap_hdr_create(const io::Image& img, math::vec2f view_size, bool mipmap);
 
 	//TODO -- ability to send array of different uniforms types table (revisit)
 	void
-	cubemap_postprocess(cubemap input, cubemap output, program postprocessor, Unifrom_Float uniform, math::vec2f view_size, int mipmap_level);
+	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, math::vec2f view_size, int mipmap_level);
 
 	void
-	cubemap_bind(cubemap texture, TEXTURE_UNIT texture_unit);
+	cubemap_bind(Cubemap texture, TEXTURE_UNIT texture_unit);
 
 	void
-	cubemap_free(cubemap cmap);
+	cubemap_free(Cubemap cmap);
 
-	framebuffer
+	Framebuffer
 	framebuffer_create();
 
 	void
-	framebuffer_bind(framebuffer fb);
+	framebuffer_bind(Framebuffer fb);
 
 	void
-	framebuffer_attach(framebuffer fb, texture tex, FRAMEBUFFER_ATTACHMENT attachment);
+	framebuffer_attach(Framebuffer fb, Texture tex, FRAMEBUFFER_ATTACHMENT attachment);
 
 	void
 	framebuffer_unbind();
 
 	void
-	framebuffer_free(framebuffer fb);
+	framebuffer_free(Framebuffer fb);
 
 	void
 	disable_color_buffer_rw();
@@ -199,19 +206,19 @@ namespace glgpu
 	draw_indexed(unsigned int indcies_count);
 
 	void
-	uniform1f_set(program prog, const char* uniform, float data);
+	uniform1f_set(Program prog, const char* uniform, float data);
 
 	void
-	uniform3f_set(program prog, const char* uniform, const math::vec3f& data);
+	uniform3f_set(Program prog, const char* uniform, const math::vec3f& data);
 
 	void
-	uniform4f_set(program prog, const char* uniform, const math::vec4f& data);
+	uniform4f_set(Program prog, const char* uniform, const math::vec4f& data);
 
 	void
-	uniformmat4f_set(program prog, const char* uniform, const math::Mat4f& data);
+	uniformmat4f_set(Program prog, const char* uniform, const math::Mat4f& data);
 
 	void
-	uniform1i_set(program prog, const char* uniform, int data);
+	uniform1i_set(Program prog, const char* uniform, int data);
 
 	void
 	view_port(int x, int y, int width, int height);

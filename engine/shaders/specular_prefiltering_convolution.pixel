@@ -22,7 +22,9 @@ HOW TO:
 	GGX importance sampling which is generating the samples biased and constrained around an orientation using both concepts above. (inside the specular lobe)
 */
 
-#version 330 core
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
 in vec3 world_pos;
 out vec4 frag_color;
 

@@ -15,8 +15,8 @@ namespace rndr
 		Phong_Renderer self{};
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.prog = program_create("../engine/shaders/phong.vertex", "../engine/shaders/phong.pixel");
-
+		self.prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/phong.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/phong.pixel");
+		self.uniform_object_color = buffer_uniform_create(sizeof(vec3f));
 		return self;
 	}
 
@@ -24,6 +24,7 @@ namespace rndr
 	phong_free(Phong_Renderer & mr)
 	{
 		program_delete(mr.prog);
+		buffer_delete(mr.uniform_object_color);
 	}
 
 	void
@@ -53,6 +54,9 @@ namespace rndr
 		uniform3f_set(mr.prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
 		uniform3f_set(mr.prog, "camera_world_pos", cam.pos);
 
+		//uniform block
+		buffer_uniform_bind(2, mr.uniform_object_color);
+
 		for (const auto object : mr.meshes)
 		{
 			//MVP
@@ -61,7 +65,10 @@ namespace rndr
 
 			uniformmat4f_set(mr.prog, "mvp", mvp);
 			uniformmat4f_set(mr.prog, "model", model);
-			uniform3f_set(mr.prog, "object_color", vec3f{ 1.0, 0.5, 0.31 });
+
+			//test uniform block
+			vec3f color_test{ 0.0, 0.5, 0.31 };
+			buffer_uniform_set(mr.uniform_object_color, &color_test, sizeof(color_test));
 
 			//draw geometry
 			vao_bind(object->mesh.va, object->mesh.vs, object->mesh.is);

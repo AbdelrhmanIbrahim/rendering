@@ -19,8 +19,8 @@ namespace geo
 
 		//gpu
 		self.va = vao_create();
-		self.vs = vertex_buffer_create(&self.vertices.front(), self.vertices.size());
-		self.is = index_buffer_create(&self.indices.front(), self.indices.size());
+		self.vs = buffer_vertex_create(&self.vertices.front(), self.vertices.size());
+		self.is = buffer_index_create(&self.indices.front(), self.indices.size());
 
 		return self;
 	}

@@ -10,8 +10,6 @@
 
 #include <assert.h>
 
-//#define HAND(name) struct name##__{int unused;}; typedef struct name##__ *name
-
 namespace win
 {
 	struct IWindow

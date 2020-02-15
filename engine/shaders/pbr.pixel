@@ -25,7 +25,8 @@ there's precomputed enviroment maps that corresponds to each which we use in sam
 To understand the precomputed enviroment maps, read the comments section in the PBR renderer explaining each.
 */
 
-#version 330 core
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
 
 uniform vec3 object_color_albedo;
 uniform vec3 light_color;

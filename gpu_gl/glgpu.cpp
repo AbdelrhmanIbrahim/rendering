@@ -297,23 +297,50 @@ namespace glgpu
 	}
 
 	buffer
-	vertex_buffer_create(const geo::Vertex vertices[], std::size_t count)
+	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count)
 	{
 		GLuint vbo;
 		glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(geo::Vertex), vertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, NULL);
 		return (buffer)vbo;
 	}
 
 	buffer
-	index_buffer_create(unsigned int indices[], std::size_t count)
+	buffer_index_create(unsigned int indices[], std::size_t count)
 	{
 		GLuint ebo;
 		glGenBuffers(1, &ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
 		return (buffer)ebo;
+	}
+
+	buffer
+	buffer_uniform_create(unsigned int size_in_bytes)
+	{
+		GLuint uniform;
+		glGenBuffers(1, &uniform);
+		glBindBuffer(GL_UNIFORM_BUFFER, uniform);
+		glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, NULL, GL_STATIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
+		return (buffer)uniform;
+	}
+
+	void
+	buffer_uniform_bind(unsigned int binding_point, buffer data)
+	{
+		glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, (GLuint)data);
+	}
+
+	void
+	buffer_uniform_set(buffer buf, void* data, unsigned int size_in_bytes)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, (GLuint)buf);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, size_in_bytes, data);
+		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
 	}
 
 	void
@@ -453,7 +480,7 @@ namespace glgpu
 
 		//render to output attached texture
 		vao quad_vao = vao_create();
-		buffer quad_vs = vertex_buffer_create(quad_ndc, 6);
+		buffer quad_vs = buffer_vertex_create(quad_ndc, 6);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		vao_bind(quad_vao, quad_vs, NULL);
 		draw_strip(6);
@@ -583,7 +610,7 @@ namespace glgpu
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		vao cube_vao = vao_create();
-		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
+		buffer cube_vs = buffer_vertex_create(unit_cube, 36);
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
@@ -651,7 +678,7 @@ namespace glgpu
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		vao cube_vao = vao_create();
-		buffer cube_vs = vertex_buffer_create(unit_cube, 36);
+		buffer cube_vs = buffer_vertex_create(unit_cube, 36);
 
 		//TEST
 		/*io::Image imgs[6];

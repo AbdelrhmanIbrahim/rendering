@@ -1,4 +1,6 @@
-#version 330 core
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
 out vec4 FragColor;
 
 in vec3 uvs;

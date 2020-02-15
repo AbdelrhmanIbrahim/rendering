@@ -9,7 +9,9 @@ HOW TO :
 	through a hemisphere around the given normal at a certain point.
 */
 
-#version 330 core
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
 out vec4 frag_color;
 in vec3 world_pos;
 

@@ -70,7 +70,7 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self.prog = program_create("../engine/shaders/skybox.vertex", "../engine/shaders/skybox.pixel");
 		self.cube = vao_create();
-		self.cube_vs = vertex_buffer_create(skybox, 36);
+		self.cube_vs = buffer_vertex_create(skybox, 36);
 	}
 
 	Skybox_Renderer

@@ -151,11 +151,6 @@ namespace glgpu
 		result = wglMakeCurrent(dc, self->context);
 		assert(result && "wglMakeCurrent failed");
 
-		{
-			glEnable(GL_DEPTH_TEST);
-			glClearColor(0, 1, 0, 1);
-		}
-
 		result = wglDeleteContext(fake_ctx);
 		assert(result && "wglDeleteContext failed");
 

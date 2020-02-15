@@ -14,7 +14,9 @@ HOW TO:
 	read specular_prefiltering_convolution shader first for a clear understanding when reading this.
 */
 
-#version 330 core
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
 in vec2 uvs;
 out vec2 frag_color;
 

@@ -57,7 +57,7 @@ namespace world
 		mesh.vertices.push_back(geo::Vertex{ 0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f, 1.0f, 0.0f});
 		mesh.vertices.push_back(geo::Vertex{-0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f, 0.0f, 0.0f});
 		mesh.vertices.push_back(geo::Vertex{-0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f, 0.0f, 1.0f});
-		mesh.vs = glgpu::vertex_buffer_create(&mesh.vertices.front(), (unsigned int)mesh.vertices.size());
+		mesh.vs = glgpu::buffer_vertex_create(&mesh.vertices.front(), (unsigned int)mesh.vertices.size());
 		mesh.va = glgpu::vao_create();
 		return mesh;
 	}
@@ -104,8 +104,8 @@ namespace world
 		}
 
 		mesh.va = glgpu::vao_create();
-		mesh.vs = glgpu::vertex_buffer_create(&mesh.vertices.front(), (unsigned int)mesh.vertices.size());
-		mesh.is = glgpu::index_buffer_create(&mesh.indices.front(), mesh.indices.size());
+		mesh.vs = glgpu::buffer_vertex_create(&mesh.vertices.front(), (unsigned int)mesh.vertices.size());
+		mesh.is = glgpu::buffer_index_create(&mesh.indices.front(), mesh.indices.size());
 		return mesh;
 	}
 

@@ -12,6 +12,7 @@ namespace rndr
 	struct Phong_Renderer
 	{
 		glgpu::program prog;
+		glgpu::buffer uniform_object_color;
 		std::vector<const world::object3D*> meshes;
 	};
 

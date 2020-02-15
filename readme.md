@@ -16,6 +16,6 @@
 - resources file format
 - selection and picking
 - terrian deformation
-- fluid/water/particle system simulation *read Fluid Engine Development book*
+- fluid/water/particle system simulation (*read Fluid Engine Development book*)
 - cloud rendering
 - rigid body dynamics

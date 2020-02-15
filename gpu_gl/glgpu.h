@@ -90,10 +90,19 @@ namespace glgpu
 	program_delete(program prog);
 
 	buffer
-	vertex_buffer_create(const geo::Vertex vertices[], std::size_t count);
+	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count);
 
 	buffer
-	index_buffer_create(unsigned int indices[], std::size_t count);
+	buffer_index_create(unsigned int indices[], std::size_t count);
+
+	buffer
+	buffer_uniform_create(unsigned int size_in_bytes);
+
+	void
+	buffer_uniform_bind(unsigned int binding_point, buffer data);
+
+	void
+	buffer_uniform_set(buffer buf, void* data, unsigned int size_in_bytes);
 
 	void
 	buffer_delete(buffer buf);

@@ -5,6 +5,7 @@
 - remove prebuilt glew binaries ✔
 - cmake ✔
 - renderdoc ✔
+- fix pbr new bug after refactor, diff roughness ✔
 - get samplers in
 - hide renderers impl inside and clean the interface
 - propagate uniform blocks to phong_shadow

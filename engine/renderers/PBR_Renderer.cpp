@@ -28,9 +28,8 @@ namespace rndr
 
 	struct Material_Uniform
 	{
-		float metallic;
-		float dummy_padding[3];
-		float rough;
+		float metallicity;
+		float roughness;
 	};
 
 	PBR_Renderer
@@ -144,7 +143,7 @@ namespace rndr
 			buffer_uniform_set(self.uniform_light, &light, sizeof(light));
 			Camera_Uniform cam{ camera.pos[0], camera.pos[1], camera.pos[2], 0.0f };
 			buffer_uniform_set(self.uniform_camera, &cam, sizeof(cam));
-			Material_Uniform mat{ 0.9, {0,0,0}, 0.2 };
+			Material_Uniform mat{ 0.8, 0.2};
 			buffer_uniform_set(self.uniform_material, &mat, sizeof(mat));
 
 			//draw geometry

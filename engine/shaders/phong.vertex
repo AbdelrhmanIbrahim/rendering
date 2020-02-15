@@ -14,7 +14,8 @@ layout (std140, binding = 0) uniform Space
 	mat4 vp;
 };
 
-void main()
+void
+main()
 {
 	gl_Position = vp * model * vec4(pos.x, pos.y, pos.z, 1.0);
 

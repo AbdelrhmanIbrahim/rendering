@@ -34,7 +34,7 @@ namespace rndr
 
 		self->phong = phong_create();
 		//self->pbr = pbr_create();
-		//self->skybox = skybox_renderer_hdr_create("../res/imgs/hdr/Tokyo_spec.hdr");
+		self->skybox = skybox_renderer_hdr_create("F:/Abdo/rendering_jo/rendering/res/imgs/hdr/Tokyo_spec.hdr");
 		//self->phong_shadow = phong_shadow_create();
 
 		//skybox
@@ -95,7 +95,7 @@ namespace rndr
 
 			//skybox
 			{
-				//skybox_renderer_draw(e->skybox, w->cam);
+				skybox_renderer_draw(e->skybox, w->cam);
 			}
 		}
 	}

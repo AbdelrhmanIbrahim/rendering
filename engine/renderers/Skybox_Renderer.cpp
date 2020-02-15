@@ -64,11 +64,17 @@ namespace rndr
 		Vertex{ 1.0f, -1.0f,  1.0f}
 	};
 
+	struct Space_Uniform
+	{
+		Mat4f view;
+		Mat4f proj;
+	};
+
 	void
 	skybox_init(Skybox_Renderer& self)
 	{
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self.prog = program_create("../engine/shaders/skybox.vertex", "../engine/shaders/skybox.pixel");
+		self.prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/skybox.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/skybox.pixel");
 		self.cube = vao_create();
 		self.cube_vs = buffer_vertex_create(skybox, 36);
 	}
@@ -99,6 +105,7 @@ namespace rndr
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
 		self.cubemap = cubemap_hdr_create(img, vec2f{800, 800}, false);
+		self.uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 
 		image_free(img);
 
@@ -109,9 +116,10 @@ namespace rndr
 	skybox_renderer_free(const Skybox_Renderer & self)
 	{
 		program_delete(self.prog);
+		cubemap_free(self.cubemap);
 		vao_delete(self.cube);
 		buffer_delete(self.cube_vs);
-		cubemap_free(self.cubemap);
+		buffer_delete(self.uniform_space);
 	}
 
 	void
@@ -121,11 +129,10 @@ namespace rndr
 		{
 			program_use(self.prog);
 
-			//MVP
-			Mat4f view = camera_view_matrix(cam);
-			Mat4f proj = camera_proj_matrix(cam);
-			uniformmat4f_set(self.prog, "view", view);
-			uniformmat4f_set(self.prog, "proj", proj);
+			//Uniform blocks
+			buffer_uniform_bind(0, self.uniform_space);
+			Space_Uniform mvp{ camera_view_matrix(cam), camera_proj_matrix(cam)};
+			buffer_uniform_set(self.uniform_space, &mvp, sizeof(mvp));
 
 			//viewport
 			vec2f viewport = camera_viewport(cam);
@@ -139,14 +146,6 @@ namespace rndr
 			vao_bind(self.cube, self.cube_vs, NULL);
 			draw_strip(36);
 			vao_unbind();
-
-			//for testing on small cube
-			/*auto mesh = geo::mesh_create("../res/stls/cube.stl");
-			vao_bind(mesh.va, mesh.vs, mesh.is);
-			draw_indexed(mesh.indices.size());
-			vao_unbind();
-			mesh_delete(mesh);*/
-			
 		}
 		depth_test(DEPTH_TEST::L);
 	}

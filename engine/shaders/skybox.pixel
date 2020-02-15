@@ -1,7 +1,7 @@
 #version 400 core
 #extension GL_ARB_shading_language_420pack : require
 
-out vec4 FragColor;
+out vec4 frag_color;
 
 in vec3 uvs;
 
@@ -9,5 +9,5 @@ uniform samplerCube cubemap;
 
 void main()
 {
-	FragColor = texture(cubemap, uvs);
+	frag_color = texture(cubemap, uvs);
 }

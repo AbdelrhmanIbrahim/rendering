@@ -1,5 +1,4 @@
 #include "app/app.h"
-
 using namespace app;
 
 int

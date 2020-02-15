@@ -5,6 +5,8 @@
 - remove prebuilt glew binaries ✔
 - cmake ✔
 - renderdoc
+- get samplers in
+- define _DEBUG macro in debug mode only (cmake)
 - fix rotation + movement events bug
 - add imGui
 - make a shadow renderer only that outputs a texture with shadows then merge it later

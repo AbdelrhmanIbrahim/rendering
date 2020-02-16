@@ -466,12 +466,9 @@ namespace glgpu
 	void
 	texture2d_render_offline_to(Texture output, Program prog, vec2f view_size)
 	{
-		GLuint fbo, rbo;
+		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
-		glGenRenderbuffers(1, &rbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, view_size[0], view_size[1]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, (GLuint)output, 0);
 
 		//setup
@@ -487,7 +484,6 @@ namespace glgpu
 		vao_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
-		glDeleteRenderbuffers(1, &rbo);
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(quad_vao);
 		buffer_delete(quad_vs);
@@ -594,13 +590,9 @@ namespace glgpu
 		Cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, mipmap);
 
 		//float framebuffer to render to
-		GLuint fbo, rbo;
+		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
-		glGenRenderbuffers(1, &rbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, view_size[0], view_size[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//setup
 		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
@@ -632,7 +624,6 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free
-		glDeleteRenderbuffers(1, &rbo);
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
 		buffer_delete(cube_vs);
@@ -659,13 +650,9 @@ namespace glgpu
 			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
-		GLuint fbo, rbo;
+		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
-		glGenRenderbuffers(1, &rbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, view_size[0], view_size[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//convolute
 		program_use(postprocessor);
@@ -713,7 +700,6 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free
-		glDeleteRenderbuffers(1, &rbo);
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
 		buffer_delete(cube_vs);

@@ -48,7 +48,7 @@ namespace rndr
 		IPhong* self = new IPhong();
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self->prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/phong.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/phong.pixel");
+		self->prog = program_create(DIR_PATH"/engine/shaders/phong.vertex", DIR_PATH"/engine/shaders/phong.pixel");
 		self->uniform_object_color = buffer_uniform_create(sizeof(vec4f));
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->uniform_light = buffer_uniform_create(sizeof(Light_Uniform));

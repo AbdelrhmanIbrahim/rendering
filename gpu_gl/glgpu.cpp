@@ -603,7 +603,7 @@ namespace glgpu
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 		//setup
-		Program prog = program_create("F:/Abdo/rendering_jo/rendering/engine/shaders/cube.vertex", "F:/Abdo/rendering_jo/rendering/engine/shaders/equarectangular_to_cubemap.pixel");
+		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
 

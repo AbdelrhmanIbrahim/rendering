@@ -95,6 +95,9 @@ add_executable(${PROJECT_NAME}
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
+#macros for project directory path to load shaders from, for now till we have a res file
+target_compile_definitions(${PROJECT_NAME} PRIVATE DIR_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
+
 #windows macro
 if(WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE OS_WINDOWS=1)

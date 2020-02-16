@@ -6,7 +6,7 @@
 	#include <windowsx.h>
 #endif
 
-#include "window.h"
+#include "Window.h"
 
 #include <assert.h>
 

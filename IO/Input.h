@@ -1,6 +1,6 @@
 #pragma once
 
-#include "window/window.h"
+#include "window/Window.h"
 
 #include "math/Vector.h"
 

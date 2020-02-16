@@ -1,6 +1,6 @@
 #pragma once
 
-#include "geometry/vertex.h"
+#include "geometry/Vertex.h"
 #include "gpu_gl/glgpu.h"
 
 #include <vector>

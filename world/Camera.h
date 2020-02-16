@@ -9,9 +9,6 @@
 
 #include <IO/Input.h>
 
-//move enums to another defs file -- TODO
-#include "window/window.h"
-
 namespace world
 {
 	struct Camera

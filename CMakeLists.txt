@@ -8,13 +8,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 #headers
 set(HEADERS
-	app/app.h
+	app/App.h
 	engine/Engine.h
 	engine/renderers/Phong.h
 	engine/renderers/Phong_Shadow.h
 	engine/renderers/PBR.h
 	engine/renderers/Skybox.h
-	geometry/vertex.h
+	geometry/Vertex.h
 	geometry/Mesh.h
 	gpu_gl/glgpu.h
 	gpu_gl/gl_context.h
@@ -30,7 +30,7 @@ set(HEADERS
 	math/Quaternion.h
 	math/Transform.h
 	math/Gfx.h
-	window/window.h
+	window/Window.h
 	world/World.h
 	world/Camera.h
 	world/3Dobject.h
@@ -39,7 +39,7 @@ set(HEADERS
 
 #src
 set(SOURCES
-	app/app.cpp
+	app/App.cpp
 	engine/Engine.cpp
 	engine/renderers/Phong.cpp
 	engine/renderers/Phong_Shadow.cpp

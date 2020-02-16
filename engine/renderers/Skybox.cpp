@@ -3,7 +3,7 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
-#include "geometry/vertex.h"
+#include "geometry/Vertex.h"
 
 #include "gpu_gl/glgpu.h"
 

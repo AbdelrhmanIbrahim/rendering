@@ -1,4 +1,4 @@
-#include "app/app.h"
+#include "app/App.h"
 
 #include "Defs/Defs.h"
 
@@ -6,7 +6,7 @@
 
 #include "math/Vector.h"
 
-#include "window/window.h"
+#include "window/Window.h"
 #include "gpu_gl/gl_context.h"
 
 #include "world/World.h"

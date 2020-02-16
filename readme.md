@@ -4,7 +4,7 @@
 - remove GLUT ✔
 - remove prebuilt glew binaries ✔
 - cmake ✔
-- renderdoc ✔ (uniforms are always zero when reading *shrugging*)
+- renderdoc ✔ (uniforms are always zero when reading -*shrugging*-)
 - fix pbr new bug after refactor, diff roughness ✔
 - hide renderers impl inside and clean the interface ✔
 - get samplers in
@@ -16,11 +16,13 @@
 - deferred shading
 - ambient occlusion
 - main loop indpendent frame rate
+- space partitioning 
 - view frustm culling
 - load textured models, check assimp impl
 - resources file format
 - selection and picking
 - terrian deformation
-- fluid/water/particle system simulation (*read Fluid Engine Development book*)
+- fluid/water/particlesystem simulation (*read Fluid Engine Development book*)
 - cloud rendering
 - rigid body dynamics
+- animation 

@@ -4,11 +4,11 @@
 - remove GLUT ✔
 - remove prebuilt glew binaries ✔
 - cmake ✔
-- renderdoc ✔ (uniforms are always zero when reading -*shrugging*-)
+- renderdoc ✔
 - fix pbr new bug after refactor, diff roughness ✔
 - hide renderers impl inside and clean the interface ✔
 - get samplers in
-- define _DEBUG macro in debug mode only (cmake)
+- show assertion window
 - fix rotation + movement events bug
 - add imGui
 - make a shadow renderer only that outputs a texture with shadows then merge it later
@@ -16,13 +16,14 @@
 - deferred shading
 - ambient occlusion
 - main loop indpendent frame rate
+- compute shaders
 - space partitioning 
 - view frustm culling
 - load textured models, check assimp impl
 - resources file format
 - selection and picking
 - terrian deformation
-- fluid/water/particlesystem simulation (*read Fluid Engine Development book*)
+- fluid/water/particle system simulation (*read Fluid Engine Development book*)
 - cloud rendering
 - rigid body dynamics
 - animation 

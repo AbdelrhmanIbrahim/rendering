@@ -82,6 +82,7 @@ namespace glgpu
 	{
 		enum KIND
 		{
+			KIND_BUFFER,
 			KIND_PROGRAM,
 			KIND_SAMPLER,
 			KIND_TEXTURE,
@@ -92,6 +93,12 @@ namespace glgpu
 
 		union
 		{
+			struct
+			{
+				GLuint id;
+				GLenum type;
+			} buffer;
+
 			struct
 			{
 				GLuint id;
@@ -384,46 +391,55 @@ namespace glgpu
 	Buffer
 	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count)
 	{
-		GLuint vbo;
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_BUFFER;
+		self->buffer.type = GL_ARRAY_BUFFER;
+
+		glGenBuffers(1, &self->buffer.id);
+		glBindBuffer(GL_ARRAY_BUFFER, self->buffer.id);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(geo::Vertex), vertices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, NULL);
-		return (Buffer)vbo;
+		return self;
 	}
 
 	Buffer
 	buffer_index_create(unsigned int indices[], std::size_t count)
 	{
-		GLuint ebo;
-		glGenBuffers(1, &ebo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_BUFFER;
+		self->buffer.type = GL_ELEMENT_ARRAY_BUFFER;
+
+		glGenBuffers(1, &self->buffer.id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self->buffer.id);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
-		return (Buffer)ebo;
+		return self;
 	}
 
 	Buffer
 	buffer_uniform_create(unsigned int size_in_bytes)
 	{
-		GLuint uniform;
-		glGenBuffers(1, &uniform);
-		glBindBuffer(GL_UNIFORM_BUFFER, uniform);
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_BUFFER;
+		self->buffer.type = GL_UNIFORM_BUFFER;
+
+		glGenBuffers(1, &self->buffer.id);
+		glBindBuffer(GL_UNIFORM_BUFFER, self->buffer.id);
 		glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, NULL, GL_STATIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
-		return (Buffer)uniform;
+		return self;
 	}
 
 	void
 	buffer_uniform_bind(unsigned int binding_point, Buffer data)
 	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, (GLuint)data);
+		glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, data->buffer.id);
 	}
 
 	void
 	buffer_uniform_set(Buffer buf, void* data, unsigned int size_in_bytes)
 	{
-		glBindBuffer(GL_UNIFORM_BUFFER, (GLuint)buf);
+		glBindBuffer(GL_UNIFORM_BUFFER, buf->buffer.id);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size_in_bytes, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
 	}
@@ -431,8 +447,8 @@ namespace glgpu
 	void
 	buffer_delete(Buffer buf)
 	{
-		GLuint b = (GLuint)buf;
-		glDeleteBuffers(1, &b);
+		glDeleteBuffers(1, &buf->buffer.id);
+		delete buf;
 	}
 
 	Vao
@@ -441,7 +457,7 @@ namespace glgpu
 		unsigned int VAO;
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray((GLuint)VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 
 		//pos
 		glEnableVertexAttribArray(0);
@@ -465,7 +481,7 @@ namespace glgpu
 		unsigned int VAO;
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray((GLuint)VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 
 		//pos
 		glEnableVertexAttribArray(0);
@@ -480,7 +496,7 @@ namespace glgpu
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 
 		//indexs
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 		glBindVertexArray(NULL);
 
 		return Vao(VAO);

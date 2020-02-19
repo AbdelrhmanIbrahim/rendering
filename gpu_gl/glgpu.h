@@ -13,10 +13,10 @@
 namespace glgpu
 {
 	//make an internal handle instead of casting to an address ofc
-	HANDLE(Buffer);
 	HANDLE(Vao);
 	HANDLE(Cubemap);
 
+	typedef struct IGL_Handle* Buffer;
 	typedef struct IGL_Handle* Program;
 	typedef struct IGL_Handle* Texture;
 	typedef struct IGL_Handle* Sampler;

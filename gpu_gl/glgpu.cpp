@@ -82,7 +82,8 @@ namespace glgpu
 	{
 		enum KIND
 		{
-			SAMPLER
+			KIND_PROGRAM,
+			KIND_SAMPLER
 		};
 
 		KIND kind;
@@ -92,10 +93,14 @@ namespace glgpu
 			struct
 			{
 				GLuint id;
-				//for both s and t, edit it when we need
+			} program;
+
+			struct
+			{
+				GLuint id;
+				//for both s, t and r, edit it when we need
 				GLenum filtering;
 				GLenum sampling;
-
 			} sampler;
 		};
 	};
@@ -326,31 +331,38 @@ namespace glgpu
 	Program
 	program_create(const char* vertex_shader_path, const char* pixel_shader_path)
 	{
+		IGL_Handle* handle = new IGL_Handle{};
+		handle->kind = IGL_Handle::KIND::KIND_PROGRAM;
+		handle->program.id = glCreateProgram();
+		error();
 		std::ifstream stream;
 		GLuint vobj = _shader_obj(stream, vertex_shader_path, SHADER_STAGE::VERTEX);
 		GLuint pobj = _shader_obj(stream, pixel_shader_path, SHADER_STAGE::PIXEL);
-		GLuint prog = glCreateProgram();
-		glAttachShader(prog, vobj);
-		glAttachShader(prog, pobj);
-		glLinkProgram(prog);
+		glAttachShader(handle->program.id, vobj);
+		error();
+		glAttachShader(handle->program.id, pobj);
+		error();
+		glLinkProgram(handle->program.id);
+		error();
 		glDeleteShader(vobj);
+		error();
 		glDeleteShader(pobj);
-
-		return (Program)prog;
+		error();
+		return handle;
 	}
 
 	void
 	program_use(Program prog)
 	{
-		GLuint p = (GLuint)prog;
-		glUseProgram(p);
+		glUseProgram(prog->program.id);
+		error();
 	}
 
 	void
 	program_delete(Program prog)
 	{
-		GLuint p = (GLuint)prog;
-		glDeleteProgram(p);
+		glDeleteProgram(prog->program.id);
+		delete prog;
 	}
 
 	Buffer
@@ -576,10 +588,11 @@ namespace glgpu
 	Sampler
 	sampler_create(TEXTURE_FILTERING filtering, TEXTURE_SAMPLING sampling)
 	{
+		//go for handles pool?
 		IGL_Handle* handle = new IGL_Handle;
 
 		GLuint* id = (GLuint*)&handle->sampler.id;
-		handle->kind = IGL_Handle::KIND::SAMPLER;
+		handle->kind = IGL_Handle::KIND::KIND_SAMPLER;
 		handle->sampler.filtering = _map(filtering);
 		handle->sampler.sampling = _map(sampling);
 
@@ -609,15 +622,18 @@ namespace glgpu
 	Cubemap
 	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap)
 	{
+		error();
 		GLuint cmap;
 		glGenTextures(1, &cmap);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap);
 		for (unsigned int i = 0; i < 6; ++i)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, _map(texture_format), view_size[0], view_size[1], 0, _map(ext_format), _map(type), NULL);
+		error();
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		error();
 
 		if (mipmap)
 		{
@@ -628,7 +644,7 @@ namespace glgpu
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
-
+		error();
 		return (Cubemap)cmap;
 	}
 
@@ -686,13 +702,17 @@ namespace glgpu
 
 		//setup
 		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
+		error();
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
+		error();
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		Vao cube_vao = vao_create();
 		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
+		
+		error();
 		for (unsigned int i = 0; i < 6; ++i)
 		{
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
@@ -702,7 +722,7 @@ namespace glgpu
 			draw_strip(36);
 			vao_unbind();
 		}
-
+		error();
 		if (mipmap)
 		{
 			glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)cube_map);
@@ -894,28 +914,28 @@ namespace glgpu
 	void
 	uniform1f_set(Program prog, const char* uniform, float data)
 	{
-		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniform1f(uniform_loc, data);
 	}
 
 	void
 	uniform3f_set(Program prog, const char * uniform, const math::vec3f & data)
 	{
-		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniform3f(uniform_loc, data[0], data[1], data[2]);
 	}
 
 	void
 	uniform4f_set(Program prog, const char* uniform, const math::vec4f& data)
 	{
-		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniform4f(uniform_loc, data[0], data[1], data[2], data[3]);
 	}
 
 	void
 	uniformmat4f_set(Program prog, const char* uniform, const math::Mat4f& data)
 	{
-		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, &data.data[0][0]);
 	}
 
@@ -923,7 +943,7 @@ namespace glgpu
 	uniform1i_set(Program prog, const char* uniform, int data)
 	{
 		//samplers for example
-		int uniform_loc = glGetUniformLocation((GLuint)prog, uniform);
+		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniform1i(uniform_loc, data);
 	}
 

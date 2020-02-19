@@ -13,13 +13,13 @@
 namespace glgpu
 {
 	//make an internal handle instead of casting to an address ofc
-	HANDLE(Program);
 	HANDLE(Buffer);
 	HANDLE(Texture);
 	HANDLE(Cubemap);
 	HANDLE(Vao);
 	HANDLE(Framebuffer);
 
+	typedef struct IGL_Handle* Program;
 	typedef struct IGL_Handle* Sampler;
 
 	enum TEXTURE_UNIT
@@ -87,6 +87,7 @@ namespace glgpu
 		CLAMP_TO_BORDER
 	};
 
+	//remove later
 	struct Unifrom_Float
 	{
 		const char* uniform;

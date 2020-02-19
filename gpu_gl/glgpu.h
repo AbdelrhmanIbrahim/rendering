@@ -16,11 +16,11 @@ namespace glgpu
 	HANDLE(Buffer);
 	HANDLE(Cubemap);
 	HANDLE(Vao);
-	HANDLE(Framebuffer);
 
 	typedef struct IGL_Handle* Program;
 	typedef struct IGL_Handle* Texture;
 	typedef struct IGL_Handle* Sampler;
+	typedef struct IGL_Handle* Framebuffer;
 
 	enum class DEPTH_TEST
 	{

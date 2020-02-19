@@ -84,7 +84,8 @@ namespace glgpu
 		{
 			KIND_PROGRAM,
 			KIND_SAMPLER,
-			KIND_TEXTURE
+			KIND_TEXTURE,
+			KIND_FRAMEBUFFER
 		};
 
 		KIND kind;
@@ -113,6 +114,11 @@ namespace glgpu
 				GLenum type;
 				GLenum pixel_format;
 			} texture;
+
+			struct
+			{
+				GLuint id;
+			} framebuffer;
 		};
 	};
 
@@ -862,21 +868,23 @@ namespace glgpu
 	Framebuffer
 	framebuffer_create()
 	{
-		unsigned int fb;
-		glGenFramebuffers(1, &fb);
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_FRAMEBUFFER;
+		glGenFramebuffers(1, &self->framebuffer.id);
 
-		return (Framebuffer)fb;
+		return self;
 	}
 
 	void
 	framebuffer_bind(Framebuffer fb)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, (GLuint)fb);
+		glBindFramebuffer(GL_FRAMEBUFFER, fb->framebuffer.id);
 	}
 
 	void
 	framebuffer_attach(Framebuffer fb, Texture tex, FRAMEBUFFER_ATTACHMENT attachment)
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, fb->framebuffer.id);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, _map(attachment), GL_TEXTURE_2D, (GLuint)tex->texture.id, 0);
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Error while creating framebuffer");
 	}
@@ -890,8 +898,7 @@ namespace glgpu
 	void
 	framebuffer_free(Framebuffer fb)
 	{
-		GLuint t = (GLuint)fb;
-		glDeleteFramebuffers(1, &t);
+		glDeleteFramebuffers(1, &fb->framebuffer.id);
 	}
 
 	void

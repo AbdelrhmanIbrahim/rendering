@@ -14,20 +14,13 @@ namespace glgpu
 {
 	//make an internal handle instead of casting to an address ofc
 	HANDLE(Buffer);
-	HANDLE(Texture);
 	HANDLE(Cubemap);
 	HANDLE(Vao);
 	HANDLE(Framebuffer);
 
 	typedef struct IGL_Handle* Program;
+	typedef struct IGL_Handle* Texture;
 	typedef struct IGL_Handle* Sampler;
-
-	enum TEXTURE_UNIT
-	{
-		UNIT_0,
-		UNIT_1,
-		UNIT_2
-	};
 
 	enum class DEPTH_TEST
 	{
@@ -41,6 +34,13 @@ namespace glgpu
 		COLOR0,
 		COLOR1,
 		DEPTH_STENCIL
+	};
+
+	enum TEXTURE_UNIT
+	{
+		UNIT_0,
+		UNIT_1,
+		UNIT_2
 	};
 
 	enum class EXTERNAL_TEXTURE_FORMAT
@@ -60,19 +60,6 @@ namespace glgpu
 		DEPTH_STENCIL
 	};
 
-	enum class DATA_TYPE
-	{
-		UBYTE,
-		FLOAT,
-		UINT_24_8
-	};
-
-	enum class TARGET
-	{
-		TEXTURE_2D,
-		CUBEMAP,
-	};
-
 	enum class TEXTURE_FILTERING
 	{
 		NEAREST,
@@ -85,6 +72,19 @@ namespace glgpu
 		MIRROR_REPEAT,
 		CLAMP_TO_EDGE,
 		CLAMP_TO_BORDER
+	};
+
+	enum class DATA_TYPE
+	{
+		UBYTE,
+		FLOAT,
+		UINT_24_8
+	};
+
+	enum class TARGET
+	{
+		TEXTURE_2D,
+		CUBEMAP,
 	};
 
 	//remove later
@@ -137,13 +137,13 @@ namespace glgpu
 	vao_delete(Vao va);
 
 	Texture
+	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
+
+	Texture
 	texture2d_create(const io::Image& img, io::IMAGE_FORMAT format);
 
 	Texture
 	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
-
-	Texture
-	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
 
 	void
 	texture2d_render_offline_to(Texture output, Program prog, math::vec2f view_size);

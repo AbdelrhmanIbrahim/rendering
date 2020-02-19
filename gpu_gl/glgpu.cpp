@@ -83,7 +83,8 @@ namespace glgpu
 		enum KIND
 		{
 			KIND_PROGRAM,
-			KIND_SAMPLER
+			KIND_SAMPLER,
+			KIND_TEXTURE
 		};
 
 		KIND kind;
@@ -102,6 +103,16 @@ namespace glgpu
 				GLenum filtering;
 				GLenum sampling;
 			} sampler;
+
+			struct
+			{
+				//remove filtering and sampling parameters from textures, we have samplers now
+				GLuint id;
+				unsigned int width, height;
+				GLenum internal_format;
+				GLenum type;
+				GLenum pixel_format;
+			} texture;
 		};
 	};
 
@@ -467,26 +478,38 @@ namespace glgpu
 	Texture
 	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap)
 	{
-		GLuint tex;
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
+		IGL_Handle* handle = new IGL_Handle{};
+		handle->kind = IGL_Handle::KIND::KIND_TEXTURE;
+
+		glGenTextures(1, &handle->texture.id);
+		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
+		handle->texture.width = size[0];
+		handle->texture.height = size[1];
+		handle->texture.internal_format = _map(internal_format);
+		handle->texture.pixel_format = _map(format);
+		handle->texture.type = _map(type);
+
+		//propagate samplers then remove
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), size[0], size[1], 0, _map(format), _map(type), NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, NULL);
 
 		if (mipmap)
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
-		return (Texture)tex;
+		return handle;
 	}
 
 	Texture
 	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
 	{
+		IGL_Handle* handle = new IGL_Handle{};
+		handle->kind = IGL_Handle::KIND::KIND_TEXTURE;
+
 		INTERNAL_TEXTURE_FORMAT internal_format;
 		EXTERNAL_TEXTURE_FORMAT tex_format;
 		DATA_TYPE type;
@@ -509,18 +532,25 @@ namespace glgpu
 			break;
 		}
 
-		GLuint tex;
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
+		glGenTextures(1, &handle->texture.id);
+		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
+		handle->texture.width = img.width;
+		handle->texture.height = img.height;
+		handle->texture.internal_format = _map(internal_format);
+		handle->texture.pixel_format = _map(tex_format);
+		handle->texture.type = _map(type);
+
+		//remove later, we have samplers now
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, _map(internal_format), img.width, img.height, 0, _map(tex_format), _map(type), img.data);
+		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, img.data);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
-		return (Texture)tex;
+		return handle;
 	}
 
 	Texture
@@ -538,7 +568,7 @@ namespace glgpu
 		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, (GLuint)output, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, (GLuint)output->texture.id, 0);
 
 		//setup
 		program_use(prog);
@@ -562,7 +592,7 @@ namespace glgpu
 	texture2d_bind(Texture texture, TEXTURE_UNIT texture_unit)
 	{
 		glActiveTexture(_map(texture_unit));
-		glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
+		glBindTexture(GL_TEXTURE_2D, (GLuint)texture->texture.id);
 	}
 
 	void
@@ -575,14 +605,14 @@ namespace glgpu
 	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
-		glGetTexImage(GL_TEXTURE_2D, 0, _map(format), _map(type), image.data);
+		glGetTexImage(GL_TEXTURE_2D, 0, texture->texture.pixel_format, texture->texture.type, image.data);
 	}
 
 	void
 	texture_free(Texture texture)
 	{
-		GLuint t = (GLuint)texture;
-		glDeleteTextures(1, &t);
+		glDeleteTextures(1, &texture->texture.id);
+		delete texture;
 	}
 
 	Sampler
@@ -847,7 +877,7 @@ namespace glgpu
 	void
 	framebuffer_attach(Framebuffer fb, Texture tex, FRAMEBUFFER_ATTACHMENT attachment)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, _map(attachment), GL_TEXTURE_2D, (GLuint)tex, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, _map(attachment), GL_TEXTURE_2D, (GLuint)tex->texture.id, 0);
 		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Error while creating framebuffer");
 	}
 

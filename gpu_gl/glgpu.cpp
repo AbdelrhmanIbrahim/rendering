@@ -372,7 +372,6 @@ namespace glgpu
 	program_use(Program prog)
 	{
 		glUseProgram(prog->program.id);
-		error();
 	}
 
 	void
@@ -437,18 +436,35 @@ namespace glgpu
 	}
 
 	Vao
-	vao_create()
+	vao_create(Buffer vbo)
 	{
 		unsigned int VAO;
 		glGenVertexArrays(1, &VAO);
+		glBindVertexArray((GLuint)VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
+
+		//pos
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
+
+		//normal
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+
+		//uv
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
+		glBindVertexArray(NULL);
+
 		return Vao(VAO);
 	}
 
-	void
-	vao_bind(Vao va, Buffer vbo, Buffer ebo)
+	Vao
+	vao_create(Buffer vbo, Buffer ibo)
 	{
-		GLuint v = (GLuint)va;
-		glBindVertexArray(v);
+		unsigned int VAO;
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray((GLuint)VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)vbo);
 
 		//pos
@@ -463,9 +479,17 @@ namespace glgpu
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 
-		//no indexed triangles so far
-		if(ebo != NULL)
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ebo);
+		//indexs
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)ibo);
+		glBindVertexArray(NULL);
+
+		return Vao(VAO);
+	}
+
+	void
+	vao_bind(Vao va)
+	{
+		glBindVertexArray((GLuint)va);
 	}
 
 	void
@@ -477,8 +501,7 @@ namespace glgpu
 	void
 	vao_delete(Vao va)
 	{
-		GLuint v = (GLuint)va;
-		glDeleteVertexArrays(1, &v);
+		glDeleteVertexArrays(1, (GLuint*)&va);
 	}
 
 	Texture
@@ -581,10 +604,10 @@ namespace glgpu
 		glViewport(0, 0, view_size[0], view_size[1]);
 
 		//render to output attached texture
-		Vao quad_vao = vao_create();
 		Buffer quad_vs = buffer_vertex_create(quad_ndc, 6);
+		Vao quad_vao = vao_create(quad_vs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		vao_bind(quad_vao, quad_vs, NULL);
+		vao_bind(quad_vao);
 		draw_strip(6);
 		vao_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -745,8 +768,8 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Vao cube_vao = vao_create();
 		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
+		Vao cube_vao = vao_create(cube_vs);
 		
 		error();
 		for (unsigned int i = 0; i < 6; ++i)
@@ -754,7 +777,7 @@ namespace glgpu
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
-			vao_bind(cube_vao, cube_vs, NULL);
+			vao_bind(cube_vao);
 			draw_strip(36);
 			vao_unbind();
 		}
@@ -810,8 +833,8 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Vao cube_vao = vao_create();
 		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
+		Vao cube_vao = vao_create(cube_vs);
 
 		//TEST
 		/*io::Image imgs[6];
@@ -828,7 +851,7 @@ namespace glgpu
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)output, mipmap_level);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
-			vao_bind(cube_vao, cube_vs, NULL);
+			vao_bind(cube_vao);
 			draw_strip(36);
 			vao_unbind();
 

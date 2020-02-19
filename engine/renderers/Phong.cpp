@@ -109,7 +109,7 @@ namespace rndr
 			buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
 			//draw geometry
-			vao_bind(object->mesh.va, object->mesh.vs, object->mesh.is);
+			vao_bind(object->mesh.va);
 			draw_indexed(object->mesh.indices.size());
 			vao_unbind();
 		}

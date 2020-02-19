@@ -18,9 +18,9 @@ namespace geo
 		self.indices = std::move(tris.indices);
 
 		//gpu
-		self.va = vao_create();
 		self.vs = buffer_vertex_create(&self.vertices.front(), self.vertices.size());
 		self.is = buffer_index_create(&self.indices.front(), self.indices.size());
+		self.va = vao_create(self.vs, self.is);
 
 		return self;
 	}

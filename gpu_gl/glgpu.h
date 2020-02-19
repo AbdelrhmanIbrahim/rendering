@@ -14,8 +14,8 @@ namespace glgpu
 {
 	//make an internal handle instead of casting to an address ofc
 	HANDLE(Buffer);
-	HANDLE(Cubemap);
 	HANDLE(Vao);
+	HANDLE(Cubemap);
 
 	typedef struct IGL_Handle* Program;
 	typedef struct IGL_Handle* Texture;
@@ -125,10 +125,13 @@ namespace glgpu
 	buffer_delete(Buffer buf);
 
 	Vao
-	vao_create();
+	vao_create(Buffer vbo);
+
+	Vao
+	vao_create(Buffer vbo, Buffer ibo);
 
 	void
-	vao_bind(Vao v, Buffer vbo, Buffer ebo);
+	vao_bind(Vao v);
 
 	void
 	vao_unbind();

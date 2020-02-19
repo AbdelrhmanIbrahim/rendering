@@ -86,8 +86,8 @@ namespace rndr
 	{
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/engine/shaders/skybox.vertex", DIR_PATH"/engine/shaders/skybox.pixel");
-		self->cube = vao_create();
 		self->cube_vs = buffer_vertex_create(skybox, 36);
+		self->cube = vao_create(self->cube_vs);
 	}
 
 	Skybox
@@ -156,7 +156,7 @@ namespace rndr
 			uniform1i_set(self->prog, "cubemap", TEXTURE_UNIT::UNIT_0);
 
 			//draw world cube
-			vao_bind(self->cube, self->cube_vs, NULL);
+			vao_bind(self->cube);
 			draw_strip(36);
 			vao_unbind();
 		}

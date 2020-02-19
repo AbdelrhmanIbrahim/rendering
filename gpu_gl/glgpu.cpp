@@ -87,6 +87,7 @@ namespace glgpu
 			KIND_PROGRAM,
 			KIND_SAMPLER,
 			KIND_TEXTURE,
+			KIND_CUBEMAP,
 			KIND_FRAMEBUFFER
 		};
 
@@ -127,6 +128,16 @@ namespace glgpu
 				GLenum type;
 				GLenum pixel_format;
 			} texture;
+
+			struct
+			{
+				//remove filtering and sampling parameters from textures, we have samplers now
+				GLuint id;
+				unsigned int width, height;
+				GLenum internal_format;
+				GLenum type;
+				GLenum pixel_format;
+			} cubemap;
 
 			struct
 			{
@@ -297,6 +308,8 @@ namespace glgpu
 			return GL_LINEAR;
 		case TEXTURE_FILTERING::NEAREST:
 			return GL_NEAREST;
+		case TEXTURE_FILTERING::LINEAR_MIPMAP:
+			return GL_LINEAR_MIPMAP_LINEAR;
 		default:
 			assert("undefined filter type" && false);
 			return -1;
@@ -675,9 +688,9 @@ namespace glgpu
 	{
 		//go for handles pool?
 		IGL_Handle* handle = new IGL_Handle;
+		handle->kind = IGL_Handle::KIND::KIND_SAMPLER;
 
 		GLuint* id = (GLuint*)&handle->sampler.id;
-		handle->kind = IGL_Handle::KIND::KIND_SAMPLER;
 		handle->sampler.filtering = _map(filtering);
 		handle->sampler.sampling = _map(sampling);
 
@@ -705,20 +718,26 @@ namespace glgpu
 	}
 
 	Cubemap
-	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap)
+	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT pixel_format, DATA_TYPE type, bool mipmap)
 	{
-		error();
-		GLuint cmap;
-		glGenTextures(1, &cmap);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap);
+		IGL_Handle* handle = new IGL_Handle;
+		handle->kind = IGL_Handle::KIND::KIND_CUBEMAP;
+		handle->cubemap.width = view_size[0];
+		handle->cubemap.height = view_size[1];
+		handle->cubemap.internal_format = _map(internal_format);
+		handle->cubemap.pixel_format = _map(pixel_format);
+		handle->cubemap.type = _map(type);
+
+		glGenTextures(1, &handle->cubemap.id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, handle->cubemap.id);
 		for (unsigned int i = 0; i < 6; ++i)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, _map(texture_format), view_size[0], view_size[1], 0, _map(ext_format), _map(type), NULL);
-		error();
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, handle->cubemap.internal_format, view_size[0], view_size[1], 0, handle->cubemap.pixel_format, handle->cubemap.type, NULL);
+		
+		//remove later after propagating the sampler
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		error();
 
 		if (mipmap)
 		{
@@ -729,21 +748,28 @@ namespace glgpu
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
-		error();
-		return (Cubemap)cmap;
+		return handle;
 	}
 
 	Cubemap
 	cubemap_rgba_create(const io::Image imgs[6])
 	{
-		GLuint cmap;
-		glGenTextures(1, &cmap);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap);
+		IGL_Handle* handle = new IGL_Handle;
+		handle->kind = IGL_Handle::KIND::KIND_CUBEMAP;
+		handle->cubemap.width = imgs[0].width;
+		handle->cubemap.height = imgs[0].height;
+		handle->cubemap.internal_format = GL_RGB;
+		handle->cubemap.pixel_format = GL_RGB;
+		handle->cubemap.type = GL_UNSIGNED_BYTE;
+		
+		glGenTextures(1, &handle->cubemap.id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, handle->cubemap.id);
 
 		//righ, left, top, bottom, front, back
 		for (int i = 0; i < 6; ++i)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, imgs[i].width, imgs[i].height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgs[i].data);
 
+		//remove later after propagating the sampler
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -751,7 +777,7 @@ namespace glgpu
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
-		return (Cubemap)cmap;
+		return handle;
 	}
 
 	Cubemap
@@ -780,14 +806,13 @@ namespace glgpu
 		//they make the exponent the alpha and each channel remains 8 so 16 bit for each -RGB-)
 		Cubemap cube_map = cubemap_create(view_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, mipmap);
 
-		//float framebuffer to render to
+		//framebuffer to render to
 		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		//setup
 		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
-		error();
 		program_use(prog);
 		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
 		error();
@@ -800,17 +825,17 @@ namespace glgpu
 		error();
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)cube_map, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map->cubemap.id, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			vao_bind(cube_vao);
 			draw_strip(36);
 			vao_unbind();
 		}
-		error();
+
 		if (mipmap)
 		{
-			glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)cube_map);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map->cubemap.id);
 			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 		}
@@ -852,7 +877,7 @@ namespace glgpu
 		//convolute
 		program_use(postprocessor);
 		cubemap_bind(input, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(postprocessor, "env_map", TEXTURE_UNIT::UNIT_0);
+		uniform1i_set(postprocessor, "env_map", (int)TEXTURE_UNIT::UNIT_0);
 
 		//assign float uniforms (move to arrays)
 		uniform1f_set(postprocessor, uniform.uniform, uniform.value);
@@ -874,7 +899,7 @@ namespace glgpu
 
 		for (unsigned int i = 0; i < 6; ++i)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (GLuint)output, mipmap_level);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, output->cubemap.id, mipmap_level);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
 			vao_bind(cube_vao);
@@ -904,14 +929,14 @@ namespace glgpu
 	cubemap_bind(Cubemap cmap, TEXTURE_UNIT texture_unit)
 	{
 		glActiveTexture(_map(texture_unit));
-		glBindTexture(GL_TEXTURE_CUBE_MAP, (GLuint)cmap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap->cubemap.id);
 	}
 
 	void
 	cubemap_free(Cubemap cmap)
 	{
-		GLuint t = (GLuint)cmap;
-		glDeleteTextures(1, &t);
+		glDeleteTextures(1, &cmap->cubemap.id);
+		delete cmap;
 	}
 
 	Framebuffer

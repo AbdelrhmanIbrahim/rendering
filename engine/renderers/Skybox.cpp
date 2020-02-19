@@ -153,7 +153,7 @@ namespace rndr
 
 			//cubemap, till we get sampler objects in
 			cubemap_bind(self->cubemap, TEXTURE_UNIT::UNIT_0);
-			uniform1i_set(self->prog, "cubemap", TEXTURE_UNIT::UNIT_0);
+			uniform1i_set(self->prog, "cubemap", (int)TEXTURE_UNIT::UNIT_0);
 
 			//draw world cube
 			vao_bind(self->cube);

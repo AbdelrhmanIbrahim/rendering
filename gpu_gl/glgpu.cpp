@@ -82,6 +82,7 @@ namespace glgpu
 	{
 		enum KIND
 		{
+			KIND_VAO,
 			KIND_BUFFER,
 			KIND_PROGRAM,
 			KIND_SAMPLER,
@@ -93,6 +94,11 @@ namespace glgpu
 
 		union
 		{
+			struct
+			{
+				GLuint id;
+			} vao;
+
 			struct
 			{
 				GLuint id;
@@ -454,9 +460,11 @@ namespace glgpu
 	Vao
 	vao_create(Buffer vbo)
 	{
-		unsigned int VAO;
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray((GLuint)VAO);
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_VAO;
+
+		glGenVertexArrays(1, &self->vao.id);
+		glBindVertexArray(self->vao.id);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 
 		//pos
@@ -472,15 +480,17 @@ namespace glgpu
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
 		glBindVertexArray(NULL);
 
-		return Vao(VAO);
+		return self;
 	}
 
 	Vao
 	vao_create(Buffer vbo, Buffer ibo)
 	{
-		unsigned int VAO;
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray((GLuint)VAO);
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_VAO;
+
+		glGenVertexArrays(1, &self->vao.id);
+		glBindVertexArray(self->vao.id);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 
 		//pos
@@ -499,13 +509,13 @@ namespace glgpu
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 		glBindVertexArray(NULL);
 
-		return Vao(VAO);
+		return self;
 	}
 
 	void
 	vao_bind(Vao va)
 	{
-		glBindVertexArray((GLuint)va);
+		glBindVertexArray(va->vao.id);
 	}
 
 	void
@@ -517,7 +527,7 @@ namespace glgpu
 	void
 	vao_delete(Vao va)
 	{
-		glDeleteVertexArrays(1, (GLuint*)&va);
+		glDeleteVertexArrays(1, &va->vao.id);
 	}
 
 	Texture

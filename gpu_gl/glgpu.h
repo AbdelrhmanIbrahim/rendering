@@ -12,15 +12,15 @@
 
 namespace glgpu
 {
-	//make an internal handle instead of casting to an address ofc
-	HANDLE(Vao);
-	HANDLE(Cubemap);
-
+	typedef struct IGL_Handle* Vao;
 	typedef struct IGL_Handle* Buffer;
 	typedef struct IGL_Handle* Program;
 	typedef struct IGL_Handle* Texture;
 	typedef struct IGL_Handle* Sampler;
 	typedef struct IGL_Handle* Framebuffer;
+
+	//make an internal handle instead of casting to an address ofc
+	HANDLE(Cubemap);
 
 	enum class DEPTH_TEST
 	{

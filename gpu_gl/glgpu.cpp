@@ -78,6 +78,28 @@ namespace glgpu
 		Vertex{ 1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 0.0f}
 	};
 
+	struct IGL_Handle
+	{
+		enum KIND
+		{
+			SAMPLER
+		};
+
+		KIND kind;
+
+		union
+		{
+			struct
+			{
+				GLuint id;
+				//for both s and t, edit it when we need
+				GLenum filtering;
+				GLenum sampling;
+
+			} sampler;
+		};
+	};
+
 	void
 	graphics_init()
 	{
@@ -91,7 +113,8 @@ namespace glgpu
 		PIXEL
 	};
 
-	int
+	//do we really need all this function name mangling to avoid a longer function name? nah (TODO)
+	GLenum
 	_map(DEPTH_TEST test)
 	{
 		switch (test)
@@ -108,7 +131,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(TEXTURE_UNIT unit)
 	{
 		switch (unit)
@@ -126,7 +149,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(SHADER_STAGE stage)
 	{
 		switch (stage)
@@ -141,7 +164,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(FRAMEBUFFER_ATTACHMENT attachment)
 	{
 		switch (attachment)
@@ -158,7 +181,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(EXTERNAL_TEXTURE_FORMAT format)
 	{
 		switch (format)
@@ -177,7 +200,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(INTERNAL_TEXTURE_FORMAT format)
 	{
 		switch (format)
@@ -198,7 +221,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(DATA_TYPE type)
 	{
 		switch (type)
@@ -215,7 +238,7 @@ namespace glgpu
 		}
 	}
 
-	int
+	GLenum
 	_map(TARGET target)
 	{
 		switch (target)
@@ -226,6 +249,40 @@ namespace glgpu
 			return GL_TEXTURE_CUBE_MAP;
 		default:
 			assert("undefined target type" && false);
+			return -1;
+		}
+	}
+
+	GLenum
+	_map(TEXTURE_FILTERING filter)
+	{
+		switch (filter)
+		{
+		case TEXTURE_FILTERING::LINEAR:
+			return GL_LINEAR;
+		case TEXTURE_FILTERING::NEAREST:
+			return GL_NEAREST;
+		default:
+			assert("undefined filter type" && false);
+			return -1;
+		}
+	}
+
+	GLenum
+	_map(TEXTURE_SAMPLING sampling)
+	{
+		switch (sampling)
+		{
+		case TEXTURE_SAMPLING::REPEAT:
+			return GL_REPEAT;
+		case TEXTURE_SAMPLING::MIRROR_REPEAT:
+			return GL_MIRRORED_REPEAT;
+		case TEXTURE_SAMPLING::CLAMP_TO_EDGE:
+			return GL_CLAMP_TO_EDGE;
+		case TEXTURE_SAMPLING::CLAMP_TO_BORDER:
+			return GL_CLAMP_TO_BORDER;
+		default:
+			assert("undefined sampling type" && false);
 			return -1;
 		}
 	}
@@ -514,6 +571,39 @@ namespace glgpu
 	{
 		GLuint t = (GLuint)texture;
 		glDeleteTextures(1, &t);
+	}
+
+	Sampler
+	sampler_create(TEXTURE_FILTERING filtering, TEXTURE_SAMPLING sampling)
+	{
+		IGL_Handle* handle = new IGL_Handle;
+
+		GLuint* id = (GLuint*)&handle->sampler.id;
+		handle->kind = IGL_Handle::KIND::SAMPLER;
+		handle->sampler.filtering = _map(filtering);
+		handle->sampler.sampling = _map(sampling);
+
+		glGenSamplers(1, id);
+		glSamplerParameteri(*id, GL_TEXTURE_MIN_FILTER, handle->sampler.filtering);
+		glSamplerParameteri(*id, GL_TEXTURE_MIN_FILTER, handle->sampler.filtering);
+		glSamplerParameteri(*id, GL_TEXTURE_WRAP_S, handle->sampler.sampling);
+		glSamplerParameteri(*id, GL_TEXTURE_WRAP_T, handle->sampler.sampling);
+		glSamplerParameteri(*id, GL_TEXTURE_WRAP_R, handle->sampler.sampling);
+
+		return handle;
+	}
+
+	void
+	sampler_bind(Sampler self, unsigned int texture_unit)
+	{
+		glBindSampler(texture_unit, self->sampler.id);
+	}
+
+	void
+	sampler_free(Sampler self)
+	{
+		glDeleteSamplers(1, (GLuint*)&self->sampler.id);
+		delete self;
 	}
 
 	Cubemap

@@ -19,7 +19,8 @@ namespace glgpu
 	HANDLE(Cubemap);
 	HANDLE(Vao);
 	HANDLE(Framebuffer);
-	HANDLE(Sampler);
+
+	typedef struct IGL_Handle* Sampler;
 
 	enum TEXTURE_UNIT
 	{
@@ -70,6 +71,20 @@ namespace glgpu
 	{
 		TEXTURE_2D,
 		CUBEMAP,
+	};
+
+	enum class TEXTURE_FILTERING
+	{
+		NEAREST,
+		LINEAR
+	};
+
+	enum class TEXTURE_SAMPLING
+	{
+		REPEAT,
+		MIRROR_REPEAT,
+		CLAMP_TO_EDGE,
+		CLAMP_TO_BORDER
 	};
 
 	struct Unifrom_Float
@@ -145,7 +160,10 @@ namespace glgpu
 	texture_free(Texture texture);
 
 	Sampler
-	sampler_create();
+	sampler_create(TEXTURE_FILTERING filtering, TEXTURE_SAMPLING sampling);
+
+	void
+	sampler_bind(Sampler self, unsigned int texture_unit);
 
 	void
 	sampler_free(Sampler self);

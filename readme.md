@@ -8,6 +8,7 @@
 - fix pbr new bug after refactor, diff roughness ✔
 - hide renderers impl inside and clean the interface ✔
 - get samplers in
+- create internal handle for gl objects
 - show assertion window
 - fix rotation + movement events bug
 - add imGui

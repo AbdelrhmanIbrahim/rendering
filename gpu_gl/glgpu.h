@@ -90,7 +90,7 @@ namespace glgpu
 	texture_free(Texture texture);
 
 	Sampler
-	sampler_create(TEXTURE_FILTERING filtering, TEXTURE_SAMPLING sampling);
+	sampler_create(TEXTURE_FILTERING min_filtering, TEXTURE_FILTERING mag_filtering, TEXTURE_SAMPLING sampling);
 
 	void
 	sampler_bind(Sampler self, unsigned int texture_unit);

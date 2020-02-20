@@ -114,8 +114,7 @@ namespace glgpu
 			struct
 			{
 				GLuint id;
-				//for both s, t and r, edit it when we need
-				GLenum filtering;
+				GLenum min_filtering, mag_filtering;
 				GLenum sampling;
 			} sampler;
 
@@ -666,19 +665,20 @@ namespace glgpu
 	}
 
 	Sampler
-	sampler_create(TEXTURE_FILTERING filtering, TEXTURE_SAMPLING sampling)
+	sampler_create(TEXTURE_FILTERING min_filtering, TEXTURE_FILTERING mag_filtering, TEXTURE_SAMPLING sampling)
 	{
 		//go for handles pool?
 		IGL_Handle* handle = new IGL_Handle;
 		handle->kind = IGL_Handle::KIND::KIND_SAMPLER;
 
 		GLuint* id = (GLuint*)&handle->sampler.id;
-		handle->sampler.filtering = _map(filtering);
+		handle->sampler.min_filtering = _map(min_filtering);
+		handle->sampler.mag_filtering = _map(mag_filtering);
 		handle->sampler.sampling = _map(sampling);
 
 		glGenSamplers(1, id);
-		glSamplerParameteri(*id, GL_TEXTURE_MIN_FILTER, handle->sampler.filtering);
-		glSamplerParameteri(*id, GL_TEXTURE_MIN_FILTER, handle->sampler.filtering);
+		glSamplerParameteri(*id, GL_TEXTURE_MIN_FILTER, handle->sampler.min_filtering);
+		glSamplerParameteri(*id, GL_TEXTURE_MAG_FILTER, handle->sampler.mag_filtering);
 		glSamplerParameteri(*id, GL_TEXTURE_WRAP_S, handle->sampler.sampling);
 		glSamplerParameteri(*id, GL_TEXTURE_WRAP_T, handle->sampler.sampling);
 		glSamplerParameteri(*id, GL_TEXTURE_WRAP_R, handle->sampler.sampling);

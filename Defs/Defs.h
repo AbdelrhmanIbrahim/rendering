@@ -22,13 +22,6 @@ enum class FRAMEBUFFER_ATTACHMENT
 	DEPTH_STENCIL
 };
 
-enum class TEXTURE_UNIT
-{
-	UNIT_0,
-	UNIT_1,
-	UNIT_2
-};
-
 enum class EXTERNAL_TEXTURE_FORMAT
 {
 	RG,

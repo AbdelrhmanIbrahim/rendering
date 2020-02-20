@@ -162,12 +162,12 @@ namespace rndr
 		buffer_uniform_bind(4, self->uniform_material);
 
 		//till we get sampler objects in
-		cubemap_bind(self->diffuse_irradiance_map, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(self->prog, "diffuse_irradiance_map", (int)TEXTURE_UNIT::UNIT_0);
-		cubemap_bind(self->specular_prefiltered_map, TEXTURE_UNIT::UNIT_1);
-		uniform1i_set(self->prog, "specular_prefiltered_map", (int)TEXTURE_UNIT::UNIT_1);
-		texture2d_bind(self->specular_BRDF_LUT, TEXTURE_UNIT::UNIT_2);
-		uniform1i_set(self->prog, "specular_BRDF_LUT", (int)TEXTURE_UNIT::UNIT_2);
+		cubemap_bind(self->diffuse_irradiance_map, 0);
+		uniform1i_set(self->prog, "diffuse_irradiance_map", 0);
+		cubemap_bind(self->specular_prefiltered_map, 1);
+		uniform1i_set(self->prog, "specular_prefiltered_map", 1);
+		texture2d_bind(self->specular_BRDF_LUT, 2);
+		uniform1i_set(self->prog, "specular_BRDF_LUT", 2);
 
 		for (auto object : self->meshes)
 		{

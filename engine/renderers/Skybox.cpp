@@ -152,8 +152,8 @@ namespace rndr
 			view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 			//cubemap, till we get sampler objects in
-			cubemap_bind(self->cubemap, TEXTURE_UNIT::UNIT_0);
-			uniform1i_set(self->prog, "cubemap", (int)TEXTURE_UNIT::UNIT_0);
+			cubemap_bind(self->cubemap, 0);
+			uniform1i_set(self->prog, "cubemap", 0);
 
 			//draw world cube
 			vao_bind(self->cube);

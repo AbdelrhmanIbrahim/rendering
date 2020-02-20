@@ -78,7 +78,7 @@ namespace glgpu
 	texture2d_render_offline_to(Texture output, Program prog, math::vec2f view_size);
 
 	void
-	texture2d_bind(Texture texture, TEXTURE_UNIT texture_unit);
+	texture2d_bind(Texture texture, unsigned int texture_unit_index);
 
 	void
 	texture2d_unbind();
@@ -112,7 +112,7 @@ namespace glgpu
 	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, math::vec2f view_size, int mipmap_level);
 
 	void
-	cubemap_bind(Cubemap texture, TEXTURE_UNIT texture_unit);
+	cubemap_bind(Cubemap texture, unsigned int texture_unit);
 
 	void
 	cubemap_free(Cubemap cmap);

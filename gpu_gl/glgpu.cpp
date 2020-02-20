@@ -178,24 +178,6 @@ namespace glgpu
 	}
 
 	GLenum
-	_map(TEXTURE_UNIT unit)
-	{
-		switch (unit)
-		{
-		case TEXTURE_UNIT::UNIT_0:
-			return GL_TEXTURE0;
-		case TEXTURE_UNIT::UNIT_1:
-			return GL_TEXTURE1;
-		case TEXTURE_UNIT::UNIT_2:
-			return GL_TEXTURE2;
-
-		default:
-			assert("undefined texture unit" && false);
-			return -1;
-		}
-	}
-
-	GLenum
 	_map(SHADER_STAGE stage)
 	{
 		switch (stage)
@@ -657,9 +639,9 @@ namespace glgpu
 	}
 
 	void
-	texture2d_bind(Texture texture, TEXTURE_UNIT texture_unit)
+	texture2d_bind(Texture texture, unsigned int texture_unit_index)
 	{
-		glActiveTexture(_map(texture_unit));
+		glActiveTexture(GL_TEXTURE0 + texture_unit_index);
 		glBindTexture(GL_TEXTURE_2D, (GLuint)texture->texture.id);
 	}
 
@@ -672,7 +654,7 @@ namespace glgpu
 	void
 	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
-		texture2d_bind(texture, TEXTURE_UNIT::UNIT_0);
+		texture2d_bind(texture, 0);
 		glGetTexImage(GL_TEXTURE_2D, 0, texture->texture.pixel_format, texture->texture.type, image.data);
 	}
 
@@ -814,7 +796,8 @@ namespace glgpu
 		//setup
 		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
-		texture2d_bind(hdr, TEXTURE_UNIT::UNIT_0);
+		texture2d_bind(hdr, 0);
+		uniform1i_set(prog, "equirectangular_map", 0);
 		error();
 
 		//render offline to the output cubemap texs
@@ -876,8 +859,8 @@ namespace glgpu
 
 		//convolute
 		program_use(postprocessor);
-		cubemap_bind(input, TEXTURE_UNIT::UNIT_0);
-		uniform1i_set(postprocessor, "env_map", (int)TEXTURE_UNIT::UNIT_0);
+		cubemap_bind(input, 0);
+		uniform1i_set(postprocessor, "env_map", 0);
 
 		//assign float uniforms (move to arrays)
 		uniform1f_set(postprocessor, uniform.uniform, uniform.value);
@@ -926,9 +909,9 @@ namespace glgpu
 	}
 
 	void
-	cubemap_bind(Cubemap cmap, TEXTURE_UNIT texture_unit)
+	cubemap_bind(Cubemap cmap, unsigned int texture_unit_index)
 	{
-		glActiveTexture(_map(texture_unit));
+		glActiveTexture(GL_TEXTURE0 + texture_unit_index);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap->cubemap.id);
 	}
 

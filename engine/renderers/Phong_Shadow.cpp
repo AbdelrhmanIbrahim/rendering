@@ -72,7 +72,7 @@ namespace rndr
 
 			//bind framebuffer (render color buffer to color tex for testing)
 			framebuffer_bind(self->fb);
-			texture2d_bind(self->depth, TEXTURE_UNIT::UNIT_0);
+			texture2d_bind(self->depth, 0);
 			framebuffer_attach(self->fb, self->depth, FRAMEBUFFER_ATTACHMENT::DEPTH_STENCIL);
 			
 			//clear depth buffer

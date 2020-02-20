@@ -537,12 +537,6 @@ namespace glgpu
 		handle->texture.internal_format = _map(internal_format);
 		handle->texture.pixel_format = _map(format);
 		handle->texture.type = _map(type);
-
-		//propagate samplers then remove
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, NULL);
 
 		if (mipmap)
@@ -588,12 +582,6 @@ namespace glgpu
 		handle->texture.internal_format = _map(internal_format);
 		handle->texture.pixel_format = _map(tex_format);
 		handle->texture.type = _map(type);
-
-		//remove later, we have samplers now
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, img.data);
@@ -714,20 +702,9 @@ namespace glgpu
 		glBindTexture(GL_TEXTURE_CUBE_MAP, handle->cubemap.id);
 		for (unsigned int i = 0; i < 6; ++i)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, handle->cubemap.internal_format, view_size[0], view_size[1], 0, handle->cubemap.pixel_format, handle->cubemap.type, NULL);
-		
-		//remove later after propagating the sampler
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		if (mipmap)
-		{
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-		}
-		else
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 		return handle;
@@ -751,12 +728,6 @@ namespace glgpu
 		for (int i = 0; i < 6; ++i)
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, imgs[i].width, imgs[i].height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgs[i].data);
 
-		//remove later after propagating the sampler
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 
 		return handle;
@@ -767,6 +738,7 @@ namespace glgpu
 	{
 		//create hdr texture
 		Texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
+		Sampler sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
@@ -797,7 +769,7 @@ namespace glgpu
 		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, 0);
-		uniform1i_set(prog, "equirectangular_map", 0);
+		sampler_bind(sampler, 0);
 		error();
 
 		//render offline to the output cubemap texs
@@ -832,6 +804,7 @@ namespace glgpu
 		buffer_delete(cube_vs);
 		program_delete(prog);
 		texture_free(hdr);
+		sampler_free(sampler);
 
 		return cube_map;
 	}
@@ -853,14 +826,16 @@ namespace glgpu
 			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
 		};
 
+
 		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		//convolute
+		Sampler sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 		program_use(postprocessor);
 		cubemap_bind(input, 0);
-		uniform1i_set(postprocessor, "env_map", 0);
+		sampler_bind(sampler, 0);
 
 		//assign float uniforms (move to arrays)
 		uniform1f_set(postprocessor, uniform.uniform, uniform.value);
@@ -906,6 +881,7 @@ namespace glgpu
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
 		buffer_delete(cube_vs);
+		sampler_free(sampler);
 	}
 
 	void
@@ -1031,14 +1007,6 @@ namespace glgpu
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, &data.data[0][0]);
-	}
-
-	void
-	uniform1i_set(Program prog, const char* uniform, int data)
-	{
-		//samplers for example
-		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
-		glUniform1i(uniform_loc, data);
 	}
 
 	void

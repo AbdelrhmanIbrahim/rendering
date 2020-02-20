@@ -28,7 +28,7 @@ HOW TO:
 in vec3 world_pos;
 out vec4 frag_color;
 
-uniform samplerCube env_map;
+layout (binding = 0) uniform samplerCube env_map;
 uniform float roughness;
 
 const float PI = 3.14159265359;

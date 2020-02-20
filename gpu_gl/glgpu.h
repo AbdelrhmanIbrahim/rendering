@@ -166,9 +166,6 @@ namespace glgpu
 	uniformmat4f_set(Program prog, const char* uniform, const math::Mat4f& data);
 
 	void
-	uniform1i_set(Program prog, const char* uniform, int data);
-
-	void
 	view_port(int x, int y, int width, int height);
 
 	bool

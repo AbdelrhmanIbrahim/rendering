@@ -27,6 +27,7 @@ namespace rndr
 			that corresponds to the contributions of all incoming light rays from the enviroment map
 			through the hemipshere surrounding a given normal at a given point*/
 		glgpu::Cubemap diffuse_irradiance_map;
+		glgpu::Sampler sampler_diffuse;
 
 		/* 2) SPECULAR : we solve the specular part of the reflectance integral equation using split sum approx algorithm by EPIC Games.
 			Split sum approx algorithm splits the specular integral part of the reflectance equation to a simpler two integral parts :
@@ -38,7 +39,10 @@ namespace rndr
 			Read till page 7 for more understanding : https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 		*/
 		glgpu::Cubemap specular_prefiltered_map;
+		glgpu::Sampler sampler_specular_prefiltering;
+
 		glgpu::Texture specular_BRDF_LUT;
+		glgpu::Sampler sampler_specular_BRDF;
 
 		std::vector<const world::object3D*> meshes;
 	};
@@ -79,6 +83,9 @@ namespace rndr
 		self->uniform_light = buffer_uniform_create(sizeof(Light_Uniform));
 		self->uniform_camera = buffer_uniform_create(sizeof(Camera_Uniform));
 		self->uniform_material = buffer_uniform_create(sizeof(Material_Uniform));
+		self->sampler_diffuse = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
+		self->sampler_specular_prefiltering = sampler_create(TEXTURE_FILTERING::LINEAR_MIPMAP, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
+		self->sampler_specular_BRDF = sampler_create(TEXTURE_FILTERING::NEAREST, TEXTURE_FILTERING::NEAREST, TEXTURE_SAMPLING::REPEAT);
 
 		/*Diffuse irriadiance convoluted map*/
 		io::Image diff = image_read(DIR_PATH"/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
@@ -128,6 +135,9 @@ namespace rndr
 		buffer_delete(self->uniform_material);
 		cubemap_free(self->diffuse_irradiance_map);
 		cubemap_free(self->specular_prefiltered_map);
+		sampler_free(self->sampler_diffuse);
+		sampler_free(self->sampler_specular_prefiltering);
+		sampler_free(self->sampler_specular_BRDF);
 
 		delete self;
 	}
@@ -163,11 +173,11 @@ namespace rndr
 
 		//till we get sampler objects in
 		cubemap_bind(self->diffuse_irradiance_map, 0);
-		uniform1i_set(self->prog, "diffuse_irradiance_map", 0);
+		sampler_bind(self->sampler_diffuse, 0);
 		cubemap_bind(self->specular_prefiltered_map, 1);
-		uniform1i_set(self->prog, "specular_prefiltered_map", 1);
+		sampler_bind(self->sampler_specular_prefiltering, 1);
 		texture2d_bind(self->specular_BRDF_LUT, 2);
-		uniform1i_set(self->prog, "specular_BRDF_LUT", 2);
+		sampler_bind(self->sampler_specular_BRDF, 2);
 
 		for (auto object : self->meshes)
 		{

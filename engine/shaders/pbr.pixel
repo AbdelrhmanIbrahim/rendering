@@ -55,9 +55,9 @@ layout (std140, binding = 4) uniform Material
 	float rough;
 };
 
-uniform samplerCube diffuse_irradiance_map;
-uniform samplerCube specular_prefiltered_map;
-uniform sampler2D specular_BRDF_LUT;
+layout (binding = 0) uniform samplerCube diffuse_irradiance_map;
+layout (binding = 1) uniform samplerCube specular_prefiltered_map;
+layout (binding = 2) uniform sampler2D specular_BRDF_LUT;
 
 const float PI = 3.14159265359f;
 

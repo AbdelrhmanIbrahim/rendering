@@ -22,6 +22,7 @@ namespace rndr
 		glgpu::Buffer cube_vs;
 		glgpu::Buffer uniform_space;
 		glgpu::Cubemap cubemap;
+		glgpu::Sampler sampler;
 	};
 
 	constexpr static Vertex skybox[36] = 
@@ -101,6 +102,8 @@ namespace rndr
 		for (int i = 0; i < 6; ++i)
 			imgs[i] = image_read(skybox_paths[i], format);
 		self->cubemap = cubemap_rgba_create(imgs);
+		self->sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
+
 		for (int i = 0; i < 6; ++i)
 			image_free(imgs[i]);
 
@@ -116,6 +119,7 @@ namespace rndr
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
 		self->cubemap = cubemap_hdr_create(img, vec2f{800, 800}, false);
+		self->sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 
 		image_free(img);
@@ -131,6 +135,7 @@ namespace rndr
 		vao_delete(self->cube);
 		buffer_delete(self->cube_vs);
 		buffer_delete(self->uniform_space);
+		sampler_free(self->sampler);
 
 		delete self;
 	}
@@ -153,7 +158,7 @@ namespace rndr
 
 			//cubemap, till we get sampler objects in
 			cubemap_bind(self->cubemap, 0);
-			uniform1i_set(self->prog, "cubemap", 0);
+			sampler_bind(self->sampler, 0);
 
 			//draw world cube
 			vao_bind(self->cube);

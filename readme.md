@@ -1,4 +1,4 @@
-## Simple C++ Rendering Engine for learning purposes. 
+## Simple C++ Rendering Engine from scratch for learning purposes. 
 
 ### TODO :
 - remove GLUT ✔
@@ -28,4 +28,5 @@
 - fluid/water/particle system simulation (*read Fluid Engine Development book*)
 - cloud rendering
 - rigid body dynamics
+- mesh destruction
 - animation 

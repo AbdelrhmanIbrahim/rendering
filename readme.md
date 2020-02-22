@@ -10,7 +10,7 @@
 - get samplers in ✔
 - create internal handle for gl objects ✔
 - propagate samplers in rendereres ✔
-- show assertion window
+- disable exceptions
 - fix rotation + movement events bug
 - add imGui
 - make a shadow renderer only that outputs a texture with shadows then merge it later

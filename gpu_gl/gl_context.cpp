@@ -151,6 +151,9 @@ namespace glgpu
 		result = wglMakeCurrent(dc, self->context);
 		assert(result && "wglMakeCurrent failed");
 
+		result = wglSwapIntervalEXT(0);
+		assert(result && "disabling vsync failed");
+
 		result = wglDeleteContext(fake_ctx);
 		assert(result && "wglDeleteContext failed");
 

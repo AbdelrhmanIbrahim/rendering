@@ -76,6 +76,7 @@ set(RESOURCES
 	engine/shaders/quad_ndc.vertex
 	engine/shaders/skybox.vertex
 	engine/shaders/skybox.pixel
+	readme.md
 	)
 
 #make it reflect the same structure as the one on disk

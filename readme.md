@@ -10,11 +10,11 @@
 - get samplers in ✔
 - create internal handle for gl objects ✔
 - propagate samplers in rendereres ✔
-- disable exceptions
-- fix rotation + movement events bug
-- add imGui
+- fix rotation + movement events bug ✔
+- add imGui 
 - make a shadow renderer only that outputs a texture with shadows then merge it later
 - propagate uniform blocks to phong_shadow
+- if we don't need exceptions, disable them
 - deferred shading
 - ambient occlusion
 - main loop indpendent frame rate

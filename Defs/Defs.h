@@ -3,8 +3,8 @@
 #define HANDLE(NAME) typedef struct NAME##__ { int unused; } *NAME;
 #define to_radian(degree) degree * 0.01745329251f
 #define to_degree(radian) radian * 57.2957795131f
-#define WIN_WIDTH 1400
-#define WIN_HEIGHT 1000
+#define WIN_WIDTH 1000
+#define WIN_HEIGHT 700
 #define SHADOW_WIDTH 1024
 #define SHADOW_HEIGHT 1024
 

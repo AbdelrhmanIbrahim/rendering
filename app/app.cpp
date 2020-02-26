@@ -33,33 +33,32 @@ namespace app
 		world::World* w;
 	};
 
+
 	void
 	_input_act(const Input& i, World* w)
 	{
 		//Mouse move
 		{
-			camera_rotate(w->cam, input_mouse_delta(i));
+			math::vec2f mouse_dir{ input_mouse_delta(i) };
+			if (mouse_dir != math::vec2f{})
+				camera_rotate(w->cam, mouse_dir);
 		}
 
 		//Keyboard
 		{
-			constexpr float speed = 0.05f * 2.0f;
+			constexpr float speed = 0.005f * 2.0f;
 			if (i.keyboard[(int)win::KEYBOARD::W] == true)
 				camera_move_forward(w->cam, speed);
-
 			if (i.keyboard[(int)win::KEYBOARD::S] == true)
 				camera_move_backward(w->cam, speed);
-
 			if (i.keyboard[(int)win::KEYBOARD::A] == true)
 				camera_move_left(w->cam, speed);
-
 			if (i.keyboard[(int)win::KEYBOARD::D] == true)
 				camera_move_right(w->cam, speed);
 		}
 
 		//Wheel
 		{
-			//std::cout << i.wheel_dir << std::endl;
 			camera_zoom(w->cam, i.wheel_dir);
 		}
 	}

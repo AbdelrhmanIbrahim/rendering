@@ -6,6 +6,7 @@
 #include "gpu_gl/glgpu.h"
 
 #include <vector>
+#include <corecrt_math.h>
 
 using namespace glgpu;
 using namespace math;
@@ -107,7 +108,7 @@ namespace rndr
 		for (unsigned int mip_level = 0; mip_level < max_mipmaps; ++mip_level)
 		{
 			float roughness = (float)mip_level / max_mipmaps;
-			vec2f mipmap_size{ prefiltered_initial_size[0] * std::pow(0.5, mip_level) , prefiltered_initial_size[0] * std::pow(0.5, mip_level) };
+			vec2f mipmap_size{ prefiltered_initial_size[0] * pow(0.5, mip_level) , prefiltered_initial_size[0] * pow(0.5, mip_level) };
 			cubemap_postprocess(env_cmap, self->specular_prefiltered_map, prefiltering_prog, Unifrom_Float{"roughness", roughness}, mipmap_size, mip_level);
 		}
 		program_delete(prefiltering_prog);

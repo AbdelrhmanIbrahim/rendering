@@ -9,6 +9,13 @@ namespace io
 	{
 		switch (event.kind)
 		{
+		case Window_Event::KIND::KIND_MOUSE_MOVE:
+		{
+			input.mouse_x = event.mouse_move.x;
+			input.mouse_y = event.mouse_move.y;
+			break;
+		}
+
 			case Window_Event::KIND::KIND_KEYBOARD_KEY:
 			{
 				if(event.keyboard_key.s == KEY_STATE::DOWN)
@@ -27,12 +34,6 @@ namespace io
 				break;
 			}
 		
-			case Window_Event::KIND::KIND_MOUSE_MOVE:
-			{
-				input.mouse_x = event.mouse_move.x;
-				input.mouse_y = event.mouse_move.y;
-				break;
-			}
 
 			case Window_Event::KIND::KIND_MOUSE_WHEEL:
 			{

@@ -75,9 +75,9 @@ namespace world
 			{
 				float xSegment = (float)x / (float)X_SEGMENTS;
 				float ySegment = (float)y / (float)Y_SEGMENTS;
-				float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-				float yPos = std::cos(ySegment * PI);
-				float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+				float xPos = cos(xSegment * 2.0f * PI) * sin(ySegment * PI);
+				float yPos = cos(ySegment * PI);
+				float zPos = sin(xSegment * 2.0f * PI) *sin(ySegment * PI);
 				mesh.vertices.push_back(geo::Vertex{ math::vec3f{xPos, yPos, zPos}, math::vec3f{xPos, yPos, zPos}, math::vec2f{xSegment, ySegment} });
 			}
 		}

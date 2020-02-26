@@ -6,13 +6,13 @@ namespace math
 	{
 		float data[2];
 
-		float&
+		inline float&
 		operator[](unsigned int index)
 		{
 			return data[index];
 		}
 
-		const float&
+		inline const float&
 		operator[](unsigned int index) const
 		{
 			return data[index];
@@ -22,6 +22,18 @@ namespace math
 		operator*(float factor) const
 		{
 			return vec2f{ data[0] * factor, data[1] * factor};
+		}
+
+		inline bool
+		operator!=(const vec2f& other) const
+		{
+			return data[0] != other.data[0] || data[1] != other.data[1];
+		}
+
+		inline bool
+		operator==(const vec2f& other) const
+		{
+			return data[0] == other.data[0] && data[1] == other.data[1];
 		}
 	};
 

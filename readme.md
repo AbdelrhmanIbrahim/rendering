@@ -12,6 +12,9 @@
 - propagate samplers in rendereres ✔
 - fix rotation + movement events bug ✔
 - add imGui 
+- add QT
+- add ECS
+- lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later
 - propagate uniform blocks to phong_shadow
 - if we don't need exceptions, disable them

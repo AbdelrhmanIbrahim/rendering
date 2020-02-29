@@ -19,6 +19,7 @@
 - propagate uniform blocks to phong_shadow
 - if we don't need exceptions, disable them
 - deferred shading
+- realtime GI (global illumination) 
 - ambient occlusion
 - main loop indpendent frame rate
 - compute shaders

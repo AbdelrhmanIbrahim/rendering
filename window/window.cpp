@@ -295,6 +295,12 @@ namespace win
 		return win->dc;
 	}
 
+	void*
+	window_handle(Window win)
+	{
+		return win->handle;
+	}
+
 	Window_Event
 	window_poll(Window win)
 	{

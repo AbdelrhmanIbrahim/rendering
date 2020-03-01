@@ -12,6 +12,10 @@
 #include "world/World.h"
 #include "engine/Engine.h"
 
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_win32.h"
+#include "ImGui/imgui_impl_opengl3.h"
+
 using namespace world;
 using namespace rndr;
 using namespace io;
@@ -63,6 +67,22 @@ namespace app
 		}
 	}
 
+	void
+	_imgui_render()
+	{
+		//imgui newframes
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		//push to imgui cmds
+		ImGui::Text("Hello, world!");
+
+		//render gui
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
+
 	App
 	app_new()
 	{
@@ -82,6 +102,10 @@ namespace app
 
 		app->e = engine_create();
 		app->w = world_create();
+		
+		ImGui::CreateContext();
+		ImGui_ImplWin32_Init(win::window_handle(app->win));
+		ImGui_ImplOpenGL3_Init("#version 400");
 
 		return app;
 	}
@@ -91,32 +115,40 @@ namespace app
 	{
 		while (true)
 		{
-			//get the window input event
-			auto event = win::window_poll(app->win);
+			//Get the window input event
+			win::Window_Event event = win::window_poll(app->win);
 
-			//resize or close window
-			if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
+			//Window specific events actions
 			{
-				app->window_size[0] = event.window_resize.width;
-				app->window_size[1] = event.window_resize.height;
+				if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
+				{
+					app->window_size[0] = event.window_resize.width;
+					app->window_size[1] = event.window_resize.height;
+				}
+				else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
+					break;
 			}
-			else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
-				break;
 
-			//send event to input
-			input_process_event(app->i, event);
-
-			//call the right procedures according to the input state to update the data
-			_input_act(app->i, app->w);
-			input_mouse_update(app->i);
-
-			//render the data
+			//INPUT
 			{
-				//set camera viewport to window's viewport
-				camera_viewport(app->w->cam, app->window_size);
+				//process event and set input state
+				input_process_event(app->i, event);
+			}
 
-				//render
+			//UPDATE
+			{
+				_input_act(app->i, app->w);
+				input_mouse_update(app->i);
+			}
+
+			//RENDER
+			{
+				//render world
+				camera_viewport(app->w->cam, app->window_size);
 				engine_world_draw(app->e, app->w);
+
+				//render GUI
+				_imgui_render();
 			}
 
 			//swap window buffers

@@ -192,6 +192,9 @@ namespace win
 	void*
 	window_dc(Window win);
 
+	void*
+	window_handle(Window win);
+
 	Window_Event
 	window_poll(Window win);
 };

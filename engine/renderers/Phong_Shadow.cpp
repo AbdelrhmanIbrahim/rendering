@@ -6,7 +6,7 @@
 
 #include "Defs/Defs.h"
 
-#include "gpu_gl/glgpu.h"
+#include "GL/glgpu.h"
 
 #include <vector>
 

@@ -7,7 +7,7 @@
 #include "math/Vector.h"
 
 #include "window/Window.h"
-#include "gpu_gl/gl_context.h"
+#include "GL/gl_context.h"
 
 #include "world/World.h"
 #include "engine/Engine.h"

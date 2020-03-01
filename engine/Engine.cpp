@@ -13,7 +13,7 @@
 #include "math/Vector.h"
 
 //nope (refactor later --revisit--)
-#include "gpu_gl/glgpu.h"
+#include "GL/glgpu.h"
 
 using namespace world;
 

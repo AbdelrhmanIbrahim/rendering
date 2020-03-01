@@ -8,74 +8,87 @@ set(CMAKE_CXX_STANDARD 17)
 
 #headers
 set(HEADERS
-	app/App.h
-	engine/Engine.h
-	engine/renderers/Phong.h
-	engine/renderers/Phong_Shadow.h
-	engine/renderers/PBR.h
-	engine/renderers/Skybox.h
-	geometry/Vertex.h
-	geometry/Mesh.h
-	gpu_gl/glgpu.h
-	gpu_gl/gl_context.h
-	gpu_gl/glew.h
-	gpu_gl/wglew.h
+	App/App.h
+	Engine/Engine.h
+	Engine/renderers/Phong.h
+	Engine/renderers/Phong_Shadow.h
+	Engine/renderers/PBR.h
+	Engine/renderers/Skybox.h
+	Geometry/Vertex.h
+	Geometry/Mesh.h
+	GL/glgpu.h
+	GL/gl_context.h
+	GL/glew.h
+	GL/wglew.h
 	IO/Input.h
 	IO/Image.h
 	IO/Stb_Image.h
 	IO/Stb_Image_Write.h
 	IO/STL_Reader.h
-	math/Vector.h
-	math/Matrix.h
-	math/Quaternion.h
-	math/Transform.h
-	math/Gfx.h
-	window/Window.h
-	world/World.h
-	world/Camera.h
-	world/3Dobject.h
+	Math/Vector.h
+	Math/Matrix.h
+	Math/Quaternion.h
+	Math/Transform.h
+	Math/Gfx.h
+	Window/Window.h
+	World/World.h
+	World/Camera.h
+	World/3Dobject.h
 	Defs/Defs.h
+	ImGui/imgui.h
+	ImGui/imconfig.h
+	ImGui/imgui_impl_opengl3.h
+	ImGui/imgui_impl_win32.h
+	ImGui/imgui_internal.h
+	ImGui/imstb_rectpack.h
+	ImGui/imstb_textedit.h
+	ImGui/imstb_truetype.h
 	)
 
 #src
 set(SOURCES
-	app/App.cpp
-	engine/Engine.cpp
-	engine/renderers/Phong.cpp
-	engine/renderers/Phong_Shadow.cpp
-	engine/renderers/PBR.cpp
-	engine/renderers/Skybox.cpp
-	geometry/Mesh.cpp
-	gpu_gl/glgpu.cpp
-	gpu_gl/gl_context.cpp
-	gpu_gl/glew.c
+	App/App.cpp
+	Engine/Engine.cpp
+	Engine/renderers/Phong.cpp
+	Engine/renderers/Phong_Shadow.cpp
+	Engine/renderers/PBR.cpp
+	Engine/renderers/Skybox.cpp
+	Geometry/Mesh.cpp
+	GL/glgpu.cpp
+	GL/gl_context.cpp
+	GL/glew.c
 	IO/Input.cpp
 	IO/Image.cpp
 	IO/STL_Reader.cpp
-	window/window.cpp
-	world/World.cpp
-	world/3Dobject.h
+	Window/window.cpp
+	World/World.cpp
+	ImGui/imgui.cpp
+	ImGui/imgui_demo.cpp
+	ImGui/imgui_draw.cpp
+	ImGui/imgui_impl_opengl3.cpp
+	ImGui/imgui_impl_win32.cpp
+	ImGui/imgui_widgets.cpp
 	main/main.cpp
 	)
 
 #resources
 set(RESOURCES
-	engine/shaders/cube.vertex
-	engine/shaders/depth.vertex
-	engine/shaders/depth.pixel
-	engine/shaders/pbr.vertex
-	engine/shaders/pbr.pixel
-	engine/shaders/equarectangular_to_cubemap.pixel
-	engine/shaders/diffuse_irradiance_convolution.pixel
-	engine/shaders/specular_BRDF_convolution.pixel
-	engine/shaders/specular_prefiltering_convolution.pixel
-	engine/shaders/phong.vertex
-	engine/shaders/phong.pixel
-	engine/shaders/phong_shadow.vertex
-	engine/shaders/phong_shadow.pixel
-	engine/shaders/quad_ndc.vertex
-	engine/shaders/skybox.vertex
-	engine/shaders/skybox.pixel
+	Engine/shaders/cube.vertex
+	Engine/shaders/depth.vertex
+	Engine/shaders/depth.pixel
+	Engine/shaders/pbr.vertex
+	Engine/shaders/pbr.pixel
+	Engine/shaders/equarectangular_to_cubemap.pixel
+	Engine/shaders/diffuse_irradiance_convolution.pixel
+	Engine/shaders/specular_BRDF_convolution.pixel
+	Engine/shaders/specular_prefiltering_convolution.pixel
+	Engine/shaders/phong.vertex
+	Engine/shaders/phong.pixel
+	Engine/shaders/phong_shadow.vertex
+	Engine/shaders/phong_shadow.pixel
+	Engine/shaders/quad_ndc.vertex
+	Engine/shaders/skybox.vertex
+	Engine/shaders/skybox.pixel
 	readme.md
 	)
 

@@ -16,6 +16,9 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_impl_opengl3.h"
 
+
+#include <iostream>
+
 using namespace world;
 using namespace rndr;
 using namespace io;
@@ -68,12 +71,22 @@ namespace app
 	}
 
 	void
-	_imgui_render()
+	_imgui_render(const io::Input& app_i, math::vec2f& win_size)
 	{
 		//imgui newframes
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+
+		//set io state
+		ImGuiIO& imgui_io = ImGui::GetIO();
+		imgui_io.DisplaySize.x = win_size[0];
+		imgui_io.DisplaySize.y = win_size[1];
+		imgui_io.MousePos.x = app_i.mouse_x;
+		imgui_io.MousePos.y = app_i.mouse_y;
+		imgui_io.MouseClicked[0] = app_i.mouse[0];
+		imgui_io.MouseClicked[1] = app_i.mouse[1];
+		imgui_io.MouseClicked[2] = app_i.mouse[2];
 
 		//push to imgui cmds
 		ImGui::ShowDemoWindow();
@@ -100,9 +113,11 @@ namespace app
 		app->i.pmouse_x = WIN_WIDTH / 2;
 		app->i.pmouse_y = WIN_HEIGHT / 2;
 
+		//init rendering engine and world
 		app->e = engine_create();
 		app->w = world_create();
 		
+		//init imgui
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(win::window_handle(app->win));
 		ImGui_ImplOpenGL3_Init("#version 400");
@@ -115,11 +130,9 @@ namespace app
 	{
 		while (true)
 		{
-			//Get the window input event
-			win::Window_Event event = win::window_poll(app->win);
-
-			//Window specific events actions
+			//INPUT
 			{
+				win::Window_Event event = win::window_poll(app->win);
 				if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
 				{
 					app->window_size[0] = event.window_resize.width;
@@ -127,11 +140,7 @@ namespace app
 				}
 				else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
 					break;
-			}
 
-			//INPUT
-			{
-				//process event and set input state
 				input_process_event(app->i, event);
 			}
 
@@ -139,6 +148,7 @@ namespace app
 			{
 				_input_act(app->i, app->w);
 				input_mouse_update(app->i);
+
 			}
 
 			//RENDER
@@ -148,11 +158,12 @@ namespace app
 				engine_world_draw(app->e, app->w);
 
 				//render GUI
-				_imgui_render();
+				_imgui_render(app->i, app->window_size);
+
+				//Swap window buffers
+				window_swap(app->win);
 			}
 
-			//swap window buffers
-			window_swap(app->win);
 		}
 	}
 

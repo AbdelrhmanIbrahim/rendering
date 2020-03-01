@@ -20,9 +20,6 @@ namespace io
 
 		//wheel
 		int wheel_dir;
-
-		//current frame ticks
-		int p_frame;
 	};
 
 	void

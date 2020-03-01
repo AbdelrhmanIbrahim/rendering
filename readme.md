@@ -11,7 +11,8 @@
 - create internal handle for gl objects ✔
 - propagate samplers in rendereres ✔
 - fix rotation + movement events bug ✔
-- add imGui 
+- add imGui ✔
+- interact with ImGui
 - add QT
 - add fmt
 - add ECS

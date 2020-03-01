@@ -76,7 +76,7 @@ namespace app
 		ImGui::NewFrame();
 
 		//push to imgui cmds
-		ImGui::Text("Hello, world!");
+		ImGui::ShowDemoWindow();
 
 		//render gui
 		ImGui::Render();

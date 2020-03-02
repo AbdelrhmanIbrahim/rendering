@@ -13,6 +13,7 @@
 - fix rotation + movement events bug ✔
 - add imGui and interact ✔
 - add fmt ✔
+- fix imgui input handling bug
 - add QT
 - add ECS
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally

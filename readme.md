@@ -12,8 +12,8 @@
 - propagate samplers in rendereres ✔
 - fix rotation + movement events bug ✔
 - add imGui and interact ✔
+- add fmt ✔
 - add QT
-- add fmt
 - add ECS
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

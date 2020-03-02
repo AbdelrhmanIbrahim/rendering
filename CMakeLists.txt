@@ -105,9 +105,12 @@ add_executable(${PROJECT_NAME}
 				${SOURCES}
 				${RESOURCES})
 
-#link to opengl
+#link to deps
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
+
+add_subdirectory(External/fmt EXCLUDE_FROM_ALL)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 
 #macros for project directory path to load shaders from, for now till we have a res file
 target_compile_definitions(${PROJECT_NAME} PRIVATE DIR_PATH="${CMAKE_CURRENT_SOURCE_DIR}")

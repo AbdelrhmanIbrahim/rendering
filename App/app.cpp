@@ -17,8 +17,6 @@
 #include "ImGui/imgui_impl_opengl3.h"
 
 
-#include <iostream>
-
 using namespace world;
 using namespace rndr;
 using namespace io;

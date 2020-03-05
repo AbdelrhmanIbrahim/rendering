@@ -4,9 +4,9 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
-#include "IO/Image.h"
+#include "io/Image.h"
 
-#include "Defs/Defs.h"
+#include "defs/Defs.h"
 
 #include <cstddef>
 

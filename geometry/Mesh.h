@@ -1,7 +1,7 @@
 #pragma once
 
 #include "geometry/Vertex.h"
-#include "GL/glgpu.h"
+#include "gl/glgpu.h"
 
 #include <vector>
 

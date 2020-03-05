@@ -3,7 +3,7 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
-#include "GL/glgpu.h"
+#include "gl/glgpu.h"
 
 #include <vector>
 #include <corecrt_math.h>

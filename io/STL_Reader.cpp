@@ -3,10 +3,8 @@
 #include "math/Vector.h"
 
 #include <fstream>
-
 #include <unordered_map>
 #include <type_traits>
-
 #include <assert.h>
 
 using namespace math;

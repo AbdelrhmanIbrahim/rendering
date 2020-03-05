@@ -1,12 +1,12 @@
 #include "Phong_Shadow.h"
 
-#include <math/Vector.h>
-#include <math/Matrix.h>
-#include <math/Gfx.h>
+#include "math/Vector.h"
+#include "math/Matrix.h"
+#include "math/Gfx.h"
 
-#include "Defs/Defs.h"
+#include "defs/Defs.h"
 
-#include "GL/glgpu.h"
+#include "gl/glgpu.h"
 
 #include <vector>
 

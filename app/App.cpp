@@ -1,21 +1,20 @@
 #include "app/App.h"
 
-#include "Defs/Defs.h"
+#include "defs/Defs.h"
 
-#include "IO/Input.h"
+#include "io/Input.h"
 
 #include "math/Vector.h"
 
 #include "window/Window.h"
-#include "GL/gl_context.h"
+#include "gl/gl_context.h"
 
 #include "world/World.h"
 #include "engine/Engine.h"
 
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_impl_opengl3.h"
-
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_win32.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 using namespace world;
 using namespace rndr;

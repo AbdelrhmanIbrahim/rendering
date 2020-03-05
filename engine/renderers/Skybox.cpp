@@ -5,7 +5,7 @@
 
 #include "geometry/Vertex.h"
 
-#include "GL/glgpu.h"
+#include "gl/glgpu.h"
 
 using namespace glgpu;
 using namespace math;

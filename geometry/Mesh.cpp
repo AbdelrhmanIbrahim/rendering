@@ -1,5 +1,5 @@
 #include "geometry/Mesh.h"
-#include "IO/STL_Reader.h"
+#include "io/STL_Reader.h"
 
 using namespace glgpu;
 using namespace io;

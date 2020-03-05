@@ -8,12 +8,12 @@
 #include "engine/renderers/Skybox.h"
 #include "engine/renderers/Phong_Shadow.h"
 
-#include "IO/Image.h"
+#include "io/Image.h"
 
 #include "math/Vector.h"
 
 //nope (refactor later --revisit--)
-#include "GL/glgpu.h"
+#include "gl/glgpu.h"
 
 using namespace world;
 

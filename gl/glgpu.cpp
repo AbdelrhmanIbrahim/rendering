@@ -1,13 +1,12 @@
-#include "GL/glgpu.h"
+#include "gl/glgpu.h"
+#include "gl/glew.h"
 
-#include "GL/glew.h"
+#include "math/Matrix.h"
+#include "math/Gfx.h"
 
 #include <assert.h>
 #include <fstream>
 #include <string>
-
-#include <math/Matrix.h>
-#include <math/Gfx.h>
 
 using namespace io;
 using namespace math;

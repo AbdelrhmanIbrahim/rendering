@@ -1,10 +1,10 @@
-#include "IO/Image.h"
+#include "io/Image.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "IO/Stb_Image.h"
+#include "io/Stb_Image.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "IO/Stb_Image_Write.h"
+#include "io/Stb_Image_Write.h"
 
 namespace io
 {

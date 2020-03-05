@@ -13,13 +13,14 @@
 - fix rotation + movement events bug ✔
 - add imGui and interact ✔
 - add fmt ✔
-- fix imgui input handling bug
+- small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - add QT
 - add ECS
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later
 - propagate uniform blocks to phong_shadow
 - if we don't need exceptions, disable them
+- fix imgui input handling bug
 - deferred shading
 - realtime GI (global illumination) 
 - ambient occlusion

@@ -1,5 +1,8 @@
 ## Simple C++ Rendering Engine from scratch for learning purposes. 
 
+#### Clone, submodule init then update.
+#### We use QT5 so add an enviroment variable "QT5_INSTALL_DIR" points to QT5 install directory (where libs and include of QT5 are, for example - C:\Qt\5.14.1\msvc2017_64).
+
 ### TODO :
 - remove GLUT ✔
 - remove prebuilt glew binaries ✔
@@ -13,8 +16,9 @@
 - fix rotation + movement events bug ✔
 - add imGui and interact ✔
 - add fmt ✔
-- small profiling shows swapbuffer waiting take much time, read more about this and vsync
+- link to QT ✔
 - add QT
+- small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - add ECS
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

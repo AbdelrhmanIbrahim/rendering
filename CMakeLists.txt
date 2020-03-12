@@ -105,11 +105,18 @@ add_executable(${PROJECT_NAME}
 				${SOURCES}
 				${RESOURCES})
 
-#link to deps
+#qt5 path for find_package
+set (CMAKE_PREFIX_PATH $ENV{QT5_INSTALL_DIR})
+
+#link to external packages
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets)
+
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
-add_subdirectory(External/fmt EXCLUDE_FROM_ALL)
+#link to external submodules
+add_subdirectory(external/fmt EXCLUDE_FROM_ALL)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 
 #macros for project directory path to load shaders from, for now till we have a res file

@@ -3,6 +3,7 @@
 #### 
 	Clone, submodule init then update.
 	Add an enviroment variable "QT5_INSTALL_DIR" points to QT5 install directory (where libs and include of QT5 are, for example - C:\Qt\5.14.1\msvc2017_64).
+	Add %QT5_INSTALL_DIR%/bin to Path variable for now
 
 ### TODO :
 - remove GLUT ✔

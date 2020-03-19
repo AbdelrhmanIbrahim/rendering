@@ -117,8 +117,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RESOURCES})
 #include the source directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-#search path for find_package for qt5
-set(CMAKE_PREFIX_PATH $ENV{QT5_INSTALL_DIR})
 #add sources and build to the include path to search within (uics/mocs generated in the build dir)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

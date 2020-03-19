@@ -1,9 +1,9 @@
 ## Simple C++ Rendering Engine from scratch for learning purposes. 
 
 #### 
-	Clone, submodule init then update.
-	Add an enviroment variable "QT5_INSTALL_DIR" points to QT5 install directory (where libs and include of QT5 are, for example - C:\Qt\5.14.1\msvc2017_64).
-	Add %QT5_INSTALL_DIR%/bin to Path variable for now
+	- Clone, submodule init then update.
+	- Add QT5_DIR as an enviroment variable points to the directory that has Qt5Config.cmake, for example : "C:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5"
+	- Add QT5 bin folder path to Path
 
 ### TODO :
 - remove GLUT ✔
@@ -18,8 +18,8 @@
 - fix rotation + movement events bug ✔
 - add imGui and interact ✔
 - add fmt ✔
-- link to QT ✔
-- get QT in
+- get QT in ✔
+- blend QT windowing with our created naive window
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - add ECS
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally

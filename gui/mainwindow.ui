@@ -13,7 +13,92 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QToolBox" name="toolButtons_list">
+      <property name="maximumSize">
+       <size>
+        <width>70</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="rendering_page">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>70</width>
+         <height>534</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Rendering</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QToolButton" name="toolButton_pbr">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>phong</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="toolButton_phong">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>pbr</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QOpenGLWidget" name="openGLWidget"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -23,18 +108,22 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuhi_man">
+   <widget class="QMenu" name="menu_open">
     <property name="title">
-     <string>hi man</string>
+     <string>open</string>
     </property>
-    <addaction name="actionasd"/>
+    <addaction name="action_stl_load"/>
    </widget>
-   <addaction name="menuhi_man"/>
+   <addaction name="menu_open"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionasd">
+  <action name="action_stl_load">
    <property name="text">
-    <string>hello</string>
+    <string>STL</string>
+   </property>
+  </action>
+  <action name="actionlol">
+   <property name="text">
+    <string>lol</string>
    </property>
   </action>
  </widget>

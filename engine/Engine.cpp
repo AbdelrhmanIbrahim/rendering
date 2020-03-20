@@ -33,9 +33,9 @@ namespace rndr
 	{
 		IEngine* self = new IEngine;
 
-		//self->phong = phong_create();
-		self->pbr = pbr_create();
-		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		self->phong = phong_create();
+		//self->pbr = pbr_create();
+		//self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		//self->phong_shadow = phong_shadow_create();
 
 		//skybox
@@ -56,9 +56,9 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		//phong_free(e->phong);
-		pbr_free(e->pbr);
-		skybox_renderer_free(e->skybox);
+		phong_free(e->phong);
+		//pbr_free(e->pbr);
+		//skybox_renderer_free(e->skybox);
 		//phong_shadow_free(e->phong_shadow);
 
 		delete e;
@@ -75,28 +75,28 @@ namespace rndr
 			//pack meshes to draw
 			for (const auto& mesh : w->meshes)
 			{
-				//phong_pack(e->phong, &mesh);
-				pbr_pack(e->pbr, &mesh);
+				phong_pack(e->phong, &mesh);
+				//pbr_pack(e->pbr, &mesh);
 				//phong_shadow_pack(e->phong_shadow, &mesh);
 			}
 
 			//flush renderers
 			{
-				//phong_draw(e->phong, w->cam);
-				pbr_draw(e->pbr, w->cam);
+				phong_draw(e->phong, w->cam);
+				//pbr_draw(e->pbr, w->cam);
 				//phong_shadow_draw(e->phong_shadow, math::vec3f{0,30,0}, w->cam);
 			}
 
 			//unpack meshes
 			{
-				//phong_unpack(e->phong);
-				pbr_unpack(e->pbr);
+				phong_unpack(e->phong);
+				//pbr_unpack(e->pbr);
 				//phong_shadow_unpack(e->phong_shadow);
 			}
 
 			//skybox
 			{
-				skybox_renderer_draw(e->skybox, w->cam);
+				//skybox_renderer_draw(e->skybox, w->cam);
 			}
 		}
 	}

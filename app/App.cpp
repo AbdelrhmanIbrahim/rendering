@@ -103,6 +103,7 @@ namespace app
 		IApp* app = new IApp;
 
 		//window and its context
+		app->is_running = true;
 		app->window_size = math::vec2f{ WIN_WIDTH, WIN_HEIGHT };
 		app->win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
 		app->ctx = glgpu::context_create(4, 0, app->win);
@@ -117,8 +118,6 @@ namespace app
 		//init rendering engine and world
 		app->e = engine_create();
 		app->w = world_create();
-
-		app->is_running = true;
 
 		//init imgui
 		ImGui::CreateContext();
@@ -152,16 +151,16 @@ namespace app
 	void
 	app_paint(App app, win::Window palette)
 	{
-		//attach context
+		//attach current glcontext to palette
 		glgpu::context_attach(app->ctx, palette);
-		{
-			//render world
-			camera_viewport(app->w->cam, app->window_size);
-			engine_world_draw(app->e, app->w);
 
-			//render GUI
-			_imgui_render(app->i, app->window_size);
-		}
+		//render world
+		camera_viewport(app->w->cam, app->window_size);
+		engine_world_draw(app->e, app->w);
+
+		//render GUI
+		_imgui_render(app->i, app->window_size);
+
 		window_swap(palette);
 	}
 

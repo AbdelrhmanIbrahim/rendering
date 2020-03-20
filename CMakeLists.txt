@@ -77,6 +77,7 @@ set(HEADERS
 	imGui/imstb_rectpack.h
 	imGui/imstb_textedit.h
 	imGui/imstb_truetype.h
+	utils/Defer.h
 
 	${UI_HEADERS}
 	)

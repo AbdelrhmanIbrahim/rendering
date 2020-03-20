@@ -1,14 +1,16 @@
-//#include <Qapplication>
-//#include "gui/mainwindow.h"
+#include <Qapplication>
+#include "gui/mainwindow.h"
 
 #include "app/App.h"
+
+#include "utils/Defer.h"
+
 using namespace app;
 
 int
 main(int argc, char** argv)
 {
-	App app = app_new();
-	win::Window win = app_window(app);
+	/*win::Window win = app_window(app);
 	while (app_running(app))
 	{
 		win::Window_Event event = win::window_poll(win);
@@ -17,10 +19,13 @@ main(int argc, char** argv)
 		app_paint(app, win);
 	}
 	app_free(app);
-	return 0;
+	return 0;*/
 
-	//QApplication app(argc, argv);
-	//gui::MainWindow win;
-	//win.show();
-	//return app.exec();
+	//App painter = app_new();
+	//defer(painter_free, app_free(painter));
+
+	QApplication app_gui(argc, argv);
+	gui::MainWindow win;
+	win.show();
+	return app_gui.exec();
 }

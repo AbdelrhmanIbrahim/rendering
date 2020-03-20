@@ -176,6 +176,7 @@ namespace app
 		return app->win;
 	}
 
+
 	void
 	app_free(App app)
 	{

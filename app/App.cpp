@@ -40,7 +40,7 @@ namespace app
 		bool is_running;
 	};
 
-
+	//internal helpers
 	void
 	_input_act(const Input& i, World* w)
 	{
@@ -95,7 +95,19 @@ namespace app
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
+	
+	void
+	_app_render(App app, const math::vec2f& window_size)
+	{
+		//render world
+		camera_viewport(app->w->cam, app->window_size);
+		engine_world_draw(app->e, app->w);
 
+		//render GUI
+		_imgui_render(app->i, app->window_size);
+	}
+
+	//API
 	App
 	app_new()
 	{
@@ -149,32 +161,22 @@ namespace app
 	}
 
 	void
-	app_render(App app, const math::vec2f window_size)
-	{
-		//render world
-		camera_viewport(app->w->cam, app->window_size);
-		engine_world_draw(app->e, app->w);
-
-		//render GUI
-		_imgui_render(app->i, app->window_size);
-	}
-
-	void
 	app_paint(App app, win::Window palette)
 	{
-		app_render(app, win::window_size(palette));
+		_app_render(app, win::window_size(palette));
 		window_swap(palette);
 	}
 
-	void
-	app_run(App app)
+	bool
+	app_running(App app)
 	{
-		while (app->is_running)
-		{
-			app_input(app, win::window_poll(app->win));
-			app_update(app);
-			app_paint(app, app->win);
-		}
+		return app->is_running;
+	}
+
+	win::Window
+	app_window(App app)
+	{
+		return app->win;
 	}
 
 	void

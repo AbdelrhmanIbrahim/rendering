@@ -8,7 +8,13 @@ int
 main(int argc, char** argv)
 {
 	App app = app_new();
-	app_run(app);
+	win::Window win = app_window(app);
+	while (app_running(app))
+	{
+		app_input(app, win::window_poll(win));
+		app_update(app);
+		app_paint(app, win);
+	}
 	app_free(app);
 	return 0;
 

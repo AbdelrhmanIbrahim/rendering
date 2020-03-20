@@ -1,8 +1,9 @@
 #pragma once
 
+#include "math/Vector.h"
+
 namespace win
 {
-	//window from scratch WIP instead of using glut or glfw
 	typedef struct IWindow* Window;
 
 	//keyboard enums and their mapping taken from Break engine, an incomplete game engine I worked on with a friend years ago 
@@ -197,4 +198,10 @@ namespace win
 
 	Window_Event
 	window_poll(Window win);
+
+	math::vec2f
+	window_size(Window win);
+
+	bool
+	is_window(void* win);
 };

@@ -35,6 +35,9 @@ namespace app
 		//rendering engine and world
 		rndr::Engine e;
 		world::World* w;
+
+		//check if app is running or not
+		bool is_running;
 	};
 
 
@@ -113,7 +116,9 @@ namespace app
 		//init rendering engine and world
 		app->e = engine_create();
 		app->w = world_create();
-		
+
+		app->is_running = true;
+
 		//init imgui
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(win::window_handle(app->win));
@@ -123,44 +128,52 @@ namespace app
 	}
 
 	void
+	app_input(App app, win::Window_Event event)
+	{
+		if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
+		{
+			app->window_size[0] = event.window_resize.width;
+			app->window_size[1] = event.window_resize.height;
+		}
+		else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
+			app->is_running = false;
+
+		input_process_event(app->i, event);
+	}
+
+	void
+	app_update(App app)
+	{
+		_input_act(app->i, app->w);
+		input_mouse_update(app->i);
+	}
+
+	void
+	app_render(App app, const math::vec2f window_size)
+	{
+		//render world
+		camera_viewport(app->w->cam, app->window_size);
+		engine_world_draw(app->e, app->w);
+
+		//render GUI
+		_imgui_render(app->i, app->window_size);
+	}
+
+	void
+	app_paint(App app, win::Window palette)
+	{
+		app_render(app, win::window_size(palette));
+		window_swap(palette);
+	}
+
+	void
 	app_run(App app)
 	{
-		while (true)
+		while (app->is_running)
 		{
-			//INPUT
-			{
-				win::Window_Event event = win::window_poll(app->win);
-				if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
-				{
-					app->window_size[0] = event.window_resize.width;
-					app->window_size[1] = event.window_resize.height;
-				}
-				else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
-					break;
-
-				input_process_event(app->i, event);
-			}
-
-			//UPDATE
-			{
-				_input_act(app->i, app->w);
-				input_mouse_update(app->i);
-
-			}
-
-			//RENDER
-			{
-				//render world
-				camera_viewport(app->w->cam, app->window_size);
-				engine_world_draw(app->e, app->w);
-
-				//render GUI
-				_imgui_render(app->i, app->window_size);
-
-				//Swap window buffers
-				window_swap(app->win);
-			}
-
+			app_input(app, win::window_poll(app->win));
+			app_update(app);
+			app_paint(app, app->win);
 		}
 	}
 
@@ -175,5 +188,4 @@ namespace app
 
 		delete app;
 	}
-
 };

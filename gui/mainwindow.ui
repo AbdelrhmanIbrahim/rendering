@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QToolBox" name="toolButtons_list">
+     <widget class="QToolBox" name="tools_list">
       <property name="maximumSize">
        <size>
         <width>70</width>
@@ -95,7 +95,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QOpenGLWidget" name="openGLWidget"/>
+     <widget class="QWidget" name="scene" native="true"/>
     </item>
    </layout>
   </widget>
@@ -119,11 +119,6 @@
   <action name="action_stl_load">
    <property name="text">
     <string>STL</string>
-   </property>
-  </action>
-  <action name="actionlol">
-   <property name="text">
-    <string>lol</string>
    </property>
   </action>
  </widget>

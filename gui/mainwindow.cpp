@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 namespace gui
 {
@@ -8,6 +8,7 @@ namespace gui
         ui(new Ui::MainWindow)
     {
         ui->setupUi(this);
+        void* win = (void*)ui->scene->winId();
     }
 
     MainWindow::~MainWindow()

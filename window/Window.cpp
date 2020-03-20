@@ -315,4 +315,16 @@ namespace win
 		}
 		return win->event;
 	}
+
+	math::vec2f
+	window_size(Window win)
+	{
+		return math::vec2f{ (float)win->width, (float)win->height };
+	}
+
+	bool
+	is_window(void* win)
+	{
+		return IsWindow((HWND)win);
+	}
 };

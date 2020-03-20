@@ -8,7 +8,10 @@ namespace glgpu
 
 	//you can't create an opengl context without a window handle/device context, because windows manager system I guess 
 	Context
-	context_attach(unsigned int gl_major, unsigned int gl_minor, win::Window win);
+	context_create(unsigned int gl_major, unsigned int gl_minor, win::Window win);
+
+	void
+	context_attach(Context self, win::Window win);
 
 	void
 	context_free(Context self);

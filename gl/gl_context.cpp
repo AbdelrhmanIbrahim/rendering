@@ -38,7 +38,7 @@ namespace glgpu
 	}
 
 	Context
-	context_attach(unsigned int gl_major, unsigned int gl_minor, win::Window win)
+	context_create(unsigned int gl_major, unsigned int gl_minor, win::Window win)
 	{
 		IContext* self = new IContext;
 
@@ -164,6 +164,14 @@ namespace glgpu
 		assert(result && "DestroyWindow failed");
 
 		return self;
+	}
+
+	void
+	context_attach(Context self, win::Window win)
+	{
+		HDC dc = (HDC)win::window_dc(win);
+		bool result = wglMakeCurrent(dc, self->context);
+		assert(result && "wglMakeCurrent failed");
 	}
 
 	void 

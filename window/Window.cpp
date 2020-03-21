@@ -265,7 +265,7 @@ namespace win
 		assert(self->handle != NULL && "ERROR CREATING A WINDOW");
 
 		self->dc = GetDC(self->handle);
-
+		window_pixel_format_set(self);
 
 		ShowWindow(self->handle, SW_SHOW);
 		SetForegroundWindow(self->handle);
@@ -287,6 +287,7 @@ namespace win
 
 		return self;
 	}
+
 	void
 	window_free(Window win)
 	{
@@ -337,9 +338,37 @@ namespace win
 		return math::vec2f{ (float)win->width, (float)win->height };
 	}
 
-	bool
-	is_window(void* win)
+	void
+	window_pixel_format_set(win::Window win)
 	{
-		return IsWindow((HWND)win);
+		//setup the modern pixel format in order to create the modern GL Context
+		PIXELFORMATDESCRIPTOR pfd = {
+			sizeof(PIXELFORMATDESCRIPTOR),  //  size of this pfd  
+			1,								// version number  
+			PFD_DRAW_TO_WINDOW |			// support window  
+			PFD_SUPPORT_OPENGL |			// support OpenGL  
+			PFD_DOUBLEBUFFER |				// double buffered  
+			PFD_GENERIC_ACCELERATED,		// accelrated by the driver
+			PFD_TYPE_RGBA,					// RGBA type  
+			32,								// 32-bit color
+			0, 0, 0, 0, 0, 0,				// color bits ignored  
+			8,								// 8-bit alpha buffer  
+			0,								// shift bit ignored  
+			0,								// no accumulation buffer
+			0, 0, 0, 0,						// accum bits ignored  
+			24,								// 24-bit z-buffer      
+			8,								// 8-bit stencil buffer  
+			0,								// no auxiliary buffer
+			PFD_MAIN_PLANE,					// main layer  
+			0,								// reserved  
+			0, 0, 0							// layer masks ignored  
+		};
+
+		HDC dc = (HDC)win::window_dc(win);
+		int pixel_format_id = ChoosePixelFormat(dc, &pfd);
+		assert(pixel_format_id && "ChoosePixelFormat failed");
+
+		bool result = SetPixelFormat(dc, pixel_format_id, &pfd);
+		assert(result && "pixel format set failed");
 	}
 };

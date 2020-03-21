@@ -205,6 +205,6 @@ namespace win
 	math::vec2f
 	window_size(Window win);
 
-	bool
-	is_window(void* win);
+	void
+	window_pixel_format_set(win::Window win);
 };

@@ -13,11 +13,11 @@ namespace gui
     {
         ui->setupUi(this);
         //gui::NativeWindow* scene_win = new gui::NativeWindow(300, 500);
-        QWidget* lool = new QWidget;
+       /* QWidget* lool = new QWidget;
         lool->create()
         QWidget::create = createWindowContainer(scene_win, this);
         win::Window dis = win::window_new_test((void*)wid->winId(), wid->width(), wid->height(), "");
-        auto ctx = glgpu::context_create(4, 0, dis);
+        auto ctx = glgpu::context_create(4, 0, dis);*/
         //glgpu::context_attach(ctx, dis);
         //ui->horizontalLayout->addWidget(wid);
     }

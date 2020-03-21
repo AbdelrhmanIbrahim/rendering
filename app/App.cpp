@@ -103,8 +103,8 @@ namespace app
 
 		//window and its context
 		app->is_running = true;
+		app->ctx = glgpu::context_create(4, 0);
 		app->win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
-		app->ctx = glgpu::context_create(4, 0, app->win);
 
 		//input init state
 		app->i = Input{};

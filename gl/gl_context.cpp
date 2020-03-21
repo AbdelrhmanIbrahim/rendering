@@ -38,7 +38,7 @@ namespace glgpu
 	}
 
 	Context
-	context_create(unsigned int gl_major, unsigned int gl_minor, win::Window win)
+	context_create(unsigned int gl_major, unsigned int gl_minor)
 	{
 		IContext* self = new IContext;
 
@@ -121,23 +121,8 @@ namespace glgpu
 			0, 0
 		};
 
-		HDC dc = (HDC)win::window_dc(win);
-		int pixel_format_id;
-		UINT num_formats;
-		bool status = wglChoosePixelFormatARB(dc,
-			pixel_attribs,
-			NULL,
-			1,
-			&pixel_format_id,
-			&num_formats);
-
-		assert(status && num_formats > 0 && "wglChoosePixelFormatARB failed");
-
-		PIXELFORMATDESCRIPTOR pixel_format{};
-		DescribePixelFormat(dc, pixel_format_id, sizeof(pixel_format), &pixel_format);
-		result = SetPixelFormat(dc, pixel_format_id, &pixel_format);
-
-		assert(result && "Pixel format set failed");
+		win::Window dummy = win::window_new(1, 1, "glcontext init dummy window");
+		win::window_pixel_format_set(dummy);
 
 		//now we are in a position to create the modern opengl context
 		int context_attribs[] = {
@@ -147,6 +132,7 @@ namespace glgpu
 			0
 		};
 
+		HDC dc = (HDC)win::window_dc(dummy);
 		self->context = wglCreateContextAttribsARB(dc, 0, context_attribs);
 		assert(self->context && "wglCreateContextAttribsARB failed");
 
@@ -165,6 +151,8 @@ namespace glgpu
 		result = DestroyWindow(fake_wnd);
 		assert(result && "DestroyWindow failed");
 
+		win::window_free(dummy);
+
 		return self;
 	}
 
@@ -174,6 +162,9 @@ namespace glgpu
 		HDC dc = (HDC)win::window_dc(win);
 		bool result = wglMakeCurrent(dc, self->context);
 		assert(result && "wglMakeCurrent failed");
+
+		result = wglSwapIntervalEXT(0);
+		assert(result && "disabling vsync failed");
 	}
 
 	void 

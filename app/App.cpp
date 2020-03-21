@@ -25,7 +25,6 @@ namespace app
 	struct IApp
 	{
 		//win and ogl context
-		math::vec2f window_size;
 		win::Window win;
 		glgpu::Context ctx;
 
@@ -104,7 +103,6 @@ namespace app
 
 		//window and its context
 		app->is_running = true;
-		app->window_size = math::vec2f{ WIN_WIDTH, WIN_HEIGHT };
 		app->win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
 		app->ctx = glgpu::context_create(4, 0, app->win);
 
@@ -130,22 +128,21 @@ namespace app
 	void
 	app_input(App app, win::Window_Event event)
 	{
-		if (event.kind == win::Window_Event::KIND::KIND_WINDOW_RESIZE)
+		if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
 		{
-			app->window_size[0] = event.window_resize.width;
-			app->window_size[1] = event.window_resize.height;
-		}
-		else if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
 			app->is_running = false;
+			return;
+		}
 
 		input_process_event(app->i, event);
 	}
 
 	void
-	app_update(App app)
+	app_update(App app, const math::vec2f& window_size)
 	{
 		_input_act(app->i, app->w);
 		input_mouse_update(app->i);
+		camera_viewport(app->w->cam, window_size);
 	}
 
 	void
@@ -155,11 +152,10 @@ namespace app
 		glgpu::context_attach(app->ctx, palette);
 
 		//render world
-		camera_viewport(app->w->cam, app->window_size);
 		engine_world_draw(app->e, app->w);
 
 		//render GUI
-		_imgui_render(app->i, app->window_size);
+		_imgui_render(app->i, win::window_size(palette));
 
 		window_swap(palette);
 	}

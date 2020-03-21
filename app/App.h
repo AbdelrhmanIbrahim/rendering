@@ -2,6 +2,8 @@
 
 #include "window/Window.h"
 
+#include "math/Vector.h"
+
 namespace app
 {
 	typedef struct IApp* App;
@@ -13,7 +15,7 @@ namespace app
 	app_input(App app, win::Window_Event event);
 
 	void
-	app_update(App app);
+	app_update(App app, const math::vec2f& window_size);
 
 	void
 	app_paint(App app, win::Window palette);

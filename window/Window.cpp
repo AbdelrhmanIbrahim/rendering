@@ -213,6 +213,8 @@ namespace win
 				self->event.kind = Window_Event::KIND::KIND_WINDOW_RESIZE;
 				self->event.window_resize.width = LOWORD(lparam);
 				self->event.window_resize.height = HIWORD(lparam);
+				self->width = LOWORD(lparam);
+				self->height = HIWORD(lparam);
 				break;
 			}
 		}

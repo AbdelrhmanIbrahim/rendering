@@ -1,32 +1,32 @@
 #include <Qapplication>
 #include "gui/mainwindow.h"
+#include "gui/NativeWindow.h"
 
 #include "utils/Defer.h"
 
-#include "app/App.h"
+#include "app/Painter.h"
 using namespace app;
-
-#include "gui/NativeWindow.h"
 
 int
 main(int argc, char** argv)
 {
-	App app = app_new();
+	Painter Picasso = painter_new();
 	win::Window win = win::window_new(500, 500, "rendering");
-	while (app_running(app))
+	defer(win_free, win::window_free(win));
+	while (painter_drawing(Picasso))
 	{
 		//input
 		win::Window_Event event = win::window_poll(win);
-		app_input(app, event);
+		painter_input(Picasso, event);
 
 		//update
 		math::vec2f window_size = win::window_size(win);
-		app_update(app, window_size[0], window_size[1]);
+		painter_update(Picasso, window_size[0], window_size[1]);
 
 		//render
-		app_paint(app, win);
+		painter_paint(Picasso, win);
 	}
-	app_free(app);
+	painter_free(Picasso);
 	return 0;
 
 	//QApplication qt_app(argc, argv);

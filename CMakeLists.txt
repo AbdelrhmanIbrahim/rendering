@@ -44,7 +44,7 @@ set(RESOURCES
 
 #headers
 set(HEADERS
-	App/App.h
+	App/Painter.h
 	engine/Engine.h
 	engine/renderers/Phong.h
 	engine/renderers/Phong_Shadow.h
@@ -86,7 +86,7 @@ set(HEADERS
 
 #src
 set(SOURCES
-	App/App.cpp
+	App/Painter.cpp
 	engine/Engine.cpp
 	engine/renderers/Phong.cpp
 	engine/renderers/Phong_Shadow.cpp

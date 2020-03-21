@@ -1,4 +1,4 @@
-#include "app/App.h"
+#include "app/Painter.h"
 
 #include "defs/Defs.h"
 
@@ -15,7 +15,7 @@ using namespace io;
 
 namespace app
 {
-	struct IApp
+	struct IPainter
 	{
 		//input state
 		io::Input i;
@@ -59,10 +59,10 @@ namespace app
 	}
 
 	//API
-	App
-	app_new()
+	Painter
+	painter_new()
 	{
-		IApp* app = new IApp;
+		IPainter* app = new IPainter;
 
 		//app window
 		app->is_running = true;
@@ -82,7 +82,7 @@ namespace app
 	}
 
 	void
-	app_input(App app, win::Window_Event event)
+	painter_input(Painter app, win::Window_Event event)
 	{
 		if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
 		{
@@ -94,7 +94,7 @@ namespace app
 	}
 
 	void
-	app_update(App app, int window_width, int window_height)
+	painter_update(Painter app, int window_width, int window_height)
 	{
 		_input_act(app->i, app->w);
 		input_mouse_update(app->i);
@@ -102,7 +102,7 @@ namespace app
 	}
 
 	void
-	app_paint(App app, win::Window palette)
+	painter_paint(Painter app, win::Window palette)
 	{
 		engine_world_draw(app->e, app->w, palette);
 		engine_imgui_draw(app->e, app->i, palette);
@@ -110,13 +110,13 @@ namespace app
 	}
 
 	bool
-	app_running(App app)
+	painter_drawing(Painter app)
 	{
 		return app->is_running;
 	}
 
 	void
-	app_free(App app)
+	painter_free(Painter app)
 	{
 		world_free(app->w);
 		engine_free(app->e);

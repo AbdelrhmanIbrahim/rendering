@@ -1,6 +1,6 @@
-## Simple C++ Rendering Engine from scratch for learning purposes. 
+## Simple C++ Rendering Engine from scratch for learning purposes. (windows/opengl based only for now) 
 
-#### 
+####
 	- Clone, submodule init then update.
 	- Add QT5_DIR as an enviroment variable points to the directory that has Qt5Config.cmake, for example : "C:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5"
 	- Add QT5 bin folder path to "Path" enviroment variable

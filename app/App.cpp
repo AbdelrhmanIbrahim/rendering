@@ -6,15 +6,8 @@
 
 #include "math/Vector.h"
 
-#include "window/Window.h"
-#include "gl/gl_context.h"
-
 #include "world/World.h"
 #include "engine/Engine.h"
-
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_win32.h"
-#include "imgui/imgui_impl_opengl3.h"
 
 using namespace world;
 using namespace rndr;
@@ -24,10 +17,6 @@ namespace app
 {
 	struct IApp
 	{
-		//win and ogl context
-		win::Window win;
-		glgpu::Context ctx;
-
 		//input state
 		io::Input i;
 
@@ -69,42 +58,14 @@ namespace app
 		}
 	}
 
-	void
-	_imgui_render(const io::Input& app_i, math::vec2f& win_size)
-	{
-		//imgui newframes
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
-		//set io state
-		ImGuiIO& imgui_io = ImGui::GetIO();
-		imgui_io.DisplaySize.x = win_size[0];
-		imgui_io.DisplaySize.y = win_size[1];
-		imgui_io.MousePos.x = app_i.mouse_x;
-		imgui_io.MousePos.y = app_i.mouse_y;
-		imgui_io.MouseClicked[0] = app_i.mouse[0];
-		imgui_io.MouseClicked[1] = app_i.mouse[1];
-		imgui_io.MouseClicked[2] = app_i.mouse[2];
-
-		//push to imgui cmds
-		ImGui::ShowDemoWindow();
-
-		//render gui
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
-
 	//API
 	App
 	app_new()
 	{
 		IApp* app = new IApp;
 
-		//window and its context
+		//app window
 		app->is_running = true;
-		app->ctx = glgpu::context_create(4, 0);
-		app->win = win::window_new(WIN_WIDTH, WIN_HEIGHT, "rendering journey");
 
 		//input init state
 		app->i = Input{};
@@ -116,11 +77,6 @@ namespace app
 		//init rendering engine and world
 		app->e = engine_create();
 		app->w = world_create();
-
-		//init imgui
-		ImGui::CreateContext();
-		ImGui_ImplWin32_Init(win::window_handle(app->win));
-		ImGui_ImplOpenGL3_Init("#version 400");
 
 		return app;
 	}
@@ -138,25 +94,18 @@ namespace app
 	}
 
 	void
-	app_update(App app, const math::vec2f& window_size)
+	app_update(App app, int window_width, int window_height)
 	{
 		_input_act(app->i, app->w);
 		input_mouse_update(app->i);
-		camera_viewport(app->w->cam, window_size);
+		camera_viewport(app->w->cam, math::vec2f{(float)window_width, (float)window_height});
 	}
 
 	void
 	app_paint(App app, win::Window palette)
 	{
-		//attach current glcontext to palette
-		glgpu::context_attach(app->ctx, palette);
-
-		//render world
-		engine_world_draw(app->e, app->w);
-
-		//render GUI
-		_imgui_render(app->i, win::window_size(palette));
-
+		engine_world_draw(app->e, app->w, palette);
+		engine_imgui_draw(app->e, app->i, palette);
 		window_swap(palette);
 	}
 
@@ -166,21 +115,11 @@ namespace app
 		return app->is_running;
 	}
 
-	win::Window
-	app_window(App app)
-	{
-		return app->win;
-	}
-
-
 	void
 	app_free(App app)
 	{
 		world_free(app->w);
 		engine_free(app->e);
-
-		win::window_free(app->win);
-		glgpu::context_free(app->ctx);
 
 		delete app;
 	}

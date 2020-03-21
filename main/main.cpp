@@ -12,12 +12,18 @@ int
 main(int argc, char** argv)
 {
 	App app = app_new();
-	win::Window win = app_window(app);
+	win::Window win = win::window_new(500, 500, "rendering");
 	while (app_running(app))
 	{
+		//input
 		win::Window_Event event = win::window_poll(win);
 		app_input(app, event);
-		app_update(app, win::window_size(win));
+
+		//update
+		math::vec2f window_size = win::window_size(win);
+		app_update(app, window_size[0], window_size[1]);
+
+		//render
 		app_paint(app, win);
 	}
 	app_free(app);

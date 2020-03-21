@@ -8,13 +8,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 #ui
 set(UI_FILES
-	gui/mainwindow.ui
+	gui/ui/MainWindow.ui
 	)
 set(UI_HEADERS
-	gui/mainwindow.h
+	gui/MainWindow.h
+	gui/NativeWindow.h
 	)
 set(UI_SOURCES
-	gui/mainwindow.cpp
+	gui/MainWindow.cpp
+	gui/NativeWindow.cpp
 	)
 
 #resources

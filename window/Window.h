@@ -184,6 +184,9 @@ namespace win
 	Window
 	window_new(unsigned int width, unsigned int height, const char* title);
 
+	Window
+	window_new_test(void* handle, unsigned int width, unsigned int height, const char* title);
+
 	void
 	window_free(Window win);
 

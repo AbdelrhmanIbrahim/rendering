@@ -94,9 +94,6 @@
       </widget>
      </widget>
     </item>
-    <item>
-     <widget class="QWidget" name="scene" native="true"/>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">

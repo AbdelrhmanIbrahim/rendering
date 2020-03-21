@@ -266,6 +266,7 @@ namespace win
 
 		self->dc = GetDC(self->handle);
 
+
 		ShowWindow(self->handle, SW_SHOW);
 		SetForegroundWindow(self->handle);
 		SetFocus(self->handle);
@@ -274,6 +275,18 @@ namespace win
 		return self;
 	}
 
+	Window
+	window_new_test(void* handle, unsigned int width, unsigned int height, const char* title)
+	{
+		Window self = new IWindow;
+		self->dc = GetDC((HWND)handle);
+		self->handle = (HWND)handle;
+		self->height = height;
+		self->width = width;
+		self->title = title;
+
+		return self;
+	}
 	void
 	window_free(Window win)
 	{

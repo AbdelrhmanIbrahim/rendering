@@ -135,7 +135,9 @@ namespace glgpu
 
 		PIXELFORMATDESCRIPTOR pixel_format{};
 		DescribePixelFormat(dc, pixel_format_id, sizeof(pixel_format), &pixel_format);
-		SetPixelFormat(dc, pixel_format_id, &pixel_format);
+		result = SetPixelFormat(dc, pixel_format_id, &pixel_format);
+
+		assert(result && "Pixel format set failed");
 
 		//now we are in a position to create the modern opengl context
 		int context_attribs[] = {

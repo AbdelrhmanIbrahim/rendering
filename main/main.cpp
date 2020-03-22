@@ -1,5 +1,5 @@
 #include <Qapplication>
-#include "gui/mainwindow.h"
+#include "gui/MainWindow.h"
 
 #include "utils/Defer.h"
 
@@ -30,8 +30,7 @@ main(int argc, char** argv)
 
 
 	QApplication qt_app(argc, argv);
-	gui::MainWindow mainWindow;
-	mainWindow.show();
-
+	gui::MainWindow m;
+	m.show();
 	return qt_app.exec();
 }

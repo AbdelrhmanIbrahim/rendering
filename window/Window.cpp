@@ -282,6 +282,20 @@ namespace win
 	}
 
 	Window
+	window_test_new(void* handle, unsigned int width, unsigned int height, const char* title)
+	{
+		IWindow* self = new IWindow;
+		self->width = width;
+		self->height = height;
+		self->title = title;
+		self->handle = (HWND)handle;
+		self->dc = GetDC(self->handle);
+		window_pixel_format_set(self);
+
+		return self;
+	}
+
+	Window
 	window_fake_new(unsigned int width, unsigned int height, const char* title)
 	{
 		IWindow* self = new IWindow;

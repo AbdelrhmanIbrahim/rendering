@@ -16,12 +16,12 @@ namespace gui
         Q_OBJECT
 
     public:
-        explicit MainWindow(QWidget* parent = nullptr);
+        MainWindow(QWidget* parent = nullptr);
         ~MainWindow();
 
     private:
         Ui::MainWindow* ui;
-        NativeWindow qnative_win;
+        gui::NativeWindow* scene;
     };
 };
 

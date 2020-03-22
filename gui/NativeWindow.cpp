@@ -1,19 +1,34 @@
 #include "NativeWindow.h"
 
-#include "window/Window.h"
-#include "gl/gl_context.h"
+#include "app/Painter.h"
 
 namespace gui
 {
-    NativeWindow::NativeWindow(unsigned int width, unsigned int height, QWindow* parent) :
-        QWindow(parent)
+    NativeWindow::NativeWindow(win::Window win, QWindow* parent)
     {
-        resize(width, height);
-        setSurfaceType(QWindow::OpenGLSurface);
-        glgpu::Context ctx = glgpu::context_create(4, 0);
+        //setSurfaceType(QWindow::OpenGLSurface);
+        palette = win;
+        math::vec2f size = win::window_size(palette);
+        resize(size[0], size[1]);
+        picasso = app::painter_new();
+    }
+
+    bool
+    NativeWindow::event(QEvent* event)
+    {
+        //update and render
+        if(event->type() != QEvent::Close)
+        {
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, win::window_test_new((void*)winId(), width(), height(), ""));
+        }
+
+        return true;
     }
 
     NativeWindow::~NativeWindow()
     {
+        win::window_free(palette);
+        app::painter_free(picasso);
     }
 };

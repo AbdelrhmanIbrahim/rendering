@@ -182,6 +182,9 @@ namespace win
 	};
 
 	Window
+	window_test_new(void* handle, unsigned int width, unsigned int height, const char* title);
+
+	Window
 	window_new(unsigned int width, unsigned int height, const char* title);
 
 	Window

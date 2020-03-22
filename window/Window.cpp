@@ -119,7 +119,6 @@ namespace win
 		{
 		case WM_CLOSE:
 		case WM_DESTROY:
-			PostQuitMessage(0);
 			if (self)
 			{
 				self->event.kind = Window_Event::KIND::KIND_WINDOW_CLOSE;
@@ -226,6 +225,13 @@ namespace win
 		return DefWindowProcA(hwnd, msg, wparam, lparam);
 	}
 
+	LRESULT CALLBACK
+	_fake_window_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+	{
+		//postquitmessage teminates the current thread, so that's why when creating gl_context from here inside a qt app, it crashes as the thread ends
+		return DefWindowProcA(hwnd, msg, wparam, lparam);
+	}
+
 	Window
 	window_new(unsigned int width, unsigned int height, const char* title)
 	{
@@ -276,14 +282,45 @@ namespace win
 	}
 
 	Window
-	window_new_test(void* handle, unsigned int width, unsigned int height, const char* title)
+	window_fake_new(unsigned int width, unsigned int height, const char* title)
 	{
-		Window self = new IWindow;
-		self->dc = GetDC((HWND)handle);
-		self->handle = (HWND)handle;
-		self->height = height;
+		IWindow* self = new IWindow;
 		self->width = width;
+		self->height = height;
 		self->title = title;
+
+		WNDCLASSEXA wc;
+		ZeroMemory(&wc, sizeof(WNDCLASSEXA));
+		wc.cbSize = sizeof(WNDCLASSEXA);
+		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+		wc.lpfnWndProc = _fake_window_proc;
+		wc.hInstance = NULL;
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+		wc.lpszClassName = "hiddenWindowClass";
+
+		RegisterClassExA(&wc);
+
+		RECT wr = { 0, 0, LONG(self->width), LONG(self->height) };
+		AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
+
+		self->handle = CreateWindowExA(NULL,
+			"hiddenWindowClass",
+			self->title,
+			WS_OVERLAPPEDWINDOW,
+			10,
+			10,
+			wr.right - wr.left,
+			wr.bottom - wr.top,
+			NULL,
+			NULL,
+			NULL,
+			NULL);
+
+		assert(self->handle != NULL && "ERROR CREATING A WINDOW");
+
+		self->dc = GetDC(self->handle);
+		window_pixel_format_set(self);
 
 		return self;
 	}

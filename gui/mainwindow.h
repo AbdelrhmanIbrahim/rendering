@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "NativeWindow.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -19,6 +21,7 @@ namespace gui
 
     private:
         Ui::MainWindow* ui;
+        NativeWindow qnative_win;
     };
 };
 

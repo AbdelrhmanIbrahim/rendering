@@ -8,5 +8,6 @@ namespace gui
 
     public:
         explicit NativeWindow(unsigned int width, unsigned int height, QWindow* parent = nullptr);
+        ~NativeWindow();
     };
-}
+};

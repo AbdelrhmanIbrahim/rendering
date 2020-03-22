@@ -1,8 +1,7 @@
 #include "NativeWindow.h"
 
-#include "gl/gl_context.h"
-
 #include "window/Window.h"
+#include "gl/gl_context.h"
 
 namespace gui
 {
@@ -11,8 +10,10 @@ namespace gui
     {
         resize(width, height);
         setSurfaceType(QWindow::OpenGLSurface);
-        //leak
-        win::Window win = win::window_new_test((void*)winId(), width, height, "qwindow_test");
-        //glgpu::context_create(4, 0, win);
+        glgpu::Context ctx = glgpu::context_create(4, 0);
+    }
+
+    NativeWindow::~NativeWindow()
+    {
     }
 };

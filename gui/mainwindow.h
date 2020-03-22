@@ -21,7 +21,7 @@ namespace gui
 
     private:
         Ui::MainWindow* ui;
-        gui::NativeWindow* scene;
+        gui::NativeWindow scene;
     };
 };
 

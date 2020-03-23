@@ -2,6 +2,8 @@
 
 #include "window/Window.h"
 
+#include "io/Event.h"
+
 namespace app
 {
 	typedef struct IPainter* Painter;
@@ -10,7 +12,7 @@ namespace app
 	painter_new();
 
 	void
-	painter_input(Painter app, win::Window_Event event);
+	painter_input(Painter app, io::Event event);
 
 	void
 	painter_update(Painter app, int window_width, int window_height);

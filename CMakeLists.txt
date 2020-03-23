@@ -44,7 +44,7 @@ set(RESOURCES
 
 #headers
 set(HEADERS
-	App/Painter.h
+	app/Painter.h
 	engine/Engine.h
 	engine/renderers/Phong.h
 	engine/renderers/Phong_Shadow.h
@@ -52,15 +52,16 @@ set(HEADERS
 	engine/renderers/Skybox.h
 	geometry/Vertex.h
 	geometry/Mesh.h
-	gL/glgpu.h
-	gL/gl_context.h
-	gL/glew.h
-	gL/wglew.h
-	iO/Input.h
-	iO/Image.h
-	iO/Stb_Image.h
-	iO/Stb_Image_Write.h
-	iO/STL_Reader.h
+	gl/glgpu.h
+	gl/gl_context.h
+	gl/glew.h
+	gl/wglew.h
+	io/Input.h
+	io/Image.h
+	io/Stb_Image.h
+	io/Stb_Image_Write.h
+	io/STL_Reader.h
+	io/Event.h
 	math/Vector.h
 	math/Matrix.h
 	math/Quaternion.h
@@ -71,14 +72,14 @@ set(HEADERS
 	world/Camera.h
 	world/3Dobject.h
 	defs/Defs.h
-	imGui/imgui.h
-	imGui/imconfig.h
-	imGui/imgui_impl_opengl3.h
-	imGui/imgui_impl_win32.h
-	imGui/imgui_internal.h
-	imGui/imstb_rectpack.h
-	imGui/imstb_textedit.h
-	imGui/imstb_truetype.h
+	imgui/imgui.h
+	imgui/imconfig.h
+	imgui/imgui_impl_opengl3.h
+	imgui/imgui_impl_win32.h
+	imgui/imgui_internal.h
+	imgui/imstb_rectpack.h
+	imgui/imstb_textedit.h
+	imgui/imstb_truetype.h
 	utils/Defer.h
 
 	${UI_HEADERS}
@@ -86,27 +87,27 @@ set(HEADERS
 
 #src
 set(SOURCES
-	App/Painter.cpp
+	app/Painter.cpp
 	engine/Engine.cpp
 	engine/renderers/Phong.cpp
 	engine/renderers/Phong_Shadow.cpp
 	engine/renderers/PBR.cpp
 	engine/renderers/Skybox.cpp
 	geometry/Mesh.cpp
-	gL/glgpu.cpp
-	gL/gl_context.cpp
-	gL/glew.c
-	iO/Input.cpp
-	iO/Image.cpp
-	iO/STL_Reader.cpp
+	gl/glgpu.cpp
+	gl/gl_context.cpp
+	gl/glew.c
+	io/Input.cpp
+	io/Image.cpp
+	io/STL_Reader.cpp
 	window/window.cpp
 	world/World.cpp
-	imGui/imgui.cpp
-	imGui/imgui_demo.cpp
-	imGui/imgui_draw.cpp
-	imGui/imgui_impl_opengl3.cpp
-	imGui/imgui_impl_win32.cpp
-	imGui/imgui_widgets.cpp
+	imgui/imgui.cpp
+	imgui/imgui_demo.cpp
+	imgui/imgui_draw.cpp
+	imgui/imgui_impl_opengl3.cpp
+	imgui/imgui_impl_win32.cpp
+	imgui/imgui_widgets.cpp
 	main/main.cpp
 
 	${UI_SOURCES}

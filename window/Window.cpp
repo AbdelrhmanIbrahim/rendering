@@ -10,6 +10,8 @@
 
 #include <assert.h>
 
+using namespace io;
+
 namespace win
 {
 	struct IWindow
@@ -19,7 +21,7 @@ namespace win
 		int width;
 		int height;
 		const char* title;
-		Window_Event event;
+		Event event;
 	};
 
 	inline static KEYBOARD
@@ -121,14 +123,14 @@ namespace win
 		case WM_DESTROY:
 			if (self)
 			{
-				self->event.kind = Window_Event::KIND::KIND_WINDOW_CLOSE;
+				self->event.kind = Event::KIND::KIND_WINDOW_CLOSE;
 				self->event.window_close.close = true;
 			}
 			return 0;
 
 		case WM_KEYDOWN:
 		{
-			self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
+			self->event.kind = Event::KIND::KIND_KEYBOARD_KEY;
 			self->event.keyboard_key.k = _map_keyboard_key(wparam);
 			self->event.keyboard_key.s = KEY_STATE::DOWN;
 			break;
@@ -136,7 +138,7 @@ namespace win
 
 		case WM_KEYUP:
 		{
-			self->event.kind = Window_Event::KIND::KIND_KEYBOARD_KEY;
+			self->event.kind = Event::KIND::KIND_KEYBOARD_KEY;
 			self->event.keyboard_key.k = _map_keyboard_key(wparam);
 			self->event.keyboard_key.s = KEY_STATE::UP;
 			break;
@@ -144,7 +146,7 @@ namespace win
 
 		case WM_LBUTTONDOWN:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.kind = Event::KIND::KIND_MOUSE_BUTTON;
 			self->event.mouse_button.b = MOUSE::LEFT;
 			self->event.mouse_button.s = KEY_STATE::DOWN;
 			break;
@@ -152,7 +154,7 @@ namespace win
 
 		case WM_LBUTTONUP:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.kind = Event::KIND::KIND_MOUSE_BUTTON;
 			self->event.mouse_button.b = MOUSE::LEFT;
 			self->event.mouse_button.s = KEY_STATE::UP;
 			break;
@@ -160,7 +162,7 @@ namespace win
 
 		case WM_RBUTTONDOWN:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.kind = Event::KIND::KIND_MOUSE_BUTTON;
 			self->event.mouse_button.b = MOUSE::RIGHT;
 			self->event.mouse_button.s = KEY_STATE::DOWN;
 			break;
@@ -168,7 +170,7 @@ namespace win
 
 		case WM_RBUTTONUP:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.kind = Event::KIND::KIND_MOUSE_BUTTON;
 			self->event.mouse_button.b = MOUSE::RIGHT;
 			self->event.mouse_button.s = KEY_STATE::UP;
 			break;
@@ -176,7 +178,7 @@ namespace win
 
 		case WM_MBUTTONDOWN:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.kind = Event::KIND::KIND_MOUSE_BUTTON;
 			self->event.mouse_button.b = MOUSE::MIDDLE;
 			self->event.mouse_button.s = KEY_STATE::DOWN;
 			break;
@@ -184,7 +186,7 @@ namespace win
 
 		case WM_MBUTTONUP:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_BUTTON;
+			self->event.kind = Event::KIND::KIND_MOUSE_BUTTON;
 			self->event.mouse_button.b = MOUSE::MIDDLE;
 			self->event.mouse_button.s = KEY_STATE::UP;
 			break;
@@ -192,7 +194,7 @@ namespace win
 
 		case WM_MOUSEMOVE:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_MOVE;
+			self->event.kind = Event::KIND::KIND_MOUSE_MOVE;
 			self->event.mouse_move.x = GET_X_LPARAM(lparam);
 			self->event.mouse_move.y = GET_Y_LPARAM(lparam);
 			break;
@@ -200,7 +202,7 @@ namespace win
 
 		case WM_MOUSEWHEEL:
 		{
-			self->event.kind = Window_Event::KIND::KIND_MOUSE_WHEEL;
+			self->event.kind = Event::KIND::KIND_MOUSE_WHEEL;
 			self->event.mouse_wheel.dir = GET_WHEEL_DELTA_WPARAM(wparam);
 			break;
 		}
@@ -209,7 +211,7 @@ namespace win
 		{
 			if (self)
 			{
-				self->event.kind = Window_Event::KIND::KIND_WINDOW_RESIZE;
+				self->event.kind = Event::KIND::KIND_WINDOW_RESIZE;
 				self->event.window_resize.width = LOWORD(lparam);
 				self->event.window_resize.height = HIWORD(lparam);
 				self->width = LOWORD(lparam);
@@ -368,10 +370,10 @@ namespace win
 		return win->handle;
 	}
 
-	Window_Event
+	Event
 	window_poll(Window win)
 	{
-		win->event = Window_Event{};
+		win->event = Event{};
 		MSG msg{};
 
 		//PeekMessageA dispatches incoming msgs, then SendMessage to the win, then this triggers the window procedure

@@ -12,11 +12,11 @@ set(UI_FILES
 	)
 set(UI_HEADERS
 	gui/MainWindow.h
-	gui/NativeWindow.h
+	gui/OpenglPalette.h
 	)
 set(UI_SOURCES
 	gui/MainWindow.cpp
-	gui/NativeWindow.cpp
+	gui/OpenglPalette.cpp
 	)
 
 #resources
@@ -52,15 +52,16 @@ set(HEADERS
 	engine/renderers/Skybox.h
 	geometry/Vertex.h
 	geometry/Mesh.h
-	gL/glgpu.h
-	gL/gl_context.h
-	gL/glew.h
-	gL/wglew.h
-	iO/Input.h
-	iO/Image.h
-	iO/Stb_Image.h
-	iO/Stb_Image_Write.h
-	iO/STL_Reader.h
+	gl/glgpu.h
+	gl/gl_context.h
+	gl/glew.h
+	gl/wglew.h
+	io/Input.h
+	io/Image.h
+	io/Stb_Image.h
+	io/Stb_Image_Write.h
+	io/STL_Reader.h
+	io/Event.h
 	math/Vector.h
 	math/Matrix.h
 	math/Quaternion.h
@@ -93,8 +94,8 @@ set(SOURCES
 	engine/renderers/PBR.cpp
 	engine/renderers/Skybox.cpp
 	geometry/Mesh.cpp
-	gL/glgpu.cpp
-	gL/gl_context.cpp
+	gl/glgpu.cpp
+	gl/gl_context.cpp
 	gL/glew.c
 	iO/Input.cpp
 	iO/Image.cpp

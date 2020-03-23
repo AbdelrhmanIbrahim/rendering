@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "NativeWindow.h"
+#include "OpenglPalette.h"
 
 namespace Ui {
     class MainWindow;
@@ -21,7 +21,7 @@ namespace gui
 
     private:
         Ui::MainWindow* ui;
-        gui::NativeWindow scene;
+        gui::OpenglPalette scene;
     };
 };
 

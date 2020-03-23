@@ -5,7 +5,8 @@ namespace gui
 {
 	MainWindow::MainWindow(QWidget* parent) :
 		QMainWindow(parent),
-		ui(new Ui::MainWindow)
+		ui(new Ui::MainWindow),
+		scene(4, 0)
 	{
 		ui->setupUi(this);
 		ui->horizontalLayout->addWidget(QWidget::createWindowContainer(&scene, this));

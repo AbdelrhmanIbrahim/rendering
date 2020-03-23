@@ -6,9 +6,12 @@
 #include "app/Painter.h"
 using namespace app;
 
+#include "gl/gl_context.h"
+
 int
 main(int argc, char** argv)
 {
+	glgpu::context_free(nullptr);
 	//Painter Picasso = painter_new();
 	//win::Window win = win::window_new(500, 500, "rendering");
 	//defer(win_free, win::window_free(win));

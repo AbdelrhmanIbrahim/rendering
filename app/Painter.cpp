@@ -42,13 +42,13 @@ namespace app
 		//Keyboard
 		{
 			constexpr float speed = 0.005f * 2.0f;
-			if (i.keyboard[(int)win::KEYBOARD::W] == true)
+			if (i.keyboard[(int)io::KEYBOARD::W] == true)
 				camera_move_forward(w->cam, speed);
-			if (i.keyboard[(int)win::KEYBOARD::S] == true)
+			if (i.keyboard[(int)io::KEYBOARD::S] == true)
 				camera_move_backward(w->cam, speed);
-			if (i.keyboard[(int)win::KEYBOARD::A] == true)
+			if (i.keyboard[(int)io::KEYBOARD::A] == true)
 				camera_move_left(w->cam, speed);
-			if (i.keyboard[(int)win::KEYBOARD::D] == true)
+			if (i.keyboard[(int)io::KEYBOARD::D] == true)
 				camera_move_right(w->cam, speed);
 		}
 
@@ -82,9 +82,9 @@ namespace app
 	}
 
 	void
-	painter_input(Painter app, win::Window_Event event)
+	painter_input(Painter app, Event event)
 	{
-		if (event.kind == win::Window_Event::KIND::KIND_WINDOW_CLOSE)
+		if (event.kind == Event::KIND::KIND_WINDOW_CLOSE)
 		{
 			app->is_running = false;
 			return;
@@ -102,11 +102,10 @@ namespace app
 	}
 
 	void
-	painter_paint(Painter app, win::Window palette)
+	painter_paint(Painter app, void* palette_handle, unsigned int width, unsigned int height)
 	{
-		engine_world_draw(app->e, app->w, palette);
-		engine_imgui_draw(app->e, app->i, palette);
-		window_swap(palette);
+		engine_world_draw(app->e, app->w);
+		engine_imgui_draw(app->e, app->i, palette_handle, width, height);
 	}
 
 	bool

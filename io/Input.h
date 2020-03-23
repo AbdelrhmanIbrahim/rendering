@@ -1,6 +1,6 @@
 #pragma once
 
-#include "window/Window.h"
+#include "io/Event.h"
 
 #include "math/Vector.h"
 
@@ -9,10 +9,10 @@ namespace io
 	struct Input
 	{
 		//keyboard
-		bool keyboard[(int)win::KEYBOARD::COUNT];
+		bool keyboard[(int)io::KEYBOARD::COUNT];
 
 		//mouse
-		bool mouse[(int)win::MOUSE::COUNT];
+		bool mouse[(int)io::MOUSE::COUNT];
 
 		//cursor
 		int mouse_x, mouse_y;
@@ -23,7 +23,7 @@ namespace io
 	};
 
 	void
-	input_process_event(Input& input, win::Window_Event event);
+	input_process_event(Input& input, io::Event event);
 
 	math::vec2f
 	input_mouse_delta(const Input& i);

@@ -76,12 +76,13 @@ namespace glgpu
 	}
 
 	void
-	context_attach(Context self, win::Window win)
+	context_attach(Context self, void* win)
 	{
-		HDC dc = (HDC)win::window_dc(win);
+		HDC dc = GetDC((HWND)win);
 		bool result = wglMakeCurrent(dc, self->context);
 		assert(result && "wglMakeCurrent failed");
 
+		//replace somewhere else in the init
 		result = wglSwapIntervalEXT(0);
 		assert(result && "disabling vsync failed");
 	}

@@ -10,6 +10,8 @@
 
 #include <assert.h>
 
+#include "io/Event.h"
+
 using namespace io;
 
 namespace win
@@ -273,26 +275,12 @@ namespace win
 		assert(self->handle != NULL && "ERROR CREATING A WINDOW");
 
 		self->dc = GetDC(self->handle);
-		window_pixel_format_set(self);
+		window_pixel_format_set(self->handle);
 
 		ShowWindow(self->handle, SW_SHOW);
 		SetForegroundWindow(self->handle);
 		SetFocus(self->handle);
 		SetWindowLongPtrA(self->handle, GWLP_USERDATA, (LONG_PTR)self);
-
-		return self;
-	}
-
-	Window
-	window_test_new(void* handle, unsigned int width, unsigned int height, const char* title)
-	{
-		IWindow* self = new IWindow;
-		self->width = width;
-		self->height = height;
-		self->title = title;
-		self->handle = (HWND)handle;
-		self->dc = GetDC(self->handle);
-		window_pixel_format_set(self);
 
 		return self;
 	}
@@ -336,7 +324,7 @@ namespace win
 		assert(self->handle != NULL && "ERROR CREATING A WINDOW");
 
 		self->dc = GetDC(self->handle);
-		window_pixel_format_set(self);
+		window_pixel_format_set(self->handle);
 
 		return self;
 	}
@@ -352,9 +340,9 @@ namespace win
 	}
 
 	void
-	window_swap(Window win)
+	window_swap(void* win)
 	{
-		bool result = SwapBuffers(win->dc);
+		bool result = SwapBuffers(GetDC((HWND)win));
 		assert(result && "SwapBuffers failed");
 	}
 
@@ -362,12 +350,6 @@ namespace win
 	window_dc(Window win)
 	{
 		return win->dc;
-	}
-
-	void*
-	window_handle(Window win)
-	{
-		return win->handle;
 	}
 
 	Event
@@ -385,14 +367,8 @@ namespace win
 		return win->event;
 	}
 
-	math::vec2f
-	window_size(Window win)
-	{
-		return math::vec2f{ (float)win->width, (float)win->height };
-	}
-
 	void
-	window_pixel_format_set(win::Window win)
+	window_pixel_format_set(void* win)
 	{
 		//setup the modern pixel format in order to create the modern GL Context
 		PIXELFORMATDESCRIPTOR pfd = {
@@ -417,7 +393,7 @@ namespace win
 			0, 0, 0							// layer masks ignored  
 		};
 
-		HDC dc = (HDC)win::window_dc(win);
+		HDC dc = GetDC((HWND)win);
 		int pixel_format_id = ChoosePixelFormat(dc, &pfd);
 		assert(pixel_format_id && "ChoosePixelFormat failed");
 

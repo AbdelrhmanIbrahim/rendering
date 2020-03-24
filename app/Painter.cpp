@@ -103,11 +103,11 @@ namespace app
 	}
 
 	void
-	painter_paint(Painter app, win::Window palette)
+	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
 		engine_world_draw(app->e, app->w, palette);
-		engine_imgui_draw(app->e, app->i, palette);
-		window_swap(palette);
+		engine_imgui_draw(app->e, app->i, palette, width, height);
+		win::window_swap(palette);
 	}
 
 	bool

@@ -82,10 +82,10 @@ namespace rndr
 	}
 
 	void
-	engine_world_draw(Engine e, const World* w, win::Window palette)
+	engine_world_draw(Engine e, const World* w, void* win)
 	{
 		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
-		glgpu::context_attach(e->ctx, palette);
+		glgpu::context_attach(e->ctx, win);
 
 		//render scene
 		{
@@ -123,19 +123,18 @@ namespace rndr
 	}
 
 	void
-	engine_imgui_draw(Engine e, const io::Input& app_i, win::Window palette)
+	engine_imgui_draw(Engine e, const io::Input& app_i, void* win, unsigned int width, unsigned int height)
 	{
 		//imgui newframes
-		ImGui_ImplWin32_Init(win::window_handle(palette));
+		ImGui_ImplWin32_Init(win);
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
 		//set io state
 		ImGuiIO& imgui_io = ImGui::GetIO();
-		math::vec2f win_size = win::window_size(palette);
-		imgui_io.DisplaySize.x = win_size[0];
-		imgui_io.DisplaySize.y = win_size[1];
+		imgui_io.DisplaySize.x = width;
+		imgui_io.DisplaySize.y = height;
 		imgui_io.MousePos.x = app_i.mouse_x;
 		imgui_io.MousePos.y = app_i.mouse_y;
 		imgui_io.MouseClicked[0] = app_i.mouse[0];

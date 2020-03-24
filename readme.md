@@ -19,7 +19,7 @@
 - add imGui and interact ✔
 - add fmt ✔
 - get QT in ✔
-- blend QT windowing with our created naive window
+- blend QT windowing with out painter ✔
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - add ECS
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally

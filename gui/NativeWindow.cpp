@@ -78,31 +78,99 @@ namespace gui
         //prepare window pixel format and vsync
         setSurfaceType(QWindow::OpenGLSurface);
         win::window_pixel_format_set((void*)winId());
-        //QSurfaceFormat fmt;
-        //fmt.setSwapInterval(0);
-        //setFormat(fmt);
+        QSurfaceFormat fmt;
+        fmt.setSwapInterval(0);
+        setFormat(fmt);
+
+        //frameless
+        Qt::WindowFlags flag;
+        flag.setFlag(Qt::WindowType::FramelessWindowHint);
+        setFlags(flag);
 
         //painter
         picasso = app::painter_new();
     }
 
-    bool
-    NativeWindow::event(QEvent* event)
+    void
+    NativeWindow::mouseMoveEvent(QMouseEvent* event)
     {
-        if(picasso)
+        if (geometry().contains(event->pos()))
         {
-            io::Event e = _transform_qt_event(event);
-            if (e.kind != io::Event::KIND_WINDOW_CLOSE &&
-                e.kind != io::Event::KIND_DUMMY)
-            {
-                app::painter_input(picasso, e);
-                app::painter_update(picasso, width(), height());
-                app::painter_paint(picasso, (void*)winId(), width(), height());
-                return true;
-            }
+            io::Event e{};
+            e.kind = io::Event::KIND::KIND_MOUSE_MOVE;
+            e.mouse_move.x = event->pos().x();
+            e.mouse_move.y = event->pos().y();
+            app::painter_input(picasso, e);
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
         }
-        else
-            return QWindow::event(event);
+
+        QWindow::mouseMoveEvent(event);
+    }
+
+    void
+    NativeWindow::keyPressEvent(QKeyEvent* event)
+    {
+        if ((event)->key() == Qt::Key::Key_W ||
+            (event)->key() == Qt::Key::Key_A ||
+            (event)->key() == Qt::Key::Key_S ||
+            (event)->key() == Qt::Key::Key_D)
+        {
+            io::Event e{};
+            e.kind = io::Event::KIND::KIND_KEYBOARD_KEY;
+            e.keyboard_key.s = io::KEY_STATE::DOWN;
+            e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
+
+            app::painter_input(picasso, e);
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
+
+            return;
+        }
+
+        QWindow::keyPressEvent(event);
+    }
+
+    void
+    NativeWindow::keyReleaseEvent(QKeyEvent* event)
+    {
+        if ((event)->key() == Qt::Key::Key_W ||
+            (event)->key() == Qt::Key::Key_A ||
+            (event)->key() == Qt::Key::Key_S ||
+            (event)->key() == Qt::Key::Key_D)
+        {
+            io::Event e{};
+            e.kind = io::Event::KIND::KIND_KEYBOARD_KEY;
+            e.keyboard_key.s = io::KEY_STATE::UP;
+            e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
+
+            app::painter_input(picasso, e);
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
+
+            return;
+        }
+
+        QWindow::keyReleaseEvent(event);
+    }
+
+    void
+    NativeWindow::resizeEvent(QResizeEvent* event)
+    {
+        if (picasso)
+        {
+            io::Event e{};
+            e.kind = io::Event::KIND::KIND_WINDOW_RESIZE;
+            e.window_resize.width = event->size().width();
+            e.window_resize.height = event->size().height();
+
+            app::painter_input(picasso, e);
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
+            return;
+        }
+
+        QWindow::resizeEvent(event);
     }
 
     NativeWindow::~NativeWindow()

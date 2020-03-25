@@ -8,19 +8,22 @@
 
 namespace gui
 {
-
     inline static io::KEYBOARD
     _map_keyboard_key(Qt::Key k)
     {
         switch (k)
         {
             case Qt::Key_W:
+            case Qt::UpArrow:
                 return io::KEYBOARD::W;
             case Qt::Key_A:
+            case Qt::LeftArrow:
                 return io::KEYBOARD::A;
             case Qt::Key_S:
+            case Qt::DownArrow:
                 return io::KEYBOARD::S;
             case Qt::Key_D:
+            case Qt::RightArrow:
                 return io::KEYBOARD::D;
             default:
                 return io::KEYBOARD::COUNT;
@@ -32,9 +35,16 @@ namespace gui
     {
         io::Event e{};
         e.kind = io::Event::KIND::KIND_DUMMY;
-
         switch (event->type())
         {
+            //app will crash on exit as there's no closeevent virtual fn in QWindow yet, find a workaround
+            case QEvent::Resize:
+            {
+                e.kind = io::Event::KIND::KIND_WINDOW_RESIZE;
+                e.window_resize.width = ((QResizeEvent*)event)->size().width();
+                e.window_resize.height = ((QResizeEvent*)event)->size().height();
+                break;
+            }
             case QEvent::MouseMove:
             {
                 e.kind = io::Event::KIND::KIND_MOUSE_MOVE;
@@ -68,9 +78,9 @@ namespace gui
         //prepare window pixel format and vsync
         setSurfaceType(QWindow::OpenGLSurface);
         win::window_pixel_format_set((void*)winId());
-        QSurfaceFormat fmt;
-        fmt.setSwapInterval(0);
-        setFormat(fmt);
+        //QSurfaceFormat fmt;
+        //fmt.setSwapInterval(0);
+        //setFormat(fmt);
 
         //painter
         picasso = app::painter_new();

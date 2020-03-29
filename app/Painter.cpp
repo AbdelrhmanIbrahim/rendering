@@ -10,6 +10,8 @@
 #include "world/World.h"
 #include "engine/Engine.h"
 
+#include "world/ECS_World.h"
+
 using namespace world;
 using namespace rndr;
 using namespace io;
@@ -24,6 +26,8 @@ namespace app
 		//rendering engine and world
 		rndr::Engine e;
 		world::World* w;
+		
+		ecs::World ecs_w;
 
 		//check if app is running or not
 		bool is_running;
@@ -79,6 +83,9 @@ namespace app
 		app->e = engine_create();
 		app->w = world_create();
 
+		//init testing ecs world
+		app->ecs_w = world::_world_create();
+
 		return app;
 	}
 
@@ -121,6 +128,8 @@ namespace app
 	{
 		world_free(app->w);
 		engine_free(app->e);
+
+		_world_free(app->ecs_w);
 
 		delete app;
 	}

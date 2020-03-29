@@ -5,8 +5,8 @@
 namespace world
 {
 	ecs::World
-	world_create();
+	_world_create();
 
 	void
-	world_free(ecs::World& w);
+	_world_free(ecs::World& w);
 };

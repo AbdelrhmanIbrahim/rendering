@@ -10,8 +10,6 @@
 
 #include <assert.h>
 
-#include "io/Event.h"
-
 using namespace io;
 
 namespace win
@@ -352,7 +350,7 @@ namespace win
 		return win->dc;
 	}
 
-	Event
+	io::Event
 	window_poll(Window win)
 	{
 		win->event = Event{};

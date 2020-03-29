@@ -1,5 +1,7 @@
 #pragma once
 
+#include "io/Event.h"
+
 namespace win
 {
 	typedef struct IWindow* Window;
@@ -18,6 +20,9 @@ namespace win
 
 	void*
 	window_dc(Window win);
+
+	io::Event
+	window_poll(Window win);
 
 	void
 	window_pixel_format_set(void* win);

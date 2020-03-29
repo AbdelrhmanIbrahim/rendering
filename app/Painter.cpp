@@ -26,7 +26,7 @@ namespace app
 		//rendering engine and world
 		rndr::Engine e;
 		world::World* w;
-		
+
 		ecs::World ecs_w;
 
 		//check if app is running or not

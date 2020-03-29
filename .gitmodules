@@ -1,3 +1,7 @@
 [submodule "external/fmt"]
 	path = external/fmt
 	url = https://github.com/fmtlib/fmt
+
+[submodule "external/ecs"]
+	path = external/ecs
+	url = https://github.com/AbdelrhmanIbrahim/ecs

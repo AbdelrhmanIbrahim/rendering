@@ -120,6 +120,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RESOURCES})
 
 #include the source directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/ecs)
 
 #add sources and build to the include path to search within (uics/mocs generated in the build dir)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -148,7 +149,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Widgets Qt5::Gui)
 
 #link to external submodules
-#add_subdirectory(external/ecs EXCLUDE_FROM_ALL)
+add_subdirectory(external/ecs)
 add_subdirectory(external/fmt EXCLUDE_FROM_ALL)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 

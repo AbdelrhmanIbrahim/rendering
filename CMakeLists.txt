@@ -148,7 +148,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Widgets Qt5::Gui)
 
 #link to external submodules
-add_subdirectory(external/ecs EXCLUDE_FROM_ALL)
+#add_subdirectory(external/ecs EXCLUDE_FROM_ALL)
 add_subdirectory(external/fmt EXCLUDE_FROM_ALL)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 

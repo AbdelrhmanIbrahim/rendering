@@ -4,9 +4,6 @@
 #include "world/components/Mesh.h"
 #include "world/components/Transform.h"
 
-#include "world/World.h"
-#include "world/Camera.h"
-
 #include "engine/renderers/Phong.h"
 #include "engine/renderers/PBR.h"
 #include "engine/renderers/Skybox.h"
@@ -33,9 +30,9 @@ namespace rndr
 
 		//renderers
 		Phong phong;
-		PBR pbr;
-		Skybox skybox;
-		Phong_Shadow phong_shadow;
+		//PBR pbr;
+		//Skybox skybox;
+		//Phong_Shadow phong_shadow;
 	};
 
 	Engine

@@ -51,7 +51,6 @@ set(HEADERS
 	engine/renderers/PBR.h
 	engine/renderers/Skybox.h
 	geometry/Vertex.h
-	geometry/Mesh.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -65,12 +64,8 @@ set(HEADERS
 	math/Vector.h
 	math/Matrix.h
 	math/Quaternion.h
-	math/Transform.h
 	math/Gfx.h
 	window/Window.h
-	world/World.h
-	world/Camera.h
-	world/3Dobject.h
 	world/components/Transform.h
 	world/components/Camera.h
 	world/components/Mesh.h
@@ -97,7 +92,6 @@ set(SOURCES
 	engine/renderers/Phong_Shadow.cpp
 	engine/renderers/PBR.cpp
 	engine/renderers/Skybox.cpp
-	geometry/Mesh.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp
 	gl/glew.c
@@ -105,7 +99,6 @@ set(SOURCES
 	io/Image.cpp
 	io/STL_Reader.cpp
 	window/window.cpp
-	world/World.cpp
 	world/ECS_World.cpp
 	imgui/imgui.cpp
 	imgui/imgui_demo.cpp

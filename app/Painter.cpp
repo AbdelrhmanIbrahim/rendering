@@ -7,7 +7,6 @@
 
 #include "math/Vector.h"
 
-#include "world/World.h"
 #include "engine/Engine.h"
 
 #include "world/components/Camera.h"
@@ -82,7 +81,6 @@ namespace app
 
 		//init rendering engine and world
 		app->e = engine_create();
-		app->w = world_create();
 
 		//init testing ecs world
 		app->ecs_w = world::_world_create();
@@ -128,7 +126,6 @@ namespace app
 	void
 	painter_free(Painter app)
 	{
-		world_free(app->w);
 		engine_free(app->e);
 
 		_world_free(app->ecs_w);

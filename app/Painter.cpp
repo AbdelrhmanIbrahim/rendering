@@ -36,31 +36,31 @@ namespace app
 
 	//internal helpers
 	void
-	_input_act(const Input& i, World* w)
+	__input_act(const Input& i, world::_Camera& cam)
 	{
 		//Mouse move
 		{
 			math::vec2f mouse_dir{ input_mouse_delta(i) };
 			if (mouse_dir != math::vec2f{})
-				camera_rotate(w->cam, mouse_dir);
+				_camera_rotate(cam, mouse_dir);
 		}
 
 		//Keyboard
 		{
 			constexpr float speed = 0.005f * 2.0f;
 			if (i.keyboard[(int)io::KEYBOARD::W] == true)
-				camera_move_forward(w->cam, speed);
+				_camera_move_forward(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::S] == true)
-				camera_move_backward(w->cam, speed);
+				_camera_move_backward(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::A] == true)
-				camera_move_left(w->cam, speed);
+				_camera_move_left(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::D] == true)
-				camera_move_right(w->cam, speed);
+				_camera_move_right(cam, speed);
 		}
 
 		//Wheel
 		{
-			camera_zoom(w->cam, i.wheel_dir);
+			_camera_zoom(cam, i.wheel_dir);
 		}
 	}
 
@@ -103,30 +103,12 @@ namespace app
 	}
 
 	void
-	painter_update(Painter app, int window_width, int window_height)
-	{
-		_input_act(app->i, app->w);
-		input_mouse_update(app->i);
-		camera_viewport(app->w->cam, math::vec2f{(float)window_width, (float)window_height});
-	}
-
-	void
 	_painter_update(Painter app, int window_width, int window_height)
 	{
-		_input_act(app->i, app->w);
+		auto& cam = ecs::world_components_data<world::_Camera>(app->ecs_w).front().data;
+		__input_act(app->i, cam);
 		input_mouse_update(app->i);
-
-		auto& cams = ecs::world_components_data<world::_Camera>(app->ecs_w);
-		if(cams[0].deleted == false)
-			world::_camera_viewport(cams[0].data, math::vec2f{ (float)window_width, (float)window_height });
-	}
-
-	void
-	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
-	{
-		engine_world_draw(app->e, app->w, palette);
-		engine_imgui_draw(app->e, app->i, palette, width, height);
-		win::window_swap(palette);
+		world::_camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
 	}
 
 	void

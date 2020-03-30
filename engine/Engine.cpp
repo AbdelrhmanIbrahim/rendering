@@ -85,47 +85,6 @@ namespace rndr
 	}
 
 	void
-	engine_world_draw(Engine e, const World* w, void* win)
-	{
-		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
-		glgpu::context_attach(e->ctx, win);
-
-		//render scene
-		{
-			//enable tests and clear color and depth buffers (refactor later)
-			glgpu::frame_start();
-
-			//pack meshes to draw
-			for (const auto& mesh : w->meshes)
-			{
-				phong_pack(e->phong, &mesh);
-				//pbr_pack(e->pbr, &mesh);
-				//phong_shadow_pack(e->phong_shadow, &mesh);
-			}
-
-			//flush renderers
-			{
-				phong_draw(e->phong, w->cam);
-				//pbr_draw(e->pbr, w->cam);
-				//phong_shadow_draw(e->phong_shadow, math::vec3f{0,30,0}, w->cam);
-			}
-
-			//unpack meshes
-			{
-				phong_unpack(e->phong);
-				//pbr_unpack(e->pbr);
-				//phong_shadow_unpack(e->phong_shadow);
-			}
-
-			//skybox
-			{
-				//skybox_renderer_draw(e->skybox, w->cam);
-			}
-		}
-
-	}
-
-	void
 	_engine_world_draw(Engine e, ecs::World& w, void* win)
 	{
 		//attach current glcontext to palette, make sure that palette handle got the default pixel format first

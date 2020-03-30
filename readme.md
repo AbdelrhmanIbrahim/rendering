@@ -21,6 +21,7 @@
 - get QT in ✔
 - blend QT windowing with out painter ✔
 - add ECS ✔
+- get he rest of renderers back to use ECS
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

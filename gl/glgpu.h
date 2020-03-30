@@ -1,6 +1,7 @@
 #pragma once
 
-#include "geometry/Vertex.h"
+#include "world/components/Vertex.h"
+
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
@@ -33,7 +34,7 @@ namespace glgpu
 	program_delete(Program prog);
 
 	Buffer
-	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count);
+	buffer_vertex_create(const world::Vertex vertices[], std::size_t count);
 
 	Buffer
 	buffer_index_create(unsigned int indices[], std::size_t count);

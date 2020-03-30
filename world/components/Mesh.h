@@ -4,16 +4,16 @@
 
 #include "io/STL_Reader.h"
 
-#include "geometry/Vertex.h"
-
 #include "gl/glgpu.h"
+
+#include "world/components/Vertex.h"
 
 namespace world
 {
 	struct _Mesh
 	{
 		//cpu
-		std::vector<geo::Vertex> vertices;
+		std::vector<world::Vertex> vertices;
 		std::vector<unsigned int> indices;
 
 		//gpu

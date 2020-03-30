@@ -50,7 +50,6 @@ set(HEADERS
 	engine/renderers/Phong_Shadow.h
 	engine/renderers/PBR.h
 	engine/renderers/Skybox.h
-	geometry/Vertex.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -68,6 +67,7 @@ set(HEADERS
 	window/Window.h
 	world/components/Transform.h
 	world/components/Camera.h
+	world/components/Vertex.h
 	world/components/Mesh.h
 	world/ECS_World.h
 	defs/Defs.h

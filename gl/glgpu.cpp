@@ -10,7 +10,7 @@
 
 using namespace io;
 using namespace math;
-using namespace geo;
+using namespace world;
 
 namespace glgpu
 {
@@ -388,7 +388,7 @@ namespace glgpu
 	}
 
 	Buffer
-	buffer_vertex_create(const geo::Vertex vertices[], std::size_t count)
+	buffer_vertex_create(const world::Vertex vertices[], std::size_t count)
 	{
 		IGL_Handle* self = new IGL_Handle{};
 		self->kind = IGL_Handle::KIND::KIND_BUFFER;
@@ -396,7 +396,7 @@ namespace glgpu
 
 		glGenBuffers(1, &self->buffer.id);
 		glBindBuffer(GL_ARRAY_BUFFER, self->buffer.id);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(geo::Vertex), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(world::Vertex), vertices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, NULL);
 		return self;
 	}
@@ -462,15 +462,15 @@ namespace glgpu
 
 		//pos
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(world::Vertex), (void*)0);
 
 		//normal
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(world::Vertex), (void*)(3 * sizeof(float)));
 
 		//uv
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(world::Vertex), (void*)(6 * sizeof(float)));
 		glBindVertexArray(NULL);
 
 		return self;
@@ -488,15 +488,15 @@ namespace glgpu
 
 		//pos
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(world::Vertex), (void*)0);
 
 		//normal
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(world::Vertex), (void*)(3 * sizeof(float)));
 
 		//uv
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(geo::Vertex), (void*)(6 * sizeof(float)));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(world::Vertex), (void*)(6 * sizeof(float)));
 
 		//indexs
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);

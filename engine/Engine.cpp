@@ -1,5 +1,9 @@
 #include "Engine.h"
 
+#include "world/components/Camera.h"
+#include "world/components/Mesh.h"
+#include "world/components/Transform.h"
+
 #include "world/World.h"
 #include "world/Camera.h"
 
@@ -7,7 +11,6 @@
 #include "engine/renderers/PBR.h"
 #include "engine/renderers/Skybox.h"
 #include "engine/renderers/Phong_Shadow.h"
-
 
 #include "math/Vector.h"
 
@@ -120,6 +123,27 @@ namespace rndr
 			}
 		}
 
+	}
+
+	void
+	_engine_world_draw(Engine e, ecs::World& w, void* win)
+	{
+		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
+		glgpu::context_attach(e->ctx, win);
+
+		//render scene
+		{
+			//enable tests and clear color and depth buffers (refactor later)
+			glgpu::frame_start();
+			auto& cam = ecs::world_components_data<world::_Camera>(w);
+			auto& meshes = ecs::world_components_data<world::_Mesh>(w);
+			auto& transforms = ecs::world_components_data<world::_Transform>(w);
+			for (int i = 0; i < meshes.size(); ++i)
+			{
+				if (meshes[i].deleted == false)
+					_phong_draw(e->phong, cam[0].data, meshes[i].data, transforms[i].data);
+			}
+		}
 	}
 
 	void

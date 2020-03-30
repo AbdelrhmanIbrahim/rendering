@@ -1,5 +1,7 @@
 #pragma once
 
+#include "world/ECS_World.h"
+
 //for imgui, revisit later
 #include "io/Input.h"
 
@@ -20,6 +22,9 @@ namespace rndr
 
 	void
 	engine_world_draw(Engine e, const world::World* w, void* win);
+
+	void
+	_engine_world_draw(Engine e, ecs::World& w, void* win);
 
 	void
 	engine_imgui_draw(Engine e, const io::Input& app_i, void* win, unsigned int width, unsigned int height);

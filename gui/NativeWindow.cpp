@@ -101,8 +101,8 @@ namespace gui
             e.mouse_move.x = event->pos().x();
             e.mouse_move.y = event->pos().y();
             app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::_painter_update(picasso, width(), height());
+            app::_painter_paint(picasso, (void*)winId(), width(), height());
         }
 
         QWindow::mouseMoveEvent(event);
@@ -122,8 +122,8 @@ namespace gui
             e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
 
             app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::_painter_update(picasso, width(), height());
+            app::_painter_paint(picasso, (void*)winId(), width(), height());
 
             return;
         }
@@ -145,8 +145,8 @@ namespace gui
             e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
 
             app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::_painter_update(picasso, width(), height());
+            app::_painter_paint(picasso, (void*)winId(), width(), height());
 
             return;
         }
@@ -165,8 +165,8 @@ namespace gui
             e.window_resize.height = event->size().height();
 
             app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::_painter_update(picasso, width(), height());
+            app::_painter_paint(picasso, (void*)winId(), width(), height());
             return;
         }
 

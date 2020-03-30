@@ -10,6 +10,7 @@
 #include "world/World.h"
 #include "engine/Engine.h"
 
+#include "world/components/Camera.h"
 #include "world/ECS_World.h"
 
 using namespace world;
@@ -110,9 +111,28 @@ namespace app
 	}
 
 	void
+	_painter_update(Painter app, int window_width, int window_height)
+	{
+		_input_act(app->i, app->w);
+		input_mouse_update(app->i);
+
+		auto& cams = ecs::world_components_data<world::_Camera>(app->ecs_w);
+		if(cams[0].deleted == false)
+			world::_camera_viewport(cams[0].data, math::vec2f{ (float)window_width, (float)window_height });
+	}
+
+	void
 	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
 		engine_world_draw(app->e, app->w, palette);
+		engine_imgui_draw(app->e, app->i, palette, width, height);
+		win::window_swap(palette);
+	}
+
+	void
+	_painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
+	{
+		_engine_world_draw(app->e, app->ecs_w, palette);
 		engine_imgui_draw(app->e, app->i, palette, width, height);
 		win::window_swap(palette);
 	}

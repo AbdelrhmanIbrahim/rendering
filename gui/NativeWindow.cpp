@@ -157,7 +157,7 @@ namespace gui
     void
     NativeWindow::resizeEvent(QResizeEvent* event)
     {
-        if (picasso)
+        if (picasso && isVisible())
         {
             io::Event e{};
             e.kind = io::Event::KIND::KIND_WINDOW_RESIZE;

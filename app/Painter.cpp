@@ -146,7 +146,7 @@ namespace app
 	void
 	_painter_update(Painter app, int window_width, int window_height)
 	{
-		auto& cam = ecs::world_components_data<world::Camera>(app->ecs_w).front().data;
+		world::Camera& cam = ecs::world_components_data<world::Camera>(app->ecs_w).front().data;
 		__input_act(app->i, cam);
 		input_mouse_update(app->i);
 		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });

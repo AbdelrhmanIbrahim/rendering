@@ -15,5 +15,5 @@ namespace rndr
 	phong_free(Phong self);
 
 	void
-	_phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& transform);
+	phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model);
 };

@@ -68,7 +68,7 @@ namespace rndr
 	}
 
 	void
-	_phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model)
+	phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);

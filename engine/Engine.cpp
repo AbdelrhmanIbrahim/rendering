@@ -30,8 +30,8 @@ namespace rndr
 
 		//renderers
 		Phong phong;
-		//PBR pbr;
-		//Skybox skybox;
+		PBR pbr;
+		Skybox skybox;
 		//Phong_Shadow phong_shadow;
 	};
 
@@ -49,8 +49,8 @@ namespace rndr
 
 		//renderers
 		self->phong = phong_create();
-		//self->pbr = pbr_create();
-		//self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		self->pbr = pbr_create();
+		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		//self->phong_shadow = phong_shadow_create();
 
 		//skybox
@@ -72,8 +72,8 @@ namespace rndr
 	engine_free(Engine e)
 	{
 		phong_free(e->phong);
-		//pbr_free(e->pbr);
-		//skybox_renderer_free(e->skybox);
+		pbr_free(e->pbr);
+		skybox_renderer_free(e->skybox);
 		//phong_shadow_free(e->phong_shadow);
 
 		glgpu::context_free(e->ctx);
@@ -82,23 +82,26 @@ namespace rndr
 	}
 
 	void
-	_engine_world_draw(Engine e, ecs::World& w, void* win)
+	engine_world_draw(Engine e, ecs::World& w, void* win)
 	{
 		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
 		glgpu::context_attach(e->ctx, win);
 
+		//get data for drawing
+		auto& cam = ecs::world_components_data<world::Camera>(w);
+		auto& meshes = ecs::world_components_data<world::Mesh>(w);
+		auto& transforms = ecs::world_components_data<world::Transform>(w);
+
 		//render scene
 		{
-			//enable tests and clear color and depth buffers (refactor later)
 			glgpu::frame_start();
-			auto& cam = ecs::world_components_data<world::Camera>(w);
-			auto& meshes = ecs::world_components_data<world::Mesh>(w);
-			auto& transforms = ecs::world_components_data<world::Transform>(w);
 			for (int i = 0; i < meshes.size(); ++i)
 			{
 				if (meshes[i].deleted == false)
-					_phong_draw(e->phong, cam[0].data, meshes[i].data, transforms[i].data);
+					pbr_draw(e->pbr, cam[0].data, meshes[i].data, transforms[i].data);
 			}
+
+			skybox_renderer_draw(e->skybox, cam[0].data);
 		}
 	}
 

@@ -155,7 +155,7 @@ namespace app
 	void
 	_painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
-		_engine_world_draw(app->e, app->ecs_w, palette);
+		engine_world_draw(app->e, app->ecs_w, palette);
 		engine_imgui_draw(app->e, app->i, palette, width, height);
 		win::window_swap(palette);
 	}

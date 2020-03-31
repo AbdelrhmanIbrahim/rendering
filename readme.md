@@ -22,7 +22,7 @@
 - blend QT windowing with out painter ✔
 - add ECS ✔
 - fix crash at closing ✔
-- get the rest of renderers back to use ECS
+- get the rest of renderers back to use ECS ✔
 - start in real time rendering book
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally

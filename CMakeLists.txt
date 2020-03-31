@@ -69,7 +69,6 @@ set(HEADERS
 	world/components/Camera.h
 	world/components/Vertex.h
 	world/components/Mesh.h
-	world/ECS_World.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h
@@ -99,7 +98,6 @@ set(SOURCES
 	io/Image.cpp
 	io/STL_Reader.cpp
 	window/window.cpp
-	world/ECS_World.cpp
 	imgui/imgui.cpp
 	imgui/imgui_demo.cpp
 	imgui/imgui_draw.cpp

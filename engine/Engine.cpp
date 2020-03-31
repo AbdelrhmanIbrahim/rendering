@@ -91,9 +91,9 @@ namespace rndr
 		{
 			//enable tests and clear color and depth buffers (refactor later)
 			glgpu::frame_start();
-			auto& cam = ecs::world_components_data<world::_Camera>(w);
-			auto& meshes = ecs::world_components_data<world::_Mesh>(w);
-			auto& transforms = ecs::world_components_data<world::_Transform>(w);
+			auto& cam = ecs::world_components_data<world::Camera>(w);
+			auto& meshes = ecs::world_components_data<world::Mesh>(w);
+			auto& transforms = ecs::world_components_data<world::Transform>(w);
 			for (int i = 0; i < meshes.size(); ++i)
 			{
 				if (meshes[i].deleted == false)

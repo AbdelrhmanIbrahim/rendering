@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world/ECS_World.h"
+#include "ecs/World.h"
 
 //for imgui, revisit later
 #include "io/Input.h"
@@ -19,9 +19,6 @@ namespace rndr
 
 	void
 	engine_free(Engine e);
-
-	void
-	engine_world_draw(Engine e, const world::World* w, void* win);
 
 	void
 	_engine_world_draw(Engine e, ecs::World& w, void* win);

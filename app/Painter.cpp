@@ -9,11 +9,14 @@
 
 #include "engine/Engine.h"
 
+#include "ecs/World.h"
+#include "world/components/Transform.h"
+#include "world/components/Mesh.h"
 #include "world/components/Camera.h"
-#include "world/ECS_World.h"
 
 using namespace world;
 using namespace rndr;
+using namespace ecs;
 using namespace io;
 
 namespace app
@@ -35,31 +38,70 @@ namespace app
 
 	//internal helpers
 	void
-	__input_act(const Input& i, world::_Camera& cam)
+	__input_act(const Input& i, world::Camera& cam)
 	{
 		//Mouse move
 		{
 			math::vec2f mouse_dir{ input_mouse_delta(i) };
 			if (mouse_dir != math::vec2f{})
-				_camera_rotate(cam, mouse_dir);
+				camera_rotate(cam, mouse_dir);
 		}
 
 		//Keyboard
 		{
 			constexpr float speed = 0.005f * 2.0f;
 			if (i.keyboard[(int)io::KEYBOARD::W] == true)
-				_camera_move_forward(cam, speed);
+				camera_move_forward(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::S] == true)
-				_camera_move_backward(cam, speed);
+				camera_move_backward(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::A] == true)
-				_camera_move_left(cam, speed);
+				camera_move_left(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::D] == true)
-				_camera_move_right(cam, speed);
+				camera_move_right(cam, speed);
 		}
 
 		//Wheel
 		{
-			_camera_zoom(cam, i.wheel_dir);
+			camera_zoom(cam, i.wheel_dir);
+		}
+	}
+
+	void
+	_world_init_testing_scene(ecs::World& w)
+	{
+		//testing
+		{
+			//cam
+			{
+				auto e = world_entity_new(w);
+				auto handle_c = world_component_add<world::Camera>(w, e);
+				auto data_c = world_handle_component<world::Camera>(w, handle_c);
+				*data_c = camera_new();
+			}
+
+			//sphere 1
+			{
+				auto e = world_entity_new(w);
+				auto handle_m = world_component_add<world::Mesh>(w, e);
+				auto data_m = world_handle_component<world::Mesh>(w, handle_m);
+				*data_m = world::mesh_create(DIR_PATH"/res/stls/sphere.stl");
+
+				auto handle_t = world_component_add<world::Transform>(w, e);
+				auto data_t = world_handle_component<world::Transform>(w, handle_t);
+				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ -2,1,-20 } };
+			}
+
+			//sphere 2
+			{
+				auto e = world_entity_new(w);
+				auto handle_m = world_component_add<world::Mesh>(w, e);
+				auto data_m = world_handle_component<world::Mesh>(w, handle_m);
+				*data_m = world::mesh_create(DIR_PATH"/res/stls/sphere.stl");
+
+				auto handle_t = world_component_add<world::Transform>(w, e);
+				auto data_t = world_handle_component<world::Transform>(w, handle_t);
+				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ 2,1,1 } };
+			}
 		}
 	}
 
@@ -83,7 +125,8 @@ namespace app
 		app->e = engine_create();
 
 		//init testing ecs world
-		app->ecs_w = world::_world_create();
+		app->ecs_w = ecs::world_new();
+		_world_init_testing_scene(app->ecs_w);
 
 		return app;
 	}
@@ -103,10 +146,10 @@ namespace app
 	void
 	_painter_update(Painter app, int window_width, int window_height)
 	{
-		auto& cam = ecs::world_components_data<world::_Camera>(app->ecs_w).front().data;
+		auto& cam = ecs::world_components_data<world::Camera>(app->ecs_w).front().data;
 		__input_act(app->i, cam);
 		input_mouse_update(app->i);
-		world::_camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
+		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
 	}
 
 	void
@@ -127,8 +170,7 @@ namespace app
 	painter_free(Painter app)
 	{
 		engine_free(app->e);
-
-		_world_free(app->ecs_w);
+		ecs::world_free(app->ecs_w);
 
 		delete app;
 	}

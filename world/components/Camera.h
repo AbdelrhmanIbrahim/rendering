@@ -8,7 +8,7 @@
 
 namespace world
 {
-	struct _Camera
+	struct Camera
 	{
 		//view
 		math::vec3f pos, fwd, right, up;
@@ -21,10 +21,10 @@ namespace world
 		float fov_tan;
 	};
 
-	inline _Camera
-	_camera_new()
+	inline Camera
+	camera_new()
 	{
-		_Camera self{};
+		Camera self{};
 		self.pos = math::vec3f{ 0, 0, 5 };
 		self.fwd = math::vec3f{ 0,0,-1 };
 		self.right = math::vec3f{ 1,0,0 };
@@ -42,7 +42,7 @@ namespace world
 	}
 
 	inline static void
-	_camera_viewport(_Camera& self, const math::vec2f& viewport)
+	camera_viewport(Camera& self, const math::vec2f& viewport)
 	{
 		self.l = -viewport[0] / 2;
 		self.r = viewport[0] + self.l;
@@ -51,13 +51,13 @@ namespace world
 	}
 
 	inline static math::Mat4f
-		_camera_view_matrix(const _Camera& self)
+	camera_view_matrix(const Camera& self)
 	{
 		return math::view_matrix(self.fwd, self.right, self.up, self.pos);
 	}
 
 	inline static math::Mat4f
-		_camera_lookat(_Camera& self, const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
+	camera_lookat(Camera& self, const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
 	{
 		self.pos = eye;
 		self.fwd = math::normalize(target - eye);
@@ -67,25 +67,25 @@ namespace world
 	}
 
 	inline static math::Mat4f
-		_camera_proj_matrix(const _Camera& self)
+	camera_proj_matrix(const Camera& self)
 	{
 		return math::proj_prespective_matrix(self.f, self.n, self.r, self.l, self.t, self.b, self.fov_tan);
 	}
 
 	inline static math::Mat4f
-		_camera_view_proj(const _Camera& self)
+	camera_view_proj(const Camera& self)
 	{
-		return _camera_proj_matrix(self) * _camera_view_matrix(self);
+		return camera_proj_matrix(self) * camera_view_matrix(self);
 	}
 
 	inline static math::vec2f
-		_camera_viewport(const _Camera& self)
+	camera_viewport(const Camera& self)
 	{
 		return math::vec2f{ self.r - self.l, self.t - self.b };
 	}
 
 	inline static void
-		_camera_rotate(_Camera& self, const math::vec2f& mouse_delta)
+	camera_rotate(Camera& self, const math::vec2f& mouse_delta)
 	{
 		//test with lookat
 		float hangle = -to_radian(mouse_delta[0]) / 10.0f;
@@ -100,31 +100,31 @@ namespace world
 	}
 
 	inline static void
-		_camera_move_forward(_Camera& self, float delta)
+	camera_move_forward(Camera& self, float delta)
 	{
 		self.pos += self.fwd * delta;
 	}
 
 	inline static void
-		_camera_move_backward(_Camera& self, float delta)
+	camera_move_backward(Camera& self, float delta)
 	{
 		self.pos -= self.fwd * delta;
 	}
 
 	inline static void
-		_camera_move_right(_Camera& self, float delta)
+	camera_move_right(Camera& self, float delta)
 	{
 		self.pos += self.right * delta;
 	}
 
 	inline static void
-		_camera_move_left(_Camera& self, float delta)
+	camera_move_left(Camera& self, float delta)
 	{
 		self.pos -= self.right * delta;
 	}
 
 	inline static void
-		_camera_zoom(_Camera& self, int scroll_offset)
+	camera_zoom(Camera& self, int scroll_offset)
 	{
 		if (scroll_offset > 0)
 			self.fov -= 0.05f;

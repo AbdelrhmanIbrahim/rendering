@@ -10,7 +10,7 @@
 
 namespace world
 {
-	struct _Mesh
+	struct Mesh
 	{
 		//cpu
 		std::vector<world::Vertex> vertices;
@@ -21,10 +21,10 @@ namespace world
 		glgpu::Buffer vs, is;
 	};
 
-	inline static world::_Mesh
-		_mesh_create(const char* stl_path)
+	inline static world::Mesh
+	mesh_create(const char* stl_path)
 	{
-		world::_Mesh self{};
+		world::Mesh self{};
 
 		//cpu
 		io::Indexed_Triangles tris = io::stl_binary_read(stl_path);
@@ -40,7 +40,7 @@ namespace world
 	}
 
 	inline static void
-		_mesh_delete(const world::_Mesh& mesh)
+	mesh_delete(const world::Mesh& mesh)
 	{
 		buffer_delete(mesh.vs);
 		buffer_delete(mesh.is);

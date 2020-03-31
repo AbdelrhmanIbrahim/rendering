@@ -2,11 +2,11 @@
 
 #include <vector>
 
+#include "world/components/Vertex.h"
+
 #include "io/STL_Reader.h"
 
 #include "gl/glgpu.h"
-
-#include "world/components/Vertex.h"
 
 namespace world
 {
@@ -19,6 +19,14 @@ namespace world
 		//gpu
 		glgpu::Vao va;
 		glgpu::Buffer vs, is;
+
+		void
+		free()
+		{
+			glgpu::buffer_delete(vs);
+			glgpu::buffer_delete(is);
+			glgpu::vao_delete(va);
+		}
 	};
 
 	inline static world::Mesh
@@ -37,13 +45,5 @@ namespace world
 		self.va = vao_create(self.vs, self.is);
 
 		return self;
-	}
-
-	inline static void
-	mesh_delete(const world::Mesh& mesh)
-	{
-		buffer_delete(mesh.vs);
-		buffer_delete(mesh.is);
-		vao_delete(mesh.va);
 	}
 };

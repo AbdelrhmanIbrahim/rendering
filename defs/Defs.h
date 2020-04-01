@@ -67,6 +67,12 @@ enum class TARGET
 	CUBEMAP,
 };
 
+enum class Rendering
+{
+	PHONG,
+	PBR
+};
+
 //remove later
 struct Unifrom_Float
 {

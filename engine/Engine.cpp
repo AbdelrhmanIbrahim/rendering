@@ -15,9 +15,10 @@
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_opengl3.h"
 
-//(refactor later --revisit--)
 #include "gl/glgpu.h"
 #include "gl/gl_context.h"
+
+#include "defs/Defs.h"
 
 using namespace world;
 
@@ -28,6 +29,9 @@ namespace rndr
 		//glContext
 		glgpu::Context ctx;
 
+		//rendering mode
+		Rendering style;
+
 		//renderers
 		Phong phong;
 		PBR pbr;
@@ -35,6 +39,28 @@ namespace rndr
 		//Phong_Shadow phong_shadow;
 	};
 
+	//Internal helpers
+	void
+	_pbr_draw(PBR pbr, const Camera& cam, const std::vector<ecs::Component<Mesh>>& meshes, const std::vector<ecs::Component<Transform>>& transforms)
+	{
+		for (int i = 0; i < meshes.size(); ++i)
+		{
+			if (meshes[i].deleted == false)
+				pbr_draw(pbr, cam, meshes[i].data, transforms[i].data);
+		}
+	}
+
+	void
+	_phong_draw(Phong phong, const Camera& cam, const std::vector<ecs::Component<Mesh>>& meshes, const std::vector<ecs::Component<Transform>>& transforms)
+	{
+		for (int i = 0; i < meshes.size(); ++i)
+		{
+			if (meshes[i].deleted == false)
+				phong_draw(phong, cam, meshes[i].data, transforms[i].data);
+		}
+	}
+
+	//API
 	Engine
 	engine_create()
 	{
@@ -43,9 +69,8 @@ namespace rndr
 		//glcontext
 		self->ctx = glgpu::context_create(4, 0);
 
-		//imgui
-		ImGui::CreateContext();
-		ImGui_ImplOpenGL3_Init("#version 400");
+		//init rendering style
+		self->style = Rendering::PBR;
 
 		//renderers
 		self->phong = phong_create();
@@ -53,17 +78,9 @@ namespace rndr
 		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		//self->phong_shadow = phong_shadow_create();
 
-		//skybox
-		/*static const char* skybox_paths[6]
-		{
-			"../res/imgs/skybox/sky/right.jpg",
-			"../res/imgs/skybox/sky/left.jpg",
-			"../res/imgs/skybox/sky/bottom.jpg",
-			"../res/imgs/skybox/sky/top.jpg",
-			"../res/imgs/skybox/sky/front.jpg",
-			"../res/imgs/skybox/sky/back.jpg"
-		};
-		self->skybox = skybox_renderer_rgba_create(skybox_paths, io::IMAGE_FORMAT::JPG);*/
+		//imgui
+		ImGui::CreateContext();
+		ImGui_ImplOpenGL3_Init("#version 400");
 
 		return self;
 	}
@@ -82,31 +99,45 @@ namespace rndr
 	}
 
 	void
+	engine_rendering_style(Engine e, Rendering mode)
+	{
+		e->style = mode;
+	}
+
+	void
 	engine_world_draw(Engine e, ecs::World& w, void* win)
 	{
 		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
 		glgpu::context_attach(e->ctx, win);
 
 		//get data for drawing
-		auto& cam = ecs::world_components_data<world::Camera>(w);
+		auto& cam = ecs::world_components_data<world::Camera>(w)[0].data;
 		auto& meshes = ecs::world_components_data<world::Mesh>(w);
 		auto& transforms = ecs::world_components_data<world::Transform>(w);
 
 		//render scene
 		{
+			//start the frame
 			glgpu::frame_start();
-			for (int i = 0; i < meshes.size(); ++i)
-			{
-				if (meshes[i].deleted == false)
-					pbr_draw(e->pbr, cam[0].data, meshes[i].data, transforms[i].data);
-			}
 
-			skybox_renderer_draw(e->skybox, cam[0].data);
+			//render according to the style
+			switch (e->style)
+			{
+			case Rendering::PHONG:
+				_phong_draw(e->phong, cam, meshes, transforms);
+				break;
+			case Rendering::PBR:
+				_pbr_draw(e->pbr, cam, meshes, transforms);
+				break;
+			default:
+				break;
+			}
+			skybox_renderer_draw(e->skybox, cam);
 		}
 	}
 
 	void
-	engine_imgui_draw(Engine e, const io::Input& app_i, void* win, unsigned int width, unsigned int height)
+	engine_imgui_draw(Engine e, math::vec2f mouse_pos, bool mouse[3], void* win, unsigned int width, unsigned int height)
 	{
 		//imgui newframes
 		ImGui_ImplWin32_Init(win);
@@ -118,12 +149,11 @@ namespace rndr
 		ImGuiIO& imgui_io = ImGui::GetIO();
 		imgui_io.DisplaySize.x = width;
 		imgui_io.DisplaySize.y = height;
-		imgui_io.MousePos.x = app_i.mouse_x;
-		imgui_io.MousePos.y = app_i.mouse_y;
-		imgui_io.MouseClicked[0] = app_i.mouse[0];
-		imgui_io.MouseClicked[1] = app_i.mouse[1];
-		imgui_io.MouseClicked[2] = app_i.mouse[2];
-
+		imgui_io.MousePos.x = mouse_pos[0];
+		imgui_io.MousePos.y = mouse_pos[1];
+		imgui_io.MouseClicked[0] = mouse[0];
+		imgui_io.MouseClicked[1] = mouse[1];
+		imgui_io.MouseClicked[2] = mouse[2];
 		//push to imgui cmds
 		ImGui::ShowDemoWindow();
 

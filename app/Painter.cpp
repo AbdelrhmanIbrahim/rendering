@@ -24,21 +24,19 @@ namespace app
 	struct IPainter
 	{
 		//input state
-		io::Input i;
+		io::Input input;
 
 		//rendering engine and world
-		rndr::Engine e;
-		world::World* w;
+		rndr::Engine engine;
+		ecs::World world;
 
-		ecs::World ecs_w;
-
-		//check if app is running or not
-		bool is_running;
+		//rendering mode
+		Rendering style;
 	};
 
-	//internal helpers
+	//Internal helpers
 	void
-	__input_act(const Input& i, world::Camera& cam)
+	_input_act(const Input& i, world::Camera& cam)
 	{
 		//Mouse move
 		{
@@ -111,66 +109,57 @@ namespace app
 	{
 		IPainter* app = new IPainter;
 
-		//app window
-		app->is_running = true;
-
 		//input init state
-		app->i = Input{};
-		app->i.mouse_x = WIN_WIDTH / 2;
-		app->i.mouse_y = WIN_HEIGHT / 2;
-		app->i.pmouse_x = WIN_WIDTH / 2;
-		app->i.pmouse_y = WIN_HEIGHT / 2;
+		app->input = Input{};
+		app->input.mouse_x = WIN_WIDTH / 2;
+		app->input.mouse_y = WIN_HEIGHT / 2;
+		app->input.pmouse_x = WIN_WIDTH / 2;
+		app->input.pmouse_y = WIN_HEIGHT / 2;
 
 		//init rendering engine and world
-		app->e = engine_create();
+		app->engine = engine_create();
 
 		//init testing ecs world
-		app->ecs_w = ecs::world_new();
-		_world_init_testing_scene(app->ecs_w);
+		app->world = ecs::world_new();
+		_world_init_testing_scene(app->world);
 
 		return app;
 	}
 
 	void
+	painter_style(Painter app, Rendering mode)
+	{
+		engine_rendering_style(app->engine, mode);
+	}
+
+	void
 	painter_input(Painter app, Event event)
 	{
-		if (event.kind == Event::KIND::KIND_WINDOW_CLOSE)
-		{
-			app->is_running = false;
-			return;
-		}
-
-		input_process_event(app->i, event);
+		input_process_event(app->input, event);
 	}
 
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		world::Camera& cam = ecs::world_components_data<world::Camera>(app->ecs_w).front().data;
-		__input_act(app->i, cam);
-		input_mouse_update(app->i);
+		world::Camera& cam = ecs::world_components_data<world::Camera>(app->world).front().data;
+		_input_act(app->input, cam);
+		input_mouse_update(app->input);
 		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
 	}
 
 	void
 	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
-		engine_world_draw(app->e, app->ecs_w, palette);
-		engine_imgui_draw(app->e, app->i, palette, width, height);
+		engine_world_draw(app->engine, app->world, palette);
+		engine_imgui_draw(app->engine, math::vec2f{ (float)app->input.mouse_x, (float)app->input.mouse_y}, app->input.mouse, palette, width, height);
 		win::window_swap(palette);
-	}
-
-	bool
-	painter_drawing(Painter app)
-	{
-		return app->is_running;
 	}
 
 	void
 	painter_free(Painter app)
 	{
-		engine_free(app->e);
-		ecs::world_free(app->ecs_w);
+		engine_free(app->engine);
+		ecs::world_free(app->world);
 
 		delete app;
 	}

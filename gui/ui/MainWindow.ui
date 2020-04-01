@@ -40,7 +40,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QToolButton" name="toolButton_pbr">
+         <widget class="QToolButton" name="toolButtonPhong">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -59,7 +59,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_phong">
+         <widget class="QToolButton" name="toolButtonPBR">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -120,5 +120,42 @@
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>toolButtonPhong</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>phong_render_mode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>407</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>652</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonPBR</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbr_render_mode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>400</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>651</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>phong_render_mode()</slot>
+  <slot>pbr_render_mode()</slot>
+ </slots>
 </ui>

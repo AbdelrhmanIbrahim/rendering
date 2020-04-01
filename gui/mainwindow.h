@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QAction>
 
 #include "app/Painter.h"
 
@@ -20,6 +21,10 @@ namespace gui
     public:
         MainWindow(QWidget* parent = nullptr);
         ~MainWindow();
+
+    private slots:
+        void phong_render_mode();
+        void pbr_render_mode();
 
     private:
         Ui::MainWindow* ui;

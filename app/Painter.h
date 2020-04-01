@@ -2,12 +2,17 @@
 
 #include "io/Event.h"
 
+#include "defs/Defs.h"
+
 namespace app
 {
 	typedef struct IPainter* Painter;
 
 	Painter
 	painter_new();
+
+	void
+	painter_style(Painter app, Rendering mode);
 
 	void
 	painter_input(Painter app, io::Event event);
@@ -17,9 +22,6 @@ namespace app
 
 	void
 	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height);
-
-	bool
-	painter_drawing(Painter app);
 
 	void
 	painter_free(Painter app);

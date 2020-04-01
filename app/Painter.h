@@ -14,6 +14,9 @@ namespace app
 	void
 	painter_style(Painter app, Rendering mode);
 
+	bool
+	painter_stl_load(Painter app, const char* path);
+
 	void
 	painter_input(Painter app, io::Event event);
 

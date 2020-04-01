@@ -132,6 +132,27 @@ namespace app
 		engine_rendering_style(app->engine, mode);
 	}
 
+	bool
+	painter_stl_load(Painter app, const char* path)
+	{
+		//create entity
+		auto stl = world_entity_new(app->world);
+
+		//add mesh comp
+		auto handle_m = world_component_add<world::Mesh>(app->world, stl);
+		auto data_m = world_handle_component<world::Mesh>(app->world, handle_m);
+		*data_m = world::mesh_create(path);
+		if (data_m->vertices.empty())
+			return false;
+
+		//add transform component
+		auto handle_t = world_component_add<world::Transform>(app->world, stl);
+		auto data_t = world_handle_component<world::Transform>(app->world, handle_t);
+		*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{0,0,-1}};
+
+		return true;
+	}
+
 	void
 	painter_input(Painter app, Event event)
 	{

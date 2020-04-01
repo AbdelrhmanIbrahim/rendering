@@ -23,6 +23,7 @@ namespace gui
         ~MainWindow();
 
     private slots:
+        bool stl_load();
         void phong_render_mode();
         void pbr_render_mode();
 

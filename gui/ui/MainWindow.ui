@@ -172,8 +172,8 @@
    <slot>pbr_render_mode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>400</x>
-     <y>101</y>
+     <x>433</x>
+     <y>157</y>
     </hint>
     <hint type="destinationlabel">
      <x>651</x>
@@ -181,9 +181,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_stl_load</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>stl_load()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>phong_render_mode()</slot>
   <slot>pbr_render_mode()</slot>
+  <slot>stl_load()</slot>
  </slots>
 </ui>

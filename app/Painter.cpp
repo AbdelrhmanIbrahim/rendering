@@ -144,7 +144,7 @@ namespace app
 	}
 
 	void
-	_painter_update(Painter app, int window_width, int window_height)
+	painter_update(Painter app, int window_width, int window_height)
 	{
 		world::Camera& cam = ecs::world_components_data<world::Camera>(app->ecs_w).front().data;
 		__input_act(app->i, cam);
@@ -153,7 +153,7 @@ namespace app
 	}
 
 	void
-	_painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
+	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
 		engine_world_draw(app->e, app->ecs_w, palette);
 		engine_imgui_draw(app->e, app->i, palette, width, height);

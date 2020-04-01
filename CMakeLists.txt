@@ -12,11 +12,11 @@ set(UI_FILES
 	)
 set(UI_HEADERS
 	gui/MainWindow.h
-	gui/NativeWindow.h
+	gui/Palette.h
 	)
 set(UI_SOURCES
 	gui/MainWindow.cpp
-	gui/NativeWindow.cpp
+	gui/Palette.cpp
 	)
 
 #resources

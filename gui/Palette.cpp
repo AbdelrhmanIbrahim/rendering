@@ -1,4 +1,4 @@
-#include "NativeWindow.h"
+#include "Palette.h"
 
 #include <qevent.h>
 #include <qnamespace.h>
@@ -72,7 +72,7 @@ namespace gui
         return e;
     }
 
-    NativeWindow::NativeWindow(QWindow* parent) :
+    Palette::Palette(QWindow* parent) :
     picasso(nullptr)
     {
         //prepare window pixel format and vsync
@@ -92,7 +92,7 @@ namespace gui
     }
 
     void
-    NativeWindow::mouseMoveEvent(QMouseEvent* event)
+    Palette::mouseMoveEvent(QMouseEvent* event)
     {
         if (geometry().contains(event->pos()))
         {
@@ -101,15 +101,15 @@ namespace gui
             e.mouse_move.x = event->pos().x();
             e.mouse_move.y = event->pos().y();
             app::painter_input(picasso, e);
-            app::_painter_update(picasso, width(), height());
-            app::_painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
         }
 
         QWindow::mouseMoveEvent(event);
     }
 
     void
-    NativeWindow::keyPressEvent(QKeyEvent* event)
+    Palette::keyPressEvent(QKeyEvent* event)
     {
         if ((event)->key() == Qt::Key::Key_W ||
             (event)->key() == Qt::Key::Key_A ||
@@ -122,8 +122,8 @@ namespace gui
             e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
 
             app::painter_input(picasso, e);
-            app::_painter_update(picasso, width(), height());
-            app::_painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
 
             return;
         }
@@ -132,7 +132,7 @@ namespace gui
     }
 
     void
-    NativeWindow::keyReleaseEvent(QKeyEvent* event)
+    Palette::keyReleaseEvent(QKeyEvent* event)
     {
         if ((event)->key() == Qt::Key::Key_W ||
             (event)->key() == Qt::Key::Key_A ||
@@ -145,8 +145,8 @@ namespace gui
             e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
 
             app::painter_input(picasso, e);
-            app::_painter_update(picasso, width(), height());
-            app::_painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
 
             return;
         }
@@ -155,7 +155,7 @@ namespace gui
     }
 
     void
-    NativeWindow::resizeEvent(QResizeEvent* event)
+    Palette::resizeEvent(QResizeEvent* event)
     {
         if (picasso && isVisible())
         {
@@ -165,15 +165,15 @@ namespace gui
             e.window_resize.height = event->size().height();
 
             app::painter_input(picasso, e);
-            app::_painter_update(picasso, width(), height());
-            app::_painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_update(picasso, width(), height());
+            app::painter_paint(picasso, (void*)winId(), width(), height());
             return;
         }
 
         QWindow::resizeEvent(event);
     }
 
-    NativeWindow::~NativeWindow()
+    Palette::~Palette()
     {
         app::painter_free(picasso);
     }

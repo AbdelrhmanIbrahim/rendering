@@ -1,0 +1,6 @@
+<RCC version="5.14.1">
+	<qresource>
+	    <file>icons/phong.png</file>
+	    <file>icons/pbr.png</file>
+	</qresource>
+</RCC>

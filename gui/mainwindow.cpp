@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <QResource>
+
 #include "defs/Defs.h"
 
 namespace gui
@@ -13,6 +15,7 @@ namespace gui
 	{
 		ui->setupUi(this);
 		ui->horizontalLayout->addWidget(QWidget::createWindowContainer(&palette, this));
+		//QResource::registerResource("ui.rcc");
 	}
 
 	void

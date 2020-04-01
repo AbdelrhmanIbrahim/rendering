@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(UI_FILES
 	gui/ui/MainWindow.ui
 	)
+set(UI_RESOURCES
+	gui/ui/ui.qrc
+	)
 set(UI_HEADERS
 	gui/MainWindow.h
 	gui/Palette.h
@@ -132,12 +135,16 @@ qt5_wrap_ui(QT5_WRAPPED_UIS ${UI_FILES})
 #wrap headers for moc
 qt5_wrap_cpp(QT5_WRAPPED_MOCS ${UI_HEADERS})
 
+#wrap resources for qrc 
+qt5_add_resources(QT5_RCC_SOURCES ${UI_RESOURCES})
+
 add_executable(${PROJECT_NAME}
 				${HEADERS}
 				${SOURCES}
 				${RESOURCES}
 				${QT5_WRAPPED_UIS}
 				${QT5_WRAPPED_MOCS}
+				${QT5_RCC_SOURCES}
 				)
 
 #link to external packages

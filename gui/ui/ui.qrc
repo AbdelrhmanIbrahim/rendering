@@ -1,4 +1,5 @@
-<RCC version="5.14.1">
+<!DOCTYPE RCC>
+<RCC prefix="/ui">
 	<qresource>
 	    <file>icons/phong.png</file>
 	    <file>icons/pbr.png</file>

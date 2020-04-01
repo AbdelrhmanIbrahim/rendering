@@ -30,50 +30,8 @@ namespace gui
         }
     }
 
-    io::Event
-    _transform_qt_event(QEvent* event)
-    {
-        io::Event e{};
-        e.kind = io::Event::KIND::KIND_DUMMY;
-        switch (event->type())
-        {
-            //app will crash on exit as there's no closeevent virtual fn in QWindow yet, find a workaround
-            case QEvent::Resize:
-            {
-                e.kind = io::Event::KIND::KIND_WINDOW_RESIZE;
-                e.window_resize.width = ((QResizeEvent*)event)->size().width();
-                e.window_resize.height = ((QResizeEvent*)event)->size().height();
-                break;
-            }
-            case QEvent::MouseMove:
-            {
-                e.kind = io::Event::KIND::KIND_MOUSE_MOVE;
-                e.mouse_move.x = ((QMouseEvent*)event)->pos().x();
-                e.mouse_move.y = ((QMouseEvent*)event)->pos().y();
-                break;
-            }
-            case QEvent::KeyPress:
-            {
-                e.kind = io::Event::KIND::KIND_KEYBOARD_KEY;
-                e.keyboard_key.s = io::KEY_STATE::DOWN;
-                e.keyboard_key.k = _map_keyboard_key((Qt::Key)((QKeyEvent*)event)->key());
-                break;
-            }
-            case QEvent::KeyRelease:
-            {
-                e.kind = io::Event::KIND::KIND_KEYBOARD_KEY;
-                e.keyboard_key.s = io::KEY_STATE::UP;
-                e.keyboard_key.k = _map_keyboard_key((Qt::Key)((QKeyEvent*)event)->key());
-                break;
-            }
-            default:
-                break;
-        }
-        return e;
-    }
-
-    Palette::Palette(QWindow* parent) :
-    picasso(nullptr)
+    Palette::Palette(app::Painter p, QWindow* parent) :
+    painter(p)
     {
         //prepare window pixel format and vsync
         setSurfaceType(QWindow::OpenGLSurface);
@@ -86,9 +44,17 @@ namespace gui
         Qt::WindowFlags flag;
         flag.setFlag(Qt::WindowType::FramelessWindowHint);
         setFlags(flag);
+    }
 
-        //painter
-        picasso = app::painter_new();
+    void
+    Palette::painter_replace(app::Painter p)
+    {
+        painter = p;
+    }
+
+    Palette::~Palette()
+    {
+
     }
 
     void
@@ -100,9 +66,9 @@ namespace gui
             e.kind = io::Event::KIND::KIND_MOUSE_MOVE;
             e.mouse_move.x = event->pos().x();
             e.mouse_move.y = event->pos().y();
-            app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_input(painter, e);
+            app::painter_update(painter, width(), height());
+            app::painter_paint(painter, (void*)winId(), width(), height());
         }
 
         QWindow::mouseMoveEvent(event);
@@ -121,9 +87,9 @@ namespace gui
             e.keyboard_key.s = io::KEY_STATE::DOWN;
             e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
 
-            app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_input(painter, e);
+            app::painter_update(painter, width(), height());
+            app::painter_paint(painter, (void*)winId(), width(), height());
 
             return;
         }
@@ -144,9 +110,9 @@ namespace gui
             e.keyboard_key.s = io::KEY_STATE::UP;
             e.keyboard_key.k = _map_keyboard_key((Qt::Key)(event)->key());
 
-            app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_input(painter, e);
+            app::painter_update(painter, width(), height());
+            app::painter_paint(painter, (void*)winId(), width(), height());
 
             return;
         }
@@ -157,24 +123,19 @@ namespace gui
     void
     Palette::resizeEvent(QResizeEvent* event)
     {
-        if (picasso && isVisible())
+        if (painter && isVisible())
         {
             io::Event e{};
             e.kind = io::Event::KIND::KIND_WINDOW_RESIZE;
             e.window_resize.width = event->size().width();
             e.window_resize.height = event->size().height();
 
-            app::painter_input(picasso, e);
-            app::painter_update(picasso, width(), height());
-            app::painter_paint(picasso, (void*)winId(), width(), height());
+            app::painter_input(painter, e);
+            app::painter_update(painter, width(), height());
+            app::painter_paint(painter, (void*)winId(), width(), height());
             return;
         }
 
         QWindow::resizeEvent(event);
-    }
-
-    Palette::~Palette()
-    {
-        app::painter_free(picasso);
     }
 };

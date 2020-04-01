@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "app/Painter.h"
+
 #include "Palette.h"
 
 namespace Ui {
@@ -21,7 +23,8 @@ namespace gui
 
     private:
         Ui::MainWindow* ui;
-        gui::Palette scene;
+        app::Painter picasso;
+        gui::Palette palette;
     };
 };
 

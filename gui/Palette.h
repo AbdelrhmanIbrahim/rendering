@@ -10,14 +10,17 @@ namespace gui
         Q_OBJECT
 
     public:
-        explicit Palette(QWindow* parent = nullptr);
+        explicit Palette(app::Painter painter, QWindow* parent = nullptr);
+        void painter_replace(app::Painter p);
         ~Palette();
+
+    protected:
         void mouseMoveEvent(QMouseEvent* event) override;
         void keyPressEvent(QKeyEvent* event) override;
         void keyReleaseEvent(QKeyEvent* event) override;
         void resizeEvent(QResizeEvent* event) override;
- 
+
     private:
-        app::Painter picasso;
+        app::Painter painter;
     };
 };

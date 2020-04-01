@@ -49,7 +49,7 @@ namespace app
 
 		//Keyboard
 		{
-			constexpr float speed = 0.005f * 2.0f;
+			constexpr float speed = 0.05f * 2.0f;
 			if (i.keyboard[(int)io::KEYBOARD::W] == true)
 				camera_move_forward(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::S] == true)

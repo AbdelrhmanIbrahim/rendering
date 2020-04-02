@@ -27,10 +27,11 @@ namespace gui
 
 		bool result = app::painter_stl_load(picasso, path.toStdString().c_str());
 		if (result == false)
-		{
 			QMessageBox::warning(nullptr, QString("Can't load STL"), QString("file is corrupted."), QMessageBox::StandardButton::Ok);
-			return false;
-		}
+		else
+			palette.requestUpdate();
+		
+		return result;
 	}
 
 	void

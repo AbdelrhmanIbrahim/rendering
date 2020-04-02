@@ -6,6 +6,8 @@
 #include "window/Window.h"
 #include "io/Event.h"
 
+#include <fmt/printf.h>
+
 namespace gui
 {
     inline static io::KEYBOARD
@@ -84,6 +86,7 @@ namespace gui
             e.kind = io::Event::KIND::KIND_MOUSE_MOVE;
             e.mouse_move.x = event->pos().x();
             e.mouse_move.y = event->pos().y();
+
             app::painter_input(painter, e);
             app::painter_update(painter, width(), height());
             app::painter_paint(painter, (void*)winId(), width(), height());
@@ -155,5 +158,19 @@ namespace gui
         }
 
         QWindow::resizeEvent(event);
+    }
+
+    void
+    Palette::wheelEvent(QWheelEvent* event)
+    {
+        io::Event e{};
+        e.kind = io::Event::KIND::KIND_MOUSE_WHEEL;
+        e.mouse_wheel.dir = event->delta();
+
+        app::painter_input(painter, e);
+        app::painter_update(painter, width(), height());
+        app::painter_paint(painter, (void*)winId(), width(), height());
+
+        QWindow::wheelEvent(event);
     }
 };

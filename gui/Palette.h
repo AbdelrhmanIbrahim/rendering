@@ -16,10 +16,11 @@ namespace gui
 
     protected:
         bool event(QEvent* e) override;
-        void mouseMoveEvent(QMouseEvent* event) override;
-        void keyPressEvent(QKeyEvent* event) override;
-        void keyReleaseEvent(QKeyEvent* event) override;
-        void resizeEvent(QResizeEvent* event) override;
+        void mouseMoveEvent(QMouseEvent* e) override;
+        void keyPressEvent(QKeyEvent* e) override;
+        void keyReleaseEvent(QKeyEvent* e) override;
+        void resizeEvent(QResizeEvent* e) override;
+        void wheelEvent(QWheelEvent* e) override;
 
     private:
         app::Painter painter;

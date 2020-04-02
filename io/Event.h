@@ -163,7 +163,7 @@ namespace io
 
 			struct
 			{
-				short dir;
+				int dir;
 			} mouse_wheel;
 
 			struct

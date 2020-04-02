@@ -37,12 +37,14 @@ namespace gui
 	MainWindow::phong_render_mode()
 	{
 		app::painter_style(picasso, Rendering::PHONG);
+		palette.requestUpdate();
 	}
 
 	void
 	MainWindow::pbr_render_mode()
 	{
 		app::painter_style(picasso, Rendering::PBR);
+		palette.requestUpdate();
 	}
 
 	MainWindow::~MainWindow()

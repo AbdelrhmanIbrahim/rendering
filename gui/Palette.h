@@ -15,6 +15,7 @@ namespace gui
         ~Palette();
 
     protected:
+        bool event(QEvent* e) override;
         void mouseMoveEvent(QMouseEvent* event) override;
         void keyPressEvent(QKeyEvent* event) override;
         void keyReleaseEvent(QKeyEvent* event) override;

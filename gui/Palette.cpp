@@ -33,14 +33,14 @@ namespace gui
     Palette::Palette(app::Painter p, QWindow* parent) :
     painter(p)
     {
-        //prepare window pixel format and vsync
-        setSurfaceType(QWindow::OpenGLSurface);
-        win::window_pixel_format_set((void*)winId());
-
-        //frameless
+        //frameless and glsurface
         Qt::WindowFlags flag;
         flag.setFlag(Qt::WindowType::FramelessWindowHint);
         setFlags(flag);
+        setSurfaceType(QWindow::OpenGLSurface);
+
+        //compatible pixel format -revisit-
+        win::window_pixel_format_set((void*)winId());
     }
 
     void
@@ -52,6 +52,24 @@ namespace gui
     Palette::~Palette()
     {
 
+    }
+ 
+    bool
+    Palette::event(QEvent* e)
+    {
+        switch (e->type() )
+        {
+            case QEvent::UpdateRequest:
+            {
+                app::painter_update(painter, width(), height());
+                app::painter_paint(painter, (void*)winId(), width(), height());
+                return true;
+            }
+            default:
+                break;
+        }
+
+        return QWindow::event(e);
     }
 
     void

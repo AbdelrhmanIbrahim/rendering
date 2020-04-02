@@ -8,12 +8,12 @@ namespace io
 	{
 		switch (event.kind)
 		{
-		case Event::KIND::KIND_MOUSE_MOVE:
-		{
-			input.mouse_x = event.mouse_move.x;
-			input.mouse_y = event.mouse_move.y;
-			break;
-		}
+			case Event::KIND::KIND_MOUSE_MOVE:
+			{
+				input.mouse_x = event.mouse_move.x;
+				input.mouse_y = event.mouse_move.y;
+				break;
+			}
 
 			case Event::KIND::KIND_KEYBOARD_KEY:
 			{

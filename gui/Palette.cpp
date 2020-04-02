@@ -36,9 +36,6 @@ namespace gui
         //prepare window pixel format and vsync
         setSurfaceType(QWindow::OpenGLSurface);
         win::window_pixel_format_set((void*)winId());
-        QSurfaceFormat fmt;
-        fmt.setSwapInterval(0);
-        setFormat(fmt);
 
         //frameless
         Qt::WindowFlags flag;
@@ -62,6 +59,9 @@ namespace gui
     {
         if (geometry().contains(event->pos()))
         {
+            //recieve keyboard focus
+            requestActivate();
+
             io::Event e{};
             e.kind = io::Event::KIND::KIND_MOUSE_MOVE;
             e.mouse_move.x = event->pos().x();

@@ -7,10 +7,10 @@
 namespace math
 {
 	/* 
-	Xx Yx Zx 0 
-	Xy Yy Zy 0
-	Xz Yz Zz 0
-	Tx Ty Tz 1
+	Xx Yx Zx Tx 
+	Xy Yy Zy Ty
+	Xz Yz Zz Tz
+	0  0  0  1
 	*/
 	struct Mat4f
 	{

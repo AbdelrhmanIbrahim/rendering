@@ -66,6 +66,7 @@ set(HEADERS
 	math/Vector.h
 	math/Matrix.h
 	math/Quaternion.h
+	math/Euler_Angles.h
 	math/Gfx.h
 	window/Window.h
 	world/components/Transform.h

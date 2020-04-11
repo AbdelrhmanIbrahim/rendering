@@ -54,7 +54,8 @@ namespace math
 		float y = quat.y;
 		float z = quat.z;
 
-		return Mat4f{
+		return Mat4f
+		{
 			1 - 2 * y * y - 2 * z * z,
 			2 * x * y - 2 * z * w,
 			2 * x * z + 2 * y * w,
@@ -73,6 +74,7 @@ namespace math
 			0,
 			0,
 			0,
-			1 };
+			1 
+		};
 	}
 };

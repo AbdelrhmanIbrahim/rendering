@@ -87,16 +87,10 @@ namespace world
 	inline static void
 	camera_rotate(Camera& self, const math::vec2f& mouse_delta)
 	{
-		//test with lookat
-		float hangle = -to_radian(mouse_delta[0]) / 10.0f;
-		float vangle = to_radian(mouse_delta[1]) / 10.0f;
-		math::Quat quath = math::quat_from_axis(self.up, hangle);
-		self.fwd = quath * self.fwd;
-		self.right = quath * self.right;
-
-		math::Quat quatv = math::quat_from_axis(self.right, vangle);
-		self.fwd = quatv * self.fwd;
-		self.up = quatv * self.up;
+		math::vec3f fwd = math::quat_from_axis(self.right, to_radian(mouse_delta[1]) / 10.0f) *
+						  math::quat_from_axis(self.up, -to_radian(mouse_delta[0]) / 10.0f) *
+						  self.fwd;
+		camera_lookat(self, self.pos, self.pos + fwd, math::vec3f{ 0,1,0 });
 	}
 
 	inline static void

@@ -49,7 +49,7 @@ namespace rndr
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				pbr_draw(pbr, cam, meshes[i].data, transforms[i].data);
+				pbr_draw(pbr, &cam, &meshes[i].data, &transforms[i].data);
 		}
 	}
 
@@ -156,7 +156,7 @@ namespace rndr
 			default:
 				break;
 			}
-			skybox_renderer_draw(e->skybox, cam);
+			skybox_renderer_draw(e->skybox, &cam);
 		}
 	}
 

@@ -1,8 +1,11 @@
 #pragma once
 
-#include "world/components/Camera.h"
-#include "world/components/Mesh.h"
-#include "world/components/Transform.h"
+namespace world
+{
+	struct Camera;
+	struct Mesh;
+	struct Transform;
+};
 
 namespace rndr
 {
@@ -15,5 +18,5 @@ namespace rndr
 	pbr_free(PBR self);
 
 	void
-	pbr_draw(const PBR self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model);
+	pbr_draw(const PBR self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model);
 };

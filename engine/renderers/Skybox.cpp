@@ -4,6 +4,7 @@
 #include "math/Gfx.h"
 
 #include "world/components/Vertex.h"
+#include "world/components/Camera.h"
 
 #include "gl/glgpu.h"
 
@@ -140,7 +141,7 @@ namespace rndr
 	}
 
 	void
-	skybox_renderer_draw(const Skybox self, const Camera& cam)
+	skybox_renderer_draw(const Skybox self, const Camera* cam)
 	{
 		depth_test(DEPTH_TEST::LE);
 		{
@@ -148,11 +149,11 @@ namespace rndr
 
 			//Uniform blocks
 			buffer_uniform_bind(0, self->uniform_space);
-			Space_Uniform mvp{ camera_view_matrix(cam), camera_proj_matrix(cam)};
+			Space_Uniform mvp{ camera_view_matrix(*cam), camera_proj_matrix(*cam)};
 			buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 
 			//viewport
-			vec2f viewport = camera_viewport(cam);
+			vec2f viewport = camera_viewport(*cam);
 			view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 			//cubemap, till we get sampler objects in

@@ -2,7 +2,10 @@
 
 #include "IO/Image.h"
 
-#include "world/components/Camera.h"
+namespace world
+{
+	struct Camera;
+};
 
 namespace rndr
 {
@@ -18,5 +21,5 @@ namespace rndr
 	skybox_renderer_free(Skybox self);
 
 	void
-	skybox_renderer_draw(const Skybox self, const world::Camera& cam);
+	skybox_renderer_draw(const Skybox self, const world::Camera* cam);
 };

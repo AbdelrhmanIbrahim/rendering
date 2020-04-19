@@ -5,8 +5,11 @@
 
 #include "gl/glgpu.h"
 
-#include <vector>
 #include <corecrt_math.h>
+
+#include "world/components/Camera.h"
+#include "world/components/Mesh.h"
+#include "world/components/Transform.h"
 
 using namespace glgpu;
 using namespace math;
@@ -142,13 +145,13 @@ namespace rndr
 	}
 
 	void
-	pbr_draw(const PBR self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model)
+	pbr_draw(const PBR self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
 
 		//viewport
-		vec2f viewport = world::camera_viewport(camera);
+		vec2f viewport = world::camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 		//uniform blocks
@@ -167,20 +170,20 @@ namespace rndr
 		sampler_bind(self->sampler_specular_BRDF, 2);
 
 		//uniform blocks
-		Space_Uniform mvp{ mat4_from_transform(model), camera_view_proj(camera) };
+		Space_Uniform mvp{ mat4_from_transform(*model), camera_view_proj(*camera) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		vec4f color_test{ 0.75f, 0.75f, 0.75f, 1.0f };
 		buffer_uniform_set(self->uniform_object_color, &color_test, sizeof(color_test));
 		Light_Uniform light{ vec4f{ 1.0f, 1.0f, 1.0f,1.0f }, vec4f{ 0.0f, -1.0f, 0.0f, 0.0f } };
 		buffer_uniform_set(self->uniform_light, &light, sizeof(light));
-		Camera_Uniform cam{ camera.pos[0], camera.pos[1], camera.pos[2], 0.0f };
+		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 		Material_Uniform mat{ 0.9, 0.2, {} };
 		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
 
 		//draw geometry
-		vao_bind(mesh.va);
-		draw_indexed(mesh.indices.size());
+		vao_bind(mesh->va);
+		draw_indexed(mesh->indices.size());
 		vao_unbind();
 	}
 }

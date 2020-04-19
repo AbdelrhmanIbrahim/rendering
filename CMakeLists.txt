@@ -40,6 +40,8 @@ set(RESOURCES
 	engine/shaders/quad_ndc.vertex
 	engine/shaders/skybox.vertex
 	engine/shaders/skybox.pixel
+	engine/shaders/colored.vertex
+	engine/shaders/colored.pixel
 	readme.md
 
 	${UI_FILES}
@@ -52,6 +54,7 @@ set(HEADERS
 	engine/renderers/Phong.h
 	engine/renderers/Phong_Shadow.h
 	engine/renderers/PBR.h
+	engine/renderers/Colored.h
 	engine/renderers/Skybox.h
 	gl/glgpu.h
 	gl/gl_context.h
@@ -73,6 +76,7 @@ set(HEADERS
 	world/components/Camera.h
 	world/components/Vertex.h
 	world/components/Mesh.h
+	world/components/Material.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h
@@ -94,6 +98,7 @@ set(SOURCES
 	engine/renderers/Phong.cpp
 	engine/renderers/Phong_Shadow.cpp
 	engine/renderers/PBR.cpp
+	engine/renderers/Colored.cpp
 	engine/renderers/Skybox.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp

@@ -25,6 +25,7 @@ namespace gui
         bool stl_load();
         void phong_render_mode();
         void pbr_render_mode();
+        void colored_render_mode();
 
     private:
         Ui::MainWindow* ui;

@@ -4,5 +4,6 @@
 	    <file>icons/sun.png</file>
 	    <file>icons/phong.png</file>
 	    <file>icons/pbr.png</file>
+	    <file>icons/colored.png</file>
 	</qresource>
 </RCC>

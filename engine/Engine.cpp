@@ -9,6 +9,7 @@
 #include "engine/renderers/PBR.h"
 #include "engine/renderers/Skybox.h"
 #include "engine/renderers/Phong_Shadow.h"
+#include "engine/renderers/Colored.h"
 
 #include "math/Vector.h"
 
@@ -37,6 +38,7 @@ namespace rndr
 		Phong phong;
 		PBR pbr;
 		Skybox skybox;
+		Colored colored;
 		//Phong_Shadow phong_shadow;
 	};
 
@@ -60,7 +62,19 @@ namespace rndr
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				phong_draw(phong, cam, meshes[i].data, transforms[i].data, materials[i].data);
+				phong_draw(phong, &cam, &meshes[i].data, &transforms[i].data, &materials[i].data);
+		}
+	}
+
+	void
+	_colored_draw(Colored colored, const Camera& cam,
+			const std::vector<ecs::Component<Mesh>>& meshes,
+			const std::vector<ecs::Component<Transform>>& transforms)
+	{
+		for (int i = 0; i < meshes.size(); ++i)
+		{
+			if (meshes[i].deleted == false)
+				colored_draw(colored, &cam, &meshes[i].data, &transforms[i].data, math::vec4f{1,1,1,1});
 		}
 	}
 
@@ -80,6 +94,7 @@ namespace rndr
 		self->phong = phong_create();
 		self->pbr = pbr_create();
 		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		self->colored = colored_create();
 		//self->phong_shadow = phong_shadow_create();
 
 		//imgui
@@ -95,6 +110,7 @@ namespace rndr
 		phong_free(e->phong);
 		pbr_free(e->pbr);
 		skybox_renderer_free(e->skybox);
+		colored_free(e->colored);
 		//phong_shadow_free(e->phong_shadow);
 
 		glgpu::context_free(e->ctx);
@@ -133,6 +149,9 @@ namespace rndr
 				break;
 			case Rendering::PBR:
 				_pbr_draw(e->pbr, cam, meshes, transforms);
+				break;
+			case Rendering::COLORED:
+				_colored_draw(e->colored, cam, meshes, transforms);
 				break;
 			default:
 				break;

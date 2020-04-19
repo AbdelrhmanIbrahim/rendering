@@ -70,7 +70,8 @@ enum class TARGET
 enum class Rendering
 {
 	PHONG,
-	PBR
+	PBR,
+	COLORED
 };
 
 //remove later

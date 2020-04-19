@@ -1,9 +1,12 @@
 #pragma once
 
-#include "world/components/Camera.h"
-#include "world/components/Mesh.h"
-#include "world/components/Transform.h"
-#include "world/components/Material.h"
+namespace world
+{
+	struct Camera;
+	struct Mesh;
+	struct Transform;
+	struct Material;
+};
 
 namespace rndr
 {
@@ -16,5 +19,5 @@ namespace rndr
 	phong_free(Phong self);
 
 	void
-	phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model, const world::Material& material);
+	phong_draw(const Phong self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material);
 };

@@ -48,6 +48,13 @@ namespace gui
 		palette.requestUpdate();
 	}
 
+	void
+	MainWindow::colored_render_mode()
+	{
+		app::painter_style(picasso, Rendering::COLORED);
+		palette.requestUpdate();
+	}
+
 	MainWindow::~MainWindow()
 	{
 		delete ui;

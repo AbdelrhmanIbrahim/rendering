@@ -120,6 +120,41 @@
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="toolButtonColored">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>pbr</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(195, 195, 195, 255);</string>
+          </property>
+          <property name="text">
+           <string>pbr</string>
+          </property>
+          <property name="icon">
+           <iconset resource="ui.qrc">
+            <normaloff>:/icons/colored.png</normaloff>:/icons/colored.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -188,8 +223,8 @@
    <slot>pbr_render_mode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>433</x>
-     <y>157</y>
+     <x>418</x>
+     <y>154</y>
     </hint>
     <hint type="destinationlabel">
      <x>651</x>
@@ -213,10 +248,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>toolButtonColored</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>colored_render_mode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>640</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>phong_render_mode()</slot>
   <slot>pbr_render_mode()</slot>
+  <slot>colored_render_mode()</slot>
   <slot>stl_load()</slot>
  </slots>
 </ui>

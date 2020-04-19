@@ -1,0 +1,81 @@
+#include "Colored.h"
+
+#include "world/components/Camera.h"
+#include "world/components/Mesh.h"
+#include "world/components/Transform.h"
+
+#include "math/Matrix.h"
+
+#include "gl/glgpu.h"
+
+using namespace math;
+using namespace glgpu;
+
+namespace rndr
+{
+	struct IColored
+	{
+		glgpu::Program prog;
+		glgpu::Buffer uniform_object_color;
+		glgpu::Buffer uniform_space;
+	};
+
+	//Careful of std140 memory layout/alignment/offsets.prefer always to allocate chunks of 16 bytes.
+	//Always check renderdoc.
+	struct Space_Uniform
+	{
+		Mat4f mvp;
+	};
+
+	struct Camera_Uniform
+	{
+		vec4f camera_world_pos;
+	};
+
+	Colored
+	colored_create()
+	{
+		IColored *self = new IColored();
+
+		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
+		self->prog = program_create(DIR_PATH"/engine/shaders/colored.vertex", DIR_PATH"/engine/shaders/colored.pixel");
+		self->uniform_object_color = buffer_uniform_create(sizeof(vec4f));
+		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
+		return self;
+	}
+
+	void
+	colored_free(Colored self)
+	{
+		program_delete(self->prog);
+		buffer_delete(self->uniform_object_color);
+		buffer_delete(self->uniform_space);
+
+		delete self;
+	}
+
+	void
+	colored_draw(const Colored self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, math::vec4f& col)
+	{
+		color_clear(0.1f, 0.1f, 0.1f);
+		program_use(self->prog);
+
+		//viewport
+		vec2f viewport = world::camera_viewport(*camera);
+		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
+
+		//uniform block
+		buffer_uniform_bind(0, self->uniform_space);
+		buffer_uniform_bind(1, self->uniform_object_color);
+
+		//uniform blocks
+		Space_Uniform mvp{ camera_view_proj(*camera) * mat4_from_transform(*model) };
+		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
+		buffer_uniform_set(self->uniform_object_color, (void*)&col, sizeof(col));
+
+		//draw geometry
+		vao_bind(mesh->va);
+		draw_indexed(mesh->indices.size());
+		vao_unbind();
+	}
+};

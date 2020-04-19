@@ -9,7 +9,6 @@
 
 using namespace glgpu;
 using namespace math;
-using namespace world;
 
 namespace rndr
 {
@@ -68,7 +67,7 @@ namespace rndr
 	}
 
 	void
-	phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model)
+	phong_draw(const Phong self, const world::Camera& camera, const world::Mesh& mesh, const world::Transform& model, const world::Material& material)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
@@ -86,8 +85,7 @@ namespace rndr
 		//uniform blocks
 		Space_Uniform mvp{mat4_from_transform(model), camera_view_proj(camera) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
-		vec4f color_test{ 0.0, 0.5, 0.31, 1.0f };
-		buffer_uniform_set(self->uniform_object_color, &color_test, sizeof(color_test));
+		buffer_uniform_set(self->uniform_object_color, (void*)&material.color_norm, sizeof(material.color_norm));
 		Light_Uniform light{ vec4f{ 1.0f, 1.0f, 1.0f,1.0f }, vec4f{ 0.0f, -1.0f, 0.0f, 0.0f } };
 		buffer_uniform_set(self->uniform_light, &light, sizeof(light));
 		Camera_Uniform cam{ camera.pos[0], camera.pos[1], camera.pos[2], 0.0f };

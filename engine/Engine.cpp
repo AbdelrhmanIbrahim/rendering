@@ -3,6 +3,7 @@
 #include "world/components/Camera.h"
 #include "world/components/Mesh.h"
 #include "world/components/Transform.h"
+#include "world/components/Material.h"
 
 #include "engine/renderers/Phong.h"
 #include "engine/renderers/PBR.h"
@@ -51,12 +52,15 @@ namespace rndr
 	}
 
 	void
-	_phong_draw(Phong phong, const Camera& cam, const std::vector<ecs::Component<Mesh>>& meshes, const std::vector<ecs::Component<Transform>>& transforms)
+	_phong_draw(Phong phong, const Camera& cam, 
+				const std::vector<ecs::Component<Mesh>>& meshes, 
+				const std::vector<ecs::Component<Transform>>& transforms,
+				const std::vector<ecs::Component<Material>>& materials)
 	{
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				phong_draw(phong, cam, meshes[i].data, transforms[i].data);
+				phong_draw(phong, cam, meshes[i].data, transforms[i].data, materials[i].data);
 		}
 	}
 
@@ -114,6 +118,7 @@ namespace rndr
 		auto& cam = ecs::world_components_data<world::Camera>(w)[0].data;
 		auto& meshes = ecs::world_components_data<world::Mesh>(w);
 		auto& transforms = ecs::world_components_data<world::Transform>(w);
+		auto& materials = ecs::world_components_data<world::Material>(w);
 
 		//render scene
 		{
@@ -124,7 +129,7 @@ namespace rndr
 			switch (e->style)
 			{
 			case Rendering::PHONG:
-				_phong_draw(e->phong, cam, meshes, transforms);
+				_phong_draw(e->phong, cam, meshes, transforms, materials);
 				break;
 			case Rendering::PBR:
 				_pbr_draw(e->pbr, cam, meshes, transforms);

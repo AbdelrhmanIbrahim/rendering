@@ -25,6 +25,8 @@ layout (std140, binding = 3) uniform Camera
 void
 main()
 {
+	//interpolation in the setup triangle phase while rasterization not necasserly gives you a normal with mag = 1
+	vec3 surface_n = normalize(normal_world);
 	vec3 light_c = light_color.xyz;
 	vec3 light_d = light_dir.xyz;
 
@@ -33,11 +35,11 @@ main()
     vec3 ambient = ambient_strength * light_c;
 
 	//diffuse (interaction with light source)
-	vec3 diffuse = max(dot(normal_world, -light_d), 0.0f) * light_c;
+	vec3 diffuse = max(dot(surface_n, -light_d), 0.0f) * light_c;
 
 	//specular (shinning)
 	vec3 view_dir = normalize(camera_pos.xyz - frag_pos_world);
-	vec3 reflected_light = reflect(light_d, normal_world);
+	vec3 reflected_light = reflect(light_d, surface_n);
 	vec3 specular = 0.5f * pow(max(dot(view_dir, reflected_light), 0.0), 128) * light_c;
 
 	vec3 result = (ambient + diffuse + specular) * object_color.xyz;

@@ -3,45 +3,62 @@
 
 in vec3 frag_pos_world;
 in vec3 normal_world;
-
 out vec4 frag_color;
 
+//lights
+struct
+Directional_Light
+{
+	vec4 col;
+	vec4 dir;
+};
+
+struct
+Point_Light
+{
+	vec4 col;
+	vec4 pos;
+};
+
+//uniforms
 layout (std140, binding = 1) uniform Object_Color
 {
 	vec4 object_color;
 };
 
-layout (std140, binding = 2) uniform Light
-{
-	vec4 light_color;
-	vec4 light_dir;
-};
-
-layout (std140, binding = 3) uniform Camera
+layout (std140, binding = 2) uniform Camera
 {
 	vec4 camera_pos;
 };
 
-void
-main()
+layout (std140, binding = 3) uniform Lights
 {
-	//interpolation in the setup triangle phase while rasterization not necasserly gives you a normal with mag = 1
-	vec3 surface_n = normalize(normal_world);
-	vec3 light_c = light_color.xyz;
-	vec3 light_d = light_dir.xyz;
+	Directional_Light dl;
+	//Point_Light pl
+};
 
+vec3
+directional_light_calc(vec3 light_c, vec3 light_d, vec3 normal)
+{
 	//ambient (distrubuted light over the space)
 	float ambient_strength = 0.1f;
-    vec3 ambient = ambient_strength * light_c;
+	vec3 ambient = ambient_strength * light_c;
 
 	//diffuse (interaction with light source)
-	vec3 diffuse = max(dot(surface_n, -light_d), 0.0f) * light_c;
+	vec3 diffuse = max(dot(normal, -light_d), 0.0f) * light_c;
 
 	//specular (shinning)
 	vec3 view_dir = normalize(camera_pos.xyz - frag_pos_world);
-	vec3 reflected_light = reflect(light_d, surface_n);
+	vec3 reflected_light = reflect(light_d, normal);
 	vec3 specular = 0.5f * pow(max(dot(view_dir, reflected_light), 0.0), 128) * light_c;
 
-	vec3 result = (ambient + diffuse + specular) * object_color.xyz;
+	return ambient + diffuse + specular;
+}
+
+void
+main()
+{
+	//interpolation in the setup triangle phase while rasterization not necasserily gives you a normal with mag = 1
+	vec3 result = directional_light_calc(dl.col.xyz, dl.dir.xyz, normalize(normal_world)) * object_color.xyz;
 	frag_color = vec4(result, 1.0);
 }

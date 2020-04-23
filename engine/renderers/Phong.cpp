@@ -82,8 +82,8 @@ namespace rndr
 		//uniform block
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_object_color);
-		buffer_uniform_bind(2, self->uniform_light);
-		buffer_uniform_bind(3, self->uniform_camera);
+		buffer_uniform_bind(2, self->uniform_camera);
+		buffer_uniform_bind(3, self->uniform_light);
 
 		//uniform blocks
 		Space_Uniform mvp{mat4_from_transform(*model), camera_view_proj(*camera) };

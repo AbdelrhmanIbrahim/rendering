@@ -23,6 +23,8 @@
 - add ECS ✔
 - fix crash at closing ✔
 - get the rest of renderers back to use ECS ✔
+- SLERP
+- Shading basic algo (point light, spot light, MSAA, OIT and OD transparency like weighted average or depth peeling)
 - start in real time rendering book
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally

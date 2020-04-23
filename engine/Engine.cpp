@@ -92,8 +92,11 @@ namespace rndr
 
 		//renderers
 		self->phong = phong_create();
+
+		//crashes renderdoc -- revisit
 		self->pbr = pbr_create();
-		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+
+		//self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		self->colored = colored_create();
 		//self->phong_shadow = phong_shadow_create();
 
@@ -131,7 +134,7 @@ namespace rndr
 		glgpu::context_attach(e->ctx, win);
 
 		//get data for drawing
-		auto& cam = ecs::world_components_data<world::Camera>(w)[0].data;
+		auto& cam = ecs::world_components_data<world::Camera>(w).front().data;
 		auto& meshes = ecs::world_components_data<world::Mesh>(w);
 		auto& transforms = ecs::world_components_data<world::Transform>(w);
 		auto& materials = ecs::world_components_data<world::Material>(w);
@@ -156,7 +159,7 @@ namespace rndr
 			default:
 				break;
 			}
-			skybox_renderer_draw(e->skybox, &cam);
+			//skybox_renderer_draw(e->skybox, &cam);
 		}
 	}
 

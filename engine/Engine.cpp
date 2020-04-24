@@ -94,7 +94,7 @@ namespace rndr
 		self->phong = phong_create();
 
 		//crashes renderdoc -- revisit
-		//self->pbr = pbr_create();
+		self->pbr = pbr_create();
 
 		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		self->colored = colored_create();

@@ -5,12 +5,17 @@
 
 #include "gl/glgpu.h"
 
+#include "defs/Defs.h"
+
 #include "world/components/Camera.h"
 #include "world/components/Mesh.h"
 #include "world/components/Transform.h"
 #include "world/components/Material.h"
 #include "world/components/Sun.h"
 #include "world/components/Lamp.h"
+#include "world/components/Flash.h"
+
+#include <corecrt_math.h>
 
 using namespace glgpu;
 using namespace math;
@@ -24,6 +29,7 @@ namespace rndr
 		glgpu::Buffer uniform_space;
 		glgpu::Buffer uniform_suns;
 		glgpu::Buffer uniform_lamps;
+		glgpu::Buffer uniform_flashs;
 		glgpu::Buffer uniform_camera;
 	};
 
@@ -41,18 +47,28 @@ namespace rndr
 	};
 
 	constexpr int MAX_NUMBER_LIGHT = 10;
-	struct Sun_Uniform
+	struct
+	Sun_Uniform
 	{
 		int count;
 		int dummy[3];
 		world::Sun arr[MAX_NUMBER_LIGHT];
 	};
 
-	struct Lamp_Uniform
+	struct
+	Lamp_Uniform
 	{
 		int count;
 		int dummy[3];
 		world::Lamp arr[MAX_NUMBER_LIGHT];
+	};
+
+	struct
+	Flash_Uniform
+	{
+		int count;
+		int dummy[3];
+		world::Flash arr[MAX_NUMBER_LIGHT];
 	};
 
 	Phong
@@ -66,6 +82,7 @@ namespace rndr
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->uniform_suns = buffer_uniform_create(sizeof(Sun_Uniform));
 		self->uniform_lamps = buffer_uniform_create(sizeof(Lamp_Uniform));
+		self->uniform_flashs = buffer_uniform_create(sizeof(Flash_Uniform));
 		self->uniform_camera = buffer_uniform_create(sizeof(Camera_Uniform));
 		return self;
 	}
@@ -78,6 +95,7 @@ namespace rndr
 		buffer_delete(self->uniform_space);
 		buffer_delete(self->uniform_suns);
 		buffer_delete(self->uniform_lamps);
+		buffer_delete(self->uniform_flashs);
 		buffer_delete(self->uniform_camera);
 
 		delete self;
@@ -99,11 +117,13 @@ namespace rndr
 		buffer_uniform_bind(2, self->uniform_camera);
 		buffer_uniform_bind(3, self->uniform_suns);
 		buffer_uniform_bind(4, self->uniform_lamps);
+		buffer_uniform_bind(5, self->uniform_flashs);
 
 		//uniform blocks
 		Space_Uniform mvp{mat4_from_transform(*model), camera_view_proj(*camera) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
+
 		Sun_Uniform suns
 		{
 			0, {}, 
@@ -115,12 +135,22 @@ namespace rndr
 
 		Lamp_Uniform lamps
 		{
-			1, {},
+			0, {},
 			{
-				world::Lamp {{1.0f, 1.0f, 0.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, 5},
+				world::Lamp {{1.0f, 1.0f, 0.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, 10},
 			}
 		};
 		buffer_uniform_set(self->uniform_lamps, &lamps, sizeof(lamps));
+
+		Flash_Uniform flashes
+		{
+			1, {},
+			{
+				world::Flash {{1.0f, 1.0f, 0.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, {0, 0, -1, 0}, 10, (float)cos(to_radian(12)), (float)cos(to_radian(15))},
+			}
+		};
+		buffer_uniform_set(self->uniform_flashs, &flashes, sizeof(flashes));
+
 
 		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));

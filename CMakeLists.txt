@@ -79,6 +79,7 @@ set(HEADERS
 	world/components/Material.h
 	world/components/Sun.h
 	world/components/Lamp.h
+	world/components/Flash.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h

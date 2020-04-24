@@ -24,6 +24,17 @@ Lamp
 };
 
 struct
+Flash
+{
+	vec4 col;
+	vec4 pos;
+	vec4 dir;
+	float cutoff_dist;
+	float penumbera_cos; //cone angle
+	float umbera_cos; //cutoff angle
+};
+
+struct
 Suns
 {
 	int count;
@@ -36,6 +47,14 @@ Lamps
 	int count;
 	Lamp arr[MAX_LIGHT_NUMBER];
 };
+
+struct
+Flashes
+{
+	int count;
+	Flash arr[MAX_LIGHT_NUMBER];
+};
+
 
 //uniforms
 layout (std140, binding = 1) uniform Object_Color
@@ -58,14 +77,15 @@ layout (std140, binding = 4) uniform Point_Lights
 	Lamps lamps;
 };
 
-//calc ambient, diffuse and spec components
-vec3
-ads_calc(vec3 light_c, vec3 light_d, vec3 view_d, vec3 normal)
+layout (std140, binding = 5) uniform Spot_Lights
 {
-	//ambient (distrubuted light over the space)
-	float ambient_strength = 0.1f;
-	vec3 ambient = ambient_strength * light_c;
+	Flashes flashes;
+};
 
+//calc diffuse and spec components
+vec3
+ds_calc(vec3 light_c, vec3 light_d, vec3 view_d, vec3 normal)
+{
 	//diffuse (scatterd light according to the material)
 	vec3 diffuse = max(dot(normal, -light_d), 0.0f) * light_c;
 
@@ -73,7 +93,7 @@ ads_calc(vec3 light_c, vec3 light_d, vec3 view_d, vec3 normal)
 	vec3 reflected_light = reflect(light_d, normal);
 	vec3 specular = 0.5f * pow(max(dot(view_d, reflected_light), 0.0), 128) * light_c;
 
-	return ambient + diffuse + specular;
+	return diffuse + specular;
 };
 
 vec3
@@ -82,7 +102,7 @@ directional_light_calc(Sun sun, vec3 normal)
 	vec3 light_c = sun.col.xyz;
 	vec3 light_d = sun.dir.xyz;
 	vec3 view_d = normalize(camera_pos.xyz - frag_pos_world);
-	vec3 result = ads_calc(light_c, light_d, view_d, normal);
+	vec3 result = ds_calc(light_c, light_d, view_d, normal);
 
 	return result;
 }
@@ -92,9 +112,9 @@ point_light_calc(Lamp lamp, vec3 normal)
 {
 	vec3 light_c = lamp.col.xyz;
 	vec3 light_p = lamp.pos.xyz;
-	vec3 light_d = normalize(frag_pos_world- light_p);
+	vec3 light_d = normalize(frag_pos_world - light_p);
 	vec3 view_d = normalize(camera_pos.xyz - frag_pos_world);
-	vec3 result = ads_calc(light_c, light_d, view_d, normal);
+	vec3 result = ds_calc(light_c, light_d, view_d, normal);
 
 	//we use a similar cutoff smooth attenuatuion fn as in unreal engine
 	float d = length(frag_pos_world - light_p);
@@ -103,11 +123,32 @@ point_light_calc(Lamp lamp, vec3 normal)
 	return result * attenuation;
 }
 
+vec3
+spot_light_calc(Flash flash, vec3 normal)
+{
+	vec3 light_c = flash.col.xyz;
+	vec3 light_p = flash.pos.xyz;
+	vec3 light_d = normalize(frag_pos_world - light_p);
+	vec3 view_d = normalize(camera_pos.xyz - frag_pos_world);
+	vec3 result = ds_calc(light_c, light_d, view_d, normal);
+
+	//we use a similar cutoff smooth attenuatuion fn as in unreal engine
+	float d = length(frag_pos_world - light_p);
+	float attenuation = clamp(1 - pow((d/flash.cutoff_dist), 2) , 0, 1);
+
+	//intensity according to the angle
+	float theta_cos = dot(normalize(frag_pos_world - flash.pos.xyz), normalize(flash.dir.xyz));
+	float intensity = clamp((theta_cos - flash.umbera_cos) / (flash.penumbera_cos - flash.umbera_cos), 0, 1);
+
+	return result * attenuation * intensity;
+}
+
 //interpolation in the setup triangle phase while rasterization not necasserily gives you a normal with mag = 1
 void
 main()
 {
-	vec3 result = vec3(0);
+	//ambient (distrubuted light over the space)
+	vec3 result = vec3(0.1) * object_color.xyz;
 
 	//directional lights
 	for(int x = 0; x < suns.count; ++x)
@@ -116,6 +157,10 @@ main()
 	//point lights
 	for(int x = 0; x < lamps.count; ++x)
 		result += point_light_calc(lamps.arr[x], normalize(normal_world)) * object_color.xyz;
+
+	//spot lights
+	for(int x = 0; x < flashes.count; ++x)
+		result += spot_light_calc(flashes.arr[x], normalize(normal_world)) * object_color.xyz;
 
 	frag_color = vec4(result, 1.0);
 };

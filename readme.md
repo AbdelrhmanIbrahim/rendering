@@ -25,8 +25,14 @@
 - get the rest of renderers back to use ECS ✔
 - point light ✔
 - spot light ✔
+- add light entities
+- propagate different lights to pbr
 - point renderer
 - line renderer
+- render light source as shinny point with radius
+- virtual tiles ground
+- selection and picking
+- moving selected entities
 - slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
 - MSAA, OIT and OD transparency like weighted average or depth peeling
 - start in real time rendering book
@@ -45,7 +51,6 @@
 - view frustm culling
 - load textured models, check assimp impl
 - resources file format
-- selection and picking
 - terrian deformation
 - fluid/water/particle system simulation (*read Fluid Engine Development book*)
 - cloud rendering

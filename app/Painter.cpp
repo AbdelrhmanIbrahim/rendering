@@ -107,7 +107,7 @@ namespace app
 
 				auto handle_c = world_component_add<world::Material>(w, e);
 				auto data_c = world_handle_component<world::Material>(w, handle_t);
-				*data_c = world::Material{ math::vec4f{ 0.4, 0.5, 0.31, 1.0f  } };
+				*data_c = world::Material{ math::vec4f{ 0.0, 0.5, 0.31, 1.0f  } };
 			}
 		}
 	}

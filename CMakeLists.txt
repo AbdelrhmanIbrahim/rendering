@@ -77,6 +77,8 @@ set(HEADERS
 	world/components/Vertex.h
 	world/components/Mesh.h
 	world/components/Material.h
+	world/components/Sun.h
+	world/components/Lamp.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h

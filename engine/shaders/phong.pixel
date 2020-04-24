@@ -6,18 +6,35 @@ in vec3 normal_world;
 out vec4 frag_color;
 
 //lights
+const int MAX_LIGHT_NUMBER = 10;
+
 struct
-Directional_Light
+Sun
 {
 	vec4 col;
 	vec4 dir;
 };
 
 struct
-Point_Light
+Lamp
 {
 	vec4 col;
 	vec4 pos;
+	float max;
+};
+
+struct
+Suns
+{
+	int count;
+	Sun arr[MAX_LIGHT_NUMBER];
+};
+
+struct
+Lamps
+{
+	int count;
+	Lamp arr[MAX_LIGHT_NUMBER];
 };
 
 //uniforms
@@ -31,10 +48,14 @@ layout (std140, binding = 2) uniform Camera
 	vec4 camera_pos;
 };
 
-layout (std140, binding = 3) uniform Lights
+layout (std140, binding = 3) uniform Directional_Lights
 {
-	Directional_Light dl;
-	//Point_Light pl
+	Suns suns;
+};
+
+layout (std140, binding = 4) uniform Point_Lights
+{
+	Lamps lamps;
 };
 
 vec3
@@ -44,7 +65,7 @@ directional_light_calc(vec3 light_c, vec3 light_d, vec3 normal)
 	float ambient_strength = 0.1f;
 	vec3 ambient = ambient_strength * light_c;
 
-	//diffuse (interaction with light source)
+	//diffuse (scatterd light according to the material)
 	vec3 diffuse = max(dot(normal, -light_d), 0.0f) * light_c;
 
 	//specular (shinning)
@@ -58,7 +79,14 @@ directional_light_calc(vec3 light_c, vec3 light_d, vec3 normal)
 void
 main()
 {
-	//interpolation in the setup triangle phase while rasterization not necasserily gives you a normal with mag = 1
-	vec3 result = directional_light_calc(dl.col.xyz, dl.dir.xyz, normalize(normal_world)) * object_color.xyz;
+	vec3 result = vec3(0);
+
+	//directional lights
+	for(int x = 0; x < suns.count; ++x)
+	{
+		//interpolation in the setup triangle phase while rasterization not necasserily gives you a normal with mag = 1
+		result += directional_light_calc(suns.arr[x].col.xyz, suns.arr[x].dir.xyz, normalize(normal_world)) * object_color.xyz;
+	}
+
 	frag_color = vec4(result, 1.0);
 }

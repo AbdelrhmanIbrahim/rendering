@@ -20,7 +20,7 @@ Lamp
 {
 	vec4 col;
 	vec4 pos;
-	float max;
+	float cutoff_dist;
 };
 
 struct
@@ -58,8 +58,9 @@ layout (std140, binding = 4) uniform Point_Lights
 	Lamps lamps;
 };
 
+//calc ambient, diffuse and spec components
 vec3
-directional_light_calc(vec3 light_c, vec3 light_d, vec3 normal)
+ads_calc(vec3 light_c, vec3 light_d, vec3 view_d, vec3 normal)
 {
 	//ambient (distrubuted light over the space)
 	float ambient_strength = 0.1f;
@@ -69,13 +70,40 @@ directional_light_calc(vec3 light_c, vec3 light_d, vec3 normal)
 	vec3 diffuse = max(dot(normal, -light_d), 0.0f) * light_c;
 
 	//specular (shinning)
-	vec3 view_dir = normalize(camera_pos.xyz - frag_pos_world);
 	vec3 reflected_light = reflect(light_d, normal);
-	vec3 specular = 0.5f * pow(max(dot(view_dir, reflected_light), 0.0), 128) * light_c;
+	vec3 specular = 0.5f * pow(max(dot(view_d, reflected_light), 0.0), 128) * light_c;
 
 	return ambient + diffuse + specular;
+};
+
+vec3
+directional_light_calc(Sun sun, vec3 normal)
+{
+	vec3 light_c = sun.col.xyz;
+	vec3 light_d = sun.dir.xyz;
+	vec3 view_d = normalize(camera_pos.xyz - frag_pos_world);
+	vec3 result = ads_calc(light_c, light_d, view_d, normal);
+
+	return result;
 }
 
+vec3
+point_light_calc(Lamp lamp, vec3 normal)
+{
+	vec3 light_c = lamp.col.xyz;
+	vec3 light_p = lamp.pos.xyz;
+	vec3 light_d = normalize(frag_pos_world- light_p);
+	vec3 view_d = normalize(camera_pos.xyz - frag_pos_world);
+	vec3 result = ads_calc(light_c, light_d, view_d, normal);
+
+	//we use a similar cutoff smooth attenuatuion fn as in unreal engine
+	float d = length(frag_pos_world - light_p);
+	float attenuation = clamp(1 - pow((d/lamp.cutoff_dist), 2) , 0, 1);
+
+	return result * attenuation;
+}
+
+//interpolation in the setup triangle phase while rasterization not necasserily gives you a normal with mag = 1
 void
 main()
 {
@@ -83,10 +111,11 @@ main()
 
 	//directional lights
 	for(int x = 0; x < suns.count; ++x)
-	{
-		//interpolation in the setup triangle phase while rasterization not necasserily gives you a normal with mag = 1
-		result += directional_light_calc(suns.arr[x].col.xyz, suns.arr[x].dir.xyz, normalize(normal_world)) * object_color.xyz;
-	}
+		result += directional_light_calc(suns.arr[x], normalize(normal_world)) * object_color.xyz;
+
+	//point lights
+	for(int x = 0; x < lamps.count; ++x)
+		result += point_light_calc(lamps.arr[x], normalize(normal_world)) * object_color.xyz;
 
 	frag_color = vec4(result, 1.0);
-}
+};

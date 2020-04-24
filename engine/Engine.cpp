@@ -96,7 +96,7 @@ namespace rndr
 		//crashes renderdoc -- revisit
 		//self->pbr = pbr_create();
 
-		//self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		self->colored = colored_create();
 		//self->phong_shadow = phong_shadow_create();
 
@@ -159,7 +159,7 @@ namespace rndr
 			default:
 				break;
 			}
-			//skybox_renderer_draw(e->skybox, &cam);
+			skybox_renderer_draw(e->skybox, &cam);
 		}
 	}
 

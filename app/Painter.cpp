@@ -87,7 +87,7 @@ namespace app
 
 				auto handle_t = world_component_add<world::Transform>(w, e);
 				auto data_t = world_handle_component<world::Transform>(w, handle_t);
-				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ -2,1,-20 } };
+				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ -2,1,-4} };
 
 				auto handle_c = world_component_add<world::Material>(w, e);
 				auto data_c = world_handle_component<world::Material>(w, handle_t);

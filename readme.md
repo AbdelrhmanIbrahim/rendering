@@ -26,6 +26,9 @@
 - point light ✔
 - spot light ✔
 - attach spot light to camera ✔
+- add systems
+- remove unnecessary data transformations (revisit word) 
+- find a good way for communications and relations between components (unity scripts) 
 - propagate different lights to pbr
 - add light entities
 - point renderer
@@ -39,7 +42,6 @@
 - MSAA enable when needed
 - OI and OD transparency like weighted average or depth peeling
 - start in real time rendering book
-- find a good way for communications and relations between components
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

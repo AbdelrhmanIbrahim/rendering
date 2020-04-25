@@ -38,13 +38,18 @@ namespace app
 
 	//Internal helpers
 	void
-	_input_act(const Input& i, world::Camera& cam)
+	_input_act(const Input& i, world::Camera& cam, world::Flash& flash)
 	{
 		//Mouse move
 		{
 			math::vec2f mouse_dir{ input_mouse_delta(i) };
 			if (mouse_dir != math::vec2f{})
+			{
 				camera_rotate(cam, mouse_dir);
+
+				//till we have a rigid communication and relations between components
+				flash.dir = math::vec4f{ cam.fwd[0], cam.fwd[1], cam.fwd[2], 0 };
+			}
 		}
 
 		//Keyboard
@@ -58,6 +63,9 @@ namespace app
 				camera_move_left(cam, speed);
 			if (i.keyboard[(int)io::KEYBOARD::D] == true)
 				camera_move_right(cam, speed);
+
+			//till we have a rigid communication and relations between components
+			flash.pos = math::vec4f{ cam.pos[0], cam.pos[1], cam.pos[2], 0 };
 		}
 
 		//Wheel
@@ -180,10 +188,13 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		world::Camera& cam = ecs::world_components_data<world::Camera>(app->world).front().data;
-		_input_act(app->input, cam);
+		auto& cam = ecs::world_components_data<world::Camera>(app->world).front();
+		auto handle = ecs::world_component_add<world::Flash>(app->world, cam.entity);
+		auto flash = ecs::world_handle_component<world::Flash>(app->world, handle);
+
+		_input_act(app->input, cam.data, *flash);
 		input_mouse_update(app->input);
-		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
+		world::camera_viewport(cam.data, math::vec2f{ (float)window_width, (float)window_height });
 	}
 
 	void

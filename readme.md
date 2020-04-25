@@ -25,7 +25,7 @@
 - get the rest of renderers back to use ECS ✔
 - point light ✔
 - spot light ✔
-- attach spot light to camera
+- attach spot light to camera ✔
 - propagate different lights to pbr
 - add light entities
 - point renderer

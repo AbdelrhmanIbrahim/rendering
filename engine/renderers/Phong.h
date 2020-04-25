@@ -1,5 +1,7 @@
 #pragma once
 
+#include "math/Vector.h"
+
 namespace world
 {
 	struct Camera;
@@ -17,6 +19,9 @@ namespace rndr
 
 	void
 	phong_free(Phong self);
+
+	void
+	phong_init(Phong self, math::vec2f viewport);
 
 	void
 	phong_draw(const Phong self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material);

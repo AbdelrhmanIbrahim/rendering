@@ -44,21 +44,28 @@ namespace rndr
 
 	//Internal helpers
 	void
-	_pbr_draw(PBR pbr, const Camera& cam, const std::vector<ecs::Component<Mesh>>& meshes, const std::vector<ecs::Component<Transform>>& transforms)
+	_pbr_render(PBR pbr, const Camera& cam,
+						 const std::vector<ecs::Component<Mesh>>& meshes,
+					 	 const std::vector<ecs::Component<Transform>>& transforms,
+						 const std::vector<ecs::Component<Material>>& materials)
 	{
+		math::vec2f viewport = world::camera_viewport(cam);
+		pbr_init(pbr, viewport);
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				pbr_draw(pbr, &cam, &meshes[i].data, &transforms[i].data);
+				pbr_draw(pbr, &cam, &meshes[i].data, &transforms[i].data, &materials[i].data);
 		}
 	}
 
 	void
-	_phong_draw(Phong phong, const Camera& cam, 
-				const std::vector<ecs::Component<Mesh>>& meshes, 
+	_phong_render(Phong phong, const Camera& cam,
+				const std::vector<ecs::Component<Mesh>>& meshes,
 				const std::vector<ecs::Component<Transform>>& transforms,
 				const std::vector<ecs::Component<Material>>& materials)
 	{
+		math::vec2f viewport = world::camera_viewport(cam);
+		phong_init(phong, viewport);
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
@@ -67,10 +74,12 @@ namespace rndr
 	}
 
 	void
-	_colored_draw(Colored colored, const Camera& cam,
+	_colored_render(Colored colored, const Camera& cam,
 			const std::vector<ecs::Component<Mesh>>& meshes,
 			const std::vector<ecs::Component<Transform>>& transforms)
 	{
+		math::vec2f viewport = world::camera_viewport(cam);
+		colored_init(colored, viewport);
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
@@ -147,17 +156,19 @@ namespace rndr
 			//render according to the style
 			switch (e->style)
 			{
-			case Rendering::PHONG:
-				_phong_draw(e->phong, cam, meshes, transforms, materials);
-				break;
-			case Rendering::PBR:
-				_pbr_draw(e->pbr, cam, meshes, transforms);
-				break;
-			case Rendering::COLORED:
-				_colored_draw(e->colored, cam, meshes, transforms);
-				break;
-			default:
-				break;
+				case Rendering::PHONG:
+				{
+					_phong_render(e->phong, cam, meshes, transforms, materials);
+					break;
+				}
+				case Rendering::PBR:
+					_pbr_render(e->pbr, cam, meshes, transforms, materials);
+					break;
+				case Rendering::COLORED:
+					_colored_render(e->colored, cam, meshes, transforms);
+					break;
+				default:
+					break;
 			}
 			skybox_renderer_draw(e->skybox, &cam);
 		}

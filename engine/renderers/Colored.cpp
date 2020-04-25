@@ -55,19 +55,20 @@ namespace rndr
 	}
 
 	void
-	colored_draw(const Colored self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, math::vec4f& col)
+	colored_init(Colored self, math::vec2f viewport)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
 
-		//viewport
-		vec2f viewport = world::camera_viewport(*camera);
-		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
-
-		//uniform block
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_object_color);
 
+		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
+	}
+
+	void
+	colored_draw(const Colored self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, math::vec4f& col)
+	{
 		//uniform blocks
 		Space_Uniform mvp{ camera_view_proj(*camera) * mat4_from_transform(*model) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));

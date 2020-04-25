@@ -10,6 +10,7 @@
 #include "world/components/Camera.h"
 #include "world/components/Mesh.h"
 #include "world/components/Transform.h"
+#include "world/components/Material.h"
 
 using namespace glgpu;
 using namespace math;
@@ -145,23 +146,17 @@ namespace rndr
 	}
 
 	void
-	pbr_draw(const PBR self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model)
+	pbr_init(PBR self, math::vec2f viewport)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
 
-		//viewport
-		vec2f viewport = world::camera_viewport(*camera);
-		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
-
-		//uniform blocks
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_object_color);
 		buffer_uniform_bind(2, self->uniform_light);
 		buffer_uniform_bind(3, self->uniform_camera);
 		buffer_uniform_bind(4, self->uniform_material);
 
-		//till we get sampler objects in
 		cubemap_bind(self->diffuse_irradiance_map, 0);
 		sampler_bind(self->sampler_diffuse, 0);
 		cubemap_bind(self->specular_prefiltered_map, 1);
@@ -169,17 +164,21 @@ namespace rndr
 		texture2d_bind(self->specular_BRDF_LUT, 2);
 		sampler_bind(self->sampler_specular_BRDF, 2);
 
-		//uniform blocks
+		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
+	}
+
+	void
+	pbr_draw(PBR self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
+	{
 		Space_Uniform mvp{ mat4_from_transform(*model), camera_view_proj(*camera) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
-		vec4f color_test{ 0.75f, 0.75f, 0.75f, 1.0f };
-		buffer_uniform_set(self->uniform_object_color, &color_test, sizeof(color_test));
+		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
 		Light_Uniform light{ vec4f{ 1.0f, 1.0f, 1.0f,1.0f }, vec4f{ 0.0f, -1.0f, 0.0f, 0.0f } };
 		buffer_uniform_set(self->uniform_light, &light, sizeof(light));
+		Material_Uniform mat{ material->metallicity, material->roughness, {} };
+		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
 		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
-		Material_Uniform mat{ 0.9, 0.2, {} };
-		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
 
 		//draw geometry
 		vao_bind(mesh->va);

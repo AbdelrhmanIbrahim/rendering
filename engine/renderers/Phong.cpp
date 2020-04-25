@@ -102,16 +102,11 @@ namespace rndr
 	}
 
 	void
-	phong_draw(const Phong self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
+	phong_init(Phong self, math::vec2f viewport)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
 
-		//viewport
-		vec2f viewport = world::camera_viewport(*camera);
-		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
-
-		//uniform block
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_object_color);
 		buffer_uniform_bind(2, self->uniform_camera);
@@ -119,41 +114,45 @@ namespace rndr
 		buffer_uniform_bind(4, self->uniform_lamps);
 		buffer_uniform_bind(5, self->uniform_flashs);
 
-		//uniform blocks
+		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
+	}
+
+	void
+	phong_draw(const Phong self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
+	{
 		Space_Uniform mvp{mat4_from_transform(*model), camera_view_proj(*camera) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
+
+		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
+		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
 		Sun_Uniform suns
 		{
 			0, {}, 
 			{
-				world::Sun {{1.0f, 1.0f, 0.0f, 1.0f}, { 0.0f, -1.0f, 0.0f, 0.0f }},
+				world::Sun {{1.0f, 1.0f, 1.0f, 1.0f}, { 0.0f, -1.0f, 0.0f, 0.0f }},
 			}
 		};
 		buffer_uniform_set(self->uniform_suns, &suns, sizeof(suns));
 
 		Lamp_Uniform lamps
 		{
-			0, {},
+			1, {},
 			{
-				world::Lamp {{1.0f, 1.0f, 0.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, 10},
+				world::Lamp {{1.0f, 1.0f, 1.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, 10},
 			}
 		};
 		buffer_uniform_set(self->uniform_lamps, &lamps, sizeof(lamps));
 
 		Flash_Uniform flashes
 		{
-			1, {},
+			0, {},
 			{
-				world::Flash {{1.0f, 1.0f, 0.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, {0, 0, -1, 0}, 10, (float)cos(to_radian(12)), (float)cos(to_radian(15))},
+				world::Flash {{1.0f, 1.0f, 1.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, {0, 0, -1, 0}, 10, (float)cos(to_radian(12)), (float)cos(to_radian(15))},
 			}
 		};
 		buffer_uniform_set(self->uniform_flashs, &flashes, sizeof(flashes));
-
-
-		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
-		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
 		//draw geometry
 		vao_bind(mesh->va);

@@ -59,15 +59,40 @@ namespace rndr
 
 	void
 	_phong_render(Phong phong, const Camera& cam,
-				const std::vector<ecs::Component<Mesh>>& meshes,
-				const std::vector<ecs::Component<Transform>>& transforms,
-				const std::vector<ecs::Component<Material>>& materials)
+				const std::vector<ecs::Component<Mesh>>& c_meshes,
+				const std::vector<ecs::Component<Transform>>& c_transforms,
+				const std::vector<ecs::Component<Material>>& c_materials,
+				const std::vector<ecs::Component<Sun>>& c_suns,
+				const std::vector<ecs::Component<Lamp>>& c_lamps,
+				const std::vector<ecs::Component<Flash>>& c_flashes)
 	{
-		phong_set(phong, &cam);
-		for (int i = 0; i < meshes.size(); ++i)
+		//lighting setting (unnecassery data transformation here -revisit-)
+		std::vector<world::Sun> suns;
+		for (int i = 0; i < c_suns.size(); ++i)
 		{
-			if (meshes[i].deleted == false)
-				phong_draw(phong, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, &materials[i].data);
+			if (c_suns[i].deleted == false)
+				suns.emplace_back(c_suns[i].data);
+		}
+
+		std::vector<world::Lamp> lamps;
+		for (int i = 0; i < c_lamps.size(); ++i)
+		{
+			if (c_lamps[i].deleted == false)
+				lamps.emplace_back(c_lamps[i].data);
+		}
+
+		std::vector<world::Flash> flashes;
+		for (int i = 0; i < c_flashes.size(); ++i)
+		{
+			if (c_flashes[i].deleted == false)
+				flashes.emplace_back(c_flashes[i].data);
+		}
+		phong_set(phong, &cam, suns, lamps, flashes);
+
+		for (int i = 0; i < c_meshes.size(); ++i)
+		{
+			if (c_meshes[i].deleted == false)
+				phong_draw(phong, camera_view_proj(cam), &c_meshes[i].data, &c_transforms[i].data, &c_materials[i].data);
 		}
 	}
 
@@ -96,7 +121,7 @@ namespace rndr
 		self->ctx = glgpu::context_create(4, 0);
 
 		//init rendering style
-		self->style = Rendering::PHONG;
+		self->style = Rendering::PBR;
 
 		//renderers
 		self->phong = phong_create();
@@ -141,23 +166,25 @@ namespace rndr
 		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
 		glgpu::context_attach(e->ctx, win);
 
-		//get data for drawing
-		auto& cam = ecs::world_components_data<world::Camera>(w).front().data;
-		auto& meshes = ecs::world_components_data<world::Mesh>(w);
-		auto& transforms = ecs::world_components_data<world::Transform>(w);
-		auto& materials = ecs::world_components_data<world::Material>(w);
-
 		//render scene
 		{
 			//start the frame
 			glgpu::frame_start();
 
-			//render according to the style
+			//get data for drawing
+			auto& cam = ecs::world_components_data<world::Camera>(w).front().data;
+			auto& meshes = ecs::world_components_data<world::Mesh>(w);
+			auto& transforms = ecs::world_components_data<world::Transform>(w);
+			auto& materials = ecs::world_components_data<world::Material>(w);
+
 			switch (e->style)
 			{
 				case Rendering::PHONG:
 				{
-					_phong_render(e->phong, cam, meshes, transforms, materials);
+					auto& suns = ecs::world_components_data<world::Sun>(w);
+					auto& lamps = ecs::world_components_data<world::Lamp>(w);
+					auto& flashes = ecs::world_components_data<world::Flash>(w);
+					_phong_render(e->phong, cam, meshes, transforms, materials, suns, lamps, flashes);
 					break;
 				}
 				case Rendering::PBR:

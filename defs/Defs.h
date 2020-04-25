@@ -8,6 +8,8 @@
 #define SHADOW_WIDTH 1024
 #define SHADOW_HEIGHT 1024
 
+constexpr int MAX_NUMBER_LIGHT_TYPE = 10;
+
 enum class DEPTH_TEST
 {
 	LE,

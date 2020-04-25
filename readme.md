@@ -25,10 +25,12 @@
 - get the rest of renderers back to use ECS ✔
 - point light ✔
 - spot light ✔
-- add light entities
+- attach spot light to camera
 - propagate different lights to pbr
+- add light entities
 - point renderer
 - line renderer
+- wireframe
 - render light source as shinny point with radius
 - virtual tiles ground
 - selection and picking
@@ -37,6 +39,7 @@
 - MSAA enable when needed
 - OI and OD transparency like weighted average or depth peeling
 - start in real time rendering book
+- find a good way for communications and relations between components
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

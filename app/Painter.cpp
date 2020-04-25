@@ -14,6 +14,7 @@
 #include "world/components/Mesh.h"
 #include "world/components/Camera.h"
 #include "world/components/Material.h"
+#include "world/components/Flash.h"
 
 using namespace world;
 using namespace rndr;
@@ -68,7 +69,7 @@ namespace app
 	void
 	_world_init_testing_scene(ecs::World& w)
 	{
-		//testing
+		//entities
 		{
 			//cam
 			{
@@ -76,6 +77,14 @@ namespace app
 				auto handle_c = world_component_add<world::Camera>(w, e);
 				auto data_c = world_handle_component<world::Camera>(w, handle_c);
 				*data_c = camera_new();
+
+				auto handle_f = world_component_add<world::Flash>(w, e);
+				auto data_f = world_handle_component<world::Flash>(w, handle_f);
+				*data_f = world::Flash{ {1.0f, 1.0f, 1.0f, 1.0f},
+										{0.0f, 0.0f, 0.0f, 0.0f },
+										{0, 0, -1, 0}, 10,
+										(float)cos(to_radian(12)),
+										(float)cos(to_radian(15)) };
 			}
 
 			//sphere 1
@@ -87,7 +96,7 @@ namespace app
 
 				auto handle_t = world_component_add<world::Transform>(w, e);
 				auto data_t = world_handle_component<world::Transform>(w, handle_t);
-				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ -1, 0, -2} };
+				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ 0, 0, -6} };
 
 				auto handle_c = world_component_add<world::Material>(w, e);
 				auto data_c = world_handle_component<world::Material>(w, handle_t);

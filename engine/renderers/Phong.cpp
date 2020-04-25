@@ -11,9 +11,6 @@
 #include "world/components/Mesh.h"
 #include "world/components/Transform.h"
 #include "world/components/Material.h"
-#include "world/components/Sun.h"
-#include "world/components/Lamp.h"
-#include "world/components/Flash.h"
 
 #include <corecrt_math.h>
 
@@ -46,13 +43,13 @@ namespace rndr
 		vec4f world_pos;
 	};
 
-	constexpr int MAX_NUMBER_LIGHT = 10;
+	
 	struct
 	Sun_Uniform
 	{
 		int count;
 		int dummy[3];
-		world::Sun arr[MAX_NUMBER_LIGHT];
+		world::Sun arr[MAX_NUMBER_LIGHT_TYPE];
 	};
 
 	struct
@@ -60,7 +57,7 @@ namespace rndr
 	{
 		int count;
 		int dummy[3];
-		world::Lamp arr[MAX_NUMBER_LIGHT];
+		world::Lamp arr[MAX_NUMBER_LIGHT_TYPE];
 	};
 
 	struct
@@ -68,7 +65,7 @@ namespace rndr
 	{
 		int count;
 		int dummy[3];
-		world::Flash arr[MAX_NUMBER_LIGHT];
+		world::Flash arr[MAX_NUMBER_LIGHT_TYPE];
 	};
 
 	Phong
@@ -102,7 +99,11 @@ namespace rndr
 	}
 
 	void
-	phong_set(Phong self, const world::Camera* camera)
+	phong_set(Phong self, 
+		const world::Camera* camera, 
+		const std::vector<world::Sun>& suns,
+		const std::vector<world::Lamp>& lamps,
+		const std::vector<world::Flash>& flashes)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
@@ -119,43 +120,35 @@ namespace rndr
 
 		math::vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
+
+		//unnecassery frequent uniforms with arrays creation -revisit-
+		Sun_Uniform suns_u{suns.size() % MAX_NUMBER_LIGHT_TYPE, {}};
+		for (int i = 0; i < suns.size(); ++i)
+			suns_u.arr[i%MAX_NUMBER_LIGHT_TYPE] = suns[i];
+		buffer_uniform_set(self->uniform_suns, &suns_u, sizeof(suns_u));
+
+		Lamp_Uniform lamps_u {lamps.size() % MAX_NUMBER_LIGHT_TYPE, {}};
+		for (int i = 0; i < lamps.size(); ++i)
+			lamps_u.arr[i % MAX_NUMBER_LIGHT_TYPE] = lamps[i];
+		buffer_uniform_set(self->uniform_lamps, &lamps_u, sizeof(lamps_u));
+
+		Flash_Uniform flashes_u {flashes.size() % MAX_NUMBER_LIGHT_TYPE, {}};
+		for (int i = 0; i < flashes.size(); ++i)
+			flashes_u.arr[i % MAX_NUMBER_LIGHT_TYPE] = flashes[i];
+		buffer_uniform_set(self->uniform_flashs, &flashes_u, sizeof(flashes_u));
 	}
 
 	void
-	phong_draw(const Phong self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
+	phong_draw(const Phong self, 
+		const math::Mat4f& view_proj, 
+		const world::Mesh* mesh, 
+		const world::Transform* model, 
+		const world::Material* material)
 	{
 		Space_Uniform mvp{mat4_from_transform(*model), view_proj };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
 
-		Sun_Uniform suns
-		{
-			0, {}, 
-			{
-				world::Sun {{1.0f, 1.0f, 1.0f, 1.0f}, { 0.0f, -1.0f, 0.0f, 0.0f }},
-			}
-		};
-		buffer_uniform_set(self->uniform_suns, &suns, sizeof(suns));
-
-		Lamp_Uniform lamps
-		{
-			1, {},
-			{
-				world::Lamp {{1.0f, 1.0f, 1.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, 10},
-			}
-		};
-		buffer_uniform_set(self->uniform_lamps, &lamps, sizeof(lamps));
-
-		Flash_Uniform flashes
-		{
-			0, {},
-			{
-				world::Flash {{1.0f, 1.0f, 1.0f, 1.0f}, { 0.0f, 0.0f, 0.0f, 0.0f }, {0, 0, -1, 0}, 10, (float)cos(to_radian(12)), (float)cos(to_radian(15))},
-			}
-		};
-		buffer_uniform_set(self->uniform_flashs, &flashes, sizeof(flashes));
-
-		//draw geometry
 		vao_bind(mesh->va);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();

@@ -55,7 +55,7 @@ namespace rndr
 	}
 
 	void
-	colored_init(Colored self, math::vec2f viewport)
+	colored_set(Colored self, math::vec2f viewport)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
@@ -67,10 +67,10 @@ namespace rndr
 	}
 
 	void
-	colored_draw(const Colored self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, math::vec4f& col)
+	colored_draw(const Colored self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::vec4f& col)
 	{
 		//uniform blocks
-		Space_Uniform mvp{ camera_view_proj(*camera) * mat4_from_transform(*model) };
+		Space_Uniform mvp{ view_proj * mat4_from_transform(*model) };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&col, sizeof(col));
 

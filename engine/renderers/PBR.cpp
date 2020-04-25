@@ -146,7 +146,7 @@ namespace rndr
 	}
 
 	void
-	pbr_init(PBR self, math::vec2f viewport)
+	pbr_set(PBR self, const Camera* camera)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
@@ -164,21 +164,23 @@ namespace rndr
 		texture2d_bind(self->specular_BRDF_LUT, 2);
 		sampler_bind(self->sampler_specular_BRDF, 2);
 
+		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
+		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
+
+		math::vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 
 	void
-	pbr_draw(PBR self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
+	pbr_draw(PBR self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
 	{
-		Space_Uniform mvp{ mat4_from_transform(*model), camera_view_proj(*camera) };
+		Space_Uniform mvp{ mat4_from_transform(*model), view_proj};
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
 		Light_Uniform light{ vec4f{ 1.0f, 1.0f, 1.0f,1.0f }, vec4f{ 0.0f, -1.0f, 0.0f, 0.0f } };
 		buffer_uniform_set(self->uniform_light, &light, sizeof(light));
 		Material_Uniform mat{ material->metallicity, material->roughness, {} };
 		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
-		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
-		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
 		//draw geometry
 		vao_bind(mesh->va);

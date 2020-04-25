@@ -1,5 +1,6 @@
 #pragma once
 #include "math/Vector.h"
+#include "math/Matrix.h"
 
 namespace world
 {
@@ -19,8 +20,8 @@ namespace rndr
 	colored_free(Colored self);
 
 	void
-	colored_init(Colored self, math::vec2f viewport);
+	colored_set(Colored self, math::vec2f viewport);
 
 	void
-	colored_draw(const Colored self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, math::vec4f& col);
+	colored_draw(const Colored self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::vec4f& col);
 };

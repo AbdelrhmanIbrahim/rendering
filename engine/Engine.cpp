@@ -49,12 +49,11 @@ namespace rndr
 					 	 const std::vector<ecs::Component<Transform>>& transforms,
 						 const std::vector<ecs::Component<Material>>& materials)
 	{
-		math::vec2f viewport = world::camera_viewport(cam);
-		pbr_init(pbr, viewport);
+		pbr_set(pbr, &cam);
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				pbr_draw(pbr, &cam, &meshes[i].data, &transforms[i].data, &materials[i].data);
+				pbr_draw(pbr, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, &materials[i].data);
 		}
 	}
 
@@ -64,26 +63,26 @@ namespace rndr
 				const std::vector<ecs::Component<Transform>>& transforms,
 				const std::vector<ecs::Component<Material>>& materials)
 	{
-		math::vec2f viewport = world::camera_viewport(cam);
-		phong_init(phong, viewport);
+		phong_set(phong, &cam);
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				phong_draw(phong, &cam, &meshes[i].data, &transforms[i].data, &materials[i].data);
+				phong_draw(phong, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, &materials[i].data);
 		}
 	}
 
 	void
 	_colored_render(Colored colored, const Camera& cam,
 			const std::vector<ecs::Component<Mesh>>& meshes,
-			const std::vector<ecs::Component<Transform>>& transforms)
+			const std::vector<ecs::Component<Transform>>& transforms,
+			const std::vector<ecs::Component<Material>>& materials)
 	{
 		math::vec2f viewport = world::camera_viewport(cam);
-		colored_init(colored, viewport);
+		colored_set(colored, viewport);
 		for (int i = 0; i < meshes.size(); ++i)
 		{
 			if (meshes[i].deleted == false)
-				colored_draw(colored, &cam, &meshes[i].data, &transforms[i].data, math::vec4f{1,1,1,1});
+				colored_draw(colored, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, materials[i].data.color_norm);
 		}
 	}
 
@@ -165,7 +164,7 @@ namespace rndr
 					_pbr_render(e->pbr, cam, meshes, transforms, materials);
 					break;
 				case Rendering::COLORED:
-					_colored_render(e->colored, cam, meshes, transforms);
+					_colored_render(e->colored, cam, meshes, transforms, materials);
 					break;
 				default:
 					break;

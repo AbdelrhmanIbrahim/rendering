@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/Vector.h"
+#include "math/Matrix.h"
 
 namespace world
 {
@@ -21,8 +21,8 @@ namespace rndr
 	phong_free(Phong self);
 
 	void
-	phong_init(Phong self, math::vec2f viewport);
+	phong_set(Phong self, const world::Camera* camera);
 
 	void
-	phong_draw(const Phong self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material);
+	phong_draw(const Phong self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const world::Material* material);
 };

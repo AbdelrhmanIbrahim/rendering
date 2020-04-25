@@ -102,7 +102,7 @@ namespace rndr
 	}
 
 	void
-	phong_init(Phong self, math::vec2f viewport)
+	phong_set(Phong self, const world::Camera* camera)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
@@ -114,18 +114,19 @@ namespace rndr
 		buffer_uniform_bind(4, self->uniform_lamps);
 		buffer_uniform_bind(5, self->uniform_flashs);
 
+		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
+		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
+
+		math::vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 
 	void
-	phong_draw(const Phong self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
+	phong_draw(const Phong self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const world::Material* material)
 	{
-		Space_Uniform mvp{mat4_from_transform(*model), camera_view_proj(*camera) };
+		Space_Uniform mvp{mat4_from_transform(*model), view_proj };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
-
-		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
-		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
 		Sun_Uniform suns
 		{

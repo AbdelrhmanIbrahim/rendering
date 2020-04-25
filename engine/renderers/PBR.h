@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/Vector.h"
+#include "math/Matrix.h"
 
 namespace world
 {
@@ -21,8 +21,8 @@ namespace rndr
 	pbr_free(PBR self);
 
 	void
-	pbr_init(PBR self, math::vec2f viewport);
+	pbr_set(PBR self, const world::Camera* cam);
 
 	void
-	pbr_draw(PBR self, const world::Camera* camera, const world::Mesh* mesh, const world::Transform* model, const world::Material* material);
+	pbr_draw(PBR self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const world::Material* material);
 };

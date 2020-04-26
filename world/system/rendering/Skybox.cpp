@@ -20,7 +20,7 @@ namespace world
 		skybox_run(Skybox_System sys, ecs::World& w)
 		{
 			//get bags
-			auto cam = ecs::world_components_data<world::Camera>(w)[0].data;
+			auto cam = ecs::world_active_components_entities<world::Camera>(w)[0].data;
 			rndr::skybox_renderer_draw(sys.skybox, &cam);
 		}
 

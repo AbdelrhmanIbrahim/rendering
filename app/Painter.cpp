@@ -188,7 +188,7 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		auto& cam = ecs::world_components_data<world::Camera>(app->world)[0];
+		auto& cam = ecs::world_active_components_entities<world::Camera>(app->world)[0];
 		auto handle = ecs::world_component_add<world::Flash>(app->world, cam.entity);
 		auto cam_flash = ecs::world_handle_component<world::Flash>(app->world, handle);
 

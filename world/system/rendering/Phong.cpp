@@ -24,42 +24,31 @@ namespace world
 		phong_run(Phong_System sys, ecs::World& w)
 		{
 			//get bags
-			auto b_cam = ecs::world_components_data<world::Camera>(w)[0].data;
-			auto b_meshes = ecs::world_components_data<world::Mesh>(w);
-			auto b_transforms = ecs::world_components_data<world::Transform>(w);
-			auto b_materials = ecs::world_components_data<world::Material>(w);
-			auto b_suns = ecs::world_components_data<world::Sun>(w);
-			auto b_lamps = ecs::world_components_data<world::Lamp>(w);
-			auto b_flashes = ecs::world_components_data<world::Flash>(w);
+			auto b_cam = ecs::world_active_components_entities<world::Camera>(w)[0].data;
+			auto b_meshes = ecs::world_active_components_entities<world::Mesh>(w);
+			auto b_transforms = ecs::world_active_components_entities<world::Transform>(w);
+			auto b_materials = ecs::world_active_components_entities<world::Material>(w);
+			auto b_suns = ecs::world_active_components_entities<world::Sun>(w);
+			auto b_lamps = ecs::world_active_components_entities<world::Lamp>(w);
+			auto b_flashes = ecs::world_active_components_entities<world::Flash>(w);
 
 			//lighting setting (unnecassery data transformation here -revisit-)
 			std::vector<world::Sun> suns;
 			for (int i = 0; i < b_suns.size; ++i)
-			{
-				if (b_suns[i].deleted == false)
-					suns.emplace_back(b_suns[i].data);
-			}
+				suns.emplace_back(b_suns[i].data);
 
 			std::vector<world::Lamp> lamps;
 			for (int i = 0; i < b_lamps.size; ++i)
-			{
-				if (b_lamps[i].deleted == false)
-					lamps.emplace_back(b_lamps[i].data);
-			}
+				lamps.emplace_back(b_lamps[i].data);
 
 			std::vector<world::Flash> flashes;
 			for (int i = 0; i < b_flashes.size; ++i)
-			{
-				if (b_flashes[i].deleted == false)
-					flashes.emplace_back(b_flashes[i].data);
-			}
+				flashes.emplace_back(b_flashes[i].data);
+
 			phong_set(sys.phong, &b_cam, suns, lamps, flashes);
 
 			for (int i = 0; i < b_meshes.size; ++i)
-			{
-				if (b_meshes[i].deleted == false)
-					phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
-			}
+				phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
 		}
 
 		void

@@ -84,6 +84,7 @@ set(HEADERS
 	world/system/rendering/PBR.h
 	world/system/rendering/Colored.h
 	world/system/rendering/Skybox.h
+	infra/mem/chunck.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h

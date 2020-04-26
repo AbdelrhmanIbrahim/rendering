@@ -5,6 +5,8 @@
 #include "world/component/Lamp.h"
 #include "world/component/Flash.h"
 
+#include "infra/mem/chunck.h"
+
 #include <vector>
 
 namespace world
@@ -27,10 +29,10 @@ namespace rndr
 
 	void
 	phong_set(Phong self,
-		const world::Camera* camera,
-		const std::vector<world::Sun>& suns,
-		const std::vector<world::Lamp>& lamps,
-		const std::vector<world::Flash>& flashes);
+		world::Camera* camera,
+		infra::mem::chunk<world::Sun> suns,
+		infra::mem::chunk<world::Lamp> lamps,
+		infra::mem::chunk<world::Flash> flashes);
 
 	void
 	phong_draw(const Phong self, 

@@ -8,6 +8,8 @@
 #include "world/component/Lamp.h"
 #include "world/component/Flash.h"
 
+#include "infra/mem/chunck.h"
+
 namespace world
 {
 	namespace system
@@ -32,20 +34,10 @@ namespace world
 			auto b_lamps = ecs::world_active_components<world::Lamp>(w);
 			auto b_flashes = ecs::world_active_components<world::Flash>(w);
 
-			//lighting setting (unnecassery data transformation here -revisit-)
-			std::vector<world::Sun> suns;
-			for (int i = 0; i < b_suns.size; ++i)
-				suns.emplace_back(b_suns[i]);
-
-			std::vector<world::Lamp> lamps;
-			for (int i = 0; i < b_lamps.size; ++i)
-				lamps.emplace_back(b_lamps[i]);
-
-			std::vector<world::Flash> flashes;
-			for (int i = 0; i < b_flashes.size; ++i)
-				flashes.emplace_back(b_flashes[i]);
-
-			phong_set(sys.phong, &b_cam, suns, lamps, flashes);
+			phong_set(sys.phong, &b_cam,
+				infra::mem::chunk<world::Sun>{ b_suns.size, b_suns.ptr },
+				infra::mem::chunk<world::Lamp>{ b_lamps.size, b_lamps.ptr },
+				infra::mem::chunk<world::Flash> { b_flashes.size, b_flashes.ptr });
 			for (int i = 0; i < b_meshes.size; ++i)
 				phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
 		}

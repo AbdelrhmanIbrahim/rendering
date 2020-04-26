@@ -89,10 +89,10 @@ namespace rndr
 
 	void
 	phong_set(Phong self, 
-		const world::Camera* camera,
-		const std::vector<world::Sun>& suns,
-		const std::vector<world::Lamp>& lamps,
-		const std::vector<world::Flash>& flashes)
+		world::Camera* camera,
+		infra::mem::chunk<world::Sun> suns,
+		infra::mem::chunk<world::Lamp> lamps,
+		infra::mem::chunk<world::Flash> flashes)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
@@ -112,14 +112,14 @@ namespace rndr
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 		//lights count and arrays
-		Lights_Count_Uniform lights_count{suns.size() % MAX_NUMBER_LIGHT_TYPE, lamps.size() % MAX_NUMBER_LIGHT_TYPE, flashes.size() % MAX_NUMBER_LIGHT_TYPE};
+		Lights_Count_Uniform lights_count{suns.size % MAX_NUMBER_LIGHT_TYPE, lamps.size % MAX_NUMBER_LIGHT_TYPE, flashes.size % MAX_NUMBER_LIGHT_TYPE};
 		buffer_uniform_set(self->uniform_light_count, &lights_count, sizeof(lights_count));
-		if(suns.empty() == false)
-			buffer_uniform_set(self->uniform_suns, (void*)&suns.front(), suns.size() * sizeof(suns.front()));
-		if (lamps.empty() == false)
-			buffer_uniform_set(self->uniform_lamps, (void*)&lamps.front(), lamps.size() * sizeof(lamps.front()));
-		if (flashes.empty() == false)
-			buffer_uniform_set(self->uniform_flashes, (void*)&flashes.front(), flashes.size() * sizeof(flashes.front()));
+		if(suns.size > 0)
+			buffer_uniform_set(self->uniform_suns, suns.ptr, suns.size * sizeof(suns[0]));
+		if (lamps.size > 0)
+			buffer_uniform_set(self->uniform_lamps, lamps.ptr, lamps.size * sizeof(lamps[0]));
+		if (flashes.size > 0)
+			buffer_uniform_set(self->uniform_flashes, flashes.ptr, flashes.size * sizeof(flashes[0]));
 	}
 
 	void

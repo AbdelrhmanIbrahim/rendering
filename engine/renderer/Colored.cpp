@@ -7,7 +7,6 @@
 #include "math/Matrix.h"
 
 #include "gl/glgpu.h"
-#include "..\..\world\system\rendering\Colored.h"
 
 using namespace math;
 using namespace glgpu;

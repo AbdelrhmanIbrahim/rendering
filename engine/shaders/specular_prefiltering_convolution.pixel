@@ -108,7 +108,7 @@ main()
 		vec3 halfway  = GGX_Importance_Sampling(Xi, N, roughness);
 
 		//is this somekind of orienting around the halfway?
-		//needs to debug impotance sampling vector on a testcase on CPU to figure this out correctly. (revisit)
+		//needs to debug importance sampling vector on a testcase on CPU to figure this out correctly. (revisit)
 		vec3 L  = normalize(2.0 * dot(view, halfway) * halfway - view);
 
 		//sample vector oriented around the normal? if yes then it contributes to our reflections at this pixel

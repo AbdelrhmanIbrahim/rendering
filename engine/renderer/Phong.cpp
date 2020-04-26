@@ -13,7 +13,6 @@
 #include "world/component/Material.h"
 
 #include <corecrt_math.h>
-#include "..\..\world\system\rendering\Phong.h"
 
 using namespace glgpu;
 using namespace math;

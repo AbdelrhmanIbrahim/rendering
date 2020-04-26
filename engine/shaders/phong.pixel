@@ -35,26 +35,12 @@ Flash
 };
 
 struct
-Suns
+Lights_Count
 {
-	int count;
-	Sun arr[MAX_LIGHT_NUMBER];
+	int suns_count;
+	int lamps_count;
+	int flashes_count;
 };
-
-struct
-Lamps
-{
-	int count;
-	Lamp arr[MAX_LIGHT_NUMBER];
-};
-
-struct
-Flashes
-{
-	int count;
-	Flash arr[MAX_LIGHT_NUMBER];
-};
-
 
 //uniforms
 layout (std140, binding = 1) uniform Object_Color
@@ -67,19 +53,24 @@ layout (std140, binding = 2) uniform Camera
 	vec4 camera_pos;
 };
 
-layout (std140, binding = 3) uniform Directional_Lights
+layout (std140, binding = 3) uniform Lights_Count_
 {
-	Suns suns;
+	Lights_Count lights;
 };
 
-layout (std140, binding = 4) uniform Point_Lights
+layout (std140, binding = 4) uniform Directional_Lights
 {
-	Lamps lamps;
+	Sun suns[MAX_LIGHT_NUMBER];
 };
 
-layout (std140, binding = 5) uniform Spot_Lights
+layout (std140, binding = 5) uniform Point_Lights
 {
-	Flashes flashes;
+	Lamp lamps[MAX_LIGHT_NUMBER];
+};
+
+layout (std140, binding = 6) uniform Spot_Lights
+{
+	Flash flashes[MAX_LIGHT_NUMBER];
 };
 
 //calc diffuse and spec components
@@ -151,16 +142,16 @@ main()
 	vec3 result = vec3(0.1) * object_color.xyz;
 
 	//directional lights
-	for(int x = 0; x < suns.count; ++x)
-		result += directional_light_calc(suns.arr[x], normalize(normal_world)) * object_color.xyz;
+	for(int x = 0; x < lights.suns_count; ++x)
+		result += directional_light_calc(suns[x], normalize(normal_world)) * object_color.xyz;
 
 	//point lights
-	for(int x = 0; x < lamps.count; ++x)
-		result += point_light_calc(lamps.arr[x], normalize(normal_world)) * object_color.xyz;
+	for(int x = 0; x < lights.lamps_count; ++x)
+		result += point_light_calc(lamps[x], normalize(normal_world)) * object_color.xyz;
 
 	//spot lights
-	for(int x = 0; x < flashes.count; ++x)
-		result += spot_light_calc(flashes.arr[x], normalize(normal_world)) * object_color.xyz;
+	for(int x = 0; x < lights.flashes_count; ++x)
+		result += spot_light_calc(flashes[x], normalize(normal_world)) * object_color.xyz;
 
 	frag_color = vec4(result, 1.0);
 };

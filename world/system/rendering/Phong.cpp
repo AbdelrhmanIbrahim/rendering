@@ -46,7 +46,6 @@ namespace world
 				flashes.emplace_back(b_flashes[i].data);
 
 			phong_set(sys.phong, &b_cam, suns, lamps, flashes);
-
 			for (int i = 0; i < b_meshes.size; ++i)
 				phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
 		}

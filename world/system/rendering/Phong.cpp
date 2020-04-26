@@ -24,30 +24,30 @@ namespace world
 		phong_run(Phong_System sys, ecs::World& w)
 		{
 			//get bags
-			auto b_cam = ecs::world_active_components_entities<world::Camera>(w)[0].data;
-			auto b_meshes = ecs::world_active_components_entities<world::Mesh>(w);
-			auto b_transforms = ecs::world_active_components_entities<world::Transform>(w);
-			auto b_materials = ecs::world_active_components_entities<world::Material>(w);
-			auto b_suns = ecs::world_active_components_entities<world::Sun>(w);
-			auto b_lamps = ecs::world_active_components_entities<world::Lamp>(w);
-			auto b_flashes = ecs::world_active_components_entities<world::Flash>(w);
+			auto b_cam = ecs::world_active_components<world::Camera>(w)[0];
+			auto b_meshes = ecs::world_active_components<world::Mesh>(w);
+			auto b_transforms = ecs::world_active_components<world::Transform>(w);
+			auto b_materials = ecs::world_active_components<world::Material>(w);
+			auto b_suns = ecs::world_active_components<world::Sun>(w);
+			auto b_lamps = ecs::world_active_components<world::Lamp>(w);
+			auto b_flashes = ecs::world_active_components<world::Flash>(w);
 
 			//lighting setting (unnecassery data transformation here -revisit-)
 			std::vector<world::Sun> suns;
 			for (int i = 0; i < b_suns.size; ++i)
-				suns.emplace_back(b_suns[i].data);
+				suns.emplace_back(b_suns[i]);
 
 			std::vector<world::Lamp> lamps;
 			for (int i = 0; i < b_lamps.size; ++i)
-				lamps.emplace_back(b_lamps[i].data);
+				lamps.emplace_back(b_lamps[i]);
 
 			std::vector<world::Flash> flashes;
 			for (int i = 0; i < b_flashes.size; ++i)
-				flashes.emplace_back(b_flashes[i].data);
+				flashes.emplace_back(b_flashes[i]);
 
 			phong_set(sys.phong, &b_cam, suns, lamps, flashes);
 			for (int i = 0; i < b_meshes.size; ++i)
-				phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
+				phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
 		}
 
 		void

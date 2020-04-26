@@ -23,15 +23,15 @@ namespace world
 		colored_run(Colored_System sys, ecs::World& w)
 		{
 			//get bags
-			auto cam = ecs::world_active_components_entities<world::Camera>(w)[0].data;
-			auto b_meshes = ecs::world_active_components_entities<world::Mesh>(w);
-			auto b_transforms = ecs::world_active_components_entities<world::Transform>(w);
-			auto b_materials = ecs::world_active_components_entities<world::Material>(w);
+			auto cam = ecs::world_active_components<world::Camera>(w)[0];
+			auto b_meshes = ecs::world_active_components<world::Mesh>(w);
+			auto b_transforms = ecs::world_active_components<world::Transform>(w);
+			auto b_materials = ecs::world_active_components<world::Material>(w);
 
 			math::vec2f viewport = world::camera_viewport(cam);
 			rndr::colored_set(sys.colored, viewport);
 			for (int i = 0; i < b_meshes.size; ++i)
-				rndr::colored_draw(sys.colored, camera_view_proj(cam), &b_meshes[i].data, &b_transforms[i].data, b_materials[i].data.color_norm);
+				rndr::colored_draw(sys.colored, camera_view_proj(cam), &b_meshes[i], &b_transforms[i], b_materials[i].color_norm);
 		}
 
 		void

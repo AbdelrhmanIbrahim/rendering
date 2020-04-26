@@ -188,13 +188,13 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		auto& cam = ecs::world_active_components_entities<world::Camera>(app->world)[0];
-		auto handle = ecs::world_component_add<world::Flash>(app->world, cam.entity);
-		auto cam_flash = ecs::world_handle_component<world::Flash>(app->world, handle);
+		//this is for now till we have some good way for communicating between components
+		auto& cam = ecs::world_active_components<world::Camera>(app->world)[0];
+		auto& cam_flash = ecs::world_active_components<world::Flash>(app->world)[0];
 
-		_input_act(app->input, cam.data, *cam_flash);
+		_input_act(app->input, cam, cam_flash);
 		input_mouse_update(app->input);
-		world::camera_viewport(cam.data, math::vec2f{ (float)window_width, (float)window_height });
+		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
 	}
 
 	void

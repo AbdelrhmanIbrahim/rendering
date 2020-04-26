@@ -4,12 +4,7 @@
 #include "world/system/rendering/Phong.h"
 #include "world/system/rendering/PBR.h"
 #include "world/system/rendering/Colored.h"
-
-#include "engine/renderer/Phong.h"
-#include "engine/renderer/PBR.h"
-#include "engine/renderer/Skybox.h"
-#include "engine/renderer/Phong_Shadow.h"
-#include "engine/renderer/Colored.h"
+//#include "world/system/rendering/Skybox.h"
 
 #include "math/Vector.h"
 
@@ -34,12 +29,11 @@ namespace rndr
 		//rendering mode
 		Rendering style;
 
-		//renderers
-		Phong phong;
-		PBR pbr;
-		Skybox skybox;
-		Colored colored;
-		//Phong_Shadow phong_shadow;
+		//rendering systems
+		system::Phong_System phong;
+		system::PBR_System pbr;
+		system::Colored_System colored;
+		//system::Skybox_System skybox;
 	};
 
 	//API
@@ -54,15 +48,12 @@ namespace rndr
 		//init rendering style
 		self->style = Rendering::PBR;
 
-		//renderers
-		self->phong = phong_create();
-
+		//renderering systems
+		self->phong = system::phong_new();
 		//crashes renderdoc -- revisit
-		self->pbr = pbr_create();
-
-		self->skybox = skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
-		self->colored = colored_create();
-		//self->phong_shadow = phong_shadow_create();
+		self->pbr = system::pbr_new();
+		self->colored = system::colored_new();
+		//self->skybox = system::skybox_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//imgui
 		ImGui::CreateContext();
@@ -74,11 +65,10 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		phong_free(e->phong);
-		pbr_free(e->pbr);
-		skybox_renderer_free(e->skybox);
-		colored_free(e->colored);
-		//phong_shadow_free(e->phong_shadow);
+		system::phong_free(e->phong);
+		system::pbr_free(e->pbr);
+		system::colored_free(e->colored);
+		//system::skybox_free(e->skybox);
 
 		glgpu::context_free(e->ctx);
 
@@ -105,13 +95,13 @@ namespace rndr
 			switch (e->style)
 			{
 				case Rendering::PHONG:
-					world::system::phong_render(e->phong, w);
+					world::system::phong_run(e->phong, w);
 					break;
 				case Rendering::PBR:
-					world::system::pbr_render(e->pbr, w);
+					world::system::pbr_run(e->pbr, w);
 					break;
 				case Rendering::COLORED:
-					world::system::colored_render(e->colored, w);
+					world::system::colored_run(e->colored, w);
 					break;
 				default:
 					break;

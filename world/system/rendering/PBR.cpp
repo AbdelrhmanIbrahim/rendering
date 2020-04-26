@@ -11,8 +11,16 @@ namespace world
 {
 	namespace system
 	{
+		PBR_System
+		pbr_new()
+		{
+			PBR_System self{};
+			self.pbr = rndr::pbr_create();
+			return self;
+		}
+
 		void
-		pbr_render(rndr::PBR pbr, ecs::World& w)
+		pbr_run(PBR_System sys, ecs::World& w)
 		{
 			//get bags
 			auto cam = ecs::world_components_data<world::Camera>(w)[0].data;
@@ -21,12 +29,18 @@ namespace world
 			auto b_materials = ecs::world_components_data<world::Material>(w);
 
 			math::vec2f viewport = world::camera_viewport(cam);
-			rndr::pbr_set(pbr, &cam);
+			rndr::pbr_set(sys.pbr, &cam);
 			for (int i = 0; i < b_meshes.size; ++i)
 			{
 				if (b_meshes[i].deleted == false)
-					rndr::pbr_draw(pbr, camera_view_proj(cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
+					rndr::pbr_draw(sys.pbr, camera_view_proj(cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
 			}
+		}
+
+		void
+		pbr_free(PBR_System sys)
+		{
+			rndr::pbr_free(sys.pbr);
 		}
 	};
 };

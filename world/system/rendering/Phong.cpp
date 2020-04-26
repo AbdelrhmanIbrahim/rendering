@@ -12,8 +12,16 @@ namespace world
 {
 	namespace system
 	{
+		Phong_System
+		phong_new()
+		{
+			Phong_System self{};
+			self.phong = rndr::phong_create();
+			return self;
+		}
+
 		void
-		phong_render(rndr::Phong phong, ecs::World& w)
+		phong_run(Phong_System sys, ecs::World& w)
 		{
 			//get bags
 			auto b_cam = ecs::world_components_data<world::Camera>(w)[0].data;
@@ -45,13 +53,19 @@ namespace world
 				if (b_flashes[i].deleted == false)
 					flashes.emplace_back(b_flashes[i].data);
 			}
-			phong_set(phong, &b_cam, suns, lamps, flashes);
+			phong_set(sys.phong, &b_cam, suns, lamps, flashes);
 
 			for (int i = 0; i < b_meshes.size; ++i)
 			{
 				if (b_meshes[i].deleted == false)
-					phong_draw(phong, camera_view_proj(b_cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
+					phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i].data, &b_transforms[i].data, &b_materials[i].data);
 			}
+		}
+
+		void
+		phong_free(Phong_System sys)
+		{
+			rndr::phong_free(sys.phong);
 		}
 	};
 };

@@ -7,7 +7,19 @@ namespace world
 {
 	namespace system
 	{
+		struct
+		Phong_System
+		{
+			rndr::Phong phong;
+		};
+
+		Phong_System
+		phong_new();
+
 		void
-		phong_render(rndr::Phong phong, ecs::World& w);
+		phong_run(Phong_System sys, ecs::World& w);
+
+		void
+		phong_free(Phong_System sys);
 	};
 };

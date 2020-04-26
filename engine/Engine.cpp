@@ -1,10 +1,9 @@
 #include "Engine.h"
 
 #include "world/component/Camera.h"
-#include "world/component/Mesh.h"
-#include "world/component/Transform.h"
-#include "world/component/Material.h"
 #include "world/system/rendering/Phong.h"
+#include "world/system/rendering/PBR.h"
+#include "world/system/rendering/Colored.h"
 
 #include "engine/renderer/Phong.h"
 #include "engine/renderer/PBR.h"
@@ -42,36 +41,6 @@ namespace rndr
 		Colored colored;
 		//Phong_Shadow phong_shadow;
 	};
-
-	//Internal helpers
-	void
-	_pbr_render(PBR pbr, const Camera& cam,
-						 const std::vector<ecs::Component<Mesh>>& meshes,
-					 	 const std::vector<ecs::Component<Transform>>& transforms,
-						 const std::vector<ecs::Component<Material>>& materials)
-	{
-		pbr_set(pbr, &cam);
-		for (int i = 0; i < meshes.size(); ++i)
-		{
-			if (meshes[i].deleted == false)
-				pbr_draw(pbr, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, &materials[i].data);
-		}
-	}
-
-	void
-	_colored_render(Colored colored, const Camera& cam,
-			const std::vector<ecs::Component<Mesh>>& meshes,
-			const std::vector<ecs::Component<Transform>>& transforms,
-			const std::vector<ecs::Component<Material>>& materials)
-	{
-		math::vec2f viewport = world::camera_viewport(cam);
-		colored_set(colored, viewport);
-		for (int i = 0; i < meshes.size(); ++i)
-		{
-			if (meshes[i].deleted == false)
-				colored_draw(colored, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, materials[i].data.color_norm);
-		}
-	}
 
 	//API
 	Engine
@@ -133,29 +102,21 @@ namespace rndr
 			//start the frame
 			glgpu::frame_start();
 
-			//get data for drawing
-			auto& cam = ecs::world_components_data<world::Camera>(w).front().data;
-			auto& meshes = ecs::world_components_data<world::Mesh>(w);
-			auto& transforms = ecs::world_components_data<world::Transform>(w);
-			auto& materials = ecs::world_components_data<world::Material>(w);
-
 			switch (e->style)
 			{
 				case Rendering::PHONG:
-				{
 					world::system::phong_render(e->phong, w);
 					break;
-				}
 				case Rendering::PBR:
-					_pbr_render(e->pbr, cam, meshes, transforms, materials);
+					world::system::pbr_render(e->pbr, w);
 					break;
 				case Rendering::COLORED:
-					_colored_render(e->colored, cam, meshes, transforms, materials);
+					world::system::colored_render(e->colored, w);
 					break;
 				default:
 					break;
 			}
-			skybox_renderer_draw(e->skybox, &cam);
+			//skybox_renderer_draw(e->skybox, &ecs::world_components_data<world::Camera>(w)[0].data);
 		}
 	}
 

@@ -26,7 +26,8 @@
 - point light ✔
 - spot light ✔
 - attach spot light to camera ✔
-- add systems
+- add systems ✔
+- move all renderers to renderering systems
 - remove unnecessary data transformations (revisit word) 
 - find a good way for communications and relations between components (unity scripts) 
 - propagate different lights to pbr

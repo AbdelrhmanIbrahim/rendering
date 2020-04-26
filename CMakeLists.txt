@@ -81,6 +81,8 @@ set(HEADERS
 	world/component/Lamp.h
 	world/component/Flash.h
 	world/system/rendering/Phong.h
+	world/system/rendering/PBR.h
+	world/system/rendering/Colored.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h
@@ -105,6 +107,8 @@ set(SOURCES
 	engine/renderer/Colored.cpp
 	engine/renderer/Skybox.cpp
 	world/system/rendering/Phong.cpp
+	world/system/rendering/PBR.cpp
+	world/system/rendering/Colored.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp
 	gl/glew.c

@@ -28,7 +28,7 @@
 - attach spot light to camera ✔
 - add systems ✔
 - move all renderers to renderering systems ✔
-- remove unnecessary data transformations (revisit word) 
+- remove unnecessary data transformations, no need to link renderers to ecs ✔
 - find a good way for communications and relations between components (unity scripts) 
 - propagate different lights to pbr
 - add light entities

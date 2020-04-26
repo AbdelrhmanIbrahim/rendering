@@ -10,11 +10,11 @@
 #include "engine/Engine.h"
 
 #include "ecs/World.h"
-#include "world/components/Transform.h"
-#include "world/components/Mesh.h"
-#include "world/components/Camera.h"
-#include "world/components/Material.h"
-#include "world/components/Flash.h"
+#include "world/component/Transform.h"
+#include "world/component/Mesh.h"
+#include "world/component/Camera.h"
+#include "world/component/Material.h"
+#include "world/component/Flash.h"
 
 using namespace world;
 using namespace rndr;

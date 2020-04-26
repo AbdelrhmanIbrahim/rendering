@@ -3,8 +3,8 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
-#include "world/components/Vertex.h"
-#include "world/components/Camera.h"
+#include "world/component/Vertex.h"
+#include "world/component/Camera.h"
 
 #include "gl/glgpu.h"
 

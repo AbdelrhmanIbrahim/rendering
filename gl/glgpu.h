@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world/components/Vertex.h"
+#include "world/component/Vertex.h"
 
 #include "math/Vector.h"
 #include "math/Matrix.h"

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "math/Matrix.h"
-#include "world/components/Sun.h"
-#include "world/components/Lamp.h"
-#include "world/components/Flash.h"
+#include "world/component/Sun.h"
+#include "world/component/Lamp.h"
+#include "world/component/Flash.h"
 
 #include <vector>
 

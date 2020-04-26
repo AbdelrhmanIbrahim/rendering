@@ -1,8 +1,8 @@
 #include "Colored.h"
 
-#include "world/components/Camera.h"
-#include "world/components/Mesh.h"
-#include "world/components/Transform.h"
+#include "world/component/Camera.h"
+#include "world/component/Mesh.h"
+#include "world/component/Transform.h"
 
 #include "math/Matrix.h"
 

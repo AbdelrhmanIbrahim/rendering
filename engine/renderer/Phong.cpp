@@ -7,12 +7,13 @@
 
 #include "defs/Defs.h"
 
-#include "world/components/Camera.h"
-#include "world/components/Mesh.h"
-#include "world/components/Transform.h"
-#include "world/components/Material.h"
+#include "world/component/Camera.h"
+#include "world/component/Mesh.h"
+#include "world/component/Transform.h"
+#include "world/component/Material.h"
 
 #include <corecrt_math.h>
+#include "..\..\world\system\rendering\Phong.h"
 
 using namespace glgpu;
 using namespace math;

@@ -51,11 +51,11 @@ set(RESOURCES
 set(HEADERS
 	app/Painter.h
 	engine/Engine.h
-	engine/renderers/Phong.h
-	engine/renderers/Phong_Shadow.h
-	engine/renderers/PBR.h
-	engine/renderers/Colored.h
-	engine/renderers/Skybox.h
+	engine/renderer/Phong.h
+	engine/renderer/Phong_Shadow.h
+	engine/renderer/PBR.h
+	engine/renderer/Colored.h
+	engine/renderer/Skybox.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -72,14 +72,15 @@ set(HEADERS
 	math/Euler_Angles.h
 	math/Gfx.h
 	window/Window.h
-	world/components/Transform.h
-	world/components/Camera.h
-	world/components/Vertex.h
-	world/components/Mesh.h
-	world/components/Material.h
-	world/components/Sun.h
-	world/components/Lamp.h
-	world/components/Flash.h
+	world/component/Transform.h
+	world/component/Camera.h
+	world/component/Vertex.h
+	world/component/Mesh.h
+	world/component/Material.h
+	world/component/Sun.h
+	world/component/Lamp.h
+	world/component/Flash.h
+	world/system/rendering/Phong.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h
@@ -98,11 +99,12 @@ set(HEADERS
 set(SOURCES
 	app/Painter.cpp
 	engine/Engine.cpp
-	engine/renderers/Phong.cpp
-	engine/renderers/Phong_Shadow.cpp
-	engine/renderers/PBR.cpp
-	engine/renderers/Colored.cpp
-	engine/renderers/Skybox.cpp
+	engine/renderer/Phong.cpp
+	engine/renderer/Phong_Shadow.cpp
+	engine/renderer/PBR.cpp
+	engine/renderer/Colored.cpp
+	engine/renderer/Skybox.cpp
+	world/system/rendering/Phong.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp
 	gl/glew.c

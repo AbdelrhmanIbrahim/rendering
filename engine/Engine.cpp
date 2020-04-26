@@ -1,15 +1,16 @@
 #include "Engine.h"
 
-#include "world/components/Camera.h"
-#include "world/components/Mesh.h"
-#include "world/components/Transform.h"
-#include "world/components/Material.h"
+#include "world/component/Camera.h"
+#include "world/component/Mesh.h"
+#include "world/component/Transform.h"
+#include "world/component/Material.h"
+#include "world/system/rendering/Phong.h"
 
-#include "engine/renderers/Phong.h"
-#include "engine/renderers/PBR.h"
-#include "engine/renderers/Skybox.h"
-#include "engine/renderers/Phong_Shadow.h"
-#include "engine/renderers/Colored.h"
+#include "engine/renderer/Phong.h"
+#include "engine/renderer/PBR.h"
+#include "engine/renderer/Skybox.h"
+#include "engine/renderer/Phong_Shadow.h"
+#include "engine/renderer/Colored.h"
 
 #include "math/Vector.h"
 
@@ -54,45 +55,6 @@ namespace rndr
 		{
 			if (meshes[i].deleted == false)
 				pbr_draw(pbr, camera_view_proj(cam), &meshes[i].data, &transforms[i].data, &materials[i].data);
-		}
-	}
-
-	void
-	_phong_render(Phong phong, const Camera& cam,
-				const std::vector<ecs::Component<Mesh>>& c_meshes,
-				const std::vector<ecs::Component<Transform>>& c_transforms,
-				const std::vector<ecs::Component<Material>>& c_materials,
-				const std::vector<ecs::Component<Sun>>& c_suns,
-				const std::vector<ecs::Component<Lamp>>& c_lamps,
-				const std::vector<ecs::Component<Flash>>& c_flashes)
-	{
-		//lighting setting (unnecassery data transformation here -revisit-)
-		std::vector<world::Sun> suns;
-		for (int i = 0; i < c_suns.size(); ++i)
-		{
-			if (c_suns[i].deleted == false)
-				suns.emplace_back(c_suns[i].data);
-		}
-
-		std::vector<world::Lamp> lamps;
-		for (int i = 0; i < c_lamps.size(); ++i)
-		{
-			if (c_lamps[i].deleted == false)
-				lamps.emplace_back(c_lamps[i].data);
-		}
-
-		std::vector<world::Flash> flashes;
-		for (int i = 0; i < c_flashes.size(); ++i)
-		{
-			if (c_flashes[i].deleted == false)
-				flashes.emplace_back(c_flashes[i].data);
-		}
-		phong_set(phong, &cam, suns, lamps, flashes);
-
-		for (int i = 0; i < c_meshes.size(); ++i)
-		{
-			if (c_meshes[i].deleted == false)
-				phong_draw(phong, camera_view_proj(cam), &c_meshes[i].data, &c_transforms[i].data, &c_materials[i].data);
 		}
 	}
 
@@ -181,10 +143,7 @@ namespace rndr
 			{
 				case Rendering::PHONG:
 				{
-					auto& suns = ecs::world_components_data<world::Sun>(w);
-					auto& lamps = ecs::world_components_data<world::Lamp>(w);
-					auto& flashes = ecs::world_components_data<world::Flash>(w);
-					_phong_render(e->phong, cam, meshes, transforms, materials, suns, lamps, flashes);
+					world::system::phong_render(e->phong, w);
 					break;
 				}
 				case Rendering::PBR:

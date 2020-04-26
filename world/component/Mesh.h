@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "world/components/Vertex.h"
+#include "world/component/Vertex.h"
 
 #include "io/STL_Reader.h"
 

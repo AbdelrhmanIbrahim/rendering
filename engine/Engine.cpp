@@ -1,10 +1,9 @@
 #include "Engine.h"
 
-#include "world/component/Camera.h"
-#include "world/system/rendering/Phong.h"
 #include "world/system/rendering/PBR.h"
+#include "world/system/rendering/Phong.h"
 #include "world/system/rendering/Colored.h"
-//#include "world/system/rendering/Skybox.h"
+#include "world/system/rendering/Skybox.h"
 
 #include "math/Vector.h"
 
@@ -30,10 +29,10 @@ namespace rndr
 		Rendering style;
 
 		//rendering systems
-		system::Phong_System phong;
 		system::PBR_System pbr;
+		system::Phong_System phong;
 		system::Colored_System colored;
-		//system::Skybox_System skybox;
+		system::Skybox_System skybox;
 	};
 
 	//API
@@ -48,12 +47,11 @@ namespace rndr
 		//init rendering style
 		self->style = Rendering::PBR;
 
-		//renderering systems
-		self->phong = system::phong_new();
-		//crashes renderdoc -- revisit
+		//rendering systems, pbr_new crashes renderdoc -- revisit
 		self->pbr = system::pbr_new();
+		self->phong = system::phong_new();
 		self->colored = system::colored_new();
-		//self->skybox = system::skybox_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		self->skybox = system::skybox_hdr_new(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//imgui
 		ImGui::CreateContext();
@@ -65,10 +63,10 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		system::phong_free(e->phong);
 		system::pbr_free(e->pbr);
+		system::phong_free(e->phong);
 		system::colored_free(e->colored);
-		//system::skybox_free(e->skybox);
+		system::skybox_free(e->skybox);
 
 		glgpu::context_free(e->ctx);
 
@@ -89,9 +87,7 @@ namespace rndr
 
 		//render scene
 		{
-			//start the frame
 			glgpu::frame_start();
-
 			switch (e->style)
 			{
 				case Rendering::PHONG:
@@ -106,7 +102,7 @@ namespace rndr
 				default:
 					break;
 			}
-			//skybox_renderer_draw(e->skybox, &ecs::world_components_data<world::Camera>(w)[0].data);
+			world::system::skybox_run(e->skybox, w);
 		}
 	}
 

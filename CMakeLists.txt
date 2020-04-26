@@ -83,6 +83,7 @@ set(HEADERS
 	world/system/rendering/Phong.h
 	world/system/rendering/PBR.h
 	world/system/rendering/Colored.h
+	world/system/rendering/Skybox.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h
@@ -109,6 +110,7 @@ set(SOURCES
 	world/system/rendering/Phong.cpp
 	world/system/rendering/PBR.cpp
 	world/system/rendering/Colored.cpp
+	world/system/rendering/Skybox.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp
 	gl/glew.c

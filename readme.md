@@ -31,8 +31,8 @@
 - remove unnecessary data transformations, no need to link renderers to ecs ✔
 - find a good way for communications and relations between components (unity scripts) ✔
 - add camera sys ✔
-- propagate different lights to pbr
-- add light entities
+- propagate different lights to pbr ✔
+- add light entities ✔
 - point renderer
 - line renderer
 - wireframe

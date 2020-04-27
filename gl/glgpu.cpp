@@ -988,6 +988,7 @@ namespace glgpu
 		glClearColor(0.1, 0.1, 0.1, 1);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
+		glEnable(GL_PROGRAM_POINT_SIZE);
 		glDepthFunc(GL_LESS);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}

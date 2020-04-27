@@ -103,6 +103,40 @@ namespace world
 	}
 
 	void
+	universe_input_act(Universe& u, io::Input& i, int window_width, int window_height)
+	{
+		auto& cam = ecs::world_active_components<world::Camera>(u.world)[0];
+		//Mouse move
+		{
+			math::vec2f mouse_dir{ input_mouse_delta(i) };
+			if (mouse_dir != math::vec2f{})
+				camera_rotate(cam, mouse_dir);
+		}
+
+		//Keyboard
+		{
+			constexpr float speed = 0.05f * 2.0f;
+			if (i.keyboard[(int)io::KEYBOARD::W] == true)
+				camera_move_forward(cam, speed);
+			if (i.keyboard[(int)io::KEYBOARD::S] == true)
+				camera_move_backward(cam, speed);
+			if (i.keyboard[(int)io::KEYBOARD::A] == true)
+				camera_move_left(cam, speed);
+			if (i.keyboard[(int)io::KEYBOARD::D] == true)
+				camera_move_right(cam, speed);
+		}
+
+		//Wheel
+		{
+			camera_zoom(cam, i.wheel_dir);
+		}
+
+		//viewport
+		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
+	}
+	
+
+	void
 	universe_scripts_run(Universe& u)
 	{
 		world::system::script_system_run(u.script_sys, u.world);

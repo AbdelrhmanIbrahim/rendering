@@ -9,16 +9,12 @@
 
 #include "engine/Engine.h"
 
-#include "ecs/World.h"
-#include "world/component/Transform.h"
-#include "world/component/Mesh.h"
+#include "world/Universe.h"
 #include "world/component/Camera.h"
-#include "world/component/Material.h"
 #include "world/component/Flash.h"
 
 using namespace world;
 using namespace rndr;
-using namespace ecs;
 using namespace io;
 
 namespace app
@@ -28,12 +24,10 @@ namespace app
 		//input state
 		io::Input input;
 
-		//rendering engine and world
-		rndr::Engine engine;
-		ecs::World world;
-
-		//rendering mode
+		//rendering engine and universe
 		Rendering style;
+		rndr::Engine engine;
+		world::Universe universe;
 	};
 
 	//Internal helpers
@@ -74,61 +68,6 @@ namespace app
 		}
 	}
 
-	void
-	_world_init_testing_scene(ecs::World& w)
-	{
-		//entities
-		{
-			//cam
-			{
-				auto e = world_entity_new(w);
-				auto handle_c = world_component_add<world::Camera>(w, e);
-				auto data_c = world_handle_component<world::Camera>(w, handle_c);
-				*data_c = camera_new();
-
-				auto handle_f = world_component_add<world::Flash>(w, e);
-				auto data_f = world_handle_component<world::Flash>(w, handle_f);
-				*data_f = world::Flash{ {1.0f, 1.0f, 1.0f, 1.0f},
-										{0.0f, 0.0f, 0.0f, 0.0f },
-										{0, 0, -1, 0}, 10,
-										(float)cos(to_radian(12)),
-										(float)cos(to_radian(15)) };
-			}
-
-			//sphere 1
-			{
-				auto e = world_entity_new(w);
-				auto handle_m = world_component_add<world::Mesh>(w, e);
-				auto data_m = world_handle_component<world::Mesh>(w, handle_m);
-				*data_m = world::mesh_create(DIR_PATH"/res/stls/sphere.stl");
-
-				auto handle_t = world_component_add<world::Transform>(w, e);
-				auto data_t = world_handle_component<world::Transform>(w, handle_t);
-				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ 0, 0, -6} };
-
-				auto handle_c = world_component_add<world::Material>(w, e);
-				auto data_c = world_handle_component<world::Material>(w, handle_t);
-				*data_c = world::Material{math::vec4f{ 0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
-			}
-
-			//sphere 2
-			{
-				auto e = world_entity_new(w);
-				auto handle_m = world_component_add<world::Mesh>(w, e);
-				auto data_m = world_handle_component<world::Mesh>(w, handle_m);
-				*data_m = world::mesh_create(DIR_PATH"/res/stls/sphere.stl");
-
-				auto handle_t = world_component_add<world::Transform>(w, e);
-				auto data_t = world_handle_component<world::Transform>(w, handle_t);
-				*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ 1, 0, 2 } };
-
-				auto handle_c = world_component_add<world::Material>(w, e);
-				auto data_c = world_handle_component<world::Material>(w, handle_t);
-				*data_c = world::Material{ math::vec4f{  0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
-			}
-		}
-	}
-
 	//API
 	Painter
 	painter_new()
@@ -145,9 +84,10 @@ namespace app
 		//init rendering engine and world
 		app->engine = engine_create();
 
-		//init testing ecs world
-		app->world = ecs::world_new();
-		_world_init_testing_scene(app->world);
+		//init testing universe scene
+		app->universe = world::universe_new();
+		world::universe_init_scene(app->universe);
+
 
 		return app;
 	}
@@ -161,22 +101,7 @@ namespace app
 	bool
 	painter_stl_load(Painter app, const char* path)
 	{
-		//create entity
-		auto stl = world_entity_new(app->world);
-
-		//add mesh comp
-		auto handle_m = world_component_add<world::Mesh>(app->world, stl);
-		auto data_m = world_handle_component<world::Mesh>(app->world, handle_m);
-		*data_m = world::mesh_create(path);
-		if (data_m->vertices.empty())
-			return false;
-
-		//add transform component
-		auto handle_t = world_component_add<world::Transform>(app->world, stl);
-		auto data_t = world_handle_component<world::Transform>(app->world, handle_t);
-		*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{0,0,-1}};
-
-		return true;
+		return world::universe_load_stl(app->universe, path);
 	}
 
 	void
@@ -189,18 +114,20 @@ namespace app
 	painter_update(Painter app, int window_width, int window_height)
 	{
 		//this is for now till we have some good way for communicating between components
-		auto& cam = ecs::world_active_components<world::Camera>(app->world)[0];
-		auto& cam_flash = ecs::world_active_components<world::Flash>(app->world)[0];
+		auto& cam = ecs::world_active_components<world::Camera>(app->universe.world)[0];
+		auto& cam_flash = ecs::world_active_components<world::Flash>(app->universe.world)[0];
 
 		_input_act(app->input, cam, cam_flash);
 		input_mouse_update(app->input);
 		world::camera_viewport(cam, math::vec2f{ (float)window_width, (float)window_height });
+
+		universe_scripts_run(app->universe);
 	}
 
 	void
 	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
-		engine_world_draw(app->engine, app->world, palette);
+		engine_world_draw(app->engine, app->universe.world, palette);
 		engine_imgui_draw(app->engine, math::vec2f{ (float)app->input.mouse_x, (float)app->input.mouse_y}, app->input.mouse, palette, width, height);
 		win::window_swap(palette);
 	}
@@ -208,8 +135,8 @@ namespace app
 	void
 	painter_free(Painter app)
 	{
-		engine_free(app->engine);
-		ecs::world_free(app->world);
+		rndr::engine_free(app->engine);
+		world::universe_free(app->universe);
 
 		delete app;
 	}

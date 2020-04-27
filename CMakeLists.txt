@@ -72,6 +72,7 @@ set(HEADERS
 	math/Euler_Angles.h
 	math/Gfx.h
 	window/Window.h
+	world/Universe.h
 	world/component/Transform.h
 	world/component/Camera.h
 	world/component/Vertex.h
@@ -84,6 +85,7 @@ set(HEADERS
 	world/system/rendering/PBR.h
 	world/system/rendering/Colored.h
 	world/system/rendering/Skybox.h
+	world/system/scripting/Script.h
 	infra/mem/chunck.h
 	defs/Defs.h
 	imgui/imgui.h
@@ -108,10 +110,12 @@ set(SOURCES
 	engine/renderer/PBR.cpp
 	engine/renderer/Colored.cpp
 	engine/renderer/Skybox.cpp
+	world/Universe.cpp
 	world/system/rendering/Phong.cpp
 	world/system/rendering/PBR.cpp
 	world/system/rendering/Colored.cpp
 	world/system/rendering/Skybox.cpp
+	world/system/scripting/Script.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp
 	gl/glew.c

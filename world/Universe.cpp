@@ -4,8 +4,9 @@
 #include "world/component/Mesh.h"
 #include "world/component/Camera.h"
 #include "world/component/Material.h"
-#include "world/component/Flash.h"
 #include "world/component/Sun.h"
+#include "world/component/Lamp.h"
+#include "world/component/Flash.h"
 
 #include "world/system/updating/Camera.h"
 
@@ -106,6 +107,7 @@ namespace world
 
 		//lights
 		{
+			//directional
 			{
 				auto e = world_entity_new(w);
 				auto handle_f = world_component_add<world::Sun>(w, e);
@@ -113,11 +115,20 @@ namespace world
 				*data_f = world::Sun{ {1.0f, 0.0f, 1.0f, 1.0f}, {0, -1, 0, 0} };
 			}
 
+			//directional
 			{
 				auto e = world_entity_new(w);
 				auto handle_f = world_component_add<world::Sun>(w, e);
 				auto data_f = world_handle_component<world::Sun>(w, handle_f);
 				*data_f = world::Sun{ {1.0f, 0.0f, 1.0f, 1.0f}, {1, 0, 0, 0} };
+			}
+
+			//point light
+			{
+				auto e = world_entity_new(w);
+				auto handle_f = world_component_add<world::Lamp>(w, e);
+				auto data_f = world_handle_component<world::Lamp>(w, handle_f);
+				*data_f = world::Lamp{ {1.0f, 1.0f, 0.0f, 1.0f}, {0, 0, 0, 0}, 8};
 			}
 		}
 	}

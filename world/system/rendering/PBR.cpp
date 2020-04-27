@@ -5,6 +5,7 @@
 #include "world/component/Transform.h"
 #include "world/component/Material.h"
 #include "world/component/Sun.h"
+#include "world/component/Lamp.h"
 #include "world/component/Flash.h"
 
 #include "infra/mem/chunck.h"
@@ -32,12 +33,14 @@ namespace world
 			auto b_transforms = ecs::world_active_components<world::Transform>(w);
 			auto b_materials = ecs::world_active_components<world::Material>(w);
 			auto b_suns = ecs::world_active_components<world::Sun>(w);
+			auto b_lamps = ecs::world_active_components<world::Lamp>(w);
 			auto b_flashes = ecs::world_active_components<world::Flash>(w);
 
 			math::vec2f viewport = world::camera_viewport(cam);
 			rndr::pbr_set(sys.pbr, 
 				&cam,
 				infra::mem::chunk<world::Sun>{ b_suns.size, b_suns.ptr },
+				infra::mem::chunk<world::Lamp>{ b_lamps.size, b_lamps.ptr },
 				infra::mem::chunk<world::Flash>{ b_flashes.size, b_flashes.ptr });
 
 			for (int i = 0; i < b_meshes.size; ++i)

@@ -3,6 +3,7 @@
 #include "math/Matrix.h"
 
 #include "world/component/Sun.h"
+#include "world/component/Lamp.h"
 #include "world/component/Flash.h"
 
 #include "infra/mem/chunck.h"
@@ -29,6 +30,7 @@ namespace rndr
 	pbr_set(PBR self, 
 		const world::Camera* cam,
 		infra::mem::chunk<world::Sun> suns,
+		infra::mem::chunk<world::Lamp> lamps,
 		infra::mem::chunk<world::Flash> flashes);
 
 	void

@@ -5,6 +5,9 @@
 #include "world/component/Camera.h"
 #include "world/component/Material.h"
 #include "world/component/Flash.h"
+#include "world/component/Sun.h"
+
+#include "world/system/updating/Camera.h"
 
 using namespace ecs;
 
@@ -99,6 +102,23 @@ namespace world
 			auto handle_c = world_component_add<world::Material>(w, e);
 			auto data_c = world_handle_component<world::Material>(w, handle_t);
 			*data_c = world::Material{ math::vec4f{  0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
+		}
+
+		//lights
+		{
+			{
+				auto e = world_entity_new(w);
+				auto handle_f = world_component_add<world::Sun>(w, e);
+				auto data_f = world_handle_component<world::Sun>(w, handle_f);
+				*data_f = world::Sun{ {1.0f, 0.0f, 1.0f, 1.0f}, {0, -1, 0, 0} };
+			}
+
+			{
+				auto e = world_entity_new(w);
+				auto handle_f = world_component_add<world::Sun>(w, e);
+				auto data_f = world_handle_component<world::Sun>(w, handle_f);
+				*data_f = world::Sun{ {1.0f, 0.0f, 1.0f, 1.0f}, {1, 0, 0, 0} };
+			}
 		}
 	}
 

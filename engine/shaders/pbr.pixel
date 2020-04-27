@@ -30,31 +30,64 @@ To understand the precomputed enviroment maps, read the comments section in the 
 
 in vec3 pos_world;
 in vec3 normal_world;
-
 out vec4 frag_color;
 
-layout (std140, binding = 1) uniform Object_Color
+//lights
+const int MAX_LIGHT_NUMBER = 10;
+
+struct
+Sun
 {
-	vec4 object_color_albedo;
+	vec4 col;
+	vec4 dir;
 };
 
-layout (std140, binding = 2) uniform Light
+struct
+Flash
 {
-	vec4 light_color;
-	vec4 light_dir;
+	vec4 col;
+	vec4 pos;
+	vec4 dir;
+	float cutoff_dist;
+	float penumbera_cos; //cone angle
+	float umbera_cos; //cutoff angle
 };
 
-layout (std140, binding = 3) uniform Camera
+struct
+Lights_Count
+{
+	int suns_count;
+	int lamps_count;
+	int flashes_count;
+};
+
+layout (std140, binding = 1) uniform Camera
 {
 	vec4 camera_pos_world;
 };
 
-layout (std140, binding = 4) uniform Material
+layout (std140, binding = 2) uniform Material
 {
+	vec4 object_color_albedo;
 	float metallic;
 	float rough;
 };
 
+layout (std140, binding = 3) uniform Lights_Count_
+{
+	Lights_Count lights;
+};
+
+layout (std140, binding = 4) uniform Directional_Lights
+{
+	Sun suns[MAX_LIGHT_NUMBER];
+};
+
+layout (std140, binding = 6) uniform Spot_Lights
+{
+	Flash flashes[MAX_LIGHT_NUMBER];
+
+};
 layout (binding = 0) uniform samplerCube diffuse_irradiance_map;
 layout (binding = 1) uniform samplerCube specular_prefiltered_map;
 layout (binding = 2) uniform sampler2D specular_BRDF_LUT;
@@ -154,18 +187,53 @@ Direct_Light_BRDF(vec3 normal, vec3 light_dir, vec3 view_dir, float roughness)
 	return (diffuse + specular);
 }
 
+//directional lights
+vec3
+directional_light_calc(Sun sun, vec3 normal, vec3 view_dir, float roughness)
+{
+	vec3 light_c = sun.col.xyz;
+	vec3 light_d = sun.dir.xyz;
+	float nl = max(dot(normal_world, -light_d), 0.0);
+	return Direct_Light_BRDF(normal_world, -light_d, view_dir, rough)* light_c * nl; 
+}
+
+//spot lights
+vec3
+spotlight_calc(Flash flash, vec3 normal, vec3 view_dir, float roughness)
+{
+	vec3 light_c = flash.col.xyz;
+	vec3 light_p = flash.pos.xyz;
+	vec3 light_d = normalize(pos_world - light_p);
+	float nl = max(dot(normal_world, -light_d), 0.0);
+	vec3 result = Direct_Light_BRDF(normal_world, -light_d, view_dir, rough)* light_c * nl;
+
+	//we use a similar cutoff smooth attenuatuion fn as in unreal engine
+	float d = length(pos_world - light_p);
+	float attenuation = clamp(1 - pow((d/flash.cutoff_dist), 2) , 0, 1);
+
+	//intensity according to the angle
+	float theta_cos = dot(normalize(pos_world - flash.pos.xyz), normalize(flash.dir.xyz));
+	float intensity = clamp((theta_cos - flash.umbera_cos) / (flash.penumbera_cos - flash.umbera_cos), 0, 1);
+
+	return result * attenuation * intensity;
+}
+
 void
 main()
 {
-	vec3 light_c = light_color.xyz;
-	vec3 light_d = light_dir.xyz;
-
 	//reflectance eqn (irradiance)
 	vec3 view_dir = normalize(camera_pos_world.xyz - pos_world);
-	float nl = max(dot(normal_world, -light_d), 0.0);
 
-	//calc diffuse and specular of direct lighting
-	vec3 direct_light_irradiance = Direct_Light_BRDF(normal_world, -light_d, view_dir, rough) * light_c * nl;
+	//calc diffuse and specular of direct directional lights
+	vec3 direct_light_irradiance = vec3(0);
+	for(int x = 0; x < lights.suns_count; ++x)
+		direct_light_irradiance += directional_light_calc(suns[x], normal_world, view_dir, rough);
+
+	//for(int x = 0; x < lights.lamps_count; ++x)
+		//direct_light_irradiance += point_light_calc(lamps[x], normal_world, view_dir, rough);
+
+	for(int x = 0; x < lights.flashes_count; ++x)
+		direct_light_irradiance += spotlight_calc(flashes[x], normal_world, view_dir, rough);
 
 	//calc diffuse and specular of indirect enviroment lighting (IBL) 
 	vec3 F0 = vec3(0.04);

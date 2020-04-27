@@ -111,7 +111,7 @@ namespace rndr
 		math::vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
-		//lights count and arrays
+		//lights setting
 		Lights_Count_Uniform lights_count{suns.size % MAX_NUMBER_LIGHT_TYPE, lamps.size % MAX_NUMBER_LIGHT_TYPE, flashes.size % MAX_NUMBER_LIGHT_TYPE};
 		buffer_uniform_set(self->uniform_light_count, &lights_count, sizeof(lights_count));
 		if(suns.size > 0)

@@ -11,6 +11,9 @@
 #include "world/component/Mesh.h"
 #include "world/component/Transform.h"
 #include "world/component/Material.h"
+#include "world/component/Sun.h"
+
+#include "defs/Defs.h"
 
 using namespace glgpu;
 using namespace math;
@@ -22,10 +25,11 @@ namespace rndr
 	{
 		glgpu::Program prog;
 		glgpu::Buffer uniform_space;
-		glgpu::Buffer uniform_object_color;
-		glgpu::Buffer uniform_light;
 		glgpu::Buffer uniform_camera;
 		glgpu::Buffer uniform_material;
+		glgpu::Buffer uniform_light_count;
+		glgpu::Buffer uniform_suns;
+		glgpu::Buffer uniform_flashes;
 
 		//PBR is based on solving the rendering equation integral, for our case solving the diffuse and specular integrations only (excluding the emission part)
 		/* 1) DIFFUSE : we solve the diffuse part of the reflectance integral equation using irradiance convoluted cubemap (diffuse_irradiance_map)
@@ -69,9 +73,19 @@ namespace rndr
 
 	struct Material_Uniform
 	{
+		math::vec4f color;
 		float metallicity;
 		float roughness;
 		float dummy_padding[2];
+	};
+
+	struct
+	Lights_Count_Uniform
+	{
+		int suns_count;
+		int lamps_count;
+		int flashes_count;
+		int dummy;
 	};
 
 	PBR
@@ -82,10 +96,11 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/engine/shaders/pbr.vertex", DIR_PATH"/engine/shaders/pbr.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
-		self->uniform_object_color = buffer_uniform_create(sizeof(vec4f));
-		self->uniform_light = buffer_uniform_create(sizeof(Light_Uniform));
 		self->uniform_camera = buffer_uniform_create(sizeof(Camera_Uniform));
 		self->uniform_material = buffer_uniform_create(sizeof(Material_Uniform));
+		self->uniform_light_count = buffer_uniform_create(sizeof(Lights_Count_Uniform));
+		self->uniform_suns = buffer_uniform_create(MAX_NUMBER_LIGHT_TYPE * sizeof(world::Sun));
+		self->uniform_flashes = buffer_uniform_create(MAX_NUMBER_LIGHT_TYPE * sizeof(world::Flash));
 		self->sampler_diffuse = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 		self->sampler_specular_prefiltering = sampler_create(TEXTURE_FILTERING::LINEAR_MIPMAP, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 		self->sampler_specular_BRDF = sampler_create(TEXTURE_FILTERING::NEAREST, TEXTURE_FILTERING::NEAREST, TEXTURE_SAMPLING::REPEAT);
@@ -132,10 +147,11 @@ namespace rndr
 	{
 		program_delete(self->prog);
 		buffer_delete(self->uniform_space);
-		buffer_delete(self->uniform_object_color);
-		buffer_delete(self->uniform_light);
 		buffer_delete(self->uniform_camera);
 		buffer_delete(self->uniform_material);
+		buffer_delete(self->uniform_light_count);
+		buffer_delete(self->uniform_suns);
+		buffer_delete(self->uniform_flashes);
 		cubemap_free(self->diffuse_irradiance_map);
 		cubemap_free(self->specular_prefiltered_map);
 		sampler_free(self->sampler_diffuse);
@@ -146,16 +162,20 @@ namespace rndr
 	}
 
 	void
-	pbr_set(PBR self, const Camera* camera)
+	pbr_set(PBR self,
+		const world::Camera* camera,
+		infra::mem::chunk<world::Sun> suns,
+		infra::mem::chunk<world::Flash> flashes)
 	{
 		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
 
 		buffer_uniform_bind(0, self->uniform_space);
-		buffer_uniform_bind(1, self->uniform_object_color);
-		buffer_uniform_bind(2, self->uniform_light);
-		buffer_uniform_bind(3, self->uniform_camera);
-		buffer_uniform_bind(4, self->uniform_material);
+		buffer_uniform_bind(1, self->uniform_camera);
+		buffer_uniform_bind(2, self->uniform_material);
+		buffer_uniform_bind(3, self->uniform_light_count);
+		buffer_uniform_bind(4, self->uniform_suns);
+		buffer_uniform_bind(6, self->uniform_flashes);
 
 		cubemap_bind(self->diffuse_irradiance_map, 0);
 		sampler_bind(self->sampler_diffuse, 0);
@@ -169,6 +189,14 @@ namespace rndr
 
 		math::vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
+
+		//lights settings
+		Lights_Count_Uniform lights_count{ suns.size % MAX_NUMBER_LIGHT_TYPE, 0 % MAX_NUMBER_LIGHT_TYPE, flashes.size % MAX_NUMBER_LIGHT_TYPE };
+		buffer_uniform_set(self->uniform_light_count, &lights_count, sizeof(lights_count));
+		if (suns.size > 0)
+			buffer_uniform_set(self->uniform_suns, suns.ptr, suns.size * sizeof(suns[0]));
+		if (flashes.size > 0)
+			buffer_uniform_set(self->uniform_flashes, flashes.ptr, flashes.size * sizeof(flashes[0]));
 	}
 
 	void
@@ -176,10 +204,7 @@ namespace rndr
 	{
 		Space_Uniform mvp{ mat4_from_transform(*model), view_proj};
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
-		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
-		Light_Uniform light{ vec4f{ 1.0f, 1.0f, 1.0f,1.0f }, vec4f{ 0.0f, -1.0f, 0.0f, 0.0f } };
-		buffer_uniform_set(self->uniform_light, &light, sizeof(light));
-		Material_Uniform mat{ material->metallicity, material->roughness, {} };
+		Material_Uniform mat{ material->color_norm, material->metallicity, material->roughness, {} };
 		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
 
 		//draw geometry

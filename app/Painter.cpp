@@ -11,7 +11,6 @@
 
 #include "world/Universe.h"
 
-using namespace world;
 using namespace rndr;
 using namespace io;
 

@@ -1,6 +1,5 @@
 #include "ecs/World.h"
 
-#include "world/system/updating/Camera.h"
 #include "world/system/scripting/Script.h"
 
 #include "io/Input.h"

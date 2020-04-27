@@ -85,6 +85,7 @@ set(HEADERS
 	world/system/rendering/PBR.h
 	world/system/rendering/Colored.h
 	world/system/rendering/Skybox.h
+	world/system/updating/Camera.h
 	world/system/scripting/Script.h
 	infra/mem/chunck.h
 	defs/Defs.h
@@ -115,6 +116,7 @@ set(SOURCES
 	world/system/rendering/PBR.cpp
 	world/system/rendering/Colored.cpp
 	world/system/rendering/Skybox.cpp
+	world/system/updating/Camera.cpp
 	world/system/scripting/Script.cpp
 	gl/glgpu.cpp
 	gl/gl_context.cpp

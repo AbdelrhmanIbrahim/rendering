@@ -22,7 +22,7 @@ namespace world
 		void
 		pbr_run(PBR_System sys, ecs::World& w)
 		{
-			//get bags
+			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];
 			auto b_meshes = ecs::world_active_components<world::Mesh>(w);
 			auto b_transforms = ecs::world_active_components<world::Transform>(w);

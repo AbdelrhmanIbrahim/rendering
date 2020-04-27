@@ -1,5 +1,6 @@
 #include "ecs/World.h"
 
+#include "world/system/updating/Camera.h"
 #include "world/system/scripting/Script.h"
 
 #include "io/Input.h"
@@ -9,8 +10,6 @@ namespace world
 	struct Universe
 	{
 		ecs::World world;
-
-		//world::system::Camera_System cam_sys;
 		world::system::Script_System script_sys;
 	};
 

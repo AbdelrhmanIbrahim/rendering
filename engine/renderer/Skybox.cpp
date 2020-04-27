@@ -1,4 +1,4 @@
-#include "Skybox.h"
+#include "engine/renderer/Skybox.h"
 
 #include "math/Matrix.h"
 #include "math/Gfx.h"
@@ -87,8 +87,9 @@ namespace rndr
 	{
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/engine/shaders/skybox.vertex", DIR_PATH"/engine/shaders/skybox.pixel");
-		self->cube_vs = buffer_vertex_create(skybox, 36);
+		self->cube_vs = buffer_vertex_create();
 		self->cube = vao_create(self->cube_vs);
+		buffer_vertex_set(self->cube_vs, skybox, 36);
 	}
 
 	Skybox

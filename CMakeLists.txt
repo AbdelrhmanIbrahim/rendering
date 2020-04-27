@@ -56,6 +56,7 @@ set(HEADERS
 	engine/renderer/PBR.h
 	engine/renderer/Colored.h
 	engine/renderer/Skybox.h
+	engine/renderer/Point.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -111,6 +112,7 @@ set(SOURCES
 	engine/renderer/PBR.cpp
 	engine/renderer/Colored.cpp
 	engine/renderer/Skybox.cpp
+	engine/renderer/Point.cpp
 	world/Universe.cpp
 	world/system/rendering/Phong.cpp
 	world/system/rendering/PBR.cpp

@@ -34,7 +34,22 @@ namespace glgpu
 	program_delete(Program prog);
 
 	Buffer
-	buffer_vertex_create(const world::Vertex vertices[], std::size_t count);
+	buffer_vertex_create();
+
+	void
+	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count);
+
+	void
+	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count);
+
+	void
+	buffer_vertex_attribute(Buffer self, int att, int att_components_number, int size_bytes, int offset);
+
+	void
+	buffer_vertex_bind(Buffer self);
+
+	void
+	buffer_vertex_unbind();
 
 	Buffer
 	buffer_index_create(unsigned int indices[], std::size_t count);
@@ -150,6 +165,9 @@ namespace glgpu
 
 	void
 	draw_strip(std::size_t vertices_count);
+
+	void
+	draw_point(std::size_t vertices_count);
 
 	void
 	draw_indexed(unsigned int indcies_count);

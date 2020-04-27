@@ -40,7 +40,8 @@ namespace world
 		self.indices = std::move(tris.indices);
 
 		//gpu
-		self.vs = glgpu::buffer_vertex_create(&self.vertices.front(), self.vertices.size());
+		self.vs = glgpu::buffer_vertex_create();
+		glgpu::buffer_vertex_set(self.vs, &self.vertices.front(), self.vertices.size());
 		self.is = glgpu::buffer_index_create(&self.indices.front(), self.indices.size());
 		self.va = vao_create(self.vs, self.is);
 

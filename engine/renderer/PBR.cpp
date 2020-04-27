@@ -1,4 +1,4 @@
-#include "PBR.h"
+#include "engine/renderer/PBR.h"
 
 #include "math/Matrix.h"
 #include "math/Gfx.h"
@@ -171,7 +171,6 @@ namespace rndr
 		infra::mem::chunk<world::Lamp> lamps,
 		infra::mem::chunk<world::Flash> flashes)
 	{
-		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
 
 		buffer_uniform_bind(0, self->uniform_space);

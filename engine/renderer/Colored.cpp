@@ -1,4 +1,4 @@
-#include "Colored.h"
+#include "engine/renderer/Colored.h"
 
 #include "world/component/Camera.h"
 #include "world/component/Mesh.h"
@@ -57,12 +57,9 @@ namespace rndr
 	void
 	colored_set(Colored self, math::vec2f viewport)
 	{
-		color_clear(0.1f, 0.1f, 0.1f);
 		program_use(self->prog);
-
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_object_color);
-
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 

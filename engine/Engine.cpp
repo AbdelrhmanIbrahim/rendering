@@ -67,7 +67,6 @@ namespace rndr
 		system::phong_free(e->phong);
 		system::colored_free(e->colored);
 		system::skybox_free(e->skybox);
-
 		glgpu::context_free(e->ctx);
 
 		delete e;

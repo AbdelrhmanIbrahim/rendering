@@ -397,6 +397,22 @@ namespace glgpu
 		return self;
 	}
 
+	Buffer
+	buffer_vertex_create(const world::Vertex vertices[], std::size_t count)
+	{
+		Buffer self = buffer_vertex_create();
+		buffer_vertex_set(self, vertices, count);
+		return self;
+	}
+
+	Buffer
+	buffer_vertex_create(const math::vec3f pos[], std::size_t count)
+	{
+		Buffer self = buffer_vertex_create();
+		buffer_vertex_set(self, pos, count);
+		return self;
+	}
+
 	void
 	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count)
 	{
@@ -492,6 +508,8 @@ namespace glgpu
 		glGenVertexArrays(1, &self->vao.id);
 		glBindVertexArray(self->vao.id);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
+
+		//assuming the vertex buffer is world::Vertex
 		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
@@ -508,11 +526,13 @@ namespace glgpu
 		glGenVertexArrays(1, &self->vao.id);
 		glBindVertexArray(self->vao.id);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
+
+		//assuming the vertex buffer is world::Vertex
 		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
 
-		//indexs
+		//indices
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 		glBindVertexArray(NULL);
 
@@ -625,8 +645,7 @@ namespace glgpu
 		glViewport(0, 0, view_size[0], view_size[1]);
 
 		//render to output attached texture
-		Buffer quad_vs = buffer_vertex_create();
-		buffer_vertex_set(quad_vs, quad_ndc, 6);
+		Buffer quad_vs = buffer_vertex_create(quad_ndc, 6);
 
 		Vao quad_vao = vao_create(quad_vs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -789,8 +808,7 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Buffer cube_vs = buffer_vertex_create();
-		buffer_vertex_set(cube_vs, unit_cube, 36);
+		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
 		Vao cube_vao = vao_create(cube_vs);
 		
 		error();
@@ -858,8 +876,7 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Buffer cube_vs = buffer_vertex_create();
-		buffer_vertex_set(cube_vs, unit_cube, 36);
+		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
 		Vao cube_vao = vao_create(cube_vs);
 
 		//TEST

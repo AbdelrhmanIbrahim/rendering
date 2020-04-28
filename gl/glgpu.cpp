@@ -534,9 +534,6 @@ namespace glgpu
 	{
 		vao_bind(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
-		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 	}
 
@@ -635,9 +632,9 @@ namespace glgpu
 
 		//render to output attached texture
 		Buffer quad_vbo = buffer_vertex_create();
-		buffer_vertex_set(quad_vbo, quad_ndc, 6, Storage::STATIC);
 		Vao quad_vao = vao_create();
 		vao_attach(quad_vao, quad_vbo);
+		buffer_vertex_set(quad_vbo, quad_ndc, 6, Storage::STATIC);
 		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
@@ -804,9 +801,9 @@ namespace glgpu
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		Buffer cube_vbo = buffer_vertex_create();
-		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
+		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
@@ -878,9 +875,9 @@ namespace glgpu
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		Buffer cube_vbo = buffer_vertex_create();
-		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
+		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));

@@ -88,9 +88,9 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/engine/shaders/skybox.vertex", DIR_PATH"/engine/shaders/skybox.pixel");
 		self->cube_vbo = buffer_vertex_create();
-		buffer_vertex_set(self->cube_vbo, skybox, 36, Storage::STATIC);
 		self->cube_vao = vao_create();
 		vao_attach(self->cube_vao, self->cube_vbo);
+		buffer_vertex_set(self->cube_vbo, skybox, 36, Storage::STATIC);
 		buffer_vertex_attribute(self->cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(self->cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(self->cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));

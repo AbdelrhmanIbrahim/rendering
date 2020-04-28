@@ -1,10 +1,10 @@
 #include "gl/glgpu.h"
 #include "gl/glew.h"
 
+#include "world/component/Vertex.h"
+
 #include "math/Matrix.h"
 #include "math/Gfx.h"
-
-#include "defs/Defs.h"
 
 #include <assert.h>
 #include <fstream>
@@ -416,18 +416,10 @@ namespace glgpu
 	}
 
 	void
-	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count, Storage storage)
+	buffer_vertex_set(Buffer self, const void* arr, int size_bytes, Storage storage)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, self->buffer.id);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(world::Vertex), vertices, _map(storage));
-		glBindBuffer(GL_ARRAY_BUFFER, NULL);
-	}
-
-	void
-	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count, Storage storage)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, self->buffer.id);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(math::vec3f), pos, _map(storage));
+		glBufferData(GL_ARRAY_BUFFER, size_bytes, arr, _map(storage));
 		glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	}
 
@@ -634,7 +626,7 @@ namespace glgpu
 		Buffer quad_vbo = buffer_vertex_create();
 		Vao quad_vao = vao_create();
 		vao_attach(quad_vao, quad_vbo);
-		buffer_vertex_set(quad_vbo, quad_ndc, 6, Storage::STATIC);
+		buffer_vertex_set(quad_vbo, quad_ndc,   sizeof(quad_ndc), Storage::STATIC);
 		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
@@ -803,7 +795,7 @@ namespace glgpu
 		Buffer cube_vbo = buffer_vertex_create();
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
-		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
+		buffer_vertex_set(cube_vbo, unit_cube, sizeof(unit_cube), Storage::STATIC);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
@@ -877,7 +869,7 @@ namespace glgpu
 		Buffer cube_vbo = buffer_vertex_create();
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
-		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
+		buffer_vertex_set(cube_vbo, unit_cube,  sizeof(unit_cube), Storage::STATIC);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));

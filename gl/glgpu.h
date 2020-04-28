@@ -1,7 +1,5 @@
 #pragma once
 
-#include "world/component/Vertex.h"
-
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
@@ -37,10 +35,7 @@ namespace glgpu
 	buffer_vertex_create();
 
 	void
-	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count, Storage storage);
-
-	void
-	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count, Storage storage);
+	buffer_vertex_set(Buffer self, const void* arr, int total_size_bytes, Storage storage);
 
 	void
 	buffer_vertex_attribute(Buffer self, int att, int att_components_number, int size_bytes, int offset);

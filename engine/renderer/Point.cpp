@@ -69,7 +69,7 @@ namespace rndr
 	{
 		program_use(self->prog);
 
-		buffer_vertex_set(self->vbo, &self->points.front(), self->points.size(), Storage::DYNAMIC);
+		buffer_vertex_set(self->vbo, &self->points.front(), self->points.size() * sizeof(self->points.front()) , Storage::DYNAMIC);
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_color);
 

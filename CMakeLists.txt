@@ -44,6 +44,8 @@ set(RESOURCES
 	engine/shaders/colored.pixel
 	engine/shaders/point.vertex
 	engine/shaders/point.pixel	
+	engine/shaders/line.vertex
+	engine/shaders/line.pixel
 	readme.md
 
 	${UI_FILES}
@@ -59,6 +61,7 @@ set(HEADERS
 	engine/renderer/Colored.h
 	engine/renderer/Skybox.h
 	engine/renderer/Point.h
+	engine/renderer/Line.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -89,6 +92,7 @@ set(HEADERS
 	world/system/rendering/Colored.h
 	world/system/rendering/Skybox.h
 	world/system/rendering/Point.h
+	world/system/rendering/Line.h
 	world/system/updating/Camera.h
 	world/system/scripting/Script.h
 	infra/mem/chunck.h
@@ -116,12 +120,14 @@ set(SOURCES
 	engine/renderer/Colored.cpp
 	engine/renderer/Skybox.cpp
 	engine/renderer/Point.cpp
+	engine/renderer/Line.cpp
 	world/Universe.cpp
 	world/system/rendering/Phong.cpp
 	world/system/rendering/PBR.cpp
 	world/system/rendering/Colored.cpp
 	world/system/rendering/Skybox.cpp
 	world/system/rendering/Point.cpp
+	world/system/rendering/Line.cpp
 	world/system/updating/Camera.cpp
 	world/system/scripting/Script.cpp
 	gl/glgpu.cpp

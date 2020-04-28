@@ -168,7 +168,7 @@ namespace rndr
 
 			//draw world cube
 			vao_bind(self->cube_vao);
-			draw_strip(36);
+			draw_strips(36);
 			vao_unbind();
 		}
 		depth_test(DEPTH_TEST::L);

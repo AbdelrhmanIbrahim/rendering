@@ -634,7 +634,7 @@ namespace glgpu
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		vao_bind(quad_vao);
-		draw_strip(6);
+		draw_strips(6);
 		vao_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
@@ -808,7 +808,7 @@ namespace glgpu
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			vao_bind(cube_vao);
-			draw_strip(36);
+			draw_strips(36);
 			vao_unbind();
 		}
 
@@ -891,7 +891,7 @@ namespace glgpu
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
 			vao_bind(cube_vao);
-			draw_strip(36);
+			draw_strips(36);
 			vao_unbind();
 
 			//TEST
@@ -1003,15 +1003,23 @@ namespace glgpu
 	}
 
 	void
-	draw_strip(std::size_t vertices_count)
+	draw_points(std::size_t vertices_count, float thickness)
 	{
-		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_count);
+		glPointSize(thickness);
+		glDrawArrays(GL_POINTS, 0, (GLsizei)vertices_count);
 	}
 
 	void
-	draw_point(std::size_t vertices_count)
+	draw_lines(std::size_t vertices_count, float thickness)
 	{
-		glDrawArrays(GL_POINTS, 0, (GLsizei)vertices_count);
+		glLineWidth(thickness);
+		glDrawArrays(GL_LINES, 0, (GLsizei)vertices_count);
+	}
+
+	void
+	draw_strips(std::size_t vertices_count)
+	{
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_count);
 	}
 
 	void

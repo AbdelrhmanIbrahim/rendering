@@ -4,6 +4,8 @@
 
 #include "math/Vector.h"
 
+#include "defs/Defs.h"
+
 namespace world
 {
 	namespace system
@@ -26,11 +28,7 @@ namespace world
 
 			//append some points
 			for (int i = 0; i < lamps.size; ++i)
-			{
-				rndr::point_append(sys.point,
-					math::vec3f{ lamps[i].pos[0], lamps[i].pos[1] , lamps[i].pos[2] },
-					lamps[i].col);
-			}
+				rndr::point_append(sys.point, Pnt{math::vec3f{ lamps[i].pos[0], lamps[i].pos[1] , lamps[i].pos[2] },lamps[i].col});
 
 			rndr::point_set(sys.point, camera_view_proj(cam));
 			rndr::point_draw(sys.point);

@@ -130,7 +130,7 @@ namespace world
 				auto e = world_entity_new(w);
 				auto handle_f = world_component_add<world::Lamp>(w, e);
 				auto data_f = world_handle_component<world::Lamp>(w, handle_f);
-				*data_f = world::Lamp{ {1.0f, 1.0f, 0.0f, 1.0f}, {0, 0, 0, 0}, 8};
+				*data_f = world::Lamp{ {1.0f, 1.0f, 0.0f, 1.0f}, {0, 2, 0, 0}, 8};
 			}
 		}
 	}

@@ -2,6 +2,8 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
+#include "defs/Defs.h"
+
 namespace rndr
 {
 	typedef struct IPoint* Point;
@@ -13,7 +15,7 @@ namespace rndr
 	point_free(Point self);
 
 	void
-	point_append(Point self, const math::vec3f& pos, const math::vec4f& col);
+	point_append(Point self, Pnt point);
 
 	void
 	point_set(Point self, const math::Mat4f& view_proj);

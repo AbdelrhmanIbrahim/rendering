@@ -162,10 +162,13 @@ namespace glgpu
 	depth_test(DEPTH_TEST test);
 
 	void
-	draw_strip(std::size_t vertices_count);
+	draw_points(std::size_t vertices_count, float thickness);
 
 	void
-	draw_point(std::size_t vertices_count);
+	draw_lines(std::size_t vertices_count, float thickness);
+
+	void
+	draw_strips(std::size_t vertices_count);
 
 	void
 	draw_indexed(unsigned int indcies_count);

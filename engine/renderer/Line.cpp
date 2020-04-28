@@ -1,4 +1,4 @@
-#include "engine/renderer/Point.h"
+#include "engine/renderer/Line.h"
 
 #include "gl/glgpu.h"
 
@@ -8,13 +8,13 @@ using namespace glgpu;
 
 namespace rndr
 {
-	struct IPoint
+	struct ILine
 	{
 		glgpu::Program prog;
 		glgpu::Buffer uniform_space;
 		glgpu::Buffer vbo;
 		glgpu::Vao vao;
-		std::vector<Pnt> points;
+		std::vector<Pnt> lines;
 	};
 
 	//Careful of std140 memory layout/alignment/offsets.prefer always to allocate chunks of 16 bytes.
@@ -24,11 +24,11 @@ namespace rndr
 		math::Mat4f mvp;
 	};
 
-	Point
-	point_create()
+	Line
+	line_create()
 	{
-		IPoint* self = new IPoint;
-		self->prog = program_create(DIR_PATH"/engine/shaders/point.vertex", DIR_PATH"/engine/shaders/point.pixel");
+		ILine* self = new ILine;
+		self->prog = program_create(DIR_PATH"/engine/shaders/line.vertex", DIR_PATH"/engine/shaders/line.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->vbo = buffer_vertex_create();
 		self->vao = vao_create();
@@ -41,7 +41,7 @@ namespace rndr
 	}
 
 	void
-	point_free(Point self)
+	line_free(Line self)
 	{
 		program_delete(self->prog);
 		buffer_delete(self->vbo);
@@ -50,28 +50,29 @@ namespace rndr
 	}
 
 	void
-	point_append(Point self, Pnt point)
+	line_append(Line self, Pnt p0, Pnt p1)
 	{
-		self->points.emplace_back(point);
+		self->lines.emplace_back(p0);
+		self->lines.emplace_back(p1);
 	}
 
 	void
-	point_set(Point self, const math::Mat4f& view_proj)
+	line_set(Line self, const math::Mat4f& view_proj)
 	{
 		program_use(self->prog);
 
 		Space_Uniform mvp{ view_proj };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
-		buffer_vertex_set(self->vbo, &self->points.front(), self->points.size() * sizeof(self->points.front()) , Storage::DYNAMIC);
+		buffer_vertex_set(self->vbo, &self->lines.front(), self->lines.size() * sizeof(self->lines.front()), Storage::DYNAMIC);
 		buffer_uniform_bind(0, self->uniform_space);
 	}
 
 	void
-	point_draw(Point self)
+	line_draw(Line self)
 	{
 		vao_bind(self->vao);
-		draw_points(self->points.size(), 10);
+		draw_lines(self->lines.size(), 5);
 		vao_unbind();
-		self->points.clear();
+		self->lines.clear();
 	}
 };

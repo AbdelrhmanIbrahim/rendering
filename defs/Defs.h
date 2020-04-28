@@ -1,5 +1,7 @@
 #pragma once
 
+#include "math/Vector.h"
+
 #define HANDLE(NAME) typedef struct NAME##__ { int unused; } *NAME;
 #define to_radian(degree) degree * 0.01745329251f
 #define to_degree(radian) radian * 57.2957795131f
@@ -80,6 +82,13 @@ enum class Storage
 {
 	STATIC,
 	DYNAMIC
+};
+
+struct
+Pnt
+{
+	math::vec3f pos;
+	math::vec4f col;
 };
 
 //remove later

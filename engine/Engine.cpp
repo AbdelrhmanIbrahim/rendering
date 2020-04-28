@@ -4,6 +4,7 @@
 #include "world/system/rendering/Phong.h"
 #include "world/system/rendering/Colored.h"
 #include "world/system/rendering/Point.h"
+#include "world/system/rendering/Line.h"
 #include "world/system/rendering/Skybox.h"
 
 #include "math/Vector.h"
@@ -34,6 +35,7 @@ namespace rndr
 		system::Phong_System phong;
 		system::Colored_System colored;
 		system::Point_System point;
+		system::Line_System line;
 		system::Skybox_System skybox;
 	};
 
@@ -54,6 +56,7 @@ namespace rndr
 		self->phong = system::phong_new();
 		self->colored = system::colored_new();
 		self->point = system::point_new();
+		self->line = system::line_new();
 		self->skybox = system::skybox_hdr_new(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//imgui
@@ -70,6 +73,7 @@ namespace rndr
 		system::phong_free(e->phong);
 		system::colored_free(e->colored);
 		system::point_free(e->point);
+		system::line_free(e->line);
 		system::skybox_free(e->skybox);
 
 		glgpu::context_free(e->ctx);
@@ -106,6 +110,7 @@ namespace rndr
 					break;
 			}
 			world::system::point_run(e->point, w);
+			world::system::line_run(e->line, w);
 			world::system::skybox_run(e->skybox, w);
 		}
 	}

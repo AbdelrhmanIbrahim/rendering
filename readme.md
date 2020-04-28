@@ -37,9 +37,9 @@
 - fix point renderer bug (the points show in rdoc only which is weird) ✔
 - render light source as shinny point with radius ✔
 - fix zooming bug ✔
-- line renderer
-- wireframe
+- line renderer ✔
 - virtual tiles ground
+- wireframe
 - selection and picking
 - moving selected entities
 - slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)

@@ -17,15 +17,15 @@ namespace world
 		std::vector<unsigned int> indices;
 
 		//gpu
-		glgpu::Vao va;
-		glgpu::Buffer vs, is;
+		glgpu::Vao vao;
+		glgpu::Buffer vbo, ibo;
 
 		void
 		free()
 		{
-			glgpu::buffer_delete(vs);
-			glgpu::buffer_delete(is);
-			glgpu::vao_delete(va);
+			glgpu::buffer_delete(vao);
+			glgpu::buffer_delete(ibo);
+			glgpu::vao_delete(vao);
 		}
 	};
 
@@ -40,13 +40,15 @@ namespace world
 		self.indices = std::move(tris.indices);
 
 		//gpu
-		self.vs = glgpu::buffer_vertex_create(&self.vertices.front(), self.vertices.size());
-		self.is = glgpu::buffer_index_create(&self.indices.front(), self.indices.size());
-		self.va = glgpu::vao_create();
-		glgpu::vao_attach(self.va, self.vs, self.is);
-		glgpu::buffer_vertex_attribute(self.vs, 0, 3, sizeof(world::Vertex), 0);
-		glgpu::buffer_vertex_attribute(self.vs, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		glgpu::buffer_vertex_attribute(self.vs, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		self.vbo = glgpu::buffer_vertex_create();
+		glgpu::buffer_vertex_set(self.vbo, &self.vertices.front(), self.vertices.size());
+
+		self.ibo = glgpu::buffer_index_create(&self.indices.front(), self.indices.size());
+		self.vao = glgpu::vao_create();
+		glgpu::vao_attach(self.vao, self.vbo, self.ibo);
+		glgpu::buffer_vertex_attribute(self.vbo, 0, 3, sizeof(world::Vertex), 0);
+		glgpu::buffer_vertex_attribute(self.vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		glgpu::buffer_vertex_attribute(self.vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
 		glgpu::vao_unbind();
 
 		return self;

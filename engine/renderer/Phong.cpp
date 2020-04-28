@@ -132,7 +132,7 @@ namespace rndr
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
 
-		vao_bind(mesh->va);
+		vao_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();
 	}

@@ -214,7 +214,7 @@ namespace rndr
 		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
 
 		//draw geometry
-		vao_bind(mesh->va);
+		vao_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();
 	}

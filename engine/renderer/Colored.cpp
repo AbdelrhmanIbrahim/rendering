@@ -72,7 +72,7 @@ namespace rndr
 		buffer_uniform_set(self->uniform_object_color, (void*)&col, sizeof(col));
 
 		//draw geometry
-		vao_bind(mesh->va);
+		vao_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();
 	}

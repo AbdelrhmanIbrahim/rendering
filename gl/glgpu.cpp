@@ -397,22 +397,6 @@ namespace glgpu
 		return self;
 	}
 
-	Buffer
-	buffer_vertex_create(const world::Vertex vertices[], std::size_t count)
-	{
-		Buffer self = buffer_vertex_create();
-		buffer_vertex_set(self, vertices, count);
-		return self;
-	}
-
-	Buffer
-	buffer_vertex_create(const math::vec3f pos[], std::size_t count)
-	{
-		Buffer self = buffer_vertex_create();
-		buffer_vertex_set(self, pos, count);
-		return self;
-	}
-
 	void
 	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count)
 	{
@@ -632,7 +616,8 @@ namespace glgpu
 		glViewport(0, 0, view_size[0], view_size[1]);
 
 		//render to output attached texture
-		Buffer quad_vbo = buffer_vertex_create(quad_ndc, 6);
+		Buffer quad_vbo = buffer_vertex_create();
+		buffer_vertex_set(quad_vbo, quad_ndc, 6);
 		Vao quad_vao = vao_create();
 		vao_attach(quad_vao, quad_vbo);
 		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
@@ -800,7 +785,8 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Buffer cube_vbo = buffer_vertex_create(unit_cube, 36);
+		Buffer cube_vbo = buffer_vertex_create();
+		buffer_vertex_set(cube_vbo, unit_cube, 36);
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
@@ -873,7 +859,8 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Buffer cube_vbo = buffer_vertex_create(unit_cube, 36);
+		Buffer cube_vbo = buffer_vertex_create();
+		buffer_vertex_set(cube_vbo, unit_cube, 36);
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);

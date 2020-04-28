@@ -39,13 +39,13 @@
 - fix zooming bug ✔
 - line renderer ✔
 - virtual tiles ground
-- wireframe
 - selection and picking
 - moving selected entities
-- slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
+- wireframe
 - MSAA enable when needed
 - OI and OD transparency like weighted average or depth peeling
-- start in real time rendering book
+- continue in real time rendering book
+- slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

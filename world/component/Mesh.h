@@ -42,7 +42,12 @@ namespace world
 		//gpu
 		self.vs = glgpu::buffer_vertex_create(&self.vertices.front(), self.vertices.size());
 		self.is = glgpu::buffer_index_create(&self.indices.front(), self.indices.size());
-		self.va = vao_create(self.vs, self.is);
+		self.va = glgpu::vao_create();
+		glgpu::vao_attach(self.va, self.vs, self.is);
+		glgpu::buffer_vertex_attribute(self.vs, 0, 3, sizeof(world::Vertex), 0);
+		glgpu::buffer_vertex_attribute(self.vs, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		glgpu::buffer_vertex_attribute(self.vs, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		glgpu::vao_unbind();
 
 		return self;
 	}

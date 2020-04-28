@@ -18,8 +18,8 @@ namespace rndr
 	struct ISkybox
 	{
 		glgpu::Program prog;
-		glgpu::Vao cube;
-		glgpu::Buffer cube_vs;
+		glgpu::Vao cube_vao;
+		glgpu::Buffer cube_vbo;
 		glgpu::Buffer uniform_space;
 		glgpu::Cubemap cubemap;
 		glgpu::Sampler sampler;
@@ -87,8 +87,13 @@ namespace rndr
 	{
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/engine/shaders/skybox.vertex", DIR_PATH"/engine/shaders/skybox.pixel");
-		self->cube_vs = buffer_vertex_create(skybox, 36);
-		self->cube = vao_create(self->cube_vs);
+		self->cube_vbo = buffer_vertex_create(skybox, 36);
+		self->cube_vao = vao_create();
+		vao_attach(self->cube_vao, self->cube_vbo);
+		buffer_vertex_attribute(self->cube_vbo, 0, 3, sizeof(world::Vertex), 0);
+		buffer_vertex_attribute(self->cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		buffer_vertex_attribute(self->cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		vao_unbind();
 	}
 
 	Skybox
@@ -132,8 +137,8 @@ namespace rndr
 	{
 		program_delete(self->prog);
 		cubemap_free(self->cubemap);
-		vao_delete(self->cube);
-		buffer_delete(self->cube_vs);
+		vao_delete(self->cube_vao);
+		buffer_delete(self->cube_vbo);
 		buffer_delete(self->uniform_space);
 		sampler_free(self->sampler);
 
@@ -161,7 +166,7 @@ namespace rndr
 			sampler_bind(self->sampler, 0);
 
 			//draw world cube
-			vao_bind(self->cube);
+			vao_bind(self->cube_vao);
 			draw_strip(36);
 			vao_unbind();
 		}

@@ -508,47 +508,6 @@ namespace glgpu
 		return self;
 	}
 
-	Vao
-	vao_create(Buffer vbo)
-	{
-		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_VAO;
-
-		glGenVertexArrays(1, &self->vao.id);
-		glBindVertexArray(self->vao.id);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
-
-		//assuming the vertex buffer is world::Vertex
-		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
-		glBindVertexArray(NULL);
-
-		return self;
-	}
-
-	Vao
-	vao_create(Buffer vbo, Buffer ibo)
-	{
-		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_VAO;
-
-		glGenVertexArrays(1, &self->vao.id);
-		glBindVertexArray(self->vao.id);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
-
-		//assuming the vertex buffer is world::Vertex
-		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
-
-		//indices
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
-		glBindVertexArray(NULL);
-
-		return self;
-	}
-
 	void
 	vao_bind(Vao va)
 	{
@@ -573,6 +532,9 @@ namespace glgpu
 	{
 		vao_bind(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
+		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
+		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 	}
 
@@ -676,6 +638,7 @@ namespace glgpu
 		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		vao_unbind();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		vao_bind(quad_vao);
@@ -843,6 +806,7 @@ namespace glgpu
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		vao_unbind();
 
 		error();
 		for (unsigned int i = 0; i < 6; ++i)
@@ -915,6 +879,7 @@ namespace glgpu
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		vao_unbind();
 
 		//TEST
 		/*io::Image imgs[6];

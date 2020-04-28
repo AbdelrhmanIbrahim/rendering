@@ -73,10 +73,7 @@ namespace glgpu
 	buffer_delete(Buffer buf);
 
 	Vao
-	vao_create(Buffer vbo);
-
-	Vao
-	vao_create(Buffer vbo, Buffer ibo);
+	vao_create();
 
 	void
 	vao_bind(Vao vao);

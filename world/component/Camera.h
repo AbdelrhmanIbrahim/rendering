@@ -122,7 +122,7 @@ namespace world
 	{
 		if (scroll_offset > 0)
 			self.fov -= 0.05f;
-		else
+		else if(scroll_offset < 0)
 			self.fov += 0.05f;
 
 		//45 degree

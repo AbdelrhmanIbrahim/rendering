@@ -55,5 +55,6 @@ namespace io
 	{
 		i.pmouse_x = i.mouse_x;
 		i.pmouse_y = i.mouse_y;
+		i.wheel_dir = 0;
 	}
 };

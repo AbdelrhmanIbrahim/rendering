@@ -36,7 +36,7 @@
 - point renderer ✔
 - fix point renderer bug (the points show in rdoc only which is weird) ✔
 - render light source as shinny point with radius ✔
-- fix zooming bug
+- fix zooming bug ✔
 - line renderer
 - wireframe
 - virtual tiles ground

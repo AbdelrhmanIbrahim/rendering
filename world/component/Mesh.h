@@ -8,6 +8,8 @@
 
 #include "gl/glgpu.h"
 
+#include "defs/Defs.h"
+
 namespace world
 {
 	struct Mesh
@@ -41,7 +43,7 @@ namespace world
 
 		//gpu
 		self.vbo = glgpu::buffer_vertex_create();
-		glgpu::buffer_vertex_set(self.vbo, &self.vertices.front(), self.vertices.size());
+		glgpu::buffer_vertex_set(self.vbo, &self.vertices.front(), self.vertices.size(), Storage::STATIC);
 
 		self.ibo = glgpu::buffer_index_create(&self.indices.front(), self.indices.size());
 		self.vao = glgpu::vao_create();

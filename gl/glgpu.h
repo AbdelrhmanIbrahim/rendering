@@ -37,10 +37,10 @@ namespace glgpu
 	buffer_vertex_create();
 
 	void
-	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count);
+	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count, Storage storage);
 
 	void
-	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count);
+	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count, Storage storage);
 
 	void
 	buffer_vertex_attribute(Buffer self, int att, int att_components_number, int size_bytes, int offset);

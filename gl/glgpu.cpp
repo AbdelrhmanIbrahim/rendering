@@ -4,6 +4,8 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
+#include "defs/Defs.h"
+
 #include <assert.h>
 #include <fstream>
 #include <string>
@@ -315,6 +317,22 @@ namespace glgpu
 		}
 	}
 
+	GLenum
+	_map(Storage storage)
+	{
+		switch (storage)
+		{
+		case Storage::STATIC:
+			return GL_STATIC_DRAW;
+			break;
+		case Storage::DYNAMIC:
+			return GL_DYNAMIC_DRAW;
+			break;
+		default:
+			break;
+		}
+	}
+
 	GLuint
 	_shader_obj(std::ifstream& stream, const char* shader_path, SHADER_STAGE shader_stage)
 	{
@@ -398,18 +416,18 @@ namespace glgpu
 	}
 
 	void
-	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count)
+	buffer_vertex_set(Buffer self, const world::Vertex vertices[], std::size_t count, Storage storage)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, self->buffer.id);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(world::Vertex), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(world::Vertex), vertices, _map(storage));
 		glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	}
 
 	void
-	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count)
+	buffer_vertex_set(Buffer self, const math::vec3f pos[], std::size_t count, Storage storage)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, self->buffer.id);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(math::vec3f), pos, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(math::vec3f), pos, _map(storage));
 		glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	}
 
@@ -457,7 +475,7 @@ namespace glgpu
 
 		glGenBuffers(1, &self->buffer.id);
 		glBindBuffer(GL_UNIFORM_BUFFER, self->buffer.id);
-		glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, NULL, GL_STATIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, NULL, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
 		return self;
 	}
@@ -617,7 +635,7 @@ namespace glgpu
 
 		//render to output attached texture
 		Buffer quad_vbo = buffer_vertex_create();
-		buffer_vertex_set(quad_vbo, quad_ndc, 6);
+		buffer_vertex_set(quad_vbo, quad_ndc, 6, Storage::STATIC);
 		Vao quad_vao = vao_create();
 		vao_attach(quad_vao, quad_vbo);
 		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
@@ -786,7 +804,7 @@ namespace glgpu
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		Buffer cube_vbo = buffer_vertex_create();
-		buffer_vertex_set(cube_vbo, unit_cube, 36);
+		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
@@ -860,7 +878,7 @@ namespace glgpu
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
 		Buffer cube_vbo = buffer_vertex_create();
-		buffer_vertex_set(cube_vbo, unit_cube, 36);
+		buffer_vertex_set(cube_vbo, unit_cube, 36, Storage::STATIC);
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
@@ -979,6 +997,7 @@ namespace glgpu
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_PROGRAM_POINT_SIZE);
 		glDepthFunc(GL_LESS);
+		glDepthRange(0, 1);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 

@@ -76,6 +76,12 @@ enum class Rendering
 	COLORED
 };
 
+enum class Storage
+{
+	STATIC,
+	DYNAMIC
+};
+
 //remove later
 struct Unifrom_Float
 {

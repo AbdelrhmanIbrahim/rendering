@@ -35,7 +35,7 @@
 - add light entities ✔
 - point renderer ✔
 - fix point renderer bug (the points show in rdoc only which is weird) ✔
-- render light source as shinny point with radius
+- render light source as shinny point with radius ✔
 - fix zooming bug
 - line renderer
 - wireframe

@@ -13,10 +13,10 @@ namespace rndr
 	point_free(Point self);
 
 	void
-	point_append(Point self, math::vec3f& point);
+	point_append(Point self, const math::vec3f& pos, const math::vec4f& col);
 
 	void
-	point_set(Point self, const math::Mat4f& view_proj, math::vec4f& col);
+	point_set(Point self, const math::Mat4f& view_proj);
 
 	void
 	point_draw(Point self);

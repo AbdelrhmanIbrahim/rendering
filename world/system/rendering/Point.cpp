@@ -26,11 +26,13 @@ namespace world
 
 			//append some points
 			for (int i = 0; i < lamps.size; ++i)
-				rndr::point_append(sys.point, 
-					math::vec3f{lamps[i].pos[0], lamps[i].pos[1] , lamps[i].pos[2]});
+			{
+				rndr::point_append(sys.point,
+					math::vec3f{ lamps[i].pos[0], lamps[i].pos[1] , lamps[i].pos[2] },
+					lamps[i].col);
+			}
 
-			//set color and data to be drawn then draw
-			rndr::point_set(sys.point, camera_view_proj(cam), math::vec4f{ 1, 1, 1, 1 });
+			rndr::point_set(sys.point, camera_view_proj(cam));
 			rndr::point_draw(sys.point);
 		}
 

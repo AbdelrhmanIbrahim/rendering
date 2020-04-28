@@ -34,7 +34,7 @@
 - propagate different lights to pbr ✔
 - add light entities ✔
 - point renderer ✔
-- fix point renderer bug (the points show in rdoc only which is weird)
+- fix point renderer bug (the points show in rdoc only which is weird) ✔
 - line renderer
 - wireframe
 - render light source as shinny point with radius

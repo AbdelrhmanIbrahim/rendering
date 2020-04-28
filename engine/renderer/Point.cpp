@@ -14,6 +14,7 @@ namespace rndr
 		glgpu::Buffer uniform_space;
 		glgpu::Buffer uniform_color;
 		glgpu::Buffer vbo;
+		glgpu::Vao vao;
 		std::vector<math::vec3f> points;
 	};
 
@@ -35,6 +36,11 @@ namespace rndr
 		IPoint* self = new IPoint;
 		self->prog = program_create(DIR_PATH"/engine/shaders/point.vertex", DIR_PATH"/engine/shaders/point.pixel");
 		self->vbo = buffer_vertex_create();
+		self->vao = vao_create();
+		vao_attach(self->vao, self->vbo);
+		buffer_vertex_attribute(self->vbo, 0, 3, sizeof(math::vec3f), 0);
+		vao_unbind();
+
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->uniform_color = buffer_uniform_create(sizeof(Color_Uniform));
 		return self;
@@ -62,7 +68,6 @@ namespace rndr
 		program_use(self->prog);
 
 		buffer_vertex_set(self->vbo, &self->points.front(), self->points.size());
-		buffer_vertex_attribute(self->vbo, 0, 3, sizeof(math::vec3f), 0);
 		buffer_uniform_bind(0, self->uniform_space);
 		buffer_uniform_bind(1, self->uniform_color);
 
@@ -74,9 +79,9 @@ namespace rndr
 	void
 	point_draw(Point self)
 	{
-		buffer_vertex_bind(self->vbo);
+		vao_bind(self->vao);
 		draw_point(self->points.size());
-		buffer_vertex_unbind();
+		vao_unbind();
 		self->points.clear();
 	}
 };

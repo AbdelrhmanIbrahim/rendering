@@ -45,6 +45,7 @@ namespace world
 		self.vbo = glgpu::buffer_vertex_create();
 		self.ibo = glgpu::buffer_index_create(&self.indices.front(), self.indices.size());
 		self.vao = glgpu::vao_create();
+
 		glgpu::vao_attach(self.vao, self.vbo, self.ibo);
 		glgpu::buffer_vertex_set(self.vbo, &self.vertices.front(), self.vertices.size(), Storage::STATIC);
 		glgpu::buffer_vertex_attribute(self.vbo, 0, 3, sizeof(world::Vertex), 0);

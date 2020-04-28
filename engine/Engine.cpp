@@ -105,8 +105,8 @@ namespace rndr
 				default:
 					break;
 			}
+			//world::system::point_run(e->point, w);
 			world::system::skybox_run(e->skybox, w);
-			world::system::point_run(e->point, w);
 		}
 	}
 

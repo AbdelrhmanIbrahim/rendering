@@ -500,6 +500,15 @@ namespace glgpu
 	}
 
 	Vao
+	vao_create()
+	{
+		IGL_Handle* self = new IGL_Handle{};
+		self->kind = IGL_Handle::KIND::KIND_VAO;
+		glGenVertexArrays(1, &self->vao.id);
+		return self;
+	}
+
+	Vao
 	vao_create(Buffer vbo)
 	{
 		IGL_Handle* self = new IGL_Handle{};
@@ -513,6 +522,7 @@ namespace glgpu
 		buffer_vertex_attribute(vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		glBindVertexArray(NULL);
 
 		return self;
 	}
@@ -549,6 +559,21 @@ namespace glgpu
 	vao_unbind()
 	{
 		glBindVertexArray(NULL);
+	}
+
+	void
+	vao_attach(Vao vao, Buffer vbo)
+	{
+		vao_bind(vao);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
+	}
+
+	void
+	vao_attach(Vao vao, Buffer vbo, Buffer ibo)
+	{
+		vao_bind(vao);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 	}
 
 	void
@@ -645,9 +670,13 @@ namespace glgpu
 		glViewport(0, 0, view_size[0], view_size[1]);
 
 		//render to output attached texture
-		Buffer quad_vs = buffer_vertex_create(quad_ndc, 6);
+		Buffer quad_vbo = buffer_vertex_create(quad_ndc, 6);
+		Vao quad_vao = vao_create();
+		vao_attach(quad_vao, quad_vbo);
+		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
+		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
 
-		Vao quad_vao = vao_create(quad_vs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		vao_bind(quad_vao);
 		draw_strip(6);
@@ -656,7 +685,7 @@ namespace glgpu
 
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(quad_vao);
-		buffer_delete(quad_vs);
+		buffer_delete(quad_vbo);
 	}
 
 	void
@@ -808,9 +837,13 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
-		Vao cube_vao = vao_create(cube_vs);
-		
+		Buffer cube_vbo = buffer_vertex_create(unit_cube, 36);
+		Vao cube_vao = vao_create();
+		vao_attach(cube_vao, cube_vbo);
+		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
+		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+
 		error();
 		for (unsigned int i = 0; i < 6; ++i)
 		{
@@ -835,7 +868,7 @@ namespace glgpu
 		//free
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
-		buffer_delete(cube_vs);
+		buffer_delete(cube_vbo);
 		program_delete(prog);
 		texture_free(hdr);
 		sampler_free(sampler);
@@ -876,8 +909,12 @@ namespace glgpu
 
 		//render offline to the output cubemap texs
 		glViewport(0, 0, view_size[0], view_size[1]);
-		Buffer cube_vs = buffer_vertex_create(unit_cube, 36);
-		Vao cube_vao = vao_create(cube_vs);
+		Buffer cube_vbo = buffer_vertex_create(unit_cube, 36);
+		Vao cube_vao = vao_create();
+		vao_attach(cube_vao, cube_vbo);
+		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
+		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
+		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
 
 		//TEST
 		/*io::Image imgs[6];
@@ -914,7 +951,7 @@ namespace glgpu
 		//free
 		glDeleteFramebuffers(1, &fbo);
 		vao_delete(cube_vao);
-		buffer_delete(cube_vs);
+		buffer_delete(cube_vbo);
 		sampler_free(sampler);
 	}
 

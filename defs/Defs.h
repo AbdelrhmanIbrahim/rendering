@@ -75,6 +75,7 @@ enum class Rendering
 {
 	PHONG,
 	PBR,
+	HIDDENLINE,
 	COLORED
 };
 

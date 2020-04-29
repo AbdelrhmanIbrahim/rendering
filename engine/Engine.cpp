@@ -14,15 +14,17 @@
 #include "engine/renderer/Phong.h"
 #include "engine/renderer/PBR.h"
 #include "engine/renderer/Colored.h"
-#include "engine/renderer/Skybox.h"
 #include "engine/renderer/Point.h"
 #include "engine/renderer/Line.h"
+#include "engine/renderer/Edge.h"
+#include "engine/renderer/Skybox.h"
 
 #include "world/system/rendering/Phong.h"
 #include "world/system/rendering/PBR.h"
 #include "world/system/rendering/Colored.h"
 #include "world/system/rendering/Point.h"
 #include "world/system/rendering/Line.h"
+#include "world/system/rendering/Edge.h"
 #include "world/system/rendering/Skybox.h"
 
 using namespace world;
@@ -43,6 +45,7 @@ namespace rndr
 		rndr::Colored colored;
 		rndr::Point point;
 		rndr::Line line;
+		rndr::Edge edge;
 		rndr::Skybox skybox;
 	};
 
@@ -57,6 +60,9 @@ namespace rndr
 			break;
 		case Rendering::PBR:
 			world::system::pbr_run(e->pbr, w);
+			break;
+		case Rendering::HIDDENLINE:
+			world::system::edge_run(e->edge, w);
 			break;
 		case Rendering::COLORED:
 			world::system::colored_run(e->colored, w);
@@ -76,7 +82,7 @@ namespace rndr
 		self->ctx = glgpu::context_create(4, 0);
 
 		//init rendering style
-		self->style = Rendering::PBR;
+		self->style = Rendering::HIDDENLINE;
 
 		//allocate renderers, pbr_create crashes renderdoc -- revisit
 		self->phong = rndr::phong_create();
@@ -84,6 +90,7 @@ namespace rndr
 		self->colored = rndr::colored_create();
 		self->point = rndr::point_create();
 		self->line = rndr::line_create();
+		self->edge = rndr::edge_create();
 		self->skybox = rndr::skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//imgui
@@ -101,6 +108,7 @@ namespace rndr
 		rndr::colored_free(e->colored);
 		rndr::point_free(e->point);
 		rndr::line_free(e->line);
+		rndr::edge_free(e->edge);
 		rndr::skybox_renderer_free(e->skybox);
 
 		glgpu::context_free(e->ctx);

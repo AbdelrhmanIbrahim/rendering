@@ -33,7 +33,7 @@ namespace rndr
 		IEdge* self = new IEdge();
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self->prog = program_create(DIR_PATH"/engine/shaders/edge.vertex", DIR_PATH"/engine/shaders/edge.geom", DIR_PATH"/engine/shaders/edge.pixel");
+		self->prog = program_create(DIR_PATH"/engine/shaders/edge.vertex", DIR_PATH"/engine/shaders/edge.geo", DIR_PATH"/engine/shaders/edge.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->uniform_edge_color = buffer_uniform_create(sizeof(vec4f));
 		return self;

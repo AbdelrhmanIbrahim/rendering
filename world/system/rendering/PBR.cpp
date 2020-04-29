@@ -35,8 +35,9 @@ namespace world
 				infra::mem::chunk<world::Lamp>{ b_lamps.size, b_lamps.ptr },
 				infra::mem::chunk<world::Flash>{ b_flashes.size, b_flashes.ptr });
 
+			math::Mat4f vp = camera_view_proj(cam);
 			for (int i = 0; i < b_meshes.size; ++i)
-				rndr::pbr_draw(pbr, camera_view_proj(cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
+				rndr::pbr_draw(pbr, vp, &b_meshes[i], &b_transforms[i], &b_materials[i]);
 		}
 	};
 };

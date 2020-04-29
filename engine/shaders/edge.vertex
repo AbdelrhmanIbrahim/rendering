@@ -3,7 +3,7 @@
 
 layout(location = 0) in vec3 pos;
 
-layout(std140, binding = 0) uniform Space
+layout (std140, binding = 0) uniform Space
 {
 	mat4 mvp;
 };

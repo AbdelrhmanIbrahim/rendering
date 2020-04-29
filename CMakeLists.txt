@@ -38,14 +38,17 @@ set(RESOURCES
 	engine/shaders/phong_shadow.vertex
 	engine/shaders/phong_shadow.pixel
 	engine/shaders/quad_ndc.vertex
-	engine/shaders/skybox.vertex
-	engine/shaders/skybox.pixel
 	engine/shaders/colored.vertex
 	engine/shaders/colored.pixel
 	engine/shaders/point.vertex
 	engine/shaders/point.pixel	
 	engine/shaders/line.vertex
 	engine/shaders/line.pixel
+	engine/shaders/edge.vertex
+	engine/shaders/edge.geo
+	engine/shaders/edge.pixel
+	engine/shaders/skybox.vertex
+	engine/shaders/skybox.pixel
 	readme.md
 
 	${UI_FILES}
@@ -94,6 +97,7 @@ set(HEADERS
 	world/system/rendering/Skybox.h
 	world/system/rendering/Point.h
 	world/system/rendering/Line.h
+	world/system/rendering/Edge.h
 	world/system/updating/Camera.h
 	world/system/scripting/Script.h
 	infra/mem/chunck.h
@@ -130,6 +134,7 @@ set(SOURCES
 	world/system/rendering/Skybox.cpp
 	world/system/rendering/Point.cpp
 	world/system/rendering/Line.cpp
+	world/system/rendering/Edge.cpp
 	world/system/updating/Camera.cpp
 	world/system/scripting/Script.cpp
 	gl/glgpu.cpp

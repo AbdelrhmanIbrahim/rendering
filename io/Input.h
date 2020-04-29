@@ -31,5 +31,5 @@ namespace io
 	input_mouse_delta(const Input& i);
 
 	void
-	input_mouse_update(Input& i);
+	input_update(Input& i);
 }

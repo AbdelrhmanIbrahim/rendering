@@ -51,7 +51,7 @@ namespace io
 	}
 
 	void
-	input_mouse_update(Input & i)
+	input_update(Input & i)
 	{
 		i.pmouse_x = i.mouse_x;
 		i.pmouse_y = i.mouse_y;

@@ -33,14 +33,14 @@ namespace app
 	{
 		IPainter* app = new IPainter;
 
-		//input init state
+		//init input state
 		app->input = Input{};
 		app->input.mouse_x = WIN_WIDTH / 2;
 		app->input.mouse_y = WIN_HEIGHT / 2;
 		app->input.pmouse_x = WIN_WIDTH / 2;
 		app->input.pmouse_y = WIN_HEIGHT / 2;
 
-		//init rendering engine and world
+		//init rendering engine and world (init rendering engine and its context first as universe may have components seperated into cpu and gpu alloc)
 		app->engine = engine_create();
 
 		//init testing universe scene
@@ -72,8 +72,8 @@ namespace app
 	painter_update(Painter app, int window_width, int window_height)
 	{
 		universe_input_act(app->universe, app->input, window_width, window_height);
-		input_mouse_update(app->input);
 		universe_scripts_run(app->universe);
+		input_update(app->input);
 	}
 
 	void

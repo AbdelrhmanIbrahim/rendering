@@ -14,16 +14,8 @@ namespace world
 {
 	namespace system
 	{
-		Phong_System
-		phong_new()
-		{
-			Phong_System self{};
-			self.phong = rndr::phong_create();
-			return self;
-		}
-
 		void
-		phong_run(Phong_System sys, ecs::World& w)
+		phong_run(rndr::Phong phong, ecs::World& w)
 		{
 			//fetch system req components
 			auto b_cam = ecs::world_active_components<world::Camera>(w)[0];
@@ -34,18 +26,12 @@ namespace world
 			auto b_lamps = ecs::world_active_components<world::Lamp>(w);
 			auto b_flashes = ecs::world_active_components<world::Flash>(w);
 
-			phong_set(sys.phong, &b_cam,
+			phong_set(phong, &b_cam,
 				infra::mem::chunk<world::Sun>{ b_suns.size, b_suns.ptr },
 				infra::mem::chunk<world::Lamp>{ b_lamps.size, b_lamps.ptr },
 				infra::mem::chunk<world::Flash> { b_flashes.size, b_flashes.ptr });
 			for (int i = 0; i < b_meshes.size; ++i)
-				phong_draw(sys.phong, camera_view_proj(b_cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
-		}
-
-		void
-		phong_free(Phong_System sys)
-		{
-			rndr::phong_free(sys.phong);
+				phong_draw(phong, camera_view_proj(b_cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
 		}
 	};
 };

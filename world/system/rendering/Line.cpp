@@ -43,34 +43,21 @@ namespace world
 			lines.emplace_back(Pnt{ math::vec3f{0, 0, 1}, math::vec4f{0,0,1,1} });
 		}
 
-		Line_System
-		line_new()
-		{
-			Line_System sys{};
-			sys.line = rndr::line_create();
-			_grid_init();
-
-			return sys;
-		}
-
 		void
-		line_run(Line_System sys, ecs::World& w)
+		line_run(rndr::Line line, ecs::World& w)
 		{
+			if(lines.empty())
+				_grid_init();
+
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];
 
 			//grid with axes
 			for (int i = 0; i < lines.size(); i += 2)
-				rndr::line_append(sys.line, lines[i], lines[i+1]);
+				rndr::line_append(line, lines[i], lines[i+1]);
 
-			rndr::line_set(sys.line, camera_view_proj(cam));
-			rndr::line_draw(sys.line);
-		}
-
-		void
-		line_free(Line_System sys)
-		{
-			rndr::line_free(sys.line);
+			rndr::line_set(line, camera_view_proj(cam));
+			rndr::line_draw(line);
 		}
 	};
 };

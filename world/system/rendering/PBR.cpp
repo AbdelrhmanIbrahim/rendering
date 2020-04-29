@@ -16,16 +16,8 @@ namespace world
 {
 	namespace system
 	{
-		PBR_System
-		pbr_new()
-		{
-			PBR_System self{};
-			self.pbr = rndr::pbr_create();
-			return self;
-		}
-
 		void
-		pbr_run(PBR_System sys, ecs::World& w)
+		pbr_run(rndr::PBR pbr, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];
@@ -37,20 +29,14 @@ namespace world
 			auto b_flashes = ecs::world_active_components<world::Flash>(w);
 
 			math::vec2f viewport = world::camera_viewport(cam);
-			rndr::pbr_set(sys.pbr, 
+			rndr::pbr_set(pbr, 
 				&cam,
 				infra::mem::chunk<world::Sun>{ b_suns.size, b_suns.ptr },
 				infra::mem::chunk<world::Lamp>{ b_lamps.size, b_lamps.ptr },
 				infra::mem::chunk<world::Flash>{ b_flashes.size, b_flashes.ptr });
 
 			for (int i = 0; i < b_meshes.size; ++i)
-				rndr::pbr_draw(sys.pbr, camera_view_proj(cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
-		}
-
-		void
-		pbr_free(PBR_System sys)
-		{
-			rndr::pbr_free(sys.pbr);
+				rndr::pbr_draw(pbr, camera_view_proj(cam), &b_meshes[i], &b_transforms[i], &b_materials[i]);
 		}
 	};
 };

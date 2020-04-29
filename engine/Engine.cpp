@@ -1,12 +1,5 @@
 #include "Engine.h"
 
-#include "world/system/rendering/PBR.h"
-#include "world/system/rendering/Phong.h"
-#include "world/system/rendering/Colored.h"
-#include "world/system/rendering/Point.h"
-#include "world/system/rendering/Line.h"
-#include "world/system/rendering/Skybox.h"
-
 #include "math/Vector.h"
 
 #include "imgui/imgui.h"
@@ -17,6 +10,20 @@
 #include "gl/gl_context.h"
 
 #include "defs/Defs.h"
+
+#include "engine/renderer/Phong.h"
+#include "engine/renderer/PBR.h"
+#include "engine/renderer/Colored.h"
+#include "engine/renderer/Skybox.h"
+#include "engine/renderer/Point.h"
+#include "engine/renderer/Line.h"
+
+#include "world/system/rendering/Phong.h"
+#include "world/system/rendering/PBR.h"
+#include "world/system/rendering/Colored.h"
+#include "world/system/rendering/Point.h"
+#include "world/system/rendering/Line.h"
+#include "world/system/rendering/Skybox.h"
 
 using namespace world;
 
@@ -30,13 +37,13 @@ namespace rndr
 		//rendering mode
 		Rendering style;
 
-		//rendering systems
-		system::PBR_System pbr;
-		system::Phong_System phong;
-		system::Colored_System colored;
-		system::Point_System point;
-		system::Line_System line;
-		system::Skybox_System skybox;
+		//renderers
+		rndr::Phong phong;
+		rndr::PBR pbr;
+		rndr::Colored colored;
+		rndr::Point point;
+		rndr::Line line;
+		rndr::Skybox skybox;
 	};
 
 	//helpers
@@ -71,13 +78,13 @@ namespace rndr
 		//init rendering style
 		self->style = Rendering::PBR;
 
-		//rendering systems, pbr_new crashes renderdoc -- revisit
-		self->pbr = system::pbr_new();
-		self->phong = system::phong_new();
-		self->colored = system::colored_new();
-		self->point = system::point_new();
-		self->line = system::line_new();
-		self->skybox = system::skybox_hdr_new(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		//allocate renderers, pbr_new crashes renderdoc -- revisit
+		self->phong = rndr::phong_create();
+		self->pbr = rndr::pbr_create();
+		self->colored = rndr::colored_create();
+		self->point = rndr::point_create();
+		self->line = rndr::line_create();
+		self->skybox = rndr::skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//imgui
 		ImGui::CreateContext();
@@ -89,12 +96,12 @@ namespace rndr
 	void
 	engine_free(Engine e)
 	{
-		system::pbr_free(e->pbr);
-		system::phong_free(e->phong);
-		system::colored_free(e->colored);
-		system::point_free(e->point);
-		system::line_free(e->line);
-		system::skybox_free(e->skybox);
+		rndr::phong_free(e->phong);
+		rndr::pbr_free(e->pbr);
+		rndr::colored_free(e->colored);
+		rndr::point_free(e->point);
+		rndr::line_free(e->line);
+		rndr::skybox_renderer_free(e->skybox);
 
 		glgpu::context_free(e->ctx);
 		delete e;

@@ -45,6 +45,7 @@
 - MSAA enable when needed
 - OI and OD transparency like weighted average or depth peeling
 - continue in real time rendering book
+- we do alot of fetching then uploading data to gpu even if there's no change to the data (do some kind of lazy updating)
 - slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
 - make the tiles ground infinite
 - visualize mesh normals and point clouds with geometry shader

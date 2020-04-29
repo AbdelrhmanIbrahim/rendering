@@ -49,6 +49,13 @@ namespace gui
 	}
 
 	void
+	MainWindow::hiddenline_render_mode()
+	{
+		app::painter_style(picasso, Rendering::HIDDENLINE);
+		palette.requestUpdate();
+	}
+
+	void
 	MainWindow::colored_render_mode()
 	{
 		app::painter_style(picasso, Rendering::COLORED);

@@ -36,16 +36,27 @@ namespace world
 		auto stl = world_entity_new(u.world);
 
 		//add mesh comp
-		auto handle_m = world_component_add<world::Mesh>(u.world, stl);
-		auto data_m = world_handle_component<world::Mesh>(u.world, handle_m);
-		*data_m = world::mesh_create(path);
-		if (data_m->vertices.empty())
-			return false;
+		{
+			auto handle = world_component_add<world::Mesh>(u.world, stl);
+			auto data = world_handle_component<world::Mesh>(u.world, handle);
+			*data = world::mesh_create(path);
+			if (data->vertices.empty())
+				return false;
+		}
 
 		//add transform component
-		auto handle_t = world_component_add<world::Transform>(u.world, stl);
-		auto data_t = world_handle_component<world::Transform>(u.world, handle_t);
-		*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{0,0,-1} };
+		{
+			auto handle = world_component_add<world::Transform>(u.world, stl);
+			auto data = world_handle_component<world::Transform>(u.world, handle);
+			*data = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 0.5, 0.5, 0.5 }, math::vec3f{0, 0, 0} };
+		}
+
+		//add material component
+		{
+			auto handle = world_component_add<world::Material>(u.world, stl);
+			auto data = world_handle_component<world::Material>(u.world, handle);
+			*data = world::Material{ math::vec4f{ 0, 1, 0, 1  }, 0.9, 0.2 };
+		}
 
 		return true;
 	}
@@ -107,23 +118,14 @@ namespace world
 
 		//lights
 		{
-			/*
+			
 			//directional
 			{
 				auto e = world_entity_new(w);
 				auto handle_f = world_component_add<world::Sun>(w, e);
 				auto data_f = world_handle_component<world::Sun>(w, handle_f);
-				*data_f = world::Sun{ {1.0f, 1.0f, 0.0f, 1.0f}, {0, -1, 0, 0} };
+				*data_f = world::Sun{ {1.0f, 1.0f, 1.0f, 1.0f}, {0, -1, 0, 0} };
 			}
-
-			//directional
-			{
-				auto e = world_entity_new(w);
-				auto handle_f = world_component_add<world::Sun>(w, e);
-				auto data_f = world_handle_component<world::Sun>(w, handle_f);
-				*data_f = world::Sun{ {1.0f, 0.0f, 1.0f, 1.0f}, {1, 0, 0, 0} };
-			}
-			*/
 
 			//point light
 			{

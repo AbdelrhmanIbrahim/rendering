@@ -82,7 +82,7 @@ namespace rndr
 		self->ctx = glgpu::context_create(4, 0);
 
 		//init rendering style
-		self->style = Rendering::HIDDENLINE;
+		self->style = Rendering::PBR;
 
 		//allocate renderers, pbr_create crashes renderdoc -- revisit
 		self->phong = rndr::phong_create();

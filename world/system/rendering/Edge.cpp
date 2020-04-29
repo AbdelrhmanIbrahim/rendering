@@ -23,7 +23,7 @@ namespace world
 
 			math::Mat4f vp = camera_view_proj(cam);
 			for (int i = 0; i < b_meshes.size; ++i)
-				rndr::edge_draw(edge, vp, &b_meshes[i], &b_transforms[i], math::vec4f{ 1,0,1,1 });
+				rndr::edge_draw(edge, vp, &b_meshes[i], &b_transforms[i], math::vec4f{ 1,1,1,1 });
 		}
 	};
 };

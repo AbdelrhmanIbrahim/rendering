@@ -155,6 +155,41 @@
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="toolButtonHiddenline">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>hiddenline</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(195, 195, 195, 255);</string>
+          </property>
+          <property name="text">
+           <string>pbr</string>
+          </property>
+          <property name="icon">
+           <iconset resource="ui.qrc">
+            <normaloff>:/icons/hiddenline.png</normaloff>:/icons/hiddenline.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -264,11 +299,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>toolButtonHiddenline</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>hiddenline_render_mode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>394</x>
+     <y>227</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>641</x>
+     <y>226</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
+  <slot>stl_load()</slot>
   <slot>phong_render_mode()</slot>
   <slot>pbr_render_mode()</slot>
   <slot>colored_render_mode()</slot>
-  <slot>stl_load()</slot>
+  <slot>hiddenline_render_mode()</slot>
  </slots>
 </ui>

@@ -156,6 +156,7 @@ namespace glgpu
 	enum class SHADER_STAGE
 	{
 		VERTEX,
+		GEOMETRY,
 		PIXEL
 	};
 
@@ -184,6 +185,8 @@ namespace glgpu
 		{
 		case SHADER_STAGE::VERTEX:
 			return GL_VERTEX_SHADER;
+		case SHADER_STAGE::GEOMETRY:
+			return GL_GEOMETRY_SHADER;
 		case SHADER_STAGE::PIXEL:
 			return GL_FRAGMENT_SHADER;
 		default:
@@ -375,18 +378,34 @@ namespace glgpu
 		IGL_Handle* handle = new IGL_Handle{};
 		handle->kind = IGL_Handle::KIND::KIND_PROGRAM;
 		handle->program.id = glCreateProgram();
-		error();
 		std::ifstream stream;
 		GLuint vobj = _shader_obj(stream, vertex_shader_path, SHADER_STAGE::VERTEX);
 		GLuint pobj = _shader_obj(stream, pixel_shader_path, SHADER_STAGE::PIXEL);
 		glAttachShader(handle->program.id, vobj);
-		error();
 		glAttachShader(handle->program.id, pobj);
-		error();
 		glLinkProgram(handle->program.id);
-		error();
 		glDeleteShader(vobj);
+		glDeleteShader(pobj);
 		error();
+		return handle;
+	}
+
+	Program
+	program_create(const char* vertex_shader_path, const char* geometry_shader_path, const char* pixel_shader_path)
+	{
+		IGL_Handle* handle = new IGL_Handle{};
+		handle->kind = IGL_Handle::KIND::KIND_PROGRAM;
+		handle->program.id = glCreateProgram();
+		std::ifstream stream;
+		GLuint vobj = _shader_obj(stream, vertex_shader_path, SHADER_STAGE::VERTEX);
+		GLuint gobj = _shader_obj(stream, geometry_shader_path, SHADER_STAGE::GEOMETRY);
+		GLuint pobj = _shader_obj(stream, pixel_shader_path, SHADER_STAGE::PIXEL);
+		glAttachShader(handle->program.id, vobj);
+		glAttachShader(handle->program.id, gobj);
+		glAttachShader(handle->program.id, pobj);
+		glLinkProgram(handle->program.id);
+		glDeleteShader(vobj);
+		glDeleteShader(gobj);
 		glDeleteShader(pobj);
 		error();
 		return handle;

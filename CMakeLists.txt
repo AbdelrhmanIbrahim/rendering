@@ -59,9 +59,10 @@ set(HEADERS
 	engine/renderer/Phong_Shadow.h
 	engine/renderer/PBR.h
 	engine/renderer/Colored.h
-	engine/renderer/Skybox.h
 	engine/renderer/Point.h
 	engine/renderer/Line.h
+	engine/renderer/Edge.h
+	engine/renderer/Skybox.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -118,9 +119,10 @@ set(SOURCES
 	engine/renderer/Phong_Shadow.cpp
 	engine/renderer/PBR.cpp
 	engine/renderer/Colored.cpp
-	engine/renderer/Skybox.cpp
 	engine/renderer/Point.cpp
 	engine/renderer/Line.cpp
+	engine/renderer/Edge.cpp
+	engine/renderer/Skybox.cpp
 	world/Universe.cpp
 	world/system/rendering/Phong.cpp
 	world/system/rendering/PBR.cpp

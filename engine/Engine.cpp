@@ -78,7 +78,7 @@ namespace rndr
 		//init rendering style
 		self->style = Rendering::PBR;
 
-		//allocate renderers, pbr_new crashes renderdoc -- revisit
+		//allocate renderers, pbr_create crashes renderdoc -- revisit
 		self->phong = rndr::phong_create();
 		self->pbr = rndr::pbr_create();
 		self->colored = rndr::colored_create();

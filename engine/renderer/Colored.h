@@ -4,7 +4,6 @@
 
 namespace world
 {
-	struct Camera;
 	struct Mesh;
 	struct Transform;
 };

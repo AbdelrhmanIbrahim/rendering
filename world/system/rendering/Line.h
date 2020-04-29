@@ -11,7 +11,7 @@ namespace world
 		struct
 		Line_System
 		{
-			rndr::Line point;
+			rndr::Line line;
 		};
 
 		Line_System

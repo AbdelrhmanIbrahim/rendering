@@ -39,6 +39,26 @@ namespace rndr
 		system::Skybox_System skybox;
 	};
 
+	//helpers
+	void
+	_engine_world_mesh_render(Engine e, ecs::World& w)
+	{
+		switch (e->style)
+		{
+		case Rendering::PHONG:
+			world::system::phong_run(e->phong, w);
+			break;
+		case Rendering::PBR:
+			world::system::pbr_run(e->pbr, w);
+			break;
+		case Rendering::COLORED:
+			world::system::colored_run(e->colored, w);
+			break;
+		default:
+			break;
+		}
+	}
+
 	//API
 	Engine
 	engine_create()
@@ -95,20 +115,7 @@ namespace rndr
 		//render scene
 		{
 			glgpu::frame_start();
-			switch (e->style)
-			{
-				case Rendering::PHONG:
-					world::system::phong_run(e->phong, w);
-					break;
-				case Rendering::PBR:
-					world::system::pbr_run(e->pbr, w);
-					break;
-				case Rendering::COLORED:
-					world::system::colored_run(e->colored, w);
-					break;
-				default:
-					break;
-			}
+			_engine_world_mesh_render(e, w);
 			world::system::point_run(e->point, w);
 			world::system::line_run(e->line, w);
 			world::system::skybox_run(e->skybox, w);

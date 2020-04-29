@@ -38,7 +38,8 @@
 - render light source as shinny point with radius ✔
 - fix zooming bug ✔
 - line renderer ✔
-- virtual tiles ground
+- virtual tiles ground ✔
+- hiddenline mode
 - selection and picking
 - moving selected entities
 - wireframe
@@ -46,6 +47,7 @@
 - OI and OD transparency like weighted average or depth peeling
 - continue in real time rendering book
 - slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
+- make the tiles ground infinite
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

@@ -22,5 +22,5 @@ namespace rndr
 	edge_set(Edge self, math::vec2f viewport);
 
 	void
-	edge_draw(Edge self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::vec4f& col);
+	edge_draw(Edge self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::vec4f& col, int backface_cull);
 };

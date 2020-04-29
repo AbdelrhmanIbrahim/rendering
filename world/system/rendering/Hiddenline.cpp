@@ -26,7 +26,7 @@ namespace world
 
 			rndr::edge_set(edge, viewport);
 			for (int i = 0; i < b_meshes.size; ++i)
-				rndr::edge_draw(edge, vp, &b_meshes[i], &b_transforms[i], math::vec4f{ 1, 1, 1, 1 });
+				rndr::edge_draw(edge, vp, &b_meshes[i], &b_transforms[i], math::vec4f{ 1, 1, 1, 1 }, true);
 		}
 	};
 };

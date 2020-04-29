@@ -1001,11 +1001,12 @@ namespace glgpu
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.1, 0.1, 0.1, 1);
-		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_PROGRAM_POINT_SIZE);
+		glCullFace(GL_BACK);
+		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		glDepthRange(0, 1);
+		glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 

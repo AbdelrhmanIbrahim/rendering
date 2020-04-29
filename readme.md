@@ -40,6 +40,7 @@
 - line renderer ✔
 - virtual tiles ground ✔
 - hiddenline mode ✔
+- emit line strip only when face is ccw ✔
 - selection and picking
 - moving selected entities
 - MSAA enable when needed

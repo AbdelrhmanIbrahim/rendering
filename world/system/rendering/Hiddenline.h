@@ -2,6 +2,7 @@
 
 #include "ecs/World.h"
 
+#include "engine/renderer/Colored.h"
 #include "engine/renderer/Edge.h"
 
 namespace world
@@ -9,6 +10,6 @@ namespace world
 	namespace system
 	{
 		void
-		edge_run(rndr::Edge edge, ecs::World& w);
+		hiddenline_run(rndr::Colored colored, rndr::Edge edge, ecs::World& w);
 	};
 };

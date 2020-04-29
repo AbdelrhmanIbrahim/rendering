@@ -39,7 +39,7 @@
 - fix zooming bug ✔
 - line renderer ✔
 - virtual tiles ground ✔
-- hiddenline mode
+- hiddenline mode ✔
 - selection and picking
 - moving selected entities
 - MSAA enable when needed

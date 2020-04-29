@@ -24,7 +24,7 @@
 #include "world/system/rendering/Colored.h"
 #include "world/system/rendering/Point.h"
 #include "world/system/rendering/Line.h"
-#include "world/system/rendering/Edge.h"
+#include "world/system/rendering/Hiddenline.h"
 #include "world/system/rendering/Skybox.h"
 
 using namespace world;
@@ -62,7 +62,7 @@ namespace rndr
 			world::system::pbr_run(e->pbr, w);
 			break;
 		case Rendering::HIDDENLINE:
-			world::system::edge_run(e->edge, w);
+			world::system::hiddenline_run(e->colored, e->edge, w);
 			break;
 		case Rendering::COLORED:
 			world::system::colored_run(e->colored, w);

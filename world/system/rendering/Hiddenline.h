@@ -2,14 +2,13 @@
 
 #include "ecs/World.h"
 
-#include "engine/renderer/Colored.h"
-#include "engine/renderer/Edge.h"
+#include "engine/renderer/Hiddenline.h"
 
 namespace world
 {
 	namespace system
 	{
 		void
-		hiddenline_run(rndr::Colored colored, rndr::Edge edge, ecs::World& w);
+		hiddenline_run(rndr::Hiddenline hline, ecs::World& w);
 	};
 };

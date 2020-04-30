@@ -1,0 +1,19 @@
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
+in vec3 barycentric;
+out vec4 frag_color;
+
+layout (std140, binding = 2) uniform Edge_Color
+{
+	vec4 edge_color;
+};
+
+void
+main()
+{
+	if(any(lessThan(barycentric, vec3(0.02))))
+		frag_color = edge_color;
+	else
+		frag_color = vec4(0,0,0,1);
+}

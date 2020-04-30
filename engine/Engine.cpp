@@ -17,6 +17,7 @@
 #include "engine/renderer/Point.h"
 #include "engine/renderer/Line.h"
 #include "engine/renderer/Edge.h"
+#include "engine/renderer/Hiddenline.h"
 #include "engine/renderer/Skybox.h"
 
 #include "world/system/rendering/Phong.h"
@@ -46,6 +47,7 @@ namespace rndr
 		rndr::Point point;
 		rndr::Line line;
 		rndr::Edge edge;
+		rndr::Hiddenline hline;
 		rndr::Skybox skybox;
 	};
 
@@ -62,7 +64,7 @@ namespace rndr
 			world::system::pbr_run(e->pbr, w);
 			break;
 		case Rendering::HIDDENLINE:
-			world::system::hiddenline_run(e->colored, e->edge, w);
+			world::system::hiddenline_run(e->hline, w);
 			break;
 		case Rendering::COLORED:
 			world::system::colored_run(e->colored, w);
@@ -91,6 +93,7 @@ namespace rndr
 		self->point = rndr::point_create();
 		self->line = rndr::line_create();
 		self->edge = rndr::edge_create();
+		self->hline = rndr::hiddenline_create();
 		self->skybox = rndr::skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
 		//imgui
@@ -109,6 +112,7 @@ namespace rndr
 		rndr::point_free(e->point);
 		rndr::line_free(e->line);
 		rndr::edge_free(e->edge);
+		rndr::hiddenline_free(e->hline);
 		rndr::skybox_renderer_free(e->skybox);
 
 		glgpu::context_free(e->ctx);

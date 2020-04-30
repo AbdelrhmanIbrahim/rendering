@@ -45,8 +45,10 @@ set(RESOURCES
 	engine/shaders/line.vertex
 	engine/shaders/line.pixel
 	engine/shaders/edge.vertex
-	engine/shaders/edge.geo
 	engine/shaders/edge.pixel
+	engine/shaders/hiddenline.vertex
+	engine/shaders/hiddenline.geo
+	engine/shaders/hiddenline.pixel
 	engine/shaders/skybox.vertex
 	engine/shaders/skybox.pixel
 	readme.md
@@ -66,6 +68,7 @@ set(HEADERS
 	engine/renderer/Line.h
 	engine/renderer/Edge.h
 	engine/renderer/Skybox.h
+	engine/renderer/Hiddenline.h
 	gl/glgpu.h
 	gl/gl_context.h
 	gl/glew.h
@@ -127,6 +130,7 @@ set(SOURCES
 	engine/renderer/Line.cpp
 	engine/renderer/Edge.cpp
 	engine/renderer/Skybox.cpp
+	engine/renderer/Hiddenline.cpp
 	world/Universe.cpp
 	world/system/rendering/Phong.cpp
 	world/system/rendering/PBR.cpp

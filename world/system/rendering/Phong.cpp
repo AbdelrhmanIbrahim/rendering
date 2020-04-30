@@ -15,7 +15,7 @@ namespace world
 	namespace system
 	{
 		void
-		phong_run(rndr::Phong phong, ecs::World& w)
+		phong_sys_run(rndr::Phong phong, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];

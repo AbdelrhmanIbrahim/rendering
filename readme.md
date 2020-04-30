@@ -51,7 +51,7 @@
 - slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
 - make the tiles ground infinite
 - visualize mesh normals and point clouds with geometry shader
-- wireframe
+- imporve hiddenline visualization, check its geometry shader comments
 - small profiling shows swapbuffer waiting take much time, read more about this and vsync
 - lazy main loop update for input events and comparing ecs worlds in case of changing data internally
 - make a shadow renderer only that outputs a texture with shadows then merge it later

@@ -15,6 +15,8 @@
 
 #include "utils/Defer.h"
 
+#include "window/Window.h"
+
 namespace glgpu
 {
 	struct IContext

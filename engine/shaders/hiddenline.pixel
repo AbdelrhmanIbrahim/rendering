@@ -12,6 +12,7 @@ layout (std140, binding = 2) uniform Edge_Color
 void
 main()
 {
+	//0.02, this should be relative somehow..if you are away from the mesh then this is kinda large threshold -revisit-
 	if(any(lessThan(barycentric, vec3(0.02))))
 		frag_color = edge_color;
 	else

@@ -12,7 +12,7 @@ namespace world
 	namespace system
 	{
 		void
-		colored_run(rndr::Colored colored, ecs::World& w)
+		colored_sys_run(rndr::Colored colored, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];

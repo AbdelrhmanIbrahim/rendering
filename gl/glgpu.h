@@ -86,10 +86,13 @@ namespace glgpu
 	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
 
 	Texture
-	texture2d_create(const io::Image& img, io::IMAGE_FORMAT format);
+	texture2d_create(const io::Image& img, IMAGE_FORMAT format);
 
 	Texture
-	texture2d_create(const char* image_path, io::IMAGE_FORMAT format);
+	texture2d_create(const char* image_path, IMAGE_FORMAT format);
+
+	math::vec2f
+	texture2d_size(Texture tex);
 
 	void
 	texture2d_render_offline_to(Texture output, Program prog, math::vec2f view_size);

@@ -1,19 +1,13 @@
 #pragma once
 
+#include "defs/Defs.h"
+
 namespace io
 {
 	struct Image
 	{
 		int width, height, channels;
 		void* data;
-	};
-
-	enum class IMAGE_FORMAT
-	{
-		BMP,
-		PNG,
-		JPG,
-		HDR
 	};
 
 	Image

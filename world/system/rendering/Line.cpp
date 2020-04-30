@@ -44,7 +44,7 @@ namespace world
 		}
 
 		void
-		line_run(rndr::Line line, ecs::World& w)
+		line_sys_run(rndr::Line line, ecs::World& w)
 		{
 			if(lines.empty())
 				_grid_init();

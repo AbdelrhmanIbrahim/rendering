@@ -13,6 +13,8 @@
 #include "world/component/Material.h"
 #include "world/component/Sun.h"
 
+#include "io/Image.h"
+
 #include "defs/Defs.h"
 
 using namespace glgpu;
@@ -108,7 +110,7 @@ namespace rndr
 		self->sampler_specular_BRDF = sampler_create(TEXTURE_FILTERING::NEAREST, TEXTURE_FILTERING::NEAREST, TEXTURE_SAMPLING::REPEAT);
 
 		/*Diffuse irriadiance convoluted map*/
-		io::Image diff = image_read(DIR_PATH"/res/imgs/hdr/Tokyo_diff.hdr", io::IMAGE_FORMAT::HDR);
+		io::Image diff = io::image_read(DIR_PATH"/res/imgs/hdr/Tokyo_diff.hdr", IMAGE_FORMAT::HDR);
 		self->diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512}, false);
 		image_free(diff);
 
@@ -119,7 +121,7 @@ namespace rndr
 		vec2f prefiltered_initial_size{ 128, 128 };
 		self->specular_prefiltered_map = cubemap_create(prefiltered_initial_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, true);
 
-		io::Image env = image_read(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr", io::IMAGE_FORMAT::HDR);
+		io::Image env = io::image_read(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr", IMAGE_FORMAT::HDR);
 		Cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, true);
 
 		Program prefiltering_prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/specular_prefiltering_convolution.pixel");

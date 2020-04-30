@@ -9,6 +9,6 @@ namespace world
 	namespace system
 	{
 		void
-		line_run(rndr::Line sys, ecs::World& w);
+		line_sys_run(rndr::Line sys, ecs::World& w);
 	};
 };

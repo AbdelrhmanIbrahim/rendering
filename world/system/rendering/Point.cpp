@@ -11,7 +11,7 @@ namespace world
 	namespace system
 	{
 		void
-		point_run(rndr::Point point, ecs::World& w)
+		point_sys_run(rndr::Point point, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];

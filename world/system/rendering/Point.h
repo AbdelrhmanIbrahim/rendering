@@ -9,6 +9,6 @@ namespace world
 	namespace system
 	{
 		void
-		point_run(rndr::Point point, ecs::World& w);
+		point_sys_run(rndr::Point point, ecs::World& w);
 	};
 };

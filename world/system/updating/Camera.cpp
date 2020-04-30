@@ -6,7 +6,7 @@ namespace world
 	namespace system
 	{
 		void
-		camera_system_run(ecs::World& w, io::Input& i, int win_width, int win_height)
+		camera_sys_run(ecs::World& w, io::Input& i, math::vec2f win_size)
 		{
 			//fetch system req components
 			auto& cam = ecs::world_active_components<world::Camera>(w)[0];
@@ -31,7 +31,7 @@ namespace world
 			camera_zoom(cam, i.wheel_dir);
 
 			//viewport
-			camera_viewport(cam, math::vec2f{ (float)win_width, (float)win_height });
+			camera_viewport(cam, win_size);
 		}
 	};
 };

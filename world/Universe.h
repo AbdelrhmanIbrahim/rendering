@@ -1,6 +1,9 @@
 #include "ecs/World.h"
 
+#include "engine/Engine.h"
+
 #include "world/system/scripting/Script.h"
+#include "world/system/retrieving/Pick.h"
 
 #include "io/Input.h"
 
@@ -9,6 +12,7 @@ namespace world
 	struct Universe
 	{
 		ecs::World world;
+		world::system::Pick_System pick_sys;
 		world::system::Script_System script_sys;
 	};
 
@@ -25,7 +29,7 @@ namespace world
 	universe_init_scene(Universe& u);
 
 	void
-	universe_input_act(Universe& u, io::Input& i, int window_width, int window_height);
+	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine);
 
 	void
 	universe_scripts_run(Universe& u);

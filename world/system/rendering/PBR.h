@@ -9,6 +9,6 @@ namespace world
 	namespace system
 	{
 		void
-		pbr_run(rndr::PBR pbr, ecs::World& w);
+		pbr_sys_run(rndr::PBR pbr, ecs::World& w);
 	};
 };

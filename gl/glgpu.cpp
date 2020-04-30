@@ -629,6 +629,12 @@ namespace glgpu
 		return tex;
 	}
 
+	math::vec2f
+	texture2d_size(Texture tex)
+	{
+		return math::vec2f{ (float)tex->texture.width, (float)tex->texture.height };
+	}
+
 	void
 	texture2d_render_offline_to(Texture output, Program prog, vec2f view_size)
 	{

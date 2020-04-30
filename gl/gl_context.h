@@ -1,7 +1,5 @@
 #pragma once
 
-#include "window/Window.h"
-
 namespace glgpu
 {
 	typedef struct IContext* Context;

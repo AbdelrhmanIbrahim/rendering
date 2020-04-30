@@ -19,6 +19,7 @@ namespace world
 	{
 		Universe u{};
 		u.world = ecs::world_new();
+		u.pick_sys = world::system::pick_sys_new();
 
 		return u;
 	}
@@ -27,6 +28,7 @@ namespace world
 	universe_free(Universe& u)
 	{
 		ecs::world_free(u.world);
+		world::system::pick_sys_free(u.pick_sys);
 	}
 
 	bool
@@ -138,14 +140,16 @@ namespace world
 	}
 
 	void
-	universe_input_act(Universe& u, io::Input& i, int window_width, int window_height)
+	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine)
 	{
-		world::system::camera_system_run(u.world, i, window_width, window_height);
+		//camera sys first to update viewport
+		world::system::camera_sys_run(u.world, i, win_size);
+		//world::system::pick_system_run(u.pick_sys, u.world, i, engine->colored);
 	}
 	
 	void
 	universe_scripts_run(Universe& u)
 	{
-		world::system::script_system_run(u.script_sys, u.world);
+		world::system::script_sys_run(u.script_sys, u.world);
 	}
 }

@@ -19,7 +19,7 @@ namespace world
 		};
 
 		void
-		script_system_run(Script_System sys, ecs::World& w);
+		script_sys_run(Script_System sys, ecs::World& w);
 
 		//scripts
 		void

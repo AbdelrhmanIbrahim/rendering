@@ -85,6 +85,14 @@ enum class Storage
 	DYNAMIC
 };
 
+enum class IMAGE_FORMAT
+{
+	BMP,
+	PNG,
+	JPG,
+	HDR
+};
+
 struct
 Pnt
 {

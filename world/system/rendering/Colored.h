@@ -9,6 +9,6 @@ namespace world
 	namespace system
 	{
 		void
-		colored_run(rndr::Colored colored, ecs::World& w);
+		colored_sys_run(rndr::Colored colored, ecs::World& w);
 	};
 };

@@ -9,7 +9,7 @@ namespace world
 	namespace system
 	{
 		void
-		skybox_run(rndr::Skybox skybox, ecs::World& w)
+		skybox_sys_run(rndr::Skybox skybox, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];

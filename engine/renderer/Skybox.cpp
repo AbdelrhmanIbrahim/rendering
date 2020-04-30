@@ -8,6 +8,8 @@
 
 #include "gl/glgpu.h"
 
+#include "IO/Image.h"
+
 using namespace glgpu;
 using namespace math;
 using namespace world;
@@ -98,7 +100,7 @@ namespace rndr
 	}
 
 	Skybox
-	skybox_renderer_rgba_create(const char** skybox_paths, io::IMAGE_FORMAT format)
+	skybox_renderer_rgba_create(const char** skybox_paths, IMAGE_FORMAT format)
 	{
 		ISkybox* self = new ISkybox;
 		_skybox_init(self);
@@ -123,7 +125,7 @@ namespace rndr
 		_skybox_init(self);
 
 		//load skybox hdr
-		Image img = image_read(skybox_hdr_path, io::IMAGE_FORMAT::HDR);
+		Image img = image_read(skybox_hdr_path, IMAGE_FORMAT::HDR);
 		self->cubemap = cubemap_hdr_create(img, vec2f{800, 800}, false);
 		self->sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));

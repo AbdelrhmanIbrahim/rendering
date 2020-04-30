@@ -71,7 +71,8 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		universe_input_act(app->universe, app->input, window_width, window_height);
+		//some universe input acts needs some engine renderers to complete (e.g. gpu picking sys)
+		universe_input_act(app->universe, math::vec2f{ (float)window_width, (float)window_height }, app->input, app->engine);
 		universe_scripts_run(app->universe);
 		input_update(app->input);
 	}

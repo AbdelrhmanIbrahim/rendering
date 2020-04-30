@@ -9,6 +9,6 @@ namespace world
 	namespace system
 	{
 		void
-		hiddenline_run(rndr::Hiddenline hline, ecs::World& w);
+		hiddenline_sys_run(rndr::Hiddenline hline, ecs::World& w);
 	};
 };

@@ -58,16 +58,16 @@ namespace rndr
 		switch (e->style)
 		{
 		case Rendering::PHONG:
-			world::system::phong_run(e->phong, w);
+			world::system::phong_sys_run(e->phong, w);
 			break;
 		case Rendering::PBR:
-			world::system::pbr_run(e->pbr, w);
+			world::system::pbr_sys_run(e->pbr, w);
 			break;
 		case Rendering::HIDDENLINE:
-			world::system::hiddenline_run(e->hline, w);
+			world::system::hiddenline_sys_run(e->hline, w);
 			break;
 		case Rendering::COLORED:
-			world::system::colored_run(e->colored, w);
+			world::system::colored_sys_run(e->colored, w);
 			break;
 		default:
 			break;
@@ -135,9 +135,9 @@ namespace rndr
 		{
 			glgpu::frame_start();
 			_engine_world_mesh_render(e, w);
-			world::system::point_run(e->point, w);
-			world::system::line_run(e->line, w);
-			world::system::skybox_run(e->skybox, w);
+			world::system::point_sys_run(e->point, w);
+			world::system::line_sys_run(e->line, w);
+			world::system::skybox_sys_run(e->skybox, w);
 		}
 	}
 

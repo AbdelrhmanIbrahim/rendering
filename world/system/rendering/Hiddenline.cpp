@@ -11,7 +11,7 @@ namespace world
 	namespace system
 	{
 		void
-		hiddenline_run(rndr::Hiddenline hline, ecs::World& w)
+		hiddenline_sys_run(rndr::Hiddenline hline, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];

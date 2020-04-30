@@ -9,6 +9,6 @@ namespace world
 	namespace system
 	{
 		void
-		skybox_run(rndr::Skybox sys, ecs::World& w);
+		skybox_sys_run(rndr::Skybox sys, ecs::World& w);
 	};
 };

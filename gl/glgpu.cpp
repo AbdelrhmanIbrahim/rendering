@@ -1023,6 +1023,18 @@ namespace glgpu
 	}
 
 	void
+	poly_edges_enable()
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	void
+	poly_edges_disable()
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	void
 	draw_points(std::size_t vertices_count, float thickness)
 	{
 		glPointSize(thickness);

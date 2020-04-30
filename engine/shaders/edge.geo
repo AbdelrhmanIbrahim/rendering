@@ -1,3 +1,5 @@
+//NOT USED in edge renderer, replaced by glPolygonMode enable
+
 #version 400 core
 #extension GL_ARB_shading_language_420pack : require
 

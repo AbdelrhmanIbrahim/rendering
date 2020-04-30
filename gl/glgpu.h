@@ -165,6 +165,12 @@ namespace glgpu
 	depth_test(DEPTH_TEST test);
 
 	void
+	poly_edges_enable();
+
+	void
+	poly_edges_disable();
+
+	void
 	draw_points(std::size_t vertices_count, float thickness);
 
 	void

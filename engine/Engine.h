@@ -6,10 +6,7 @@
 
 #include "defs/Defs.h"
 
-namespace world
-{
-	struct World;
-}
+#include "engine/renderer/Colored.h"
 
 namespace rndr
 {
@@ -29,4 +26,8 @@ namespace rndr
 
 	void
 	engine_imgui_draw(Engine e, math::vec2f mouse_pos, bool mouse[3], void* win, unsigned int width, unsigned int height);
+
+	//think of sth better, colored rndr needs to be retrieved to be used in some universe systems
+	rndr::Colored
+	engine_colored_renderer(Engine e);
 }

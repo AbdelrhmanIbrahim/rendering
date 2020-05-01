@@ -91,6 +91,9 @@ namespace glgpu
 	Texture
 	texture2d_create(const char* image_path, IMAGE_FORMAT format);
 
+	void
+	texture2d_reallocate(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
+
 	math::vec2f
 	texture2d_size(Texture tex);
 

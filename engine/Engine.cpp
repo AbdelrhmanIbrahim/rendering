@@ -13,7 +13,6 @@
 
 #include "engine/renderer/Phong.h"
 #include "engine/renderer/PBR.h"
-#include "engine/renderer/Colored.h"
 #include "engine/renderer/Point.h"
 #include "engine/renderer/Line.h"
 #include "engine/renderer/Edge.h"
@@ -137,7 +136,7 @@ namespace rndr
 			_engine_world_mesh_render(e, w);
 			world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);
-			world::system::skybox_sys_run(e->skybox, w);
+			//world::system::skybox_sys_run(e->skybox, w);
 		}
 	}
 
@@ -165,5 +164,11 @@ namespace rndr
 		//render gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
+
+	rndr::Colored
+	engine_colored_renderer(Engine e)
+	{
+		return e->colored;
 	}
 };

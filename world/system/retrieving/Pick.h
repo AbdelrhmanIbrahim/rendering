@@ -10,6 +10,7 @@
 #include "math/Matrix.h"
 
 #include "io/Input.h"
+#include "io/Image.h"
 
 namespace world
 {
@@ -20,12 +21,13 @@ namespace world
 		{
 			glgpu::Framebuffer fb;
 			glgpu::Texture tex;
+			io::Image pixels;
 		};
 
 		Pick_System
 		pick_sys_new();
 
-		void
+		int
 		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored);
 
 		void

@@ -629,6 +629,21 @@ namespace glgpu
 		return tex;
 	}
 
+	void
+	texture2d_reallocate(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	{
+		tex->texture.width = size[0];
+		tex->texture.height = size[1];
+		tex->texture.internal_format = _map(internal_format);
+		tex->texture.pixel_format = _map(format);
+		tex->texture.type = _map(type);
+		glDeleteTextures(1, &tex->texture.id);
+		glGenTextures(1, &tex->texture.id);
+		glBindTexture(GL_TEXTURE_2D, tex->texture.id);
+		glTexImage2D(GL_TEXTURE_2D, 0, tex->texture.internal_format, tex->texture.width, tex->texture.height, 0, tex->texture.pixel_format, tex->texture.type, NULL);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+
 	math::vec2f
 	texture2d_size(Texture tex)
 	{

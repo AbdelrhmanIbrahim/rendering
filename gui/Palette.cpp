@@ -15,20 +15,36 @@ namespace gui
     {
         switch (k)
         {
-            case Qt::Key_W:
+            case Qt::Key::Key_W:
             case Qt::UpArrow:
                 return io::KEYBOARD::W;
-            case Qt::Key_A:
+            case Qt::Key::Key_A:
             case Qt::LeftArrow:
                 return io::KEYBOARD::A;
-            case Qt::Key_S:
+            case Qt::Key::Key_S:
             case Qt::DownArrow:
                 return io::KEYBOARD::S;
-            case Qt::Key_D:
+            case Qt::Key::Key_D:
             case Qt::RightArrow:
                 return io::KEYBOARD::D;
             default:
                 return io::KEYBOARD::COUNT;
+        }
+    }
+
+    inline static io::MOUSE
+     _map_mouse_button(Qt::MouseButton b)
+    {
+        switch (b)
+        {
+            case Qt::MouseButton::LeftButton:
+                return io::MOUSE::LEFT;
+            case Qt::MouseButton::RightButton:
+                return io::MOUSE::RIGHT;
+            case Qt::MouseButton::MiddleButton:
+                return io::MOUSE::MIDDLE;
+            default:
+                return io::MOUSE::COUNT;
         }
     }
 
@@ -93,6 +109,41 @@ namespace gui
         }
 
         QWindow::mouseMoveEvent(event);
+    }
+
+    void 
+    Palette::mousePressEvent(QMouseEvent* event)
+    {
+        if (geometry().contains(event->pos()))
+        {
+            io::Event e{};
+            e.kind = io::Event::KIND::KIND_MOUSE_BUTTON;
+            e.mouse_button.s = io::KEY_STATE::DOWN;
+            e.mouse_button.b = _map_mouse_button(event->button());
+
+            app::painter_input(painter, e);
+            app::painter_update(painter, width(), height());
+            app::painter_paint(painter, (void*)winId(), width(), height());
+        }
+
+        QWindow::mousePressEvent(event);
+    }
+
+    void
+    Palette::mouseReleaseEvent(QMouseEvent* event)
+    {
+        if (geometry().contains(event->pos()))
+        {
+            io::Event e{};
+            e.kind = io::Event::KIND::KIND_MOUSE_BUTTON;
+            e.mouse_button.s = io::KEY_STATE::UP;
+            e.mouse_button.b = _map_mouse_button(event->button());
+
+            app::painter_input(painter, e);
+            app::painter_update(painter, width(), height());
+            app::painter_paint(painter, (void*)winId(), width(), height());
+        }
+        QWindow::mouseReleaseEvent(event);
     }
 
     void

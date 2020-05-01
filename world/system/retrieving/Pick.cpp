@@ -3,6 +3,13 @@
 #include "world/component/Mesh.h"
 #include "world/component/Transform.h"
 
+#include "math/Vector.h"
+#include "math/Matrix.h"
+
+#include "io/Image.h"
+
+#include "gl/glgpu.h"
+
 #include "defs/Defs.h"
 
 using namespace glgpu;
@@ -12,6 +19,14 @@ namespace world
 {
 	namespace system
 	{
+		//gpu picking
+		struct IPick_System
+		{
+			glgpu::Framebuffer fb;
+			glgpu::Texture tex;
+			io::Image pixels;
+		};
+
 		//internals
 		math::vec3f
 		_id_to_rgb(int id)
@@ -30,16 +45,16 @@ namespace world
 		Pick_System
 		pick_sys_new()
 		{
-			Pick_System sys;
-			sys.fb = framebuffer_create();
-			sys.tex = texture2d_create(math::vec2f{ 1,1 }, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
-			sys.pixels = image_new(4, math::vec2f{ 1,1 });
+			IPick_System* sys = new IPick_System;
+			sys->fb = framebuffer_create();
+			sys->tex = texture2d_create(math::vec2f{ 1,1 }, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
+			sys->pixels = image_new(4, math::vec2f{ 1,1 });
 
 			return sys;
 		}
 
 		int
-		pick_system_run(Pick_System& sys, ecs::World& w, io::Input& i, rndr::Colored colored)
+		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored)
 		{
 			int id = -1;
 			if (i.mouse[0] == true)
@@ -52,16 +67,16 @@ namespace world
 
 				//reallocate tex if needed
 				math::vec2f viewport = camera_viewport(cam);
-				math::vec2f size = texture2d_size(sys.tex);
+				math::vec2f size = texture2d_size(sys->tex);
 				if (viewport != size)
 				{
-					texture2d_resize(sys.tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
-					image_resize(sys.pixels, viewport);
+					texture2d_resize(sys->tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+					image_resize(sys->pixels, viewport);
 				}
 
 				//bind fb to render colored with entity ids into
-				framebuffer_bind(sys.fb);
-				framebuffer_attach(sys.fb, sys.tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
+				framebuffer_bind(sys->fb);
+				framebuffer_attach(sys->fb, sys->tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
 				{
 					frame_start(1, 1, 1);
 					math::Mat4f view_proj = camera_view_proj(cam);
@@ -90,11 +105,11 @@ namespace world
 		}
 
 		void
-		pick_sys_free(Pick_System& sys)
+		pick_sys_free(Pick_System sys)
 		{
-			texture_free(sys.tex);
-			framebuffer_free(sys.fb);
-			image_free(sys.pixels);
+			texture_free(sys->tex);
+			framebuffer_free(sys->fb);
+			image_free(sys->pixels);
 		}
 	};
 };

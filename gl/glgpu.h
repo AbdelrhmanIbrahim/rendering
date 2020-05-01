@@ -162,7 +162,7 @@ namespace glgpu
 	depth_clear();
 
 	void
-	frame_start(int r, int g, int b);
+	frame_start(float r, float g, float b);
 
 	void
 	color_clear(float r, float g, float b);

@@ -927,12 +927,7 @@ namespace glgpu
 		//TEST
 		/*io::Image imgs[6];
 		for (int i = 0; i < 6; ++i)
-		{
-			imgs[i].data = new unsigned char[4 * view_size[0] * view_size[1]];
-			imgs[i].width = view_size[0];
-			imgs[i].height = view_size[1];
-			imgs[i].channels = 4;
-		}*/
+			imgs[i] = io::image_new(4, view_size)*/
 
 		for (unsigned int i = 0; i < 6; ++i)
 		{
@@ -1027,7 +1022,7 @@ namespace glgpu
 	}
 
 	void
-	frame_start(int r, int g, int b)
+	frame_start(float r, float g, float b)
 	{
 		glClearColor(r, g, b, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

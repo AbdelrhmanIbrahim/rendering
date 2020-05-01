@@ -132,11 +132,11 @@ namespace rndr
 
 		//render scene
 		{
-			glgpu::frame_start(0.1, 0.1, 0.1);
+			glgpu::frame_start(0.6f, 0.68f, 0.5f);
 			_engine_world_mesh_render(e, w);
 			world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);
-			//world::system::skybox_sys_run(e->skybox, w);
+			world::system::skybox_sys_run(e->skybox, w);
 		}
 	}
 

@@ -56,7 +56,6 @@ namespace world
 		int
 		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored)
 		{
-			int id = -1;
 			if (i.mouse[0] == true)
 			{
 				//fetch system req components
@@ -91,17 +90,21 @@ namespace world
 
 				//read pixel where mouse_pos
 				{
-					//int col = 0xFFFFFF;
-					//sys.pixel.data[] <-> i.mouse_x, i.mouse_y;
-					//get rgb, check if 255 or 1, use _rgb_to_id to set col
+					texture2d_unpack(sys->tex, sys->pixels, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+					int index = 4 * (sys->pixels.width * (sys->pixels.height - i.mouse_y) + i.mouse_x);
+					unsigned char* bytes = (unsigned char*)sys->pixels.data;
+					unsigned char r = bytes[index];
+					unsigned char g = bytes[index+1];
+					unsigned char b = bytes[index+2];
+					int id = _rgb_to_id(r, g, b);
 
 					//background
-					//if (col != 0xFFFFFF)
-						//id = col;
+					if (id != 0xFFFFFF)
+						return id;
 				}
 			}
 
-			return id;
+			return -1;
 		}
 
 		void

@@ -41,8 +41,8 @@
 - virtual tiles ground ✔
 - hiddenline mode ✔
 - emit line strip only when face is ccw ✔
-- selection and picking
-- moving selected entities
+- mesh picking ✔
+- moving picked entities
 - MSAA enable when needed
 - OI and OD transparency like weighted average or depth peeling
 - continue in real time rendering book

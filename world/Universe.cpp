@@ -10,8 +10,6 @@
 
 #include "world/system/updating/Camera.h"
 
-#include "fmt/printf.h"
-
 using namespace ecs;
 
 namespace world
@@ -147,8 +145,6 @@ namespace world
 		//camera sys first to update viewport
 		world::system::camera_sys_run(u.world, i, win_size);
 		int selected_entity = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
-		if (selected_entity != -1)
-			fmt::print("selected obj {} \n", selected_entity);
 	}
 	
 	void

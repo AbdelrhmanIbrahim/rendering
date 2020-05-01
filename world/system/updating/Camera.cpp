@@ -13,8 +13,8 @@ namespace world
 
 			//Mouse move
 			math::vec2f mouse_dir{ io::input_mouse_delta(i) };
-			if (mouse_dir != math::vec2f{})
-				camera_rotate(cam, mouse_dir);
+			//if (mouse_dir != math::vec2f{})
+				//camera_rotate(cam, mouse_dir);
 
 			//Keyboard
 			constexpr float speed = 0.05f * 2.0f;

@@ -92,7 +92,7 @@ namespace glgpu
 	texture2d_create(const char* image_path, IMAGE_FORMAT format);
 
 	void
-	texture2d_reallocate(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_resize(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
 
 	math::vec2f
 	texture2d_size(Texture tex);
@@ -162,7 +162,7 @@ namespace glgpu
 	depth_clear();
 
 	void
-	frame_start();
+	frame_start(int r, int g, int b);
 
 	void
 	color_clear(float r, float g, float b);

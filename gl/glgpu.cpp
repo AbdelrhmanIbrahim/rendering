@@ -560,14 +560,17 @@ namespace glgpu
 		IGL_Handle* handle = new IGL_Handle{};
 		handle->kind = IGL_Handle::KIND::KIND_TEXTURE;
 
-		glGenTextures(1, &handle->texture.id);
-		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
 		handle->texture.width = size[0];
 		handle->texture.height = size[1];
 		handle->texture.internal_format = _map(internal_format);
 		handle->texture.pixel_format = _map(format);
 		handle->texture.type = _map(type);
-		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, NULL);
+
+		glGenTextures(1, &handle->texture.id);
+		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
+		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type,NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		if (mipmap)
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -605,16 +608,19 @@ namespace glgpu
 			break;
 		}
 
-		glGenTextures(1, &handle->texture.id);
-		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
 		handle->texture.width = img.width;
 		handle->texture.height = img.height;
 		handle->texture.internal_format = _map(internal_format);
 		handle->texture.pixel_format = _map(tex_format);
 		handle->texture.type = _map(type);
 
+		glGenTextures(1, &handle->texture.id);
+		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
 		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, img.data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		glBindTexture(GL_TEXTURE_2D, NULL);
 
 		return handle;
@@ -630,17 +636,20 @@ namespace glgpu
 	}
 
 	void
-	texture2d_reallocate(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_resize(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		tex->texture.width = size[0];
 		tex->texture.height = size[1];
 		tex->texture.internal_format = _map(internal_format);
 		tex->texture.pixel_format = _map(format);
 		tex->texture.type = _map(type);
+
 		glDeleteTextures(1, &tex->texture.id);
 		glGenTextures(1, &tex->texture.id);
 		glBindTexture(GL_TEXTURE_2D, tex->texture.id);
 		glTexImage2D(GL_TEXTURE_2D, 0, tex->texture.internal_format, tex->texture.width, tex->texture.height, 0, tex->texture.pixel_format, tex->texture.type, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, NULL);
 	}
 
@@ -1018,10 +1027,10 @@ namespace glgpu
 	}
 
 	void
-	frame_start()
+	frame_start(int r, int g, int b)
 	{
+		glClearColor(r, g, b, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.1, 0.1, 0.1, 1);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);

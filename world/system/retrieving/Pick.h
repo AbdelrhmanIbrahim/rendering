@@ -28,9 +28,9 @@ namespace world
 		pick_sys_new();
 
 		int
-		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored);
+		pick_system_run(Pick_System& sys, ecs::World& w, io::Input& i, rndr::Colored colored);
 
 		void
-		pick_sys_free(Pick_System sys);
+		pick_sys_free(Pick_System& sys);
 	}
 }

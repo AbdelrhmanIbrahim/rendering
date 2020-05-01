@@ -6,8 +6,21 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "io/Stb_Image_Write.h"
 
+#include <stdlib.h>
+
 namespace io
 {
+	Image
+	image_new(int channels, math::vec2f size)
+	{
+		io::Image img;
+		img.channels = channels;
+		img.width = size[0];
+		img.height = size[1];
+		img.data = malloc(channels * size[0] * size[1]);
+		return img;
+	}
+
 	Image
 	image_read(const char* path, IMAGE_FORMAT format)
 	{
@@ -52,6 +65,14 @@ namespace io
 			assert("unsupported image format" && false);
 			break;
 		}
+	}
+
+	void
+	image_resize(Image& img, math::vec2f size)
+	{
+		img.width = size[0];
+		img.height = size[1];
+		img.data = realloc(img.data, img.channels * size[0] * size[1]);
 	}
 
 	void

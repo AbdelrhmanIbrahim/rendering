@@ -6,6 +6,7 @@
 #include "defs/Defs.h"
 
 using namespace glgpu;
+using namespace io;
 
 namespace world
 {
@@ -32,13 +33,13 @@ namespace world
 			Pick_System sys;
 			sys.fb = framebuffer_create();
 			sys.tex = texture2d_create(math::vec2f{ 1,1 }, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
-			sys.pixels = io::Image{ 1, 1, 4, new char[4] };
+			sys.pixels = image_new(4, math::vec2f{ 1,1 });
 
 			return sys;
 		}
 
 		int
-		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored)
+		pick_system_run(Pick_System& sys, ecs::World& w, io::Input& i, rndr::Colored colored)
 		{
 			int id = -1;
 			if (i.mouse[0] == true)
@@ -54,19 +55,15 @@ namespace world
 				math::vec2f size = texture2d_size(sys.tex);
 				if (viewport != size)
 				{
-					texture2d_reallocate(sys.tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
-
-					//reallocate instead
-					image_free(sys.pixels);
-					sys.pixels = io::Image{ (int)viewport[0], (int)viewport[1], 4, new char[4 * viewport[0] * viewport[1]] };
+					texture2d_resize(sys.tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+					image_resize(sys.pixels, viewport);
 				}
 
 				//bind fb to render colored with entity ids into
-				framebuffer_attach(sys.fb, sys.tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
 				framebuffer_bind(sys.fb);
+				framebuffer_attach(sys.fb, sys.tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
 				{
-					//frame_start();
-					color_clear(1, 1, 1);
+					frame_start(1, 1, 1);
 					math::Mat4f view_proj = camera_view_proj(cam);
 					rndr::colored_set(colored, viewport);
 					for (int i = 0; i < b_meshes.size; ++i)
@@ -79,13 +76,9 @@ namespace world
 
 				//read pixel where mouse_pos
 				{
-					//int col = ;
-					math::vec2f size = texture2d_size(sys.tex);
-					texture2d_unpack(sys.tex, sys.pixels, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
-					io::image_write(sys.pixels, "F:/Abdo/rendering/stuff.png", IMAGE_FORMAT::PNG);
-
-					//i.mouse_x, i.mouse_y;
-					//multiply by 255 after retrieving
+					//int col = 0xFFFFFF;
+					//sys.pixel.data[] <-> i.mouse_x, i.mouse_y;
+					//get rgb, check if 255 or 1, use _rgb_to_id to set col
 
 					//background
 					//if (col != 0xFFFFFF)
@@ -97,11 +90,11 @@ namespace world
 		}
 
 		void
-		pick_sys_free(Pick_System sys)
+		pick_sys_free(Pick_System& sys)
 		{
-			glgpu::texture_free(sys.tex);
-			glgpu::framebuffer_free(sys.fb);
-			io::image_free(sys.pixels);
+			texture_free(sys.tex);
+			framebuffer_free(sys.fb);
+			image_free(sys.pixels);
 		}
 	};
 };

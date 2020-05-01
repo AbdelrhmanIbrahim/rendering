@@ -64,6 +64,7 @@ namespace gui
 
 	MainWindow::~MainWindow()
 	{
+		app::painter_free(picasso);
 		delete ui;
 	}
 };

@@ -132,7 +132,7 @@ namespace rndr
 
 		//render scene
 		{
-			glgpu::frame_start();
+			glgpu::frame_start(0.1, 0.1, 0.1);
 			_engine_world_mesh_render(e, w);
 			world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);

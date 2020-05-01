@@ -2,6 +2,8 @@
 
 #include "defs/Defs.h"
 
+#include "math/Vector.h"
+
 namespace io
 {
 	struct Image
@@ -11,10 +13,16 @@ namespace io
 	};
 
 	Image
+	image_new(int channels, math::vec2f size);
+
+	Image
 	image_read(const char* path, IMAGE_FORMAT format);
 
 	void
 	image_write(const Image& img, const char* path, IMAGE_FORMAT format);
+
+	void
+	image_resize(Image& img, math::vec2f size);
 
 	void
 	image_free(Image& img);

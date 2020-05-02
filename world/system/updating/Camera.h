@@ -12,9 +12,12 @@ namespace world
 	namespace system
 	{
 		void
-		camera_input_entity_run(ecs::World& w, io::Input& i, math::vec2f win_size, ecs::Entity e);
+		camera_viewport_all_run(ecs::World& w, math::vec2f win_size);
 
 		void
-		camera_input_all_run(ecs::World& w, io::Input& i, math::vec2f win_size);
+		camera_input_all_run(ecs::World& w, io::Input& i);
+
+		void
+		camera_input_entity_run(ecs::World& w, io::Input& i, ecs::Entity e);
 	}
 }

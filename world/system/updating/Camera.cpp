@@ -7,7 +7,7 @@ namespace world
 	{
 		//internals
 		void
-		_cam_update(world::Camera* cam, const io::Input& i, math::vec2f win_size)
+		_cam_update(world::Camera* cam, const io::Input& i)
 		{
 			//Mouse move
 			math::vec2f mouse_dir{ io::input_mouse_delta(i) };
@@ -28,29 +28,36 @@ namespace world
 			//Wheel
 			camera_zoom(*cam, i.wheel_dir);
 
-			//viewport
-			camera_viewport(*cam, win_size);
 		}
 
 		//API
 		void
-		camera_input_entity_run(ecs::World& w, io::Input& i, math::vec2f win_size, ecs::Entity e)
+		camera_viewport_all_run(ecs::World& w, math::vec2f win_size)
 		{
-			auto h = ecs::world_component_add<world::Camera>(w, e);
-			auto c = ecs::world_handle_component<world::Camera>(w, h);
-			_cam_update(c, i, win_size);
+			//fetch system req components
+			auto cbag = ecs::world_active_components<world::Camera>(w);
+			for (int x = 0; x < cbag.size; ++x)
+				camera_viewport(cbag[x], win_size);
 		}
 
 		void
-		camera_input_all_run(ecs::World& w, io::Input& i, math::vec2f win_size)
+		camera_input_all_run(ecs::World& w, io::Input& i)
 		{
 			//fetch system req components
 			auto cbag = ecs::world_active_components<world::Camera>(w);
 			for (int x = 0; x < cbag.size; ++x)
 			{
 				math::vec2f mouse_dir{ io::input_mouse_delta(i) };
-				_cam_update(&cbag[x], i, win_size);
+				_cam_update(&cbag[x], i);
 			}
+		}
+
+		void
+		camera_input_entity_run(ecs::World& w, io::Input& i, ecs::Entity e)
+		{
+			auto h = ecs::world_component_add<world::Camera>(w, e);
+			auto c = ecs::world_handle_component<world::Camera>(w, h);
+			_cam_update(c, i);
 		}
 	};
 };

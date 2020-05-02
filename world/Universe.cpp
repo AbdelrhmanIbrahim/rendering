@@ -145,17 +145,30 @@ namespace world
 	void
 	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine)
 	{
-		world::system::camera_input_all_run(u.world, i, win_size);
-		auto pick_info = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
+		//set correct viewports
+		world::system::camera_viewport_all_run(u.world, win_size);
 
-		static int id = -1; //this will in the selection manager in the out there in the painter later
-		if (pick_info.status == PICKING::OBJECT)
-			id = pick_info.id;
-		else if (pick_info.status == PICKING::BACKGROUND)
-			id = -1;
+		//runs components systems that acts to the input
+		//navigation sys
+		{
+			world::system::camera_input_all_run(u.world, i);
+		}
 
-		if(id != -1)
-			world::system::mesh_input_entity_run(u.world, i, ecs::Entity{ (uint32_t)id });
+		//picking sys
+		static int id = -1; //this will in the selection manager out there in the painter later
+		{
+			auto pick_info = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
+			if (pick_info.status == PICKING::OBJECT)
+				id = pick_info.id;
+			else if (pick_info.status == PICKING::BACKGROUND)
+				id = -1;
+		}
+		
+		//moving selected meshes sys
+		{
+			if (id != -1)
+				world::system::mesh_input_entity_run(u.world, i, ecs::Entity{ (uint32_t)id });
+		}
 	}
 	
 	void

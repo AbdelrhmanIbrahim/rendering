@@ -94,6 +94,7 @@ set(HEADERS
 	world/component/Sun.h
 	world/component/Lamp.h
 	world/component/Flash.h
+	world/component/Input_Handle.h
 	world/system/rendering/Phong.h
 	world/system/rendering/PBR.h
 	world/system/rendering/Colored.h
@@ -101,7 +102,8 @@ set(HEADERS
 	world/system/rendering/Point.h
 	world/system/rendering/Line.h
 	world/system/rendering/Hiddenline.h
-	world/system/updating/Camera.h
+	world/system/updating/Viewport.h
+	world/system/updating/Input.h
 	world/system/retrieving/Pick.h
 	world/system/scripting/Script.h
 	infra/mem/chunck.h
@@ -140,7 +142,8 @@ set(SOURCES
 	world/system/rendering/Point.cpp
 	world/system/rendering/Line.cpp
 	world/system/rendering/Hiddenline.cpp
-	world/system/updating/Camera.cpp
+	world/system/updating/Viewport.cpp
+	world/system/updating/Input.cpp
 	world/system/retrieving/Pick.cpp
 	world/system/scripting/Script.cpp
 	gl/glgpu.cpp

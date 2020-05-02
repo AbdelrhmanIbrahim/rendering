@@ -7,8 +7,10 @@
 #include "world/component/Sun.h"
 #include "world/component/Lamp.h"
 #include "world/component/Flash.h"
+#include "world/component/Input_Handle.h"
 
-#include "world/system/updating/Camera.h"
+#include "world/system/updating/Viewport.h"
+#include "world/system/updating/Input.h"
 
 using namespace ecs;
 
@@ -83,6 +85,10 @@ namespace world
 									(float)cos(to_radian(12)),
 									(float)cos(to_radian(15)) };
 
+			auto handle_i = world_component_add<world::Input_Handle>(w, e);
+			auto data_i = world_handle_component<world::Input_Handle>(w, handle_i);
+			data_i->act = world::system::input_camera_act;
+
 			u.script_sys.cam_flash_scripts.push_back(ecs::Script<world::Camera, world::Flash>{e, e, world::system::script_flash_cam});
 		}
 
@@ -142,9 +148,10 @@ namespace world
 	void
 	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine)
 	{
-		//camera sys first to update viewport
-		world::system::camera_sys_run(u.world, i, win_size);
-		int selected_entity = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
+		world::system::viewport_sys_run(u.world, i, win_size);
+		world::system::input_sys_run<world::Camera>(u.world, i);
+		//int selected_entity = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
+		//input sys (selected entity)
 	}
 	
 	void

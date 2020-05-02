@@ -102,6 +102,7 @@ set(HEADERS
 	world/system/rendering/Line.h
 	world/system/rendering/Hiddenline.h
 	world/system/updating/Camera.h
+	world/system/updating/Mesh.h
 	world/system/retrieving/Pick.h
 	world/system/scripting/Script.h
 	infra/mem/chunck.h
@@ -141,6 +142,7 @@ set(SOURCES
 	world/system/rendering/Line.cpp
 	world/system/rendering/Hiddenline.cpp
 	world/system/updating/Camera.cpp
+	world/system/updating/Mesh.cpp
 	world/system/retrieving/Pick.cpp
 	world/system/scripting/Script.cpp
 	gl/glgpu.cpp

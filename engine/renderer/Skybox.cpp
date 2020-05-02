@@ -92,7 +92,7 @@ namespace rndr
 		self->cube_vbo = buffer_vertex_create();
 		self->cube_vao = vao_create();
 		vao_attach(self->cube_vao, self->cube_vbo);
-		buffer_vertex_set(self->cube_vbo, skybox,	  sizeof(skybox), Storage::STATIC);
+		buffer_vertex_set(self->cube_vbo, skybox,	  sizeof(skybox), STORAGE::STATIC);
 		buffer_vertex_attribute(self->cube_vbo, 0, 3, sizeof(world::Vertex), 0);
 		buffer_vertex_attribute(self->cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
 		buffer_vertex_attribute(self->cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));

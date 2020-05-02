@@ -38,7 +38,7 @@ namespace glgpu
 	buffer_vertex_create();
 
 	void
-	buffer_vertex_set(Buffer self, const void* arr, int total_size_bytes, Storage storage);
+	buffer_vertex_set(Buffer self, const void* arr, int total_size_bytes, STORAGE storage);
 
 	void
 	buffer_vertex_attribute(Buffer self, int att, int att_components_number, int size_bytes, int offset);

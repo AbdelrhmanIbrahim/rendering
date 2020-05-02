@@ -10,8 +10,6 @@
 
 #include "gl/glgpu.h"
 
-#include "defs/Defs.h"
-
 using namespace glgpu;
 using namespace io;
 
@@ -53,7 +51,7 @@ namespace world
 			return sys;
 		}
 
-		int
+		Pick_Info
 		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored)
 		{
 			if (i.mouse[0] == true)
@@ -100,11 +98,13 @@ namespace world
 
 					//background
 					if (id != 0xFFFFFF)
-						return id;
+						return Pick_Info{ PICKING::OBJECT, id};
+					else
+						return Pick_Info{ PICKING::BACKGROUND };
 				}
 			}
 
-			return -1;
+			return Pick_Info{PICKING::NONE};
 		}
 
 		void

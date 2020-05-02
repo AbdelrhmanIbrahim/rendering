@@ -79,7 +79,7 @@ enum class Rendering
 	COLORED
 };
 
-enum class Storage
+enum class STORAGE
 {
 	STATIC,
 	DYNAMIC
@@ -91,6 +91,13 @@ enum class IMAGE_FORMAT
 	PNG,
 	JPG,
 	HDR
+};
+
+enum class PICKING
+{
+	NONE,
+	OBJECT,
+	BACKGROUND,
 };
 
 struct

@@ -9,6 +9,9 @@
 #include "world/component/Flash.h"
 
 #include "world/system/updating/Camera.h"
+#include "world/system/updating/Mesh.h"
+
+#include <fmt/printf.h>
 
 using namespace ecs;
 
@@ -142,9 +145,17 @@ namespace world
 	void
 	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine)
 	{
-		//camera sys first to update viewport
-		world::system::camera_sys_run(u.world, i, win_size);
-		int selected_entity = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
+		world::system::camera_input_all_run(u.world, i, win_size);
+		auto pick_info = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
+
+		static int id = -1; //this will in the selection manager in the out there in the painter later
+		if (pick_info.status == PICKING::OBJECT)
+			id = pick_info.id;
+		else if (pick_info.status == PICKING::BACKGROUND)
+			id = -1;
+
+		if(id != -1)
+			world::system::mesh_input_entity_run(u.world, i, ecs::Entity{ (uint32_t)id });
 	}
 	
 	void

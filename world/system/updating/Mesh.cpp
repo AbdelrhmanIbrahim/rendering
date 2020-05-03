@@ -23,7 +23,7 @@ namespace world
 
 		//API
 		void
-		mesh_input_entity_run(ecs::World& w, io::Input& i, ecs::Entity e)
+		mesh_input_entity_run(ecs::World& w, const io::Input& i, ecs::Entity e)
 		{
 			auto h = ecs::world_component_add<world::Transform>(w, e);
 			auto d = ecs::world_handle_component<world::Transform>(w, h);
@@ -31,7 +31,7 @@ namespace world
 		}
 
 		void
-		mesh_input_all_run(ecs::World& w, io::Input& i)
+		mesh_input_all_run(ecs::World& w, const io::Input& i)
 		{
 			//fetch system req components
 			auto tbag = ecs::world_active_components<world::Transform>(w);

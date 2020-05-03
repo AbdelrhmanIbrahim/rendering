@@ -1,4 +1,4 @@
-#include "world/system/retrieving/Pick.h"
+#include "world/system/querying/Pick.h"
 #include "world/component/Camera.h"
 #include "world/component/Mesh.h"
 #include "world/component/Transform.h"

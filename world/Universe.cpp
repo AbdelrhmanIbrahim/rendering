@@ -11,63 +11,13 @@
 #include "world/system/updating/Camera.h"
 #include "world/system/updating/Mesh.h"
 
-#include <fmt/printf.h>
-
 using namespace ecs;
 
 namespace world
 {
-	Universe
-	universe_new()
-	{
-		Universe u{};
-		u.world = ecs::world_new();
-		u.pick_sys = world::system::pick_sys_new();
-
-		return u;
-	}
-
+	//internals
 	void
-	universe_free(Universe& u)
-	{
-		ecs::world_free(u.world);
-		world::system::pick_sys_free(u.pick_sys);
-	}
-
-	bool
-	universe_load_stl(Universe& u, const char* path)
-	{
-		//create entity
-		auto stl = world_entity_new(u.world);
-
-		//add mesh comp
-		{
-			auto handle = world_component_add<world::Mesh>(u.world, stl);
-			auto data = world_handle_component<world::Mesh>(u.world, handle);
-			*data = world::mesh_create(path);
-			if (data->vertices.empty())
-				return false;
-		}
-
-		//add transform component
-		{
-			auto handle = world_component_add<world::Transform>(u.world, stl);
-			auto data = world_handle_component<world::Transform>(u.world, handle);
-			*data = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 0.5, 0.5, 0.5 }, math::vec3f{0, 0, 0} };
-		}
-
-		//add material component
-		{
-			auto handle = world_component_add<world::Material>(u.world, stl);
-			auto data = world_handle_component<world::Material>(u.world, handle);
-			*data = world::Material{ math::vec4f{ 0, 1, 0, 1  }, 0.9, 0.2 };
-		}
-
-		return true;
-	}
-
-	void
-	universe_init_scene(Universe& u)
+	_universe_init_scene(Universe& u)
 	{
 		ecs::World& w = u.world;
 
@@ -142,37 +92,70 @@ namespace world
 		}
 	}
 
-	void
-	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine)
+	//API
+	Universe
+	universe_new()
 	{
-		//set correct viewports
-		world::system::camera_viewport_all_run(u.world, win_size);
+		Universe u{};
+		u.world = ecs::world_new();
+		_universe_init_scene(u);
 
-		//runs components systems that acts to the input
-		//navigation sys
-		{
-			world::system::camera_input_all_run(u.world, i);
-		}
-
-		//picking sys
-		static int id = -1; //this will in the selection manager out there in the painter later
-		{
-			auto pick_info = world::system::pick_system_run(u.pick_sys, u.world, i, rndr::engine_colored_renderer(engine));
-			if (pick_info.status == PICKING::OBJECT)
-				id = pick_info.id;
-			else if (pick_info.status == PICKING::BACKGROUND)
-				id = -1;
-		}
-		
-		//moving selected meshes sys
-		{
-			if (id != -1)
-				world::system::mesh_input_entity_run(u.world, i, ecs::Entity{ (uint32_t)id });
-		}
+		return u;
 	}
-	
+
 	void
-	universe_scripts_run(Universe& u)
+	universe_free(Universe& u)
+	{
+		ecs::world_free(u.world);
+	}
+
+	bool
+	universe_3dobject_add(Universe& u, const char* path)
+	{
+		//create entity
+		auto stl = world_entity_new(u.world);
+
+		//add mesh comp
+		{
+			auto handle = world_component_add<world::Mesh>(u.world, stl);
+			auto data = world_handle_component<world::Mesh>(u.world, handle);
+			*data = world::mesh_create(path);
+			if (data->vertices.empty())
+				return false;
+		}
+
+		//add transform component
+		{
+			auto handle = world_component_add<world::Transform>(u.world, stl);
+			auto data = world_handle_component<world::Transform>(u.world, handle);
+			*data = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 0.5, 0.5, 0.5 }, math::vec3f{0, 0, 0} };
+		}
+
+		//add material component
+		{
+			auto handle = world_component_add<world::Material>(u.world, stl);
+			auto data = world_handle_component<world::Material>(u.world, handle);
+			*data = world::Material{ math::vec4f{ 0, 1, 0, 1  }, 0.9, 0.2 };
+		}
+
+		return true;
+	}
+
+	void
+	universe_update_sys_run(Universe& u, math::vec2f win_size, const io::Input& i)
+	{
+		world::system::camera_viewport_all_run(u.world, win_size);
+		world::system::camera_input_all_run(u.world, i);
+	}
+
+	void
+	universe_movement_sys_run(Universe& u, const io::Input& i, ecs::Entity e)
+	{
+		world::system::mesh_input_entity_run(u.world, i, e);
+	}
+
+	void
+	universe_scripts_sys_run(Universe& u)
 	{
 		world::system::script_sys_run(u.script_sys, u.world);
 	}

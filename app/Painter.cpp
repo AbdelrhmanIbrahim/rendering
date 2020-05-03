@@ -11,6 +11,8 @@
 
 #include "world/Universe.h"
 
+#include "world/system/querying/Pick.h"
+
 using namespace rndr;
 using namespace io;
 
@@ -25,6 +27,12 @@ namespace app
 		Rendering style;
 		rndr::Engine engine;
 		world::Universe universe;
+
+		//quering systems
+		world::system::Pick_System pick_sys;
+
+		//selected entity
+		int selected_id;
 	};
 
 	//API
@@ -43,9 +51,14 @@ namespace app
 		//init rendering engine and world (init rendering engine and its context first as universe may have components seperated into cpu and gpu alloc)
 		app->engine = engine_create();
 
-		//init testing universe scene
+		//init universe
 		app->universe = world::universe_new();
-		world::universe_init_scene(app->universe);
+
+		//init quering sys
+		app->pick_sys = world::system::pick_sys_new();
+
+		//init selected id
+		app->selected_id = 0;
 
 		return app;
 	}
@@ -59,7 +72,7 @@ namespace app
 	bool
 	painter_stl_load(Painter app, const char* path)
 	{
-		return world::universe_load_stl(app->universe, path);
+		return world::universe_3dobject_add(app->universe, path);
 	}
 
 	void
@@ -71,9 +84,23 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		//some universe input acts needs some engine renderers to complete (e.g. gpu picking sys)
-		universe_input_act(app->universe, math::vec2f{ (float)window_width, (float)window_height }, app->input, app->engine);
-		universe_scripts_run(app->universe);
+		//run frame systems
+		world::universe_update_sys_run(app->universe, math::vec2f{ (float)window_width, (float)window_height }, app->input);
+
+		//picking system
+		{
+			auto pick_info = world::system::pick_system_run(app->pick_sys, app->universe.world, app->input, rndr::engine_colored_renderer(app->engine));
+			if (pick_info.status == PICKING::OBJECT)
+				app->selected_id = pick_info.id;
+			else if (pick_info.status == PICKING::BACKGROUND)
+				app->selected_id = -1;
+		}
+
+		//moving selected meshes system
+		world::universe_movement_sys_run(app->universe, app->input, ecs::Entity{ (uint32_t)app->selected_id });
+
+		//scripts system must run after all internal data gets updated by other systems
+		world::universe_scripts_sys_run(app->universe);
 		input_update(app->input);
 	}
 
@@ -90,6 +117,7 @@ namespace app
 	{
 		rndr::engine_free(app->engine);
 		world::universe_free(app->universe);
+		world::system::pick_sys_free(app->pick_sys);
 
 		delete app;
 	}

@@ -41,7 +41,7 @@ namespace world
 		}
 
 		void
-		camera_input_all_run(ecs::World& w, io::Input& i)
+		camera_input_all_run(ecs::World& w, const io::Input& i)
 		{
 			//fetch system req components
 			auto cbag = ecs::world_active_components<world::Camera>(w);

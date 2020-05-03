@@ -1,18 +1,16 @@
 #include "ecs/World.h"
-
-#include "engine/Engine.h"
+#include "ecs/Entity.h"
 
 #include "world/system/scripting/Script.h"
-#include "world/system/retrieving/Pick.h"
 
 #include "io/Input.h"
 
 namespace world
 {
+	//any updating data sys will run here
 	struct Universe
 	{
 		ecs::World world;
-		world::system::Pick_System pick_sys;
 		world::system::Script_System script_sys;
 	};
 
@@ -22,15 +20,17 @@ namespace world
 	void
 	universe_free(Universe& u);
 
+	//entities creation
 	bool
-	universe_load_stl(Universe& u, const char* path);
+	universe_3dobject_add(Universe& u, const char* path);
+
+	//systems
+	void
+	universe_update_sys_run(Universe& u, math::vec2f win_size, const io::Input& i);
 
 	void
-	universe_init_scene(Universe& u);
+	universe_movement_sys_run(Universe& u, const io::Input& i, ecs::Entity e);
 
 	void
-	universe_input_act(Universe& u, math::vec2f win_size, io::Input& i, rndr::Engine engine);
-
-	void
-	universe_scripts_run(Universe& u);
+	universe_scripts_sys_run(Universe& u);
 };

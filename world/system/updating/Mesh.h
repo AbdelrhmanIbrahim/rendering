@@ -10,9 +10,9 @@ namespace world
 	namespace system
 	{
 		void
-		mesh_input_entity_run(ecs::World& w, io::Input& i, ecs::Entity e);
+		mesh_input_entity_run(ecs::World& w, const io::Input& i, ecs::Entity e);
 
 		void
-		mesh_input_all_run(ecs::World& w, io::Input& i);
+		mesh_input_all_run(ecs::World& w, const io::Input& i);
 	}
 }

@@ -25,9 +25,10 @@ namespace app
 		//input state
 		io::Input input;
 
-		//rendering engine and universe
-		Rendering style;
+		//rendering engine
 		rndr::Engine engine;
+
+		//universe
 		world::Universe universe;
 
 		//quering systems
@@ -50,7 +51,7 @@ namespace app
 		app->input.pmouse_x = WIN_WIDTH / 2;
 		app->input.pmouse_y = WIN_HEIGHT / 2;
 
-		//init rendering engine and world (init rendering engine and its context first as universe may have components seperated into cpu and gpu alloc)
+		//init rendering engine (init rendering engine and its context first as universe may have components seperated into cpu and gpu alloc)
 		app->engine = engine_create();
 
 		//init universe
@@ -59,7 +60,7 @@ namespace app
 		//init quering sys
 		app->pick_sys = world::system::pick_sys_new();
 
-		//init selected id
+		//init selector
 		app->selector = manager::selector_new();
 
 		return app;

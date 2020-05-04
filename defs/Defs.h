@@ -93,15 +93,7 @@ enum class IMAGE_FORMAT
 	HDR
 };
 
-enum class PICKING
-{
-	NONE,
-	OBJECT,
-	BACKGROUND,
-};
-
-struct
-Pnt
+struct Pnt
 {
 	math::vec3f pos;
 	math::vec4f col;

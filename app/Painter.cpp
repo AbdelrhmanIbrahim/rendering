@@ -1,16 +1,14 @@
 #include "app/Painter.h"
 
-#include "defs/Defs.h"
-
 #include "io/Input.h"
 #include "io/Event.h"
-
-#include "math/Vector.h"
 
 #include "engine/Engine.h"
 
 #include "world/Universe.h"
 #include "world/system/querying/Pick.h"
+
+#include "math/Vector.h"
 
 #include "infra/managers/Selector.h"
 
@@ -45,11 +43,7 @@ namespace app
 		IPainter* app = new IPainter;
 
 		//init input state
-		app->input = Input{};
-		app->input.mouse_x = WIN_WIDTH / 2;
-		app->input.mouse_y = WIN_HEIGHT / 2;
-		app->input.pmouse_x = WIN_WIDTH / 2;
-		app->input.pmouse_y = WIN_HEIGHT / 2;
+		app->input = io::input_new();
 
 		//init rendering engine (init rendering engine and its context first as universe may have components seperated into cpu and gpu alloc)
 		app->engine = engine_create();

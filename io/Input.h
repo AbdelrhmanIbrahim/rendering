@@ -24,6 +24,9 @@ namespace io
 		int wheel_dir;
 	};
 
+	Input
+	input_new();
+
 	void
 	input_process_event(Input& input, io::Event event);
 

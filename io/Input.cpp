@@ -1,8 +1,22 @@
 #include "io/Input.h"
 #include "io/Event.h"
 
+#include "defs/Defs.h"
+
 namespace io
 {
+	Input
+	input_new()
+	{
+		Input self{};
+		self.mouse_x = WIN_WIDTH / 2;
+		self.mouse_y = WIN_HEIGHT / 2;
+		self.pmouse_x = WIN_WIDTH / 2;
+		self.pmouse_y = WIN_HEIGHT / 2;
+		
+		return self;
+	}
+
 	void
 	input_process_event(Input& input, Event event)
 	{

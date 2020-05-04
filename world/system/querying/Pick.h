@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecs/World.h"
+#include "ecs/Entity.h"
 
 #include "engine/renderer/Colored.h"
 
@@ -24,7 +25,7 @@ namespace world
 		Pick_System
 		pick_sys_new();
 
-		Pick_Info
+		ecs::Entity
 		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored);
 
 		void

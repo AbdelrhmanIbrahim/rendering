@@ -106,6 +106,7 @@ set(HEADERS
 	world/system/querying/Pick.h
 	world/system/scripting/Script.h
 	infra/mem/chunck.h
+	infra/managers/Selector.h
 	defs/Defs.h
 	imgui/imgui.h
 	imgui/imconfig.h

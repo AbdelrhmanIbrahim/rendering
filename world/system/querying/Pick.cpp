@@ -51,60 +51,55 @@ namespace world
 			return sys;
 		}
 
-		Pick_Info
+		ecs::Entity
 		pick_system_run(Pick_System sys, ecs::World& w, io::Input& i, rndr::Colored colored)
 		{
-			if (i.mouse[0] == true)
+			//fetch system req components
+			auto cam = ecs::world_active_components<world::Camera>(w)[0];
+			auto b_meshes = ecs::world_active_components<world::Mesh>(w);
+			auto b_transforms = ecs::world_active_components<world::Transform>(w);
+			auto e_mesh = ecs::world_active_entities<world::Mesh>(w);
+
+			//reallocate tex if needed
+			math::vec2f viewport = camera_viewport(cam);
+			math::vec2f size = texture2d_size(sys->tex);
+			if (viewport != size)
 			{
-				//fetch system req components
-				auto cam = ecs::world_active_components<world::Camera>(w)[0];
-				auto b_meshes = ecs::world_active_components<world::Mesh>(w);
-				auto b_transforms = ecs::world_active_components<world::Transform>(w);
-				auto e_mesh = ecs::world_active_entities<world::Mesh>(w);
-
-				//reallocate tex if needed
-				math::vec2f viewport = camera_viewport(cam);
-				math::vec2f size = texture2d_size(sys->tex);
-				if (viewport != size)
-				{
-					texture2d_resize(sys->tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
-					image_resize(sys->pixels, viewport);
-				}
-
-				//bind fb to render colored with entity ids into
-				framebuffer_bind(sys->fb);
-				framebuffer_attach(sys->fb, sys->tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
-				{
-					frame_start(1, 1, 1);
-					math::Mat4f view_proj = camera_view_proj(cam);
-					rndr::colored_set(colored, viewport);
-					for (int i = 0; i < b_meshes.size; ++i)
-					{
-						math::vec3f rgb = _id_to_rgb(e_mesh[i].id);
-						rndr::colored_draw(colored, view_proj, &b_meshes[i], &b_transforms[i], math::vec4f{ rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1.0f });
-					}
-				}
-				framebuffer_unbind();
-
-				//read pixel where mouse_pos
-				{
-					texture2d_unpack(sys->tex, sys->pixels, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
-					int index = 4 * (sys->pixels.width * (sys->pixels.height - i.mouse_y) + i.mouse_x);
-					unsigned char* bytes = (unsigned char*)sys->pixels.data;
-					unsigned char r = bytes[index];
-					unsigned char g = bytes[index+1];
-					unsigned char b = bytes[index+2];
-					int id = _rgb_to_id(r, g, b);
-
-					//background
-					if (id != 0xFFFFFF)
-						return Pick_Info{ PICKING::OBJECT, id};
-					else
-						return Pick_Info{ PICKING::BACKGROUND };
-				}
+				texture2d_resize(sys->tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+				image_resize(sys->pixels, viewport);
 			}
 
-			return Pick_Info{PICKING::NONE};
+			//bind fb to render colored with entity ids into
+			framebuffer_bind(sys->fb);
+			framebuffer_attach(sys->fb, sys->tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
+			{
+				frame_start(1, 1, 1);
+				math::Mat4f view_proj = camera_view_proj(cam);
+				rndr::colored_set(colored, viewport);
+				for (int i = 0; i < b_meshes.size; ++i)
+				{
+					math::vec3f rgb = _id_to_rgb(e_mesh[i].id);
+					rndr::colored_draw(colored, view_proj, &b_meshes[i], &b_transforms[i], math::vec4f{ rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1.0f });
+				}
+			}
+			framebuffer_unbind();
+
+			//read pixel where mouse_pos
+			{
+				texture2d_unpack(sys->tex, sys->pixels, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+				int index = 4 * (sys->pixels.width * (sys->pixels.height - i.mouse_y) + i.mouse_x);
+				unsigned char* bytes = (unsigned char*)sys->pixels.data;
+				unsigned char r = bytes[index];
+				unsigned char g = bytes[index+1];
+				unsigned char b = bytes[index+2];
+				int id = _rgb_to_id(r, g, b);
+
+				//background
+				if (id != 0xFFFFFF)
+					return ecs::Entity{uint32_t(id)};
+				else
+					return ecs::INVALID_ENTITY;
+			}
 		}
 
 		void

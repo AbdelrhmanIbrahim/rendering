@@ -10,11 +10,13 @@
 #include "engine/Engine.h"
 
 #include "world/Universe.h"
-
 #include "world/system/querying/Pick.h"
+
+#include "infra/managers/Selector.h"
 
 using namespace rndr;
 using namespace io;
+using namespace infra;
 
 namespace app
 {
@@ -31,8 +33,8 @@ namespace app
 		//quering systems
 		world::system::Pick_System pick_sys;
 
-		//selected entity
-		int selected_id;
+		//selection manager
+		manager::Selector selector;
 	};
 
 	//API
@@ -58,7 +60,7 @@ namespace app
 		app->pick_sys = world::system::pick_sys_new();
 
 		//init selected id
-		app->selected_id = 0;
+		app->selector = manager::selector_new();
 
 		return app;
 	}
@@ -84,22 +86,21 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		//run frame systems
+		//Run frame systems
+		//universe update system
 		world::universe_update_sys_run(app->universe, math::vec2f{ (float)window_width, (float)window_height }, app->input);
 
-		//picking system
+		//painter selection system
+		if (app->input.mouse[0] == true)
 		{
-			auto pick_info = world::system::pick_system_run(app->pick_sys, app->universe.world, app->input, rndr::engine_colored_renderer(app->engine));
-			if (pick_info.status == PICKING::OBJECT)
-				app->selected_id = pick_info.id;
-			else if (pick_info.status == PICKING::BACKGROUND)
-				app->selected_id = -1;
+			ecs::Entity selected_entity = world::system::pick_system_run(app->pick_sys, app->universe.world, app->input, rndr::engine_colored_renderer(app->engine));
+			manager::selector_select(app->selector, selected_entity);
 		}
 
-		//moving selected meshes system
-		world::universe_movement_sys_run(app->universe, app->input, ecs::Entity{ (uint32_t)app->selected_id });
+		//universe moving selected entities system
+		world::universe_movement_sys_run(app->universe, app->input, app->selector.selected_entity);
 
-		//scripts system must run after all internal data gets updated by other systems
+		//universe script system must run after all internal data gets updated by other systems
 		world::universe_scripts_sys_run(app->universe);
 		input_update(app->input);
 	}

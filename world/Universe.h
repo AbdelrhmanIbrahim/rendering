@@ -7,7 +7,7 @@
 
 namespace world
 {
-	//any updating data sys will run here
+	//any updating data sys will run (or exposed if needed) here
 	struct Universe
 	{
 		ecs::World world;

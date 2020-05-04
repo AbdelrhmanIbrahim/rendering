@@ -151,6 +151,9 @@ namespace world
 	void
 	universe_movement_sys_run(Universe& u, const io::Input& i, ecs::Entity e)
 	{
+		if (e == ecs::INVALID_ENTITY)
+			return;
+
 		world::system::mesh_input_entity_run(u.world, i, e);
 	}
 

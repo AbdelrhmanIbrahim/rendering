@@ -43,12 +43,12 @@
 - emit line strip only when face is ccw ✔
 - mesh picking ✔
 - moving picked meshes ✔
+- selection mamager ✔
 - OI and OD transparency like weighted average or depth peeling (nvidia bookmark and https://m.habr.com/en/post/457292/) 
 - continue in real time rendering book
 - MSAA enable when needed
 - orbiting camera
 - application state (e.g. Picking state)
-- selection mamager
 - 3d objects outlines
 - shadows
 - we do alot of fetching then uploading data to gpu even if there's no change to the data (do some kind of lazy updating)

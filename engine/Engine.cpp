@@ -130,7 +130,7 @@ namespace rndr
 		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
 		glgpu::context_attach(e->ctx, win);
 
-		//render scene
+		//run rendering systems
 		{
 			glgpu::frame_start(0.6f, 0.68f, 0.5f);
 			_engine_world_mesh_render(e, w);

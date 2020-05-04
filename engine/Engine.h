@@ -27,6 +27,7 @@ namespace rndr
 	void
 	engine_imgui_draw(Engine e, math::vec2f mouse_pos, bool mouse[3], void* win, unsigned int width, unsigned int height);
 
+	//think of a better way? -revisit-
 	rndr::Colored
 	engine_colored_renderer(Engine e);
 }

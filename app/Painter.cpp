@@ -29,7 +29,7 @@ namespace app
 		//universe
 		world::Universe universe;
 
-		//quering systems
+		//querying systems
 		world::system::Pick_System pick_sys;
 
 		//selection manager
@@ -81,7 +81,7 @@ namespace app
 	void
 	painter_update(Painter app, int window_width, int window_height)
 	{
-		//Run frame systems
+		//Run updating data systems
 		//universe update system
 		world::universe_update_sys_run(app->universe, math::vec2f{ (float)window_width, (float)window_height }, app->input);
 
@@ -103,6 +103,7 @@ namespace app
 	void
 	painter_paint(Painter app, void* palette, unsigned int width, unsigned int height)
 	{
+		//Run rendering systems
 		engine_world_draw(app->engine, app->universe.world, palette);
 		engine_imgui_draw(app->engine, math::vec2f{ (float)app->input.mouse_x, (float)app->input.mouse_y}, app->input.mouse, palette, width, height);
 		win::window_swap(palette);

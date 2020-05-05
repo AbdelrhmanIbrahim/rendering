@@ -42,19 +42,11 @@ namespace app
 	{
 		IPainter* app = new IPainter;
 
-		//init input state
 		app->input = io::input_new();
-
-		//init rendering engine (init rendering engine and its context first as universe may have components seperated into cpu and gpu alloc)
+		//init rendering engine and its context first as universe may have components seperated into cpu and gpu
 		app->engine = engine_create();
-
-		//init universe
 		app->universe = world::universe_new();
-
-		//init quering sys
 		app->pick_sys = world::system::pick_sys_new();
-
-		//init selector
 		app->selector = manager::selector_new();
 
 		return app;

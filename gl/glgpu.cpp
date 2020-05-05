@@ -616,7 +616,7 @@ namespace glgpu
 
 		glGenTextures(1, &handle->texture.id);
 		glBindTexture(GL_TEXTURE_2D, handle->texture.id);
-		// revisit -- glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexImage2D(GL_TEXTURE_2D, 0, handle->texture.internal_format, handle->texture.width, handle->texture.height, 0, handle->texture.pixel_format, handle->texture.type, img.data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

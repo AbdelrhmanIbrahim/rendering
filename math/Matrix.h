@@ -182,8 +182,8 @@ namespace math
 		float sub05 = mat[2][0] * mat[3][1] - mat[3][0] * mat[2][1];
 
 		float det_3x3_00 = (mat[1][1] * sub00 - mat[1][2] * sub01 + mat[1][3] * sub02);
-		float det_3x3_01 = -(mat[1][0] * sub00 - mat[1][2] * sub03 + mat[1][3] * sub04),
-		float det_3x3_02 = (mat[1][0] * sub01 - mat[1][1] * sub03 + mat[1][3] * sub05),
+		float det_3x3_01 = -(mat[1][0] * sub00 - mat[1][2] * sub03 + mat[1][3] * sub04);
+		float det_3x3_02 = (mat[1][0] * sub01 - mat[1][1] * sub03 + mat[1][3] * sub05);
 		float det_3x3_03 = -(mat[1][0] * sub02 - mat[1][1] * sub04 + mat[1][2] * sub05);
 
 		return mat[0][0] * det_3x3_00 + mat[0][1] * det_3x3_01 + mat[0][2] * det_3x3_02 + mat[0][3] * det_3x3_03;
@@ -217,28 +217,28 @@ namespace math
 		float cof22 = mat[1][0] * mat[3][1] - mat[3][0] * mat[1][1];
 		float cof23 = mat[1][0] * mat[2][1] - mat[2][0] * mat[1][1];
 
-		vec4f fac0{cof00, cof00, cof02, cof03};
-		vec4f fac1{cof04, cof04, cof06, cof07};
-		vec4f fac2{cof08, cof08, cof10, cof11};
-		vec4f fac3{cof12, cof12, cof14, cof15};
-		vec4f fac4{cof16, cof16, cof18, cof19};
-		vec4f fac5{cof20, cof20, cof22, cof23};
+		vec4f fac0{ cof00, cof00, cof02, cof03 };
+		vec4f fac1{ cof04, cof04, cof06, cof07 };
+		vec4f fac2{ cof08, cof08, cof10, cof11 };
+		vec4f fac3{ cof12, cof12, cof14, cof15 };
+		vec4f fac4{ cof16, cof16, cof18, cof19 };
+		vec4f fac5{ cof20, cof20, cof22, cof23 };
 
-		vec4f Vec0{mat[1][0], mat[0][0], mat[0][0], mat[0][0]};
-		vec4f Vec1{mat[1][1], mat[0][1], mat[0][1], mat[0][1]};
-		vec4f Vec2{mat[1][2], mat[0][2], mat[0][2], mat[0][2]};
-		vec4f Vec3{mat[1][3], mat[0][3], mat[0][3], mat[0][3]};
+		vec4f vec0{ mat[1][0], mat[0][0], mat[0][0], mat[0][0] };
+		vec4f vec1{ mat[1][1], mat[0][1], mat[0][1], mat[0][1] };
+		vec4f vec2{ mat[1][2], mat[0][2], mat[0][2], mat[0][2] };
+		vec4f vec3{ mat[1][3], mat[0][3], mat[0][3], mat[0][3] };
 
 		//cominors
-		vec4f Inv0(Vec1 * fac0 - Vec2 * fac1 + Vec3 * fac2);
-		vec4f Inv1(Vec0 * fac0 - Vec2 * fac3 + Vec3 * fac4);
-		vec4f Inv2(Vec0 * fac1 - Vec1 * fac3 + Vec3 * fac5);
-		vec4f Inv3(Vec0 * fac2 - Vec1 * fac4 + Vec2 * fac5);
+		vec4f inv0(vec1 * fac0 - vec2 * fac1 + vec3 * fac2);
+		vec4f inv1(vec0 * fac0 - vec2 * fac3 + vec3 * fac4);
+		vec4f inv2(vec0 * fac1 - vec1 * fac3 + vec3 * fac5);
+		vec4f inv3(vec0 * fac2 - vec1 * fac4 + vec2 * fac5);
 
 		//cofactors
-		vec4f s0{+1, -1, +1, -1};
-		vec4f s1{-1, +1, -1, +1};
-		Mat4f inverse{ Inv0 * s0, Inv1 * s1, Inv2 * s0, Inv3 * s1 };
+		vec4f s0{ +1, -1, +1, -1 };
+		vec4f s1{ -1, +1, -1, +1 };
+		Mat4f inverse{ inv0 * s0, inv1 * s1, inv2 * s0, inv3 * s1 };
 
 		//you already calculated many determinants while inverting, use them to get 1/determinant of the matrix
 		vec4f row0{ inverse[0][0], inverse[1][0], inverse[2][0], inverse[3][0] };

@@ -12,6 +12,7 @@ layout (std140, binding = 0) uniform Space
 {
 	mat4 model;
 	mat4 vp;
+	mat4 normal_mat;
 };
 
 void
@@ -21,5 +22,5 @@ main()
 
 	//world (http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/) -- calc normal matrix on cpu (revisit)
 	frag_pos_world = (model * vec4(pos.x, pos.y, pos.z, 1.0)).xyz;
-	normal_world = normalize(mat3(transpose(inverse(model))) * normal);
+	normal_world = normalize(mat3(normal_mat) * normal);
 }

@@ -171,7 +171,7 @@ namespace math
 	}
 
 	inline static float
-	mat4_determinant(const Mat4f& mat)
+	mat4_det(const Mat4f& mat)
 	{
 		//glm
 		float sub00 = mat[2][2] * mat[3][3] - mat[3][2] * mat[2][3];

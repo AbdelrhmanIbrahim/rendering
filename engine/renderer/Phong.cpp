@@ -13,7 +13,6 @@
 #include "world/component/Material.h"
 
 #include <corecrt_math.h>
-#include "..\..\world\system\rendering\Phong.h"
 
 using namespace glgpu;
 using namespace math;
@@ -39,6 +38,7 @@ namespace rndr
 	{
 		Mat4f model;
 		Mat4f vp;
+		Mat4f nomral_mat;
 	};
 
 	struct
@@ -129,10 +129,17 @@ namespace rndr
 		const world::Transform* model, 
 		const world::Material* material)
 	{
-		Space_Uniform mvp{mat4_from_transform(*model), view_proj };
+		Mat4f model_mat = mat4_from_transform(*model);
+		Space_Uniform mvp{model_mat, view_proj, model_mat };
+
+		//non uniform scaling
+		if (model->scale != vec3f{ model->scale[0],model->scale[0], model->scale[0] })
+			mvp.nomral_mat = mat4_transpose(mat4_inverse(model_mat));
+			
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_uniform_set(self->uniform_object_color, (void*)&material->color_norm, sizeof(material->color_norm));
 
+		//draw geometry
 		vao_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();

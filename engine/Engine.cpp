@@ -141,8 +141,8 @@ namespace rndr
 		//run rendering systems
 		{
 			glgpu::frame_start(0.6f, 0.68f, 0.5f);
-			_engine_world_mesh_render(e, w);
-			world::system::point_sys_run(e->point, w);
+			//_engine_world_mesh_render(e, w);
+			//world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);
 			world::system::bg_sys_run(e->cquad, w);
 		}

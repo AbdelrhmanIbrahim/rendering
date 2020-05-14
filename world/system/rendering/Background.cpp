@@ -21,10 +21,11 @@ namespace world
 			vec2f viewport = world::camera_viewport(cam);
 
 			//covert the whole view
-			CVertex tl {vec3f{ 2*cam.l, 2*cam.t, cam.f }, math::vec4f{0.7, 0.7, 0.7, 1}};
-			CVertex bl {vec3f{ 2*cam.l, 2*cam.b, cam.f }, math::vec4f{0.2, 0.2, 0.2, 1}};
-			CVertex br {vec3f{ 2*cam.r, 2*cam.b, cam.f }, math::vec4f{0.2, 0.2, 0.2, 1}};
-			CVertex tr {vec3f{ 2*cam.r, 2*cam.t, cam.f }, math::vec4f{0.7, 0.7, 0.7, 1}};
+			//worlk around for depth for now -revisit-
+			CVertex tl {vec3f{ 2*cam.l, 2*cam.t, -cam.f + 2 }, math::vec4f{0.7, 0.7, 0.7, 1}};
+			CVertex bl {vec3f{ 2*cam.l, 2*cam.b, -cam.f + 2 }, math::vec4f{0.2, 0.2, 0.2, 1}};
+			CVertex br {vec3f{ 2*cam.r, 2*cam.b, -cam.f + 2 }, math::vec4f{0.2, 0.2, 0.2, 1}};
+			CVertex tr {vec3f{ 2*cam.r, 2*cam.t, -cam.f + 2 }, math::vec4f{0.7, 0.7, 0.7, 1}};
 			CVertex quad[6]
 			{
 				tl,bl,br,

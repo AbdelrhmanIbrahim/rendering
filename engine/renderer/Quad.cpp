@@ -24,6 +24,10 @@ namespace rndr
 		self->quad_vbo = buffer_vertex_create();
 		self->uvp = buffer_uniform_create(sizeof(math::Mat4f));
 
+		vao_attach(self->quad_vao, self->quad_vbo);
+		buffer_vertex_attribute(self->quad_vbo, 0, 3, sizeof(world::CVertex), 0);
+		buffer_vertex_attribute(self->quad_vbo, 1, 4, sizeof(world::CVertex), sizeof(world::CVertex::pos));
+
 		return self;
 	}
 
@@ -48,12 +52,8 @@ namespace rndr
 	void
 	cquad_draw(Cquad self, const world::CVertex quad_strip[6])
 	{
-		vao_attach(self->quad_vao, self->quad_vbo);
-		buffer_vertex_set(self->quad_vbo, quad_strip, 6 * sizeof(world::CVertex), STORAGE::DYNAMIC);
-		buffer_vertex_attribute(self->quad_vbo, 0, 3, sizeof(world::CVertex), 0);
-		buffer_vertex_attribute(self->quad_vbo, 1, 4, sizeof(world::CVertex), sizeof(world::CVertex::pos));
-
 		//draw geometry
+		buffer_vertex_set(self->quad_vbo, quad_strip, 6 * sizeof(world::CVertex), STORAGE::DYNAMIC);
 		vao_bind(self->quad_vao);
 		draw_strips(6);
 		vao_unbind();

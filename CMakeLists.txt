@@ -46,8 +46,8 @@ set(RESOURCES
 	engine/shaders/line.pixel
 	engine/shaders/edge.vertex
 	engine/shaders/edge.pixel
-	engine/shaders/quad.vertex
-	engine/shaders/quad.pixel
+	engine/shaders/cquad.vertex
+	engine/shaders/cquad.pixel
 	engine/shaders/hiddenline.vertex
 	engine/shaders/hiddenline.geo
 	engine/shaders/hiddenline.pixel

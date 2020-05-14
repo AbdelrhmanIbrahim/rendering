@@ -1,0 +1,11 @@
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
+in vec4 out_col;
+out vec4 frag_col;
+
+void
+main()
+{
+	frag_col = out_col;
+}

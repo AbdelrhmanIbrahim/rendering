@@ -7,17 +7,17 @@
 
 namespace rndr
 {
-	typedef struct IQuad* Quad;
+	typedef struct ICquad* Cquad;
 
-	Quad
-	quad_create();
-
-	void
-	quad_free(Quad self);
+	Cquad
+	cquad_create();
 
 	void
-	quad_set(Quad self, math::Mat4f& view_proj, math::vec2f& viewport);
+	cquad_free(Cquad self);
 
 	void
-	quad_draw(Quad self, const world::CVertex quad_strip[6]);
+	cquad_set(Cquad self, math::Mat4f& view_proj, math::vec2f& viewport);
+
+	void
+	cquad_draw(Cquad self, const world::CVertex quad_strip[6]);
 };

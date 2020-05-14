@@ -93,12 +93,6 @@ enum class IMAGE_FORMAT
 	HDR
 };
 
-struct Pnt
-{
-	math::vec3f pos;
-	math::vec4f col;
-};
-
 //remove later
 struct Unifrom_Float
 {

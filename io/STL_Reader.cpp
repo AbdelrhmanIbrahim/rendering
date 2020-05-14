@@ -54,7 +54,7 @@ namespace io
 			auto itr = unique_points_table.find(point);
 			if (itr == unique_points_table.end())
 			{
-				self.vertices.push_back(world::Vertex{ point, vec3f{}, vec2f{} });
+				self.vertices.push_back(world::TVertex{ point, vec3f{}, vec2f{} });
 				Vertex_Data data{};
 				data.normal += normal;
 				data.faces_count++;

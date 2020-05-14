@@ -4,7 +4,7 @@
 
 #include "math/Vector.h"
 
-#include "defs/Defs.h"
+#include "world/component/Vertex.h"
 
 namespace world
 {
@@ -19,7 +19,7 @@ namespace world
 
 			//append some points
 			for (int i = 0; i < lamps.size; ++i)
-				rndr::point_append(point, Pnt{math::vec3f{ lamps[i].pos[0], lamps[i].pos[1] , lamps[i].pos[2] },lamps[i].col});
+				rndr::point_append(point, world::CVertex{math::vec3f{ lamps[i].pos[0], lamps[i].pos[1] , lamps[i].pos[2] },lamps[i].col});
 
 			rndr::point_set(point, camera_view_proj(cam));
 			rndr::point_draw(point);

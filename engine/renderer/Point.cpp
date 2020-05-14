@@ -14,7 +14,7 @@ namespace rndr
 		glgpu::Buffer uniform_space;
 		glgpu::Buffer vbo;
 		glgpu::Vao vao;
-		std::vector<Pnt> points;
+		std::vector<world::CVertex> points;
 	};
 
 	//Careful of std140 memory layout/alignment/offsets.prefer always to allocate chunks of 16 bytes.
@@ -33,8 +33,8 @@ namespace rndr
 		self->vbo = buffer_vertex_create();
 		self->vao = vao_create();
 		vao_attach(self->vao, self->vbo);
-		buffer_vertex_attribute(self->vbo, 0, 3, sizeof(Pnt), 0);
-		buffer_vertex_attribute(self->vbo, 1, 4, sizeof(Pnt), 3 * sizeof(float));
+		buffer_vertex_attribute(self->vbo, 0, 3, sizeof(world::CVertex), 0);
+		buffer_vertex_attribute(self->vbo, 1, 4, sizeof(world::CVertex), 3 * sizeof(float));
 		vao_unbind();
 
 		return self;
@@ -50,7 +50,7 @@ namespace rndr
 	}
 
 	void
-	point_append(Point self, Pnt point)
+	point_append(Point self, world::CVertex point)
 	{
 		self->points.emplace_back(point);
 	}

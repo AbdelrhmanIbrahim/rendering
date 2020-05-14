@@ -2,7 +2,7 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
-#include "defs/Defs.h"
+#include "world/component/Vertex.h"
 
 namespace rndr
 {
@@ -15,7 +15,7 @@ namespace rndr
 	line_free(Line self);
 
 	void
-	line_append(Line self, Pnt p0, Pnt p1);
+	line_append(Line self, world::CVertex p0, world::CVertex p1);
 
 	void
 	line_set(Line self, const math::Mat4f& view_proj);

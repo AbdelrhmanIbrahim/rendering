@@ -8,7 +8,7 @@ namespace io
 {
 	struct Indexed_Triangles
 	{
-		std::vector<world::Vertex> vertices;
+		std::vector<world::TVertex> vertices;
 		std::vector<unsigned int> indices;
 	};
 

@@ -27,55 +27,55 @@ namespace rndr
 		glgpu::Sampler sampler;
 	};
 
-	constexpr static Vertex skybox[36] = 
+	constexpr static TVertex skybox[36] = 
 	{
 		//front
-		Vertex{-1.0f, -1.0f,  1.0f},
-		Vertex{-1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f, -1.0f,  1.0f},
-		Vertex{-1.0f, -1.0f,  1.0f},
+		TVertex{-1.0f, -1.0f,  1.0f},
+		TVertex{-1.0f,  1.0f,  1.0f},
+		TVertex{ 1.0f,  1.0f,  1.0f},
+		TVertex{ 1.0f,  1.0f,  1.0f},
+		TVertex{ 1.0f, -1.0f,  1.0f},
+		TVertex{-1.0f, -1.0f,  1.0f},
 
 		//back
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
+		TVertex{-1.0f,  1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{ 1.0f, -1.0f, -1.0f},
+		TVertex{ 1.0f, -1.0f, -1.0f},
+		TVertex{ 1.0f,  1.0f, -1.0f},
+		TVertex{-1.0f,  1.0f, -1.0f},
 
 		//right
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
+		TVertex{ 1.0f, -1.0f, -1.0f},
+		TVertex{ 1.0f, -1.0f,  1.0f},
+		TVertex{ 1.0f,  1.0f,  1.0f},
+		TVertex{ 1.0f,  1.0f,  1.0f},
+		TVertex{ 1.0f,  1.0f, -1.0f},
+		TVertex{ 1.0f, -1.0f, -1.0f},
 
 		//left
-		Vertex{-1.0f, -1.0f,  1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{-1.0f,  1.0f,  1.0f},
-		Vertex{-1.0f, -1.0f,  1.0f},
+		TVertex{-1.0f, -1.0f,  1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f,  1.0f, -1.0f},
+		TVertex{-1.0f,  1.0f, -1.0f},
+		TVertex{-1.0f,  1.0f,  1.0f},
+		TVertex{-1.0f, -1.0f,  1.0f},
 
 		//top
-		Vertex{-1.0f,  1.0f, -1.0f},
-		Vertex{ 1.0f,  1.0f, -1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{ 1.0f,  1.0f,  1.0f},
-		Vertex{-1.0f,  1.0f,  1.0f},
-		Vertex{-1.0f,  1.0f, -1.0f},
+		TVertex{-1.0f,  1.0f, -1.0f},
+		TVertex{ 1.0f,  1.0f, -1.0f},
+		TVertex{ 1.0f,  1.0f,  1.0f},
+		TVertex{ 1.0f,  1.0f,  1.0f},
+		TVertex{-1.0f,  1.0f,  1.0f},
+		TVertex{-1.0f,  1.0f, -1.0f},
 
 		//bottom
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f,  1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{ 1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f,  1.0f},
-		Vertex{ 1.0f, -1.0f,  1.0f}
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f,  1.0f},
+		TVertex{ 1.0f, -1.0f, -1.0f},
+		TVertex{ 1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f,  1.0f},
+		TVertex{ 1.0f, -1.0f,  1.0f}
 	};
 
 	struct Space_Uniform
@@ -93,9 +93,9 @@ namespace rndr
 		self->cube_vao = vao_create();
 		vao_attach(self->cube_vao, self->cube_vbo);
 		buffer_vertex_set(self->cube_vbo, skybox,	  sizeof(skybox), STORAGE::STATIC);
-		buffer_vertex_attribute(self->cube_vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(self->cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(self->cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		buffer_vertex_attribute(self->cube_vbo, 0, 3, sizeof(world::TVertex), 0);
+		buffer_vertex_attribute(self->cube_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
+		buffer_vertex_attribute(self->cube_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
 		vao_unbind();
 	}
 

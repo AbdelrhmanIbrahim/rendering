@@ -60,8 +60,11 @@ namespace rndr
 			world::system::phong_sys_run(e->phong, w);
 			break;
 		case Rendering::PBR:
+		{
 			world::system::pbr_sys_run(e->pbr, w);
+			world::system::skybox_sys_run(e->skybox, w);
 			break;
+		}
 		case Rendering::HIDDENLINE:
 			world::system::hiddenline_sys_run(e->hline, w);
 			break;
@@ -136,7 +139,6 @@ namespace rndr
 			_engine_world_mesh_render(e, w);
 			world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);
-			world::system::skybox_sys_run(e->skybox, w);
 		}
 	}
 

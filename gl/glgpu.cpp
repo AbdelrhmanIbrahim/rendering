@@ -17,66 +17,66 @@ using namespace world;
 namespace glgpu
 {
 	//unit cube can be used in some algorithms like equirectangle mapping, irradiance map, etc..
-	constexpr static Vertex unit_cube[36] =
+	constexpr static TVertex unit_cube[36] =
 	{
 		//back
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, 1.0f, -1.0},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{1.0f, 1.0f, -1.0f},
+		TVertex{1.0f, -1.0f, -1.0f},
+		TVertex{1.0f, 1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f, 1.0f, -1.0},
 
 		//front
-		Vertex{-1.0f, -1.0f, 1.0},
-		Vertex{1.0f, -1.0f, 1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{-1.0f, 1.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, 1.0},
+		TVertex{-1.0f, -1.0f, 1.0},
+		TVertex{1.0f, -1.0f, 1.0f},
+		TVertex{1.0f, 1.0f, 1.0f,},
+		TVertex{1.0f, 1.0f, 1.0f,},
+		TVertex{-1.0f, 1.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, 1.0},
 
 		//left
-		Vertex{-1.0f, 1.0f, 1.0f},
-		Vertex{-1.0f, 1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{-1.0f, -1.0f, 1.0},
-		Vertex{-1.0f, 1.0f, 1.0f},
+		TVertex{-1.0f, 1.0f, 1.0f},
+		TVertex{-1.0f, 1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f, 1.0},
+		TVertex{-1.0f, 1.0f, 1.0f},
 
 		//right
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{1.0f, -1.0f, -1.0},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{1.0f, -1.0f, 1.0f},
+		TVertex{1.0f, 1.0f, 1.0f,},
+		TVertex{1.0f, -1.0f, -1.0},
+		TVertex{1.0f, 1.0f, -1.0f},
+		TVertex{1.0f, -1.0f, -1.0f},
+		TVertex{1.0f, 1.0f, 1.0f,},
+		TVertex{1.0f, -1.0f, 1.0f},
 
 		//bottom
-		Vertex{-1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, -1.0f, -1.0f},
-		Vertex{1.0f, -1.0f, 1.0f},
-		Vertex{1.0f, -1.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, -1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
+		TVertex{1.0f, -1.0f, -1.0f},
+		TVertex{1.0f, -1.0f, 1.0f},
+		TVertex{1.0f, -1.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, -1.0f},
 
 		//top
-		Vertex{-1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{1.0f, 1.0f, -1.0f},
-		Vertex{1.0f, 1.0f, 1.0f,},
-		Vertex{-1.0f, 1.0f, -1.0f},
-		Vertex{-1.0f, 1.0f, 1.0f}
+		TVertex{-1.0f, 1.0f, -1.0f},
+		TVertex{1.0f, 1.0f, 1.0f,},
+		TVertex{1.0f, 1.0f, -1.0f},
+		TVertex{1.0f, 1.0f, 1.0f,},
+		TVertex{-1.0f, 1.0f, -1.0f},
+		TVertex{-1.0f, 1.0f, 1.0f}
 	};
 
-	constexpr static Vertex quad_ndc[6] =
+	constexpr static TVertex quad_ndc[6] =
 	{
-		Vertex{-1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
-		Vertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
+		TVertex{-1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
+		TVertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
 
-		Vertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
-		Vertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
-		Vertex{ 1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 0.0f}
+		TVertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
+		TVertex{ 1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 0.0f}
 	};
 
 	struct IGL_Handle
@@ -676,9 +676,9 @@ namespace glgpu
 		Vao quad_vao = vao_create();
 		vao_attach(quad_vao, quad_vbo);
 		buffer_vertex_set(quad_vbo, quad_ndc,   sizeof(quad_ndc), STORAGE::STATIC);
-		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::TVertex), 0);
+		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
+		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
 		vao_unbind();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -845,9 +845,9 @@ namespace glgpu
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
 		buffer_vertex_set(cube_vbo, unit_cube, sizeof(unit_cube), STORAGE::STATIC);
-		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::TVertex), 0);
+		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
+		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
 		vao_unbind();
 
 		error();
@@ -919,9 +919,9 @@ namespace glgpu
 		Vao cube_vao = vao_create();
 		vao_attach(cube_vao, cube_vbo);
 		buffer_vertex_set(cube_vbo, unit_cube,  sizeof(unit_cube), STORAGE::STATIC);
-		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::Vertex), 0);
-		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::Vertex), 3 * sizeof(float));
-		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::Vertex), 6 * sizeof(float));
+		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::TVertex), 0);
+		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
+		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
 		vao_unbind();
 
 		//TEST

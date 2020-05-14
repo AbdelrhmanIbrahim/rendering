@@ -2,7 +2,7 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
-#include "defs/Defs.h"
+#include "world/component/Vertex.h"
 
 namespace rndr
 {
@@ -15,7 +15,7 @@ namespace rndr
 	point_free(Point self);
 
 	void
-	point_append(Point self, Pnt point);
+	point_append(Point self, world::CVertex vertex);
 
 	void
 	point_set(Point self, const math::Mat4f& view_proj);

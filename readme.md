@@ -19,7 +19,7 @@
 - add imGui and interact ✔
 - add fmt ✔
 - get QT in ✔
-- blend QT windowing with out painter ✔
+- blend QT windowing with painter ✔
 - add ECS ✔
 - fix crash at closing ✔
 - get the rest of renderers back to use ECS ✔
@@ -43,14 +43,16 @@
 - emit line strip only when face is ccw ✔
 - mesh picking ✔
 - moving picked meshes ✔
-- selection mamager ✔
+- selection manager ✔
+- Textured quad
+- load textured models, check assimp impl
+- 3d objects outlines
+- shadows
+- orbiting camera
 - OI and OD transparency like weighted average or depth peeling (nvidia bookmark and https://m.habr.com/en/post/457292/) 
 - continue in real time rendering book
 - MSAA enable when needed
-- orbiting camera
 - application state (e.g. Picking state)
-- 3d objects outlines
-- shadows
 - we do alot of fetching then uploading data to gpu even if there's no change to the data (do some kind of lazy updating)
 - slerp (https://www.geometrictools.com/Documentation/FastAndAccurateSlerp.pdf)
 - make the tiles ground infinite
@@ -69,7 +71,6 @@
 - compute shaders
 - space partitioning 
 - view frustm culling
-- load textured models, check assimp impl
 - resources file format
 - terrian deformation
 - fluid/water/particle system simulation (*read Fluid Engine Development book*)

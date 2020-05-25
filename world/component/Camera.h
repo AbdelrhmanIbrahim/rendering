@@ -12,6 +12,7 @@ namespace world
 	{
 		//view
 		math::vec3f pos, fwd, right, up;
+		float orbit_hangle, orbit_vangle;
 
 		//projection
 		float l, r, t, b;
@@ -29,6 +30,8 @@ namespace world
 		self.fwd = math::vec3f{ 0,0,-1 };
 		self.right = math::vec3f{ 1,0,0 };
 		self.up = math::vec3f{ 0, 1, 0 };
+		self.orbit_hangle = 0;
+		self.orbit_vangle = 0;
 		self.l = -1;
 		self.r = 1;
 		self.b = -1;
@@ -53,17 +56,18 @@ namespace world
 	inline static math::Mat4f
 	camera_view_matrix(const Camera& self)
 	{
-		return math::view_matrix(self.fwd, self.right, self.up, self.pos);
+		return math::view_matrix(self.fwd, self.right, self.up, self.pos) * 
+			math::quat_to_matrix(math::quat_from_axis(math::X_AXIS, self.orbit_vangle)) *
+			math::quat_to_matrix(math::quat_from_axis(math::Y_AXIS, self.orbit_hangle));
 	}
 
-	inline static math::Mat4f
+	inline static void
 	camera_lookat(Camera& self, const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
 	{
 		self.pos = eye;
 		self.fwd = math::normalize(target - eye);
 		self.right = math::normalize(math::cross(self.fwd, up));
 		self.up = math::normalize(math::cross(self.right, self.fwd));
-		return math::view_matrix(self.fwd, self.right, self.up, self.pos);
 	}
 
 	inline static math::Mat4f
@@ -90,7 +94,14 @@ namespace world
 		math::vec3f fwd = math::quat_from_axis(self.right, to_radian(mouse_delta[1]) / 10.0f) *
 						  math::quat_from_axis(self.up, -to_radian(mouse_delta[0]) / 10.0f) *
 						  self.fwd;
-		camera_lookat(self, self.pos, self.pos + fwd, math::vec3f{ 0,1,0 });
+		camera_lookat(self, self.pos, self.pos + fwd, math::Y_AXIS);
+	}
+
+	inline static void
+	camera_orbit(Camera& self, const math::vec2f& mouse_delta)
+	{
+		self.orbit_hangle += to_radian((int)(mouse_delta[0] / 10.0f) % 360);
+		self.orbit_vangle += to_radian((int)(mouse_delta[1] / 10.0f) % 360);
 	}
 
 	inline static void

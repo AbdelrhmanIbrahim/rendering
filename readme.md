@@ -44,11 +44,11 @@
 - mesh picking ✔
 - moving picked meshes ✔
 - selection manager ✔
+- orbiting camera ✔
 - Textured quad
-- load textured models, check assimp impl
 - 3d objects outlines
+- load textured models, check assimp impl
 - shadows
-- orbiting camera
 - OI and OD transparency like weighted average or depth peeling (nvidia bookmark and https://m.habr.com/en/post/457292/) 
 - continue in real time rendering book
 - MSAA enable when needed

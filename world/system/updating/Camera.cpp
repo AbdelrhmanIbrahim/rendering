@@ -9,10 +9,15 @@ namespace world
 		void
 		_cam_update(world::Camera* cam, const io::Input& i)
 		{
-			//Mouse move
+			//Mouse
 			math::vec2f mouse_dir{ io::input_mouse_delta(i) };
 			if (mouse_dir != math::vec2f{})
-				camera_rotate(*cam, mouse_dir);
+			{
+				if (i.mouse[(int)io::MOUSE::RIGHT] == true)
+					camera_rotate(*cam, mouse_dir);
+				if (i.mouse[(int)io::MOUSE::LEFT] == true)
+					camera_orbit(*cam, mouse_dir);
+			}
 
 			//Keyboard
 			constexpr float speed = 0.05f * 2.0f;
@@ -34,22 +39,23 @@ namespace world
 		void
 		camera_viewport_all_run(ecs::World& w, math::vec2f win_size)
 		{
+			//mark active cam
+			int active_cam_index = 0;
+
 			//fetch system req components
-			auto cbag = ecs::world_active_components<world::Camera>(w);
-			for (int x = 0; x < cbag.size; ++x)
-				camera_viewport(cbag[x], win_size);
+			auto& cbag = ecs::world_active_components<world::Camera>(w)[active_cam_index];
+			camera_viewport(cbag, win_size);
 		}
 
 		void
 		camera_input_all_run(ecs::World& w, const io::Input& i)
 		{
+			//mark active cam
+			int active_cam_index = 0;
+
 			//fetch system req components
-			auto cbag = ecs::world_active_components<world::Camera>(w);
-			for (int x = 0; x < cbag.size; ++x)
-			{
-				math::vec2f mouse_dir{ io::input_mouse_delta(i) };
-				_cam_update(&cbag[x], i);
-			}
+			auto& cbag = ecs::world_active_components<world::Camera>(w)[active_cam_index];
+			_cam_update(&cbag, i);
 		}
 
 		void

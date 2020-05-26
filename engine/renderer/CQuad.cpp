@@ -1,4 +1,4 @@
-#include "engine/renderer/Quad.h"
+#include "engine/renderer/CQuad.h"
 
 #include "gl/glgpu.h"
 
@@ -6,7 +6,7 @@ using namespace glgpu;
 
 namespace rndr
 {
-	struct ICquad
+	struct ICQuad
 	{
 		Program prog;
 		Vao quad_vao;
@@ -14,10 +14,10 @@ namespace rndr
 		Buffer uvp;
 	};
 
-	Cquad
+	CQuad
 	cquad_create()
 	{
-		ICquad* self = new ICquad;
+		ICQuad* self = new ICQuad;
 
 		self->prog = program_create(DIR_PATH"/engine/shaders/cquad.vertex", DIR_PATH"/engine/shaders/cquad.pixel");
 		self->quad_vao = vao_create();
@@ -32,7 +32,7 @@ namespace rndr
 	}
 
 	void
-	cquad_free(Cquad self)
+	cquad_free(CQuad self)
 	{
 		program_delete(self->prog);
 		vao_delete(self->quad_vao);
@@ -41,7 +41,7 @@ namespace rndr
 	}
 
 	void
-	cquad_set(Cquad self, math::Mat4f& view_proj, math::vec2f& viewport)
+	cquad_set(CQuad self, math::Mat4f& view_proj, math::vec2f& viewport)
 	{
 		program_use(self->prog);
 		buffer_uniform_bind(0, self->uvp);
@@ -50,7 +50,7 @@ namespace rndr
 	}
 
 	void
-	cquad_draw(Cquad self, const world::CVertex quad_strip[6])
+	cquad_draw(CQuad self, const world::CVertex quad_strip[6])
 	{
 		//draw geometry
 		buffer_vertex_set(self->quad_vbo, quad_strip, 6 * sizeof(world::CVertex), STORAGE::DYNAMIC);

@@ -1,4 +1,4 @@
-#include "engine/renderer/Quad.h"
+#include "engine/renderer/CQuad.h"
 
 #include "ecs/World.h"
 
@@ -8,6 +8,6 @@ namespace world
 	{
 		//colored quad as a bg
 		void
-		bg_sys_run(rndr::Cquad self, ecs::World& w);
+		bg_sys_run(rndr::CQuad self, ecs::World& w);
 	};
 };

@@ -24,7 +24,7 @@ namespace world
 		};
 
 		void
-		bg_sys_run(rndr::Cquad self, ecs::World& w)
+		bg_sys_run(rndr::CQuad self, ecs::World& w)
 		{
 			//fetch system req components
 			Camera cam = ecs::world_active_components<world::Camera>(w)[0];

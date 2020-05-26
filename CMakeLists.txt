@@ -48,6 +48,8 @@ set(RESOURCES
 	engine/shaders/edge.pixel
 	engine/shaders/cquad.vertex
 	engine/shaders/cquad.pixel
+	engine/shaders/tquad.vertex
+	engine/shaders/tquad.pixel
 	engine/shaders/hiddenline.vertex
 	engine/shaders/hiddenline.geo
 	engine/shaders/hiddenline.pixel
@@ -69,7 +71,8 @@ set(HEADERS
 	engine/renderer/Point.h
 	engine/renderer/Line.h
 	engine/renderer/Edge.h
-	engine/renderer/Quad.h
+	engine/renderer/CQuad.h
+	engine/renderer/TQuad.h
 	engine/renderer/Skybox.h
 	engine/renderer/Hiddenline.h
 	gl/glgpu.h
@@ -136,7 +139,8 @@ set(SOURCES
 	engine/renderer/Point.cpp
 	engine/renderer/Line.cpp
 	engine/renderer/Edge.cpp
-	engine/renderer/Quad.cpp
+	engine/renderer/CQuad.cpp
+	engine/renderer/TQuad.cpp
 	engine/renderer/Skybox.cpp
 	engine/renderer/Hiddenline.cpp
 	world/Universe.cpp

@@ -16,7 +16,7 @@
 #include "engine/renderer/Point.h"
 #include "engine/renderer/Line.h"
 #include "engine/renderer/Edge.h"
-#include "engine/renderer/Quad.h"
+#include "engine/renderer/CQuad.h"
 #include "engine/renderer/Hiddenline.h"
 #include "engine/renderer/Skybox.h"
 
@@ -48,7 +48,7 @@ namespace rndr
 		rndr::Point point;
 		rndr::Line line;
 		rndr::Edge edge;
-		rndr::Cquad cquad;
+		rndr::CQuad cquad;
 		rndr::Hiddenline hline;
 		rndr::Skybox skybox;
 	};

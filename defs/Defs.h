@@ -2,6 +2,8 @@
 
 #include "math/Vector.h"
 
+#include "world/component/Vertex.h"
+
 #define HANDLE(NAME) typedef struct NAME##__ { int unused; } *NAME;
 #define to_radian(degree) degree * 0.01745329251f
 #define to_degree(radian) radian * 57.2957795131f
@@ -98,4 +100,26 @@ struct Unifrom_Float
 {
 	const char* uniform;
 	float value;
+};
+
+//colored quad
+constexpr static world::CVertex ctl{ math::vec3f{ -1,  1, 1 }, math::vec4f{0.7, 0.7, 0.7, 1} };
+constexpr static world::CVertex cbl{ math::vec3f{ -1, -1, 1 }, math::vec4f{0.2, 0.2, 0.2, 1} };
+constexpr static world::CVertex cbr{ math::vec3f{  1, -1, 1 }, math::vec4f{0.2, 0.2, 0.2, 1} };
+constexpr static world::CVertex ctr{ math::vec3f{  1,  1, 1 }, math::vec4f{0.7, 0.7, 0.7, 1} };
+constexpr static world::CVertex cbg_quad[6]
+{
+	ctl, cbl, cbr,
+	ctl, cbr, ctr
+};
+
+//textured quad
+constexpr static world::TVertex ttl{ math::vec3f{ -1,  1, 1 }, math::vec3f{}, math::vec2f{0, 1} };
+constexpr static world::TVertex tbl{ math::vec3f{ -1, -1, 1 }, math::vec3f{}, math::vec2f{0, 0} };
+constexpr static world::TVertex tbr{ math::vec3f{  1, -1, 1 }, math::vec3f{}, math::vec2f{1, 0} };
+constexpr static world::TVertex ttr{ math::vec3f{  1,  1, 1 }, math::vec3f{}, math::vec2f{1, 1} };
+constexpr static world::TVertex tbg_quad[6]
+{
+	ttl, tbl, tbr,
+	ttl, tbr, ttr
 };

@@ -1022,6 +1022,13 @@ namespace glgpu
 	}
 
 	void
+	color_clear(float r, float g, float b, float a)
+	{
+		glClearColor(r, g, b, a);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	void
 	frame_start(float r, float g, float b)
 	{
 		glClearColor(r, g, b, 1);
@@ -1033,12 +1040,6 @@ namespace glgpu
 		glCullFace(GL_BACK);
 		glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	}
-
-	void
-	color_clear(float r, float g, float b)
-	{
-		glClearColor(r, g, b, 1.0f);
 	}
 
 	void

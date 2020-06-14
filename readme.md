@@ -47,7 +47,9 @@
 - orbiting camera ✔
 - Textured quad
 - 3d objects outlines
-- load textured models, check assimp impl
+- load obj textured models, check assimp impl
+- normal mapping
+- parallex mapping or relief mapping (raymarching) 
 - shadows
 - OI and OD transparency like weighted average or depth peeling (nvidia bookmark and https://m.habr.com/en/post/457292/) 
 - continue in real time rendering book

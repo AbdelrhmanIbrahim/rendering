@@ -63,7 +63,7 @@ namespace rndr
 		Space_Uniform mvp{ view_proj };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 		buffer_vertex_set(self->vbo, &self->points.front(), self->points.size() * sizeof(self->points.front()) , STORAGE::DYNAMIC);
-		buffer_uniform_bind(0, self->uniform_space);
+		buffer_uniform_bind(self->uniform_space, 0);
 	}
 
 	void

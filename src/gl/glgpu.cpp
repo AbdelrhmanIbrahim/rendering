@@ -492,9 +492,9 @@ namespace glgpu
 	}
 
 	void
-	buffer_uniform_bind(unsigned int binding_point, Buffer data)
+	buffer_uniform_bind(Buffer buf, unsigned int binding_point)
 	{
-		glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, data->buffer.id);
+		glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, buf->buffer.id);
 	}
 
 	void

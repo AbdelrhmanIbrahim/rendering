@@ -92,7 +92,7 @@ namespace rndr
             case UNIFORM_TYPE::VEC4:
             case UNIFORM_TYPE::MAT4:
             {
-                buffer_uniform_bind(cgpu_uniform.ucpu.slot, cgpu_uniform.ugpu);
+                buffer_uniform_bind(cgpu_uniform.ugpu, cgpu_uniform.ucpu.slot);
                 break;
             }
             case UNIFORM_TYPE::TEXTURE2D:
@@ -126,7 +126,7 @@ namespace rndr
 
         //postprocess vertex shader uniforms
         math::Mat4f identity = math::mat4_id();
-		buffer_uniform_bind(0, self->uvp);
+		buffer_uniform_bind(self->uvp, 0);
 		buffer_uniform_set(self->uvp, &identity, sizeof(math::Mat4f));
 
         return self;

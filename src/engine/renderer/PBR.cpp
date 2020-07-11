@@ -176,13 +176,13 @@ namespace rndr
 	{
 		program_use(self->prog);
 
-		buffer_uniform_bind(0, self->uniform_space);
-		buffer_uniform_bind(1, self->uniform_camera);
-		buffer_uniform_bind(2, self->uniform_material);
-		buffer_uniform_bind(3, self->uniform_light_count);
-		buffer_uniform_bind(4, self->uniform_suns);
-		buffer_uniform_bind(5, self->uniform_lamps);
-		buffer_uniform_bind(6, self->uniform_flashes);
+		buffer_uniform_bind(self->uniform_space, 0);
+		buffer_uniform_bind(self->uniform_camera, 1);
+		buffer_uniform_bind(self->uniform_material, 2);
+		buffer_uniform_bind(self->uniform_light_count,3 );
+		buffer_uniform_bind(self->uniform_suns, 4);
+		buffer_uniform_bind(self->uniform_lamps, 5);
+		buffer_uniform_bind(self->uniform_flashes, 6);
 
 		cubemap_bind(self->diffuse_irradiance_map, 0);
 		sampler_bind(self->sampler_diffuse, 0);

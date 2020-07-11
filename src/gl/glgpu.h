@@ -70,7 +70,7 @@ namespace glgpu
 	buffer_uniform_create(unsigned int size_in_bytes);
 
 	void
-	buffer_uniform_bind(unsigned int binding_point, Buffer data);
+	buffer_uniform_bind(Buffer buf, unsigned int binding_point);
 
 	void
 	buffer_uniform_set(Buffer buf, void* data, unsigned int size_in_bytes);

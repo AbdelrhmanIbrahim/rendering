@@ -52,8 +52,8 @@ namespace rndr
 	colored_set(Colored self, math::Vec2f viewport)
 	{
 		program_use(self->prog);
-		buffer_uniform_bind(0, self->uniform_space);
-		buffer_uniform_bind(1, self->uniform_object_color);
+		buffer_uniform_bind(self->uniform_space, 0);
+		buffer_uniform_bind(self->uniform_object_color, 1);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 

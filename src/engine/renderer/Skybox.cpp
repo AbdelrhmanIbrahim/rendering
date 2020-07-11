@@ -156,7 +156,7 @@ namespace rndr
 			program_use(self->prog);
 
 			//Uniform blocks
-			buffer_uniform_bind(0, self->uniform_space);
+			buffer_uniform_bind(self->uniform_space, 0);
 			Space_Uniform mvp{ camera_view_matrix(*cam), camera_proj_matrix(*cam)};
 			buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 

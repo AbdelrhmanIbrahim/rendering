@@ -97,13 +97,13 @@ namespace rndr
 	{
 		program_use(self->prog);
 
-		buffer_uniform_bind(0, self->uniform_space);
-		buffer_uniform_bind(1, self->uniform_object_color);
-		buffer_uniform_bind(2, self->uniform_camera);
-		buffer_uniform_bind(3, self->uniform_light_count);
-		buffer_uniform_bind(4, self->uniform_suns);
-		buffer_uniform_bind(5, self->uniform_lamps);
-		buffer_uniform_bind(6, self->uniform_flashes);
+		buffer_uniform_bind(self->uniform_space, 0);
+		buffer_uniform_bind(self->uniform_object_color, 1);
+		buffer_uniform_bind(self->uniform_camera, 2);
+		buffer_uniform_bind(self->uniform_light_count, 3);
+		buffer_uniform_bind(self->uniform_suns, 4);
+		buffer_uniform_bind(self->uniform_lamps, 5);
+		buffer_uniform_bind(self->uniform_flashes, 6);
 
 		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));

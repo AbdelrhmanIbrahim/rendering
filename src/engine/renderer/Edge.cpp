@@ -54,8 +54,8 @@ namespace rndr
 	edge_set(Edge self, math::Vec2f viewport)
 	{
 		program_use(self->prog);
-		buffer_uniform_bind(0, self->uniform_space);
-		buffer_uniform_bind(2, self->uniform_edge_color);
+		buffer_uniform_bind(self->uniform_space, 0);
+		buffer_uniform_bind(self->uniform_edge_color, 2);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 

@@ -44,7 +44,7 @@ namespace rndr
 	cquad_set(CQuad self, math::Mat4f& view_proj, math::Vec2f& viewport)
 	{
 		program_use(self->prog);
-		buffer_uniform_bind(0, self->uvp);
+		buffer_uniform_bind(self->uvp, 0);
 		buffer_uniform_set(self->uvp, &view_proj, sizeof(view_proj));
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}

@@ -113,7 +113,7 @@ constexpr static world::CVertex cbg_quad[6]
 	ctl, cbr, ctr
 };
 
-//textured quad
+//bg quad
 constexpr static world::TVertex ttl{ math::vec3f{ -1,  1, 1 }, math::vec3f{}, math::vec2f{0, 1} };
 constexpr static world::TVertex tbl{ math::vec3f{ -1, -1, 1 }, math::vec3f{}, math::vec2f{0, 0} };
 constexpr static world::TVertex tbr{ math::vec3f{  1, -1, 1 }, math::vec3f{}, math::vec2f{1, 0} };
@@ -122,4 +122,15 @@ constexpr static world::TVertex tbg_quad[6]
 {
 	ttl, tbl, tbr,
 	ttl, tbr, ttr
+};
+
+//front quad
+constexpr static world::TVertex fttl{ math::vec3f{ -1,  1, -1 }, math::vec3f{}, math::vec2f{0, 1} };
+constexpr static world::TVertex ftbl{ math::vec3f{ -1, -1, -1 }, math::vec3f{}, math::vec2f{0, 0} };
+constexpr static world::TVertex ftbr{ math::vec3f{  1, -1, -1 }, math::vec3f{}, math::vec2f{1, 0} };
+constexpr static world::TVertex fttr{ math::vec3f{  1,  1, -1 }, math::vec3f{}, math::vec2f{1, 1} };
+constexpr static world::TVertex tfr_quad[6]
+{
+	fttl, ftbl, ftbr,
+	fttl, ftbr, fttr
 };

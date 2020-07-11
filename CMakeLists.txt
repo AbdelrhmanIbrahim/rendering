@@ -75,6 +75,7 @@ set(HEADERS
 	src/engine/renderer/TQuad.h
 	src/engine/renderer/Skybox.h
 	src/engine/renderer/Hiddenline.h
+	src/engine/renderer/Postprocessor.h
 	src/engine/renderer/Outlines3D.h
 	src/gl/glgpu.h
 	src/gl/gl_context.h
@@ -144,6 +145,7 @@ set(SOURCES
 	src/engine/renderer/TQuad.cpp
 	src/engine/renderer/Skybox.cpp
 	src/engine/renderer/Hiddenline.cpp
+	src/engine/renderer/Postprocessor.cpp
 	src/engine/renderer/Outlines3D.cpp
 	src/world/Universe.cpp
 	src/world/system/rendering/Phong.cpp

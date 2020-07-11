@@ -19,6 +19,11 @@ namespace glgpu
 	typedef struct IGL_Handle* Framebuffer;
 	typedef struct IGL_Handle* Cubemap;
 
+	struct Uniform
+    {
+
+    };
+    
 	void
 	graphics_init();
 

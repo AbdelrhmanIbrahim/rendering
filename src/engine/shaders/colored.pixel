@@ -11,5 +11,5 @@ layout (std140, binding = 1) uniform Object_Color
 void
 main()
 {
-	frag_color = object_color;
+	frag_color = vec4(1,0,1,1);
 }

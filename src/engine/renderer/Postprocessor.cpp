@@ -2,10 +2,18 @@
 
 #include "defs/Defs.h"
 
+#include <vector>
+
 using namespace glgpu;
 
 namespace rndr
 {
+    struct IPass
+    {
+        glgpu::Program prog;
+        std::vector<glgpu::Uniform> uniforms;
+    };
+
     struct IPostprocessor
     {
        glgpu::Vao palette_vao;
@@ -13,7 +21,8 @@ namespace rndr
        glgpu::Buffer uvp;
        glgpu::Framebuffer fb;
        glgpu::Texture out;
-       glgpu::Program prog;
+
+       std::vector<IPass> passes;
     };
     
     Postprocessor
@@ -25,7 +34,6 @@ namespace rndr
 		self->uvp = buffer_uniform_create(sizeof(math::Mat4f));
         self->fb = framebuffer_create();
         self->out = texture2d_create(math::vec2f{1,1}, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
-        self->prog = nullptr; //created when an effect added
 
         //palette quad
 		vao_attach(self->palette_vao, self->palette_vbo);
@@ -50,13 +58,22 @@ namespace rndr
 		buffer_delete(self->uvp);
         framebuffer_free(self->fb);
         texture_free(self->out);
-        program_delete(self->prog);
+
+        for(auto pass : self->passes)
+            program_delete(pass.prog);
     }
 
     void
-    postprocessor_effect(Postprocessor self, const char* frag_shader_path)
+    postprocessor_effect_add(Postprocessor self, Pass& pass)
     {
-        self->prog = program_create(DIR_PATH"/src/engine/shaders/tquad.vertex", frag_shader_path);
+        self->passes.push_back
+        (
+            IPass
+            {
+                program_create(DIR_PATH"/src/engine/shaders/tquad.vertex", pass.frag_shader_path),
+                pass.uniforms
+            }
+        );
     }
 
 	glgpu::Texture
@@ -69,7 +86,7 @@ namespace rndr
         framebuffer_bind(self->fb);
         framebuffer_attach(self->fb, self->out, FRAMEBUFFER_ATTACHMENT::COLOR0);
 		{
-            program_use(self->prog);
+            program_use(self->passes.front().prog);
             color_clear(1, 1, 1, 1);
             depth_clear();
         	depth_test(DEPTH_TEST::LE);

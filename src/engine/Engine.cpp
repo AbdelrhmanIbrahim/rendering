@@ -157,12 +157,6 @@ namespace rndr
 
 			//postprocess pass
 			glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w, DIR_PATH"/src/engine/shaders/colored.pixel");
-			{
-				//test only
-				/*io::Image im = io::image_new(4, camera_viewport(cam));
-				glgpu::texture2d_unpack(tex, im, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
-				io::image_write(im, "F:/Abdo/rendering/src/postprocess.png", IMAGE_FORMAT::PNG);*/
-			}
 		}
 	}
 

@@ -43,9 +43,9 @@ namespace rndr
 	void
 	hiddenline_free(Hiddenline self)
 	{
-		program_delete(self->prog);
-		buffer_delete(self->uniform_space);
-		buffer_delete(self->uniform_edge_color);
+		handle_free(self->prog);
+		handle_free(self->uniform_space);
+		handle_free(self->uniform_edge_color);
 
 		delete self;
 	}

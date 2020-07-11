@@ -105,8 +105,8 @@ namespace world
 		void
 		pick_sys_free(Pick_System sys)
 		{
-			texture_free(sys->tex);
-			framebuffer_free(sys->fb);
+			handle_free(sys->tex);
+			handle_free(sys->fb);
 			image_free(sys->pixels);
 		}
 	};

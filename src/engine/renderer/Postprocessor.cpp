@@ -135,16 +135,18 @@ namespace rndr
     void
     postprocessor_free(Postprocessor self)
     {
-        vao_delete(self->palette_vao);
-        buffer_delete(self->palette_vbo);
-		buffer_delete(self->uvp);
-        framebuffer_free(self->fb);
-        texture_free(self->out);
+        handle_free(self->palette_vao);
+        handle_free(self->palette_vbo);
+        handle_free(self->uvp);
+        handle_free(self->fb);
+        handle_free(self->out);
 
-        for(auto pass : self->passes)
+        //delete passes
+        for(auto& pass : self->passes)
         {
-            program_delete(pass.prog);
-            //leak -- delete glhandles
+            handle_free(pass.prog);
+            for(auto& uniform : pass.gpu_uniforms)
+                handle_free(uniform.ugpu);
         }
     }
 

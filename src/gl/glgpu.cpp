@@ -372,6 +372,53 @@ namespace glgpu
 		return obj;
 	}
 
+	void
+	_program_delete(Program prog)
+	{
+		glDeleteProgram(prog->program.id);
+		delete prog;
+	}
+
+	void
+	_buffer_delete(Buffer buf)
+	{
+		glDeleteBuffers(1, &buf->buffer.id);
+		delete buf;
+	}
+
+	void
+	_vao_delete(Vao va)
+	{
+		glDeleteVertexArrays(1, &va->vao.id);
+	}
+
+	void
+	_texture_free(Texture texture)
+	{
+		glDeleteTextures(1, &texture->texture.id);
+		delete texture;
+	}
+
+	void
+	_sampler_free(Sampler self)
+	{
+		glDeleteSamplers(1, (GLuint*)&self->sampler.id);
+		delete self;
+	}
+
+	void
+	_cubemap_free(Cubemap cmap)
+	{
+		glDeleteTextures(1, &cmap->cubemap.id);
+		delete cmap;
+	}
+
+	void
+	_framebuffer_free(Framebuffer fb)
+	{
+		glDeleteFramebuffers(1, &fb->framebuffer.id);
+	}
+
 	Program
 	program_create(const char* vertex_shader_path, const char* pixel_shader_path)
 	{
@@ -415,13 +462,6 @@ namespace glgpu
 	program_use(Program prog)
 	{
 		glUseProgram(prog->program.id);
-	}
-
-	void
-	program_delete(Program prog)
-	{
-		glDeleteProgram(prog->program.id);
-		delete prog;
 	}
 
 	Buffer
@@ -505,13 +545,6 @@ namespace glgpu
 		glBindBuffer(GL_UNIFORM_BUFFER, NULL);
 	}
 
-	void
-	buffer_delete(Buffer buf)
-	{
-		glDeleteBuffers(1, &buf->buffer.id);
-		delete buf;
-	}
-
 	Vao
 	vao_create()
 	{
@@ -546,12 +579,6 @@ namespace glgpu
 		vao_bind(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
-	}
-
-	void
-	vao_delete(Vao va)
-	{
-		glDeleteVertexArrays(1, &va->vao.id);
 	}
 
 	Texture
@@ -688,8 +715,8 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		glDeleteFramebuffers(1, &fbo);
-		vao_delete(quad_vao);
-		buffer_delete(quad_vbo);
+		_vao_delete(quad_vao);
+		_buffer_delete(quad_vbo);
 	}
 
 	void
@@ -710,13 +737,6 @@ namespace glgpu
 	{
 		texture2d_bind(texture, 0);
 		glGetTexImage(GL_TEXTURE_2D, 0, texture->texture.pixel_format, texture->texture.type, image.data);
-	}
-
-	void
-	texture_free(Texture texture)
-	{
-		glDeleteTextures(1, &texture->texture.id);
-		delete texture;
 	}
 
 	Sampler
@@ -745,13 +765,6 @@ namespace glgpu
 	sampler_bind(Sampler self, unsigned int texture_unit)
 	{
 		glBindSampler(texture_unit, self->sampler.id);
-	}
-
-	void
-	sampler_free(Sampler self)
-	{
-		glDeleteSamplers(1, (GLuint*)&self->sampler.id);
-		delete self;
 	}
 
 	Cubemap
@@ -873,11 +886,11 @@ namespace glgpu
 
 		//free
 		glDeleteFramebuffers(1, &fbo);
-		vao_delete(cube_vao);
-		buffer_delete(cube_vbo);
-		program_delete(prog);
-		texture_free(hdr);
-		sampler_free(sampler);
+		_vao_delete(cube_vao);
+		_buffer_delete(cube_vbo);
+		_program_delete(prog);
+		_texture_free(hdr);
+		_sampler_free(sampler);
 
 		return cube_map;
 	}
@@ -953,9 +966,9 @@ namespace glgpu
 
 		//free
 		glDeleteFramebuffers(1, &fbo);
-		vao_delete(cube_vao);
-		buffer_delete(cube_vbo);
-		sampler_free(sampler);
+		_vao_delete(cube_vao);
+		_buffer_delete(cube_vbo);
+		_sampler_free(sampler);
 	}
 
 	void
@@ -963,13 +976,6 @@ namespace glgpu
 	{
 		glActiveTexture(GL_TEXTURE0 + texture_unit_index);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap->cubemap.id);
-	}
-
-	void
-	cubemap_free(Cubemap cmap)
-	{
-		glDeleteTextures(1, &cmap->cubemap.id);
-		delete cmap;
 	}
 
 	Framebuffer
@@ -1003,9 +1009,35 @@ namespace glgpu
 	}
 
 	void
-	framebuffer_free(Framebuffer fb)
+	handle_free(IGL_Handle* handle)
 	{
-		glDeleteFramebuffers(1, &fb->framebuffer.id);
+		switch (handle->kind)
+		{
+			case IGL_Handle::KIND::KIND_BUFFER :
+				_buffer_delete(handle);
+				break;
+			case IGL_Handle::KIND::KIND_CUBEMAP :
+				_cubemap_free(handle);
+				break;
+			case IGL_Handle::KIND::KIND_FRAMEBUFFER :
+				_framebuffer_free(handle);
+				break;
+			case IGL_Handle::KIND::KIND_PROGRAM :
+				_program_delete(handle);
+				break;
+			case IGL_Handle::KIND::KIND_SAMPLER :
+				_sampler_free(handle);
+				break;
+			case IGL_Handle::KIND::KIND_TEXTURE :
+				_texture_free(handle);
+				break;
+			case IGL_Handle::KIND::KIND_VAO :
+				_vao_delete(handle);
+				break;
+			default:
+				assert(false);
+				break;
+		}
 	}
 
 	void

@@ -133,8 +133,8 @@ namespace rndr
 			Vec2f mipmap_size{ prefiltered_initial_size[0] * pow(0.5, mip_level) , prefiltered_initial_size[0] * pow(0.5, mip_level) };
 			cubemap_postprocess(env_cmap, self->specular_prefiltered_map, prefiltering_prog, Unifrom_Float{"roughness", roughness}, mipmap_size, mip_level);
 		}
-		program_delete(prefiltering_prog);
-		cubemap_free(env_cmap);
+		handle_free(prefiltering_prog);
+		handle_free(env_cmap);
 		image_free(env);
 
 		//Specular BRDF convoluted LUT (Part 2 from the specular integration of the reflectance equation)
@@ -142,7 +142,7 @@ namespace rndr
 		Vec2f BRDF_LUT_size{ 512, 512 };
 		self->specular_BRDF_LUT = texture2d_create(BRDF_LUT_size, INTERNAL_TEXTURE_FORMAT::RG16F, EXTERNAL_TEXTURE_FORMAT::RG, DATA_TYPE::FLOAT, false);
 		texture2d_render_offline_to(self->specular_BRDF_LUT, BRDF_prog, BRDF_LUT_size);
-		program_delete(BRDF_prog);
+		handle_free(BRDF_prog);
 
 		return self;
 	}
@@ -150,19 +150,19 @@ namespace rndr
 	void
 	pbr_free(PBR self)
 	{
-		program_delete(self->prog);
-		buffer_delete(self->uniform_space);
-		buffer_delete(self->uniform_camera);
-		buffer_delete(self->uniform_material);
-		buffer_delete(self->uniform_light_count);
-		buffer_delete(self->uniform_suns);
-		buffer_delete(self->uniform_lamps);
-		buffer_delete(self->uniform_flashes);
-		cubemap_free(self->diffuse_irradiance_map);
-		cubemap_free(self->specular_prefiltered_map);
-		sampler_free(self->sampler_diffuse);
-		sampler_free(self->sampler_specular_prefiltering);
-		sampler_free(self->sampler_specular_BRDF);
+		handle_free(self->prog);
+		handle_free(self->uniform_space);
+		handle_free(self->uniform_camera);
+		handle_free(self->uniform_material);
+		handle_free(self->uniform_light_count);
+		handle_free(self->uniform_suns);
+		handle_free(self->uniform_lamps);
+		handle_free(self->uniform_flashes);
+		handle_free(self->diffuse_irradiance_map);
+		handle_free(self->specular_prefiltered_map);
+		handle_free(self->sampler_diffuse);
+		handle_free(self->sampler_specular_prefiltering);
+		handle_free(self->sampler_specular_BRDF);
 
 		delete self;
 	}

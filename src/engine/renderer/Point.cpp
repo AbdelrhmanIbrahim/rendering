@@ -43,9 +43,9 @@ namespace rndr
 	void
 	point_free(Point self)
 	{
-		program_delete(self->prog);
-		buffer_delete(self->vbo);
-		buffer_delete(self->uniform_space);
+		handle_free(self->prog);
+		handle_free(self->vbo);
+		handle_free(self->uniform_space);
 		delete self;
 	}
 

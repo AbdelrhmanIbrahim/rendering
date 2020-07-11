@@ -45,9 +45,6 @@ namespace glgpu
 	void
 	program_use(Program prog);
 
-	void
-	program_delete(Program prog);
-
 	Buffer
 	buffer_vertex_create();
 
@@ -75,9 +72,6 @@ namespace glgpu
 	void
 	buffer_uniform_set(Buffer buf, void* data, unsigned int size_in_bytes);
 
-	void
-	buffer_delete(Buffer buf);
-
 	Vao
 	vao_create();
 
@@ -92,9 +86,6 @@ namespace glgpu
 
 	void
 	vao_attach(Vao vao, Buffer vbo, Buffer ibo);
-
-	void
-	vao_delete(Vao va);
 
 	Texture
 	texture2d_create(math::Vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
@@ -123,17 +114,11 @@ namespace glgpu
 	void
 	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
 
-	void
-	texture_free(Texture texture);
-
 	Sampler
 	sampler_create(TEXTURE_FILTERING min_filtering, TEXTURE_FILTERING mag_filtering, TEXTURE_SAMPLING sampling);
 
 	void
 	sampler_bind(Sampler self, unsigned int texture_unit);
-
-	void
-	sampler_free(Sampler self);
 
 	Cubemap
 	cubemap_create(math::Vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap);
@@ -151,9 +136,6 @@ namespace glgpu
 	void
 	cubemap_bind(Cubemap texture, unsigned int texture_unit);
 
-	void
-	cubemap_free(Cubemap cmap);
-
 	Framebuffer
 	framebuffer_create();
 
@@ -167,8 +149,8 @@ namespace glgpu
 	framebuffer_unbind();
 
 	void
-	framebuffer_free(Framebuffer fb);
-
+	handle_free(IGL_Handle* handle);
+	
 	void
 	disable_color_buffer_rw();
 

@@ -34,10 +34,10 @@ namespace rndr
 	void
 	cquad_free(CQuad self)
 	{
-		program_delete(self->prog);
-		vao_delete(self->quad_vao);
-		buffer_delete(self->quad_vbo);
-		buffer_delete(self->uvp);
+		handle_free(self->prog);
+		handle_free(self->quad_vao);
+		handle_free(self->quad_vbo);
+		handle_free(self->uvp);
 	}
 
 	void

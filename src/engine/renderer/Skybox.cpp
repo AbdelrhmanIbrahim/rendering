@@ -138,12 +138,12 @@ namespace rndr
 	void
 	skybox_renderer_free(Skybox self)
 	{
-		program_delete(self->prog);
-		cubemap_free(self->cubemap);
-		vao_delete(self->cube_vao);
-		buffer_delete(self->cube_vbo);
-		buffer_delete(self->uniform_space);
-		sampler_free(self->sampler);
+		handle_free(self->prog);
+		handle_free(self->cubemap);
+		handle_free(self->cube_vao);
+		handle_free(self->cube_vbo);
+		handle_free(self->uniform_space);
+		handle_free(self->sampler);
 
 		delete self;
 	}

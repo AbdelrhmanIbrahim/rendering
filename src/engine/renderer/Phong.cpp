@@ -76,14 +76,14 @@ namespace rndr
 	void
 	phong_free(Phong self)
 	{
-		program_delete(self->prog);
-		buffer_delete(self->uniform_object_color);
-		buffer_delete(self->uniform_space);
-		buffer_delete(self->uniform_light_count);
-		buffer_delete(self->uniform_suns);
-		buffer_delete(self->uniform_lamps);
-		buffer_delete(self->uniform_flashes);
-		buffer_delete(self->uniform_camera);
+		handle_free(self->prog);
+		handle_free(self->uniform_object_color);
+		handle_free(self->uniform_space);
+		handle_free(self->uniform_light_count);
+		handle_free(self->uniform_suns);
+		handle_free(self->uniform_lamps);
+		handle_free(self->uniform_flashes);
+		handle_free(self->uniform_camera);
 
 		delete self;
 	}

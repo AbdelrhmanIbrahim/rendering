@@ -25,9 +25,9 @@ namespace world
 		void
 		free()
 		{
-			glgpu::buffer_delete(vao);
-			glgpu::buffer_delete(ibo);
-			glgpu::vao_delete(vao);
+			glgpu::handle_free(vao);
+			glgpu::handle_free(ibo);
+			glgpu::handle_free(vao);
 		}
 	};
 

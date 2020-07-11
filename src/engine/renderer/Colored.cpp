@@ -41,9 +41,9 @@ namespace rndr
 	void
 	colored_free(Colored self)
 	{
-		program_delete(self->prog);
-		buffer_delete(self->uniform_object_color);
-		buffer_delete(self->uniform_space);
+		handle_free(self->prog);
+		handle_free(self->uniform_object_color);
+		handle_free(self->uniform_space);
 
 		delete self;
 	}

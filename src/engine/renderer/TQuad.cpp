@@ -37,12 +37,12 @@ namespace rndr
 	void
 	tquad_free(TQuad self)
 	{
-		program_delete(self->prog);
-		vao_delete(self->quad_vao);
-		buffer_delete(self->quad_vbo);
-		buffer_delete(self->uvp);
-		sampler_free(self->sampler);
-		texture_free(self->bg);
+		handle_free(self->prog);
+		handle_free(self->quad_vao);
+		handle_free(self->quad_vbo);
+		handle_free(self->uvp);
+		handle_free(self->sampler);
+		handle_free(self->bg);
 	}
 
 	void

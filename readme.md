@@ -45,7 +45,7 @@
 - moving picked meshes ✔
 - selection manager ✔
 - orbiting camera ✔
-- Textured quad
+- Textured quad ✔
 - 3d objects outlines
 - load obj textured models, check assimp impl
 - normal mapping

@@ -8,10 +8,16 @@ using namespace glgpu;
 
 namespace rndr
 {
+    struct CGPU_Uniform
+    {
+        glgpu::Uniform ucpu;
+        glgpu::IGL_Handle* ugpu;
+    };
+
     struct IPass
     {
         glgpu::Program prog;
-        std::vector<glgpu::Uniform> uniforms;
+        std::vector<CGPU_Uniform> gpu_uniforms;
     };
 
     struct IPostprocessor
@@ -24,7 +30,83 @@ namespace rndr
 
        std::vector<IPass> passes;
     };
-    
+
+    //internals
+    CGPU_Uniform
+    _cpu_to_gpu_uniform(Uniform uniform)
+    {
+        switch (uniform.type)
+        {
+            case UNIFORM_TYPE::FLOAT:
+            {
+                glgpu::Buffer ufloat = buffer_uniform_create(sizeof(float));
+                buffer_uniform_set(ufloat, &uniform.value.f, sizeof(float));
+                return CGPU_Uniform {uniform, ufloat};
+            }
+            case UNIFORM_TYPE::VEC3:
+            {
+                glgpu::Buffer uvec3 = buffer_uniform_create(sizeof(math::Vec3f));
+                buffer_uniform_set(uvec3, &uniform.value.vec3, sizeof(math::Vec3f));
+               return CGPU_Uniform {uniform, uvec3};
+            }
+            case UNIFORM_TYPE::VEC4:
+            {
+                glgpu::Buffer uvec4 = buffer_uniform_create(sizeof(math::Vec4f));
+                buffer_uniform_set(uvec4, &uniform.value.vec4, sizeof(math::Vec4f));
+                return CGPU_Uniform {uniform, uvec4};
+            }
+            case UNIFORM_TYPE::MAT4:
+            {
+                glgpu::Buffer umat4 = buffer_uniform_create(sizeof(math::Mat4f));
+                buffer_uniform_set(umat4, &uniform.value.mat4, sizeof(math::Mat4f));
+                return CGPU_Uniform {uniform, umat4};
+            }
+            case UNIFORM_TYPE::TEXTURE2D:
+            {
+                glgpu::Sampler usampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
+                 return CGPU_Uniform {uniform, usampler};
+            }
+            default:
+                return CGPU_Uniform{};
+        }
+    }
+
+    std::vector<CGPU_Uniform>
+    _cpu_to_gpu_uniforms(std::vector<Uniform>& cpu_uniforms)
+    {
+        std::vector<CGPU_Uniform> gpu_uniforms;
+
+        for(const auto& uniform : cpu_uniforms)
+            gpu_uniforms.emplace_back(_cpu_to_gpu_uniform(uniform));
+
+        return gpu_uniforms;
+    }
+
+    void
+    _bind_gpu_uniform(const CGPU_Uniform& cgpu_uniform)
+    {
+        switch (cgpu_uniform.ucpu.type)
+        {
+            case UNIFORM_TYPE::FLOAT:
+            case UNIFORM_TYPE::VEC3:
+            case UNIFORM_TYPE::VEC4:
+            case UNIFORM_TYPE::MAT4:
+            {
+                buffer_uniform_bind(cgpu_uniform.ucpu.slot, cgpu_uniform.ugpu);
+                break;
+            }
+            case UNIFORM_TYPE::TEXTURE2D:
+            {
+            	sampler_bind(cgpu_uniform.ugpu, cgpu_uniform.ucpu.slot);
+		        texture2d_bind(cgpu_uniform.ucpu.value.texture, cgpu_uniform.ucpu.slot);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    //API
     Postprocessor
 	postprocessor_create()
     {
@@ -60,18 +142,21 @@ namespace rndr
         texture_free(self->out);
 
         for(auto pass : self->passes)
+        {
             program_delete(pass.prog);
+            //leak -- delete glhandles
+        }
     }
 
     void
     postprocessor_effect_add(Postprocessor self, Pass& pass)
     {
-        self->passes.push_back
+        self->passes.emplace_back
         (
             IPass
             {
                 program_create(DIR_PATH"/src/engine/shaders/tquad.vertex", pass.frag_shader_path),
-                pass.uniforms
+                _cpu_to_gpu_uniforms(pass.cpu_uniforms)
             }
         );
     }
@@ -86,13 +171,26 @@ namespace rndr
         framebuffer_bind(self->fb);
         framebuffer_attach(self->fb, self->out, FRAMEBUFFER_ATTACHMENT::COLOR0);
 		{
-            program_use(self->passes.front().prog);
-            color_clear(1, 1, 1, 1);
-            depth_clear();
-        	depth_test(DEPTH_TEST::LE);
-            vao_bind(self->palette_vao);
-		    draw_strips(6);
-		    vao_unbind();
+            //run all your passes here
+            for(const auto& pass : self->passes)
+            {
+                //prepare postprocessor
+                {
+                    program_use(pass.prog);
+                    for(const auto& uniform : pass.gpu_uniforms)
+                        _bind_gpu_uniform(uniform);
+                }
+
+                //postprocess
+                {
+                    color_clear(1, 1, 1, 1);
+                    depth_clear();
+                    depth_test(DEPTH_TEST::LE);
+                    vao_bind(self->palette_vao);
+                    draw_strips(6);
+                    vao_unbind();
+                }
+            }
         }
         framebuffer_unbind();
 

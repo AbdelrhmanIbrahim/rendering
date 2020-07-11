@@ -10,11 +10,10 @@ namespace world
 	namespace system
 	{
 		glgpu::Texture
-		postprocess_sys_run(rndr::Postprocessor pp, ecs::World& w, const char* frag_shader_path)
+		postprocess_sys_run(rndr::Postprocessor pp, ecs::World& w)
 		{
 			//fetch system req components
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];
-			rndr::postprocessor_effect_add(pp, rndr::Pass{ frag_shader_path, {} });
 			auto out = rndr::postprocessor_run(pp, camera_viewport(cam));
 
 			//test only

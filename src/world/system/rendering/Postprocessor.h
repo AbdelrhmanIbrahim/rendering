@@ -11,6 +11,6 @@ namespace world
 	namespace system
 	{
 		glgpu::Texture
-		postprocess_sys_run(rndr::Postprocessor pp, ecs::World& w, const char* frag_shader_path);
+		postprocess_sys_run(rndr::Postprocessor pp, ecs::World& w);
 	};
 };

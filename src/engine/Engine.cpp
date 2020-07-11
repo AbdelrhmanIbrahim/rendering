@@ -84,6 +84,13 @@ namespace rndr
 		}
 	}
 
+	void
+	_init_postprocessor(Postprocessor pp)
+	{
+		//add effects here (fragment shaders and their uniforms)
+		rndr::postprocessor_effect_add(pp, rndr::Pass{ DIR_PATH"/src/engine/shaders/colored.pixel", {} });
+	}
+
 	//API
 	Engine
 	engine_create()
@@ -108,6 +115,7 @@ namespace rndr
 		self->hline = rndr::hiddenline_create();
 		self->skybox = rndr::skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 		self->pp = rndr::postprocessor_create();
+		_init_postprocessor(self->pp);
 
 		//imgui
 		ImGui::CreateContext();
@@ -149,14 +157,21 @@ namespace rndr
 
 		//run rendering systems
 		{
+			//init frame
 			glgpu::frame_start(0.6f, 0.68f, 0.5f);
-			_engine_world_mesh_render(e, w);
-			world::system::point_sys_run(e->point, w);
-			world::system::line_sys_run(e->line, w);
-			world::system::bg_img_sys_run(e->tquad, w);
 
-			//postprocess pass
-			glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w, DIR_PATH"/src/engine/shaders/colored.pixel");
+			//scene
+			{
+				_engine_world_mesh_render(e, w);
+				world::system::point_sys_run(e->point, w);
+				world::system::line_sys_run(e->line, w);
+				world::system::bg_img_sys_run(e->tquad, w);
+			}
+
+			//postprocessing (blur, SSAO, etc..)
+			{
+				glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w);
+			}
 		}
 	}
 

@@ -101,7 +101,7 @@ enum class UNIFORM_TYPE
 	VEC3,
 	VEC4,
 	MAT4,
-	SAMPLER
+	TEXTURE2D
 };
 
 //remove later

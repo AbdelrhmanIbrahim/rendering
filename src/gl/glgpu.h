@@ -29,7 +29,7 @@ namespace glgpu
 			math::Vec3f vec3;
 			math::Vec4f vec4;
 			math::Mat4f mat4;
-			Texture sampler;
+			glgpu::Texture texture;
 		} value;
     };
     

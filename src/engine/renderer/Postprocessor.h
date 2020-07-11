@@ -13,7 +13,7 @@ namespace rndr
     struct Pass
     {
         const char* frag_shader_path;
-        std::vector<glgpu::Uniform> uniforms;
+        std::vector<glgpu::Uniform> cpu_uniforms;
     };
     
 	Postprocessor

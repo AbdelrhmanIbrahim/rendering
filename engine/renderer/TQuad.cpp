@@ -11,10 +11,11 @@ namespace rndr
 		Buffer quad_vbo;
 		Buffer uvp;
 		Sampler sampler;
+		Texture bg;
 	};
 
 	TQuad
-	tquad_create()
+	tquad_create(const char* image_path, IMAGE_FORMAT format)
 	{
 		ITQuad* self = new ITQuad;
 
@@ -23,6 +24,7 @@ namespace rndr
 		self->quad_vbo = buffer_vertex_create();
 		self->uvp = buffer_uniform_create(sizeof(math::Mat4f));
 		self->sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
+		self->bg = texture2d_create(image_path, format);
 
 		vao_attach(self->quad_vao, self->quad_vbo);
 		buffer_vertex_attribute(self->quad_vbo, 0, 3, sizeof(world::TVertex), 0);
@@ -40,16 +42,17 @@ namespace rndr
 		buffer_delete(self->quad_vbo);
 		buffer_delete(self->uvp);
 		sampler_free(self->sampler);
+		texture_free(self->bg);
 	}
 
 	void
-	tquad_set(TQuad self, math::Mat4f& view_proj, Texture texture, math::vec2f& viewport)
+	tquad_set(TQuad self, math::Mat4f& view_proj, math::vec2f& viewport)
 	{
 		program_use(self->prog);
 		buffer_uniform_bind(0, self->uvp);
 		buffer_uniform_set(self->uvp, &view_proj, sizeof(view_proj));
 		sampler_bind(self->sampler, 1);
-		texture2d_bind(texture, 1);
+		texture2d_bind(self->bg, 1);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 

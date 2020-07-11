@@ -15,6 +15,6 @@ namespace world
 
 		//image quad as bg
 		void
-		bg_img_sys_run(rndr::TQuad self, ecs::World& w, glgpu::Texture img);
+		bg_img_sys_run(rndr::TQuad self, ecs::World& w);
 	};
 };

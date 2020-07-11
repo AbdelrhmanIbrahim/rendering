@@ -24,11 +24,11 @@ namespace world
 		}
 
 		void
-		bg_img_sys_run(rndr::TQuad self, ecs::World& w, glgpu::Texture img)
+		bg_img_sys_run(rndr::TQuad self, ecs::World& w)
 		{
 			//fetch system req components
 			Camera cam = ecs::world_active_components<world::Camera>(w)[0];
-			tquad_set(self, mat4_id(), img, world::camera_viewport(cam));
+			tquad_set(self, mat4_id(), world::camera_viewport(cam));
 			tquad_draw(self, tbg_quad);
 		}
 	};

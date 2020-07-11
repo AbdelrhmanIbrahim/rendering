@@ -101,7 +101,7 @@ namespace rndr
 		self->line = rndr::line_create();
 		self->edge = rndr::edge_create();
 		self->cquad = rndr::cquad_create();
-		self->tquad = rndr::tquad_create();
+		self->tquad = rndr::tquad_create(DIR_PATH"/res/imgs/skybox/sky/back.jpg", IMAGE_FORMAT::JPG);
 		self->hline = rndr::hiddenline_create();
 		self->skybox = rndr::skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
 
@@ -148,7 +148,7 @@ namespace rndr
 			_engine_world_mesh_render(e, w);
 			world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);
-			world::system::bg_col_sys_run(e->cquad, w);
+			world::system::bg_img_sys_run(e->tquad, w);
 		}
 	}
 

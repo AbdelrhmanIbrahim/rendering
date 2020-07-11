@@ -22,7 +22,7 @@ main(int argc, char** argv)
 	//	painter_paint(Picasso, win);
 	//}
 	//painter_free(Picasso);
-	//return 0;
+	//return 0; //test editing
 
 	QApplication qt_app(argc, argv);
 	gui::MainWindow m;

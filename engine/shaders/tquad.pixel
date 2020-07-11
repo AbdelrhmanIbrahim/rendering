@@ -9,6 +9,5 @@ layout (binding = 1) uniform sampler2D tex;
 void
 main()
 {
-	//texture in SRGB non linear space -revisit-
 	frag_col = texture(tex, out_uv);
 }

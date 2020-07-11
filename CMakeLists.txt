@@ -55,6 +55,7 @@ set(RESOURCES
 	src/engine/shaders/hiddenline.pixel
 	src/engine/shaders/skybox.vertex
 	src/engine/shaders/skybox.pixel
+	src/engine/shaders/postprocessing/color.pixel
 	readme.md
 
 	${UI_FILES}

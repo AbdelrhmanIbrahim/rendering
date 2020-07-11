@@ -14,9 +14,9 @@ namespace rndr
     void
     postprocessor_free(Postprocessor self);
 
-    //TODO: add uniforms as a parameter (revisit)
+    //TODO: add uniforms as a parameter -- the uv attribute name in the frag_shader_path shoudl be out_uv -- (revisit)
     void
-    postprocessor_effect(Postprocessor self, const char* frag_shader);
+    postprocessor_effect(Postprocessor self, const char* frag_shader_path);
 
 	glgpu::Texture
     postprocessor_run(Postprocessor self, math::vec2f view_port);

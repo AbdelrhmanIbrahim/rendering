@@ -110,6 +110,7 @@ set(HEADERS
 	src/world/system/rendering/Line.h
 	src/world/system/rendering/Hiddenline.h
 	src/world/system/rendering/Background.h
+	src/world/system/rendering/Postprocessor.h
 	src/world/system/updating/Camera.h
 	src/world/system/updating/Mesh.h
 	src/world/system/querying/Pick.h
@@ -156,6 +157,7 @@ set(SOURCES
 	src/world/system/rendering/Line.cpp
 	src/world/system/rendering/Hiddenline.cpp
 	src/world/system/rendering/Background.cpp
+	src/world/system/rendering/Postprocessor.cpp
 	src/world/system/updating/Camera.cpp
 	src/world/system/updating/Mesh.cpp
 	src/world/system/querying/Pick.cpp

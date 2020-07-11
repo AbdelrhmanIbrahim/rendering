@@ -20,6 +20,7 @@
 #include "engine/renderer/TQuad.h"
 #include "engine/renderer/Hiddenline.h"
 #include "engine/renderer/Skybox.h"
+#include "engine/renderer/PostProcessor.h"
 
 #include "world/system/rendering/Phong.h"
 #include "world/system/rendering/PBR.h"
@@ -29,6 +30,7 @@
 #include "world/system/rendering/Background.h"
 #include "world/system/rendering/Hiddenline.h"
 #include "world/system/rendering/Skybox.h"
+#include "world/system/rendering/Postprocessor.h"
 
 using namespace world;
 
@@ -53,6 +55,7 @@ namespace rndr
 		rndr::TQuad tquad;
 		rndr::Hiddenline hline;
 		rndr::Skybox skybox;
+		rndr::Postprocessor pp;
 	};
 
 	//helpers
@@ -104,6 +107,7 @@ namespace rndr
 		self->tquad = rndr::tquad_create(DIR_PATH"/res/imgs/skybox/sky/back.jpg", IMAGE_FORMAT::JPG);
 		self->hline = rndr::hiddenline_create();
 		self->skybox = rndr::skybox_renderer_hdr_create(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr");
+		self->pp = rndr::postprocessor_create();
 
 		//imgui
 		ImGui::CreateContext();
@@ -125,6 +129,7 @@ namespace rndr
 		rndr::tquad_free(e->tquad);
 		rndr::hiddenline_free(e->hline);
 		rndr::skybox_renderer_free(e->skybox);
+		rndr::postprocessor_free(e->pp);
 
 		glgpu::context_free(e->ctx);
 		delete e;
@@ -149,6 +154,15 @@ namespace rndr
 			world::system::point_sys_run(e->point, w);
 			world::system::line_sys_run(e->line, w);
 			world::system::bg_img_sys_run(e->tquad, w);
+
+			//postprocess pass
+			glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w, DIR_PATH"/src/engine/shaders/colored.pixel");
+			{
+				//test only
+				/*io::Image im = io::image_new(4, camera_viewport(cam));
+				glgpu::texture2d_unpack(tex, im, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+				io::image_write(im, "F:/Abdo/rendering/src/postprocess.png", IMAGE_FORMAT::PNG);*/
+			}
 		}
 	}
 

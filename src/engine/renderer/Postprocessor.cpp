@@ -54,9 +54,9 @@ namespace rndr
     }
 
     void
-    postprocessor_effect(Postprocessor self, const char* frag_shader)
+    postprocessor_effect(Postprocessor self, const char* frag_shader_path)
     {
-        self->prog = program_create(DIR_PATH"/src/engine/shaders/tquad.vertex", frag_shader);
+        self->prog = program_create(DIR_PATH"/src/engine/shaders/tquad.vertex", frag_shader_path);
     }
 
 	glgpu::Texture
@@ -72,6 +72,7 @@ namespace rndr
             program_use(self->prog);
             color_clear(1, 1, 1, 1);
             depth_clear();
+        	depth_test(DEPTH_TEST::LE);
             vao_bind(self->palette_vao);
 		    draw_strips(6);
 		    vao_unbind();

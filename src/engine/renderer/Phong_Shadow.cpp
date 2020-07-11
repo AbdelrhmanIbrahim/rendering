@@ -31,8 +31,8 @@
 //		IPhong_Shadow* self = new IPhong_Shadow;
 //
 //		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-//		self->depth_prog = program_create(DIR_PATH"/engine/shaders/depth.vertex", DIR_PATH"/engine/shaders/depth.pixel");
-//		self->phong_shadow_prog = program_create(DIR_PATH"/engine/shaders/phong_shadow.vertex", DIR_PATH"/engine/shaders/phong_shadow.pixel");
+//		self->depth_prog = program_create(DIR_PATH"/src/engine/shaders/depth.vertex", DIR_PATH"/src/engine/shaders/depth.pixel");
+//		self->phong_shadow_prog = program_create(DIR_PATH"/src/engine/shaders/phong_shadow.vertex", DIR_PATH"/src/engine/shaders/phong_shadow.pixel");
 //		self->fb = framebuffer_create();
 //		self->depth = texture2d_create(vec2f{ SHADOW_WIDTH, SHADOW_HEIGHT}, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8, false);
 //

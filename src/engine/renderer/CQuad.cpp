@@ -19,7 +19,7 @@ namespace rndr
 	{
 		ICQuad* self = new ICQuad;
 
-		self->prog = program_create(DIR_PATH"/engine/shaders/cquad.vertex", DIR_PATH"/engine/shaders/cquad.pixel");
+		self->prog = program_create(DIR_PATH"/src/engine/shaders/cquad.vertex", DIR_PATH"/src/engine/shaders/cquad.pixel");
 		self->quad_vao = vao_create();
 		self->quad_vbo = buffer_vertex_create();
 		self->uvp = buffer_uniform_create(sizeof(math::Mat4f));

@@ -28,7 +28,7 @@ namespace rndr
 	line_create()
 	{
 		ILine* self = new ILine;
-		self->prog = program_create(DIR_PATH"/engine/shaders/line.vertex", DIR_PATH"/engine/shaders/line.pixel");
+		self->prog = program_create(DIR_PATH"/src/engine/shaders/line.vertex", DIR_PATH"/src/engine/shaders/line.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->vbo = buffer_vertex_create();
 		self->vao = vao_create();

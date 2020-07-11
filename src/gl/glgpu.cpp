@@ -833,7 +833,7 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		//setup
-		Program prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/equarectangular_to_cubemap.pixel");
+		Program prog = program_create(DIR_PATH"/src/engine/shaders/cube.vertex", DIR_PATH"/src/engine/shaders/equarectangular_to_cubemap.pixel");
 		program_use(prog);
 		texture2d_bind(hdr, 0);
 		sampler_bind(sampler, 0);

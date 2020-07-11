@@ -8,53 +8,53 @@ set(CMAKE_CXX_STANDARD 17)
 
 #ui
 set(UI_FILES
-	gui/ui/MainWindow.ui
+	src/gui/ui/MainWindow.ui
 	)
 set(UI_RESOURCES
-	gui/ui/ui.qrc
+	src/gui/ui/ui.qrc
 	)
 set(UI_HEADERS
-	gui/MainWindow.h
-	gui/Palette.h
+	src/gui/MainWindow.h
+	src/gui/Palette.h
 	)
 set(UI_SOURCES
-	gui/MainWindow.cpp
-	gui/Palette.cpp
+	src/gui/MainWindow.cpp
+	src/gui/Palette.cpp
 	)
 
 #resources
 set(RESOURCES
-	engine/shaders/cube.vertex
-	engine/shaders/depth.vertex
-	engine/shaders/depth.pixel
-	engine/shaders/pbr.vertex
-	engine/shaders/pbr.pixel
-	engine/shaders/equarectangular_to_cubemap.pixel
-	engine/shaders/diffuse_irradiance_convolution.pixel
-	engine/shaders/specular_BRDF_convolution.pixel
-	engine/shaders/specular_prefiltering_convolution.pixel
-	engine/shaders/phong.vertex
-	engine/shaders/phong.pixel
-	engine/shaders/phong_shadow.vertex
-	engine/shaders/phong_shadow.pixel
-	engine/shaders/quad_ndc.vertex
-	engine/shaders/colored.vertex
-	engine/shaders/colored.pixel
-	engine/shaders/point.vertex
-	engine/shaders/point.pixel	
-	engine/shaders/line.vertex
-	engine/shaders/line.pixel
-	engine/shaders/edge.vertex
-	engine/shaders/edge.pixel
-	engine/shaders/cquad.vertex
-	engine/shaders/cquad.pixel
-	engine/shaders/tquad.vertex
-	engine/shaders/tquad.pixel
-	engine/shaders/hiddenline.vertex
-	engine/shaders/hiddenline.geo
-	engine/shaders/hiddenline.pixel
-	engine/shaders/skybox.vertex
-	engine/shaders/skybox.pixel
+	src/engine/shaders/cube.vertex
+	src/engine/shaders/depth.vertex
+	src/engine/shaders/depth.pixel
+	src/engine/shaders/pbr.vertex
+	src/engine/shaders/pbr.pixel
+	src/engine/shaders/equarectangular_to_cubemap.pixel
+	src/engine/shaders/diffuse_irradiance_convolution.pixel
+	src/engine/shaders/specular_BRDF_convolution.pixel
+	src/engine/shaders/specular_prefiltering_convolution.pixel
+	src/engine/shaders/phong.vertex
+	src/engine/shaders/phong.pixel
+	src/engine/shaders/phong_shadow.vertex
+	src/engine/shaders/phong_shadow.pixel
+	src/engine/shaders/quad_ndc.vertex
+	src/engine/shaders/colored.vertex
+	src/engine/shaders/colored.pixel
+	src/engine/shaders/point.vertex
+	src/engine/shaders/point.pixel	
+	src/engine/shaders/line.vertex
+	src/engine/shaders/line.pixel
+	src/engine/shaders/edge.vertex
+	src/engine/shaders/edge.pixel
+	src/engine/shaders/cquad.vertex
+	src/engine/shaders/cquad.pixel
+	src/engine/shaders/tquad.vertex
+	src/engine/shaders/tquad.pixel
+	src/engine/shaders/hiddenline.vertex
+	src/engine/shaders/hiddenline.geo
+	src/engine/shaders/hiddenline.pixel
+	src/engine/shaders/skybox.vertex
+	src/engine/shaders/skybox.pixel
 	readme.md
 
 	${UI_FILES}
@@ -62,116 +62,116 @@ set(RESOURCES
 
 #headers
 set(HEADERS
-	app/Painter.h
-	engine/Engine.h
-	engine/renderer/Phong.h
-	engine/renderer/Phong_Shadow.h
-	engine/renderer/PBR.h
-	engine/renderer/Colored.h
-	engine/renderer/Point.h
-	engine/renderer/Line.h
-	engine/renderer/Edge.h
-	engine/renderer/CQuad.h
-	engine/renderer/TQuad.h
-	engine/renderer/Skybox.h
-	engine/renderer/Hiddenline.h
-	engine/renderer/Outlines3D.h
-	gl/glgpu.h
-	gl/gl_context.h
-	gl/glew.h
-	gl/wglew.h
-	io/Input.h
-	io/Image.h
-	io/Stb_Image.h
-	io/Stb_Image_Write.h
-	io/STL_Reader.h
-	io/Event.h
-	math/Vector.h
-	math/Matrix.h
-	math/Quaternion.h
-	math/Euler_Angles.h
-	math/Gfx.h
-	window/Window.h
-	world/Universe.h
-	world/component/Transform.h
-	world/component/Camera.h
-	world/component/Vertex.h
-	world/component/Mesh.h
-	world/component/Material.h
-	world/component/Sun.h
-	world/component/Lamp.h
-	world/component/Flash.h
-	world/system/rendering/Phong.h
-	world/system/rendering/PBR.h
-	world/system/rendering/Colored.h
-	world/system/rendering/Skybox.h
-	world/system/rendering/Point.h
-	world/system/rendering/Line.h
-	world/system/rendering/Hiddenline.h
-	world/system/rendering/Background.h
-	world/system/updating/Camera.h
-	world/system/updating/Mesh.h
-	world/system/querying/Pick.h
-	world/system/scripting/Script.h
-	infra/mem/chunck.h
-	infra/managers/Selector.h
-	defs/Defs.h
-	imgui/imgui.h
-	imgui/imconfig.h
-	imgui/imgui_impl_opengl3.h
-	imgui/imgui_impl_win32.h
-	imgui/imgui_internal.h
-	imgui/imstb_rectpack.h
-	imgui/imstb_textedit.h
-	imgui/imstb_truetype.h
-	utils/Defer.h
+	src/app/Painter.h
+	src/engine/Engine.h
+	src/engine/renderer/Phong.h
+	src/engine/renderer/Phong_Shadow.h
+	src/engine/renderer/PBR.h
+	src/engine/renderer/Colored.h
+	src/engine/renderer/Point.h
+	src/engine/renderer/Line.h
+	src/engine/renderer/Edge.h
+	src/engine/renderer/CQuad.h
+	src/engine/renderer/TQuad.h
+	src/engine/renderer/Skybox.h
+	src/engine/renderer/Hiddenline.h
+	src/engine/renderer/Outlines3D.h
+	src/gl/glgpu.h
+	src/gl/gl_context.h
+	src/gl/glew.h
+	src/gl/wglew.h
+	src/io/Input.h
+	src/io/Image.h
+	src/io/Stb_Image.h
+	src/io/Stb_Image_Write.h
+	src/io/STL_Reader.h
+	src/io/Event.h
+	src/math/Vector.h
+	src/math/Matrix.h
+	src/math/Quaternion.h
+	src/math/Euler_Angles.h
+	src/math/Gfx.h
+	src/window/Window.h
+	src/world/Universe.h
+	src/world/component/Transform.h
+	src/world/component/Camera.h
+	src/world/component/Vertex.h
+	src/world/component/Mesh.h
+	src/world/component/Material.h
+	src/world/component/Sun.h
+	src/world/component/Lamp.h
+	src/world/component/Flash.h
+	src/world/system/rendering/Phong.h
+	src/world/system/rendering/PBR.h
+	src/world/system/rendering/Colored.h
+	src/world/system/rendering/Skybox.h
+	src/world/system/rendering/Point.h
+	src/world/system/rendering/Line.h
+	src/world/system/rendering/Hiddenline.h
+	src/world/system/rendering/Background.h
+	src/world/system/updating/Camera.h
+	src/world/system/updating/Mesh.h
+	src/world/system/querying/Pick.h
+	src/world/system/scripting/Script.h
+	src/infra/mem/chunck.h
+	src/infra/managers/Selector.h
+	src/defs/Defs.h
+	src/imgui/imgui.h
+	src/imgui/imconfig.h
+	src/imgui/imgui_impl_opengl3.h
+	src/imgui/imgui_impl_win32.h
+	src/imgui/imgui_internal.h
+	src/imgui/imstb_rectpack.h
+	src/imgui/imstb_textedit.h
+	src/imgui/imstb_truetype.h
+	src/utils/Defer.h
 
 	${UI_HEADERS}
 	)
 
 #src
 set(SOURCES
-	app/Painter.cpp
-	engine/Engine.cpp
-	engine/renderer/Phong.cpp
-	engine/renderer/Phong_Shadow.cpp
-	engine/renderer/PBR.cpp
-	engine/renderer/Colored.cpp
-	engine/renderer/Point.cpp
-	engine/renderer/Line.cpp
-	engine/renderer/Edge.cpp
-	engine/renderer/CQuad.cpp
-	engine/renderer/TQuad.cpp
-	engine/renderer/Skybox.cpp
-	engine/renderer/Hiddenline.cpp
-	engine/renderer/Outlines3D.cpp
-	world/Universe.cpp
-	world/system/rendering/Phong.cpp
-	world/system/rendering/PBR.cpp
-	world/system/rendering/Colored.cpp
-	world/system/rendering/Skybox.cpp
-	world/system/rendering/Point.cpp
-	world/system/rendering/Line.cpp
-	world/system/rendering/Hiddenline.cpp
-	world/system/rendering/Background.cpp
-	world/system/updating/Camera.cpp
-	world/system/updating/Mesh.cpp
-	world/system/querying/Pick.cpp
-	world/system/scripting/Script.cpp
-	gl/glgpu.cpp
-	gl/gl_context.cpp
-	gl/glew.c
-	io/Input.cpp
-	io/Image.cpp
-	io/STL_Reader.cpp
-	window/window.cpp
-	imgui/imgui.cpp
-	imgui/imgui_demo.cpp
-	imgui/imgui_draw.cpp
-	imgui/imgui_impl_opengl3.cpp
-	imgui/imgui_impl_win32.cpp
-	imgui/imgui_widgets.cpp
-	main/main.cpp
+	src/app/Painter.cpp
+	src/engine/Engine.cpp
+	src/engine/renderer/Phong.cpp
+	src/engine/renderer/Phong_Shadow.cpp
+	src/engine/renderer/PBR.cpp
+	src/engine/renderer/Colored.cpp
+	src/engine/renderer/Point.cpp
+	src/engine/renderer/Line.cpp
+	src/engine/renderer/Edge.cpp
+	src/engine/renderer/CQuad.cpp
+	src/engine/renderer/TQuad.cpp
+	src/engine/renderer/Skybox.cpp
+	src/engine/renderer/Hiddenline.cpp
+	src/engine/renderer/Outlines3D.cpp
+	src/world/Universe.cpp
+	src/world/system/rendering/Phong.cpp
+	src/world/system/rendering/PBR.cpp
+	src/world/system/rendering/Colored.cpp
+	src/world/system/rendering/Skybox.cpp
+	src/world/system/rendering/Point.cpp
+	src/world/system/rendering/Line.cpp
+	src/world/system/rendering/Hiddenline.cpp
+	src/world/system/rendering/Background.cpp
+	src/world/system/updating/Camera.cpp
+	src/world/system/updating/Mesh.cpp
+	src/world/system/querying/Pick.cpp
+	src/world/system/scripting/Script.cpp
+	src/gl/glgpu.cpp
+	src/gl/gl_context.cpp
+	src/gl/glew.c
+	src/io/Input.cpp
+	src/io/Image.cpp
+	src/io/STL_Reader.cpp
+	src/window/window.cpp
+	src/imgui/imgui.cpp
+	src/imgui/imgui_demo.cpp
+	src/imgui/imgui_draw.cpp
+	src/imgui/imgui_impl_opengl3.cpp
+	src/imgui/imgui_impl_win32.cpp
+	src/imgui/imgui_widgets.cpp
+	src/main/main.cpp
 
 	${UI_SOURCES}
 	)
@@ -182,7 +182,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${RESOURCES})
 
 #include the source directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/ecs)
 
 #add sources and build to the include path to search within (uics/mocs generated in the build dir)

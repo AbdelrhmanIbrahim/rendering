@@ -98,7 +98,7 @@ namespace rndr
 		IPBR* self = new IPBR;
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
-		self->prog = program_create(DIR_PATH"/engine/shaders/pbr.vertex", DIR_PATH"/engine/shaders/pbr.pixel");
+		self->prog = program_create(DIR_PATH"/src/engine/shaders/pbr.vertex", DIR_PATH"/src/engine/shaders/pbr.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->uniform_camera = buffer_uniform_create(sizeof(Camera_Uniform));
 		self->uniform_material = buffer_uniform_create(sizeof(Material_Uniform));
@@ -125,7 +125,7 @@ namespace rndr
 		io::Image env = io::image_read(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr", IMAGE_FORMAT::HDR);
 		Cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, true);
 
-		Program prefiltering_prog = program_create(DIR_PATH"/engine/shaders/cube.vertex", DIR_PATH"/engine/shaders/specular_prefiltering_convolution.pixel");
+		Program prefiltering_prog = program_create(DIR_PATH"/src/engine/shaders/cube.vertex", DIR_PATH"/src/engine/shaders/specular_prefiltering_convolution.pixel");
 		unsigned int max_mipmaps = 5;
 		for (unsigned int mip_level = 0; mip_level < max_mipmaps; ++mip_level)
 		{
@@ -138,7 +138,7 @@ namespace rndr
 		image_free(env);
 
 		//Specular BRDF convoluted LUT (Part 2 from the specular integration of the reflectance equation)
-		Program BRDF_prog = program_create(DIR_PATH"/engine/shaders/quad_ndc.vertex", DIR_PATH"/engine/shaders/specular_BRDF_convolution.pixel");
+		Program BRDF_prog = program_create(DIR_PATH"/src/engine/shaders/quad_ndc.vertex", DIR_PATH"/src/engine/shaders/specular_BRDF_convolution.pixel");
 		vec2f BRDF_LUT_size{ 512, 512 };
 		self->specular_BRDF_LUT = texture2d_create(BRDF_LUT_size, INTERNAL_TEXTURE_FORMAT::RG16F, EXTERNAL_TEXTURE_FORMAT::RG, DATA_TYPE::FLOAT, false);
 		texture2d_render_offline_to(self->specular_BRDF_LUT, BRDF_prog, BRDF_LUT_size);

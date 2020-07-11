@@ -28,7 +28,7 @@ namespace rndr
 	point_create()
 	{
 		IPoint* self = new IPoint;
-		self->prog = program_create(DIR_PATH"/engine/shaders/point.vertex", DIR_PATH"/engine/shaders/point.pixel");
+		self->prog = program_create(DIR_PATH"/src/engine/shaders/point.vertex", DIR_PATH"/src/engine/shaders/point.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->vbo = buffer_vertex_create();
 		self->vao = vao_create();

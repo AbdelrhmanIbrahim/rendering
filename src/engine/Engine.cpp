@@ -85,7 +85,7 @@ namespace rndr
 	Engine
 	engine_create()
 	{
-		IEngine* self = new IEngine;s
+		IEngine* self = new IEngine;
 
 		//glcontext
 		self->ctx = glgpu::context_create(4, 0);

@@ -10,12 +10,6 @@ namespace rndr
 {
 	typedef struct IPostprocessor* Postprocessor;
 
-    struct Pass
-    {
-        const char* frag_shader_path;
-        std::vector<glgpu::Uniform> cpu_uniforms;
-    };
-    
 	Postprocessor
 	postprocessor_create();
 
@@ -23,7 +17,7 @@ namespace rndr
     postprocessor_free(Postprocessor self);
 
     void
-    postprocessor_effect_add(Postprocessor self, Pass& pass);
+    postprocessor_effect_add(Postprocessor self, glgpu::Postprocessing_Pass& pass);
 
 	glgpu::Texture
     postprocessor_run(Postprocessor self, math::Vec2f view_port);

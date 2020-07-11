@@ -87,8 +87,26 @@ namespace rndr
 	void
 	_init_postprocessor(Postprocessor pp)
 	{
-		//add effects here (fragment shaders and their uniforms)
-		rndr::postprocessor_effect_add(pp, rndr::Pass{ DIR_PATH"/src/engine/shaders/colored.pixel", {} });
+		//add postprocessing effects here (fragment shaders and their uniforms)
+		glgpu::Uniform color;
+		color.slot = 1;
+		color.type = UNIFORM_TYPE::VEC4;
+		color.value.vec4 = math::Vec4f{ 1, 1, 0, 1 };
+		
+		rndr::postprocessor_effect_add
+		(
+			pp, 
+			glgpu::Postprocessing_Pass
+			{
+				//postprocessing frag shader
+				DIR_PATH"/src/engine/shaders/postprocessing/color.pixel", 
+
+				//postprocessing frag shader uniforms
+				{
+					color
+				} 
+			}
+		 );
 	}
 
 	//API

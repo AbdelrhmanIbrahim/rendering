@@ -1,0 +1,15 @@
+#version 400 core
+#extension GL_ARB_shading_language_420pack : require
+
+out vec4 frag_color;
+
+layout (std140, binding = 1) uniform Object_Color
+{
+	vec4 object_color;
+};
+
+void
+main()
+{
+	frag_color = object_color;
+}

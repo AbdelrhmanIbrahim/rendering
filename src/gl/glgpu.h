@@ -8,6 +8,7 @@
 #include "defs/Defs.h"
 
 #include <cstddef>
+#include <vector>
 
 namespace glgpu
 {
@@ -31,6 +32,12 @@ namespace glgpu
 			math::Mat4f mat4;
 			glgpu::Texture texture;
 		} value;
+    };
+    
+    struct Postprocessing_Pass
+    {
+        const char* frag_shader_path;
+        std::vector<glgpu::Uniform> cpu_uniforms;
     };
     
 	void

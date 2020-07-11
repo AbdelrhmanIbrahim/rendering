@@ -19,7 +19,7 @@ namespace world
 			//test only
 			{
 				/*io::Image im = io::image_new(4, camera_viewport(cam));
-				glgpu::texture2d_unpack(tex, im, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+				glgpu::texture2d_unpack(out, im, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
 				io::image_write(im, "F:/Abdo/rendering/src/postprocess.png", IMAGE_FORMAT::PNG);*/
 			}
 

@@ -151,7 +151,7 @@ namespace rndr
     }
 
     void
-    postprocessor_effect_add(Postprocessor self, Pass& pass)
+    postprocessor_effect_add(Postprocessor self, glgpu::Postprocessing_Pass& pass)
     {
         self->passes.emplace_back
         (

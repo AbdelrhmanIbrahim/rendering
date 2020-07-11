@@ -11,7 +11,7 @@
 namespace io
 {
 	Image
-	image_new(int channels, math::vec2f size)
+	image_new(int channels, math::Vec2f size)
 	{
 		io::Image img;
 		img.channels = channels;
@@ -68,7 +68,7 @@ namespace io
 	}
 
 	void
-	image_resize(Image& img, math::vec2f size)
+	image_resize(Image& img, math::Vec2f size)
 	{
 		img.width = size[0];
 		img.height = size[1];

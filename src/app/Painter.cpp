@@ -75,7 +75,7 @@ namespace app
 	{
 		//Run updating data systems
 		//universe update system
-		world::universe_update_sys_run(app->universe, math::vec2f{ (float)window_width, (float)window_height }, app->input);
+		world::universe_update_sys_run(app->universe, math::Vec2f{ (float)window_width, (float)window_height }, app->input);
 
 		//painter selection system
 		if (app->input.mouse[0] == true)
@@ -97,7 +97,7 @@ namespace app
 	{
 		//Run rendering systems
 		engine_world_draw(app->engine, app->universe.world, palette);
-		engine_imgui_draw(app->engine, math::vec2f{ (float)app->input.mouse_x, (float)app->input.mouse_y}, app->input.mouse, palette, width, height);
+		engine_imgui_draw(app->engine, math::Vec2f{ (float)app->input.mouse_x, (float)app->input.mouse_y}, app->input.mouse, palette, width, height);
 		win::window_swap(palette);
 	}
 

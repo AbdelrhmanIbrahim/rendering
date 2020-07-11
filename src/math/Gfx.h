@@ -10,58 +10,58 @@ namespace math
 	constexpr float PI = 3.14159265358979f;
 
 	inline float
-	dot(const math::vec3f& first, const math::vec3f& second)
+	dot(const math::Vec3f& first, const math::Vec3f& second)
 	{
 		return first[0] * second[0] + first[1] * second[1] + first[2] * second[2];
 	}
 
 	inline float
-	dot(const math::vec4f& first, const math::vec4f& second)
+	dot(const math::Vec4f& first, const math::Vec4f& second)
 	{
 		return first[0] * second[0] + first[1] * second[1] + first[2] * second[2] + first[3] * second[3];
 	}
 
 	inline float
-	len_sqrd(const math::vec3f& vec)
+	len_sqrd(const math::Vec3f& vec)
 	{
 		return dot(vec, vec);
 	}
 
 	inline float
-	len(const vec3f& vec)
+	len(const Vec3f& vec)
 	{
 		return sqrtf(len_sqrd(vec));
 	}
 
-	inline math::vec3f
-	normalize(const math::vec3f& vec)
+	inline math::Vec3f
+	normalize(const math::Vec3f& vec)
 	{
 		return vec * (1 / len(vec));
 	}
 
-	inline vec3f
-	cross(const math::vec3f& first, const math::vec3f& second)
+	inline Vec3f
+	cross(const math::Vec3f& first, const math::Vec3f& second)
 	{
-		return vec3f{first[1]*second[2] - second[1]*first[2] , -(first[0]*second[2]-second[0]*first[2]), first[0]*second[1]-second[0]*first[1]};
+		return Vec3f{first[1]*second[2] - second[1]*first[2] , -(first[0]*second[2]-second[0]*first[2]), first[0]*second[1]-second[0]*first[1]};
 	}
 
 	inline math::Mat4f
-	view_matrix(const math::vec3f& fwd, const math::vec3f& right, const math::vec3f& up, const math::vec3f& eye)
+	view_matrix(const math::Vec3f& fwd, const math::Vec3f& right, const math::Vec3f& up, const math::Vec3f& eye)
 	{
 		math::Mat4f view{};
-		view[0] = math::vec4f{ right[0], up[0], -fwd[0], 0 };
-		view[1] = math::vec4f{ right[1], up[1], -fwd[1], 0 };
-		view[2] = math::vec4f{ right[2], up[2], -fwd[2], 0 };
-		view[3] = math::vec4f{ -dot(eye, right), -dot(eye, up), dot(eye, fwd), 1 };
+		view[0] = math::Vec4f{ right[0], up[0], -fwd[0], 0 };
+		view[1] = math::Vec4f{ right[1], up[1], -fwd[1], 0 };
+		view[2] = math::Vec4f{ right[2], up[2], -fwd[2], 0 };
+		view[3] = math::Vec4f{ -dot(eye, right), -dot(eye, up), dot(eye, fwd), 1 };
 		return view;
 	}
 
 	inline math::Mat4f
-	view_lookat_matrix(const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
+	view_lookat_matrix(const math::Vec3f& eye, const math::Vec3f& target, const math::Vec3f& up)
 	{
-		vec3f fwd = math::normalize(target - eye);
-		vec3f right = math::normalize(math::cross(fwd, up));
-		vec3f r_up = math::normalize(math::cross(right, fwd));
+		Vec3f fwd = math::normalize(target - eye);
+		Vec3f right = math::normalize(math::cross(fwd, up));
+		Vec3f r_up = math::normalize(math::cross(right, fwd));
 		return view_matrix(fwd, right, r_up, eye);
 	}
 

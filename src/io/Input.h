@@ -30,7 +30,7 @@ namespace io
 	void
 	input_process_event(Input& input, io::Event event);
 
-	math::vec2f
+	math::Vec2f
 	input_mouse_delta(const Input& i);
 
 	void

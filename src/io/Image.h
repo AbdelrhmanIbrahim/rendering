@@ -13,7 +13,7 @@ namespace io
 	};
 
 	Image
-	image_new(int channels, math::vec2f size);
+	image_new(int channels, math::Vec2f size);
 
 	Image
 	image_read(const char* path, IMAGE_FORMAT format);
@@ -22,7 +22,7 @@ namespace io
 	image_write(const Image& img, const char* path, IMAGE_FORMAT format);
 
 	void
-	image_resize(Image& img, math::vec2f size);
+	image_resize(Image& img, math::Vec2f size);
 
 	void
 	image_free(Image& img);

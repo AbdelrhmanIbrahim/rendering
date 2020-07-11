@@ -20,7 +20,7 @@ namespace world
 			auto b_transforms = ecs::world_active_components<world::Transform>(w);
 			auto b_materials = ecs::world_active_components<world::Material>(w);
 
-			math::vec2f viewport = world::camera_viewport(cam);
+			math::Vec2f viewport = world::camera_viewport(cam);
 			rndr::colored_set(colored, viewport);
 
 			math::Mat4f vp = camera_view_proj(cam);

@@ -17,12 +17,12 @@ namespace world
 			auto cam = ecs::world_active_components<world::Camera>(w)[0];
 			auto b_meshes = ecs::world_active_components<world::Mesh>(w);
 			auto b_transforms = ecs::world_active_components<world::Transform>(w);
-			math::vec2f viewport = world::camera_viewport(cam);
+			math::Vec2f viewport = world::camera_viewport(cam);
 			math::Mat4f vp = camera_view_proj(cam);
 
 			rndr::hiddenline_set(hline, viewport);
 			for (int i = 0; i < b_meshes.size; ++i)
-				rndr::hiddenline_draw(hline, vp, &b_meshes[i], &b_transforms[i], math::vec4f{ 1, 1, 1, 1 });
+				rndr::hiddenline_draw(hline, vp, &b_meshes[i], &b_transforms[i], math::Vec4f{ 1, 1, 1, 1 });
 		}
 	};
 };

@@ -21,7 +21,7 @@ namespace rndr
 	tquad_free(TQuad self);
 
 	void
-	tquad_set(TQuad self, math::Mat4f& view_proj, math::vec2f& viewport);
+	tquad_set(TQuad self, math::Mat4f& view_proj, math::Vec2f& viewport);
 
 	void
 	tquad_draw(TQuad self, const world::TVertex quad_strip[6]);

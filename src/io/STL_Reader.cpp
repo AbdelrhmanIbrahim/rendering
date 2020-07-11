@@ -14,7 +14,7 @@ namespace io
 {
 	struct Point_Hash
 	{
-		unsigned int operator()(const vec3f& point) const
+		unsigned int operator()(const Vec3f& point) const
 		{
 			unsigned int h1 = hash<double>()(point.data[0]);
 			unsigned int h2 = hash<double>()(point.data[1]);
@@ -25,7 +25,7 @@ namespace io
 
 	struct Vertex_Data
 	{
-		vec3f normal;
+		Vec3f normal;
 		unsigned int faces_count;
 		unsigned int vertex_index;
 	};
@@ -35,9 +35,9 @@ namespace io
 	{
 		Indexed_Triangles self{};
 		ifstream file(stl_path, ios::binary);
-		unordered_map<vec3f, Vertex_Data, Point_Hash> unique_points_table;
+		unordered_map<Vec3f, Vertex_Data, Point_Hash> unique_points_table;
 
-		auto read_point = [](ifstream& file) -> vec3f
+		auto read_point = [](ifstream& file) -> Vec3f
 		{
 			char f0[4];
 			file.read(f0, 4);
@@ -46,15 +46,15 @@ namespace io
 			float y = *(float*)f0;
 			file.read(f0, 4);
 			float z = *(float*)f0;
-			return vec3f{ x,y,z };
+			return Vec3f{ x,y,z };
 		};
 
-		auto insert_point = [&self, &unique_points_table](const vec3f& point, const vec3f& normal) -> void
+		auto insert_point = [&self, &unique_points_table](const Vec3f& point, const Vec3f& normal) -> void
 		{
 			auto itr = unique_points_table.find(point);
 			if (itr == unique_points_table.end())
 			{
-				self.vertices.push_back(world::TVertex{ point, vec3f{}, vec2f{} });
+				self.vertices.push_back(world::TVertex{ point, Vec3f{}, Vec2f{} });
 				Vertex_Data data{};
 				data.normal += normal;
 				data.faces_count++;
@@ -85,7 +85,7 @@ namespace io
 
 			for (unsigned int i = 0; i < tris_count; ++i)
 			{
-				vec3f normal = read_point(file);
+				Vec3f normal = read_point(file);
 				insert_point(read_point(file), normal);
 				insert_point(read_point(file), normal);
 				insert_point(read_point(file), normal);

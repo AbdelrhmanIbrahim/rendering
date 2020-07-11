@@ -19,8 +19,8 @@ namespace rndr
 	hiddenline_free(Hiddenline self);
 
 	void
-	hiddenline_set(Hiddenline self, math::vec2f viewport);
+	hiddenline_set(Hiddenline self, math::Vec2f viewport);
 
 	void
-	hiddenline_draw(Hiddenline self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::vec4f& col);
+	hiddenline_draw(Hiddenline self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::Vec4f& col);
 };

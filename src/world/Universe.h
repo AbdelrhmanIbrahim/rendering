@@ -26,7 +26,7 @@ namespace world
 
 	//systems
 	void
-	universe_update_sys_run(Universe& u, math::vec2f win_size, const io::Input& i);
+	universe_update_sys_run(Universe& u, math::Vec2f win_size, const io::Input& i);
 
 	void
 	universe_movement_sys_run(Universe& u, const io::Input& i, ecs::Entity e);

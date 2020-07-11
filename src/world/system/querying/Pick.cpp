@@ -26,11 +26,11 @@ namespace world
 		};
 
 		//internals
-		math::vec3f
+		math::Vec3f
 		_id_to_rgb(int id)
 		{
 			int r = (id & 0x00FF0000)>>16 ; int g = (id & 0x0000FF00)>>8; int b = id & 0x000000FF;
-			return math::vec3f{(float)r, (float)g, (float)b};
+			return math::Vec3f{(float)r, (float)g, (float)b};
 		}
 
 		int
@@ -45,8 +45,8 @@ namespace world
 		{
 			IPick_System* sys = new IPick_System;
 			sys->fb = framebuffer_create();
-			sys->tex = texture2d_create(math::vec2f{ 1,1 }, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
-			sys->pixels = image_new(4, math::vec2f{ 1,1 });
+			sys->tex = texture2d_create(math::Vec2f{ 1,1 }, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
+			sys->pixels = image_new(4, math::Vec2f{ 1,1 });
 
 			return sys;
 		}
@@ -61,8 +61,8 @@ namespace world
 			auto e_mesh = ecs::world_active_entities<world::Mesh>(w);
 
 			//reallocate tex if needed
-			math::vec2f viewport = camera_viewport(cam);
-			math::vec2f size = texture2d_size(sys->tex);
+			math::Vec2f viewport = camera_viewport(cam);
+			math::Vec2f size = texture2d_size(sys->tex);
 			if (viewport != size)
 			{
 				texture2d_resize(sys->tex, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
@@ -78,8 +78,8 @@ namespace world
 				rndr::colored_set(colored, viewport);
 				for (int i = 0; i < b_meshes.size; ++i)
 				{
-					math::vec3f rgb = _id_to_rgb(e_mesh[i].id);
-					rndr::colored_draw(colored, view_proj, &b_meshes[i], &b_transforms[i], math::vec4f{ rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1.0f });
+					math::Vec3f rgb = _id_to_rgb(e_mesh[i].id);
+					rndr::colored_draw(colored, view_proj, &b_meshes[i], &b_transforms[i], math::Vec4f{ rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1.0f });
 				}
 			}
 			framebuffer_unbind();

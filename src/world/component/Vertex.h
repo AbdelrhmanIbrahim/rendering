@@ -6,14 +6,14 @@ namespace world
 {
 	struct CVertex
 	{
-		math::vec3f pos;
-		math::vec4f col;
+		math::Vec3f pos;
+		math::Vec4f col;
 	};
 
 	struct TVertex
 	{
-		math::vec3f pos;
-		math::vec3f normal;
-		math::vec2f uv;
+		math::Vec3f pos;
+		math::Vec3f normal;
+		math::Vec2f uv;
 	};
 };

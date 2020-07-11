@@ -70,13 +70,13 @@ namespace glgpu
 
 	constexpr static TVertex quad_ndc[6] =
 	{
-		TVertex{-1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
-		TVertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
+		TVertex{-1.0f,  1.0f, 0.0f,  Vec3f{0,0,1}, 0.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, 0.0f,  Vec3f{0,0,1}, 0.0f, 0.0f},
+		TVertex{ 1.0f,  1.0f, 0.0f,  Vec3f{0,0,1}, 1.0f, 1.0f},
 
-		TVertex{ 1.0f,  1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 0.0f, 0.0f},
-		TVertex{ 1.0f, -1.0f, 0.0f,  vec3f{0,0,1}, 1.0f, 0.0f}
+		TVertex{ 1.0f,  1.0f, 0.0f,  Vec3f{0,0,1}, 1.0f, 1.0f},
+		TVertex{-1.0f, -1.0f, 0.0f,  Vec3f{0,0,1}, 0.0f, 0.0f},
+		TVertex{ 1.0f, -1.0f, 0.0f,  Vec3f{0,0,1}, 1.0f, 0.0f}
 	};
 
 	struct IGL_Handle
@@ -555,7 +555,7 @@ namespace glgpu
 	}
 
 	Texture
-	texture2d_create(vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap)
+	texture2d_create(Vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap)
 	{
 		IGL_Handle* handle = new IGL_Handle{};
 		handle->kind = IGL_Handle::KIND::KIND_TEXTURE;
@@ -636,7 +636,7 @@ namespace glgpu
 	}
 
 	void
-	texture2d_resize(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
+	texture2d_resize(Texture tex, math::Vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
 		tex->texture.width = size[0];
 		tex->texture.height = size[1];
@@ -653,14 +653,14 @@ namespace glgpu
 		glBindTexture(GL_TEXTURE_2D, NULL);
 	}
 
-	math::vec2f
+	math::Vec2f
 	texture2d_size(Texture tex)
 	{
-		return math::vec2f{ (float)tex->texture.width, (float)tex->texture.height };
+		return math::Vec2f{ (float)tex->texture.width, (float)tex->texture.height };
 	}
 
 	void
-	texture2d_render_offline_to(Texture output, Program prog, vec2f view_size)
+	texture2d_render_offline_to(Texture output, Program prog, Vec2f view_size)
 	{
 		GLuint fbo;
 		glGenFramebuffers(1, &fbo);
@@ -755,7 +755,7 @@ namespace glgpu
 	}
 
 	Cubemap
-	cubemap_create(vec2f view_size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT pixel_format, DATA_TYPE type, bool mipmap)
+	cubemap_create(Vec2f view_size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT pixel_format, DATA_TYPE type, bool mipmap)
 	{
 		IGL_Handle* handle = new IGL_Handle;
 		handle->kind = IGL_Handle::KIND::KIND_CUBEMAP;
@@ -801,7 +801,7 @@ namespace glgpu
 	}
 
 	Cubemap
-	cubemap_hdr_create(const io::Image& img, vec2f view_size, bool mipmap)
+	cubemap_hdr_create(const io::Image& img, Vec2f view_size, bool mipmap)
 	{
 		//create hdr texture
 		Texture hdr = texture2d_create(img, IMAGE_FORMAT::HDR);
@@ -814,12 +814,12 @@ namespace glgpu
 		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, 1.00000004321);
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{-0.001f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.001f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f, -0.001f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.001f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(Vec3f{-0.001f,  0.0f,  0.0f}, Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(Vec3f{0.001f,  0.0f,  0.0f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(Vec3f{0.0f, -0.001f,  0.0f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f,  0.0f,  1.0f}),
+			view_lookat_matrix(Vec3f{0.0f,  0.001f,  0.0f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(Vec3f{0.0f,  0.0f, -0.001f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(Vec3f{0.0f,  0.0f,  0.001f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f})
 		};
 
 		//create env cubemap
@@ -883,7 +883,7 @@ namespace glgpu
 	}
 
 	void
-	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, vec2f view_size, int mipmap_level)
+	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, Vec2f view_size, int mipmap_level)
 	{
 		//convert HDR equirectangular environment map to cubemap
 		//create 6 views that will be rendered to the cubemap using equarectangular shader
@@ -891,12 +891,12 @@ namespace glgpu
 		Mat4f proj = proj_prespective_matrix(100, 0.1, 1, -1, 1, -1, 1.00000004321);
 		Mat4f views[6] =
 		{
-			view_lookat_matrix(vec3f{-0.001f,  0.0f,  0.0f}, vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.001f,  0.0f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f, -0.001f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.001f,  0.0f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f,  0.0f,  -1.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f, -0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f}),
-			view_lookat_matrix(vec3f{0.0f,  0.0f,  0.001f},  vec3f{0.0f, 0.0f, 0.0f}, vec3f{0.0f, -1.0f,  0.0f})
+			view_lookat_matrix(Vec3f{-0.001f,  0.0f,  0.0f}, Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(Vec3f{0.001f,  0.0f,  0.0f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(Vec3f{0.0f, -0.001f,  0.0f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f,  0.0f,  1.0f}),
+			view_lookat_matrix(Vec3f{0.0f,  0.001f,  0.0f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f,  0.0f,  -1.0f}),
+			view_lookat_matrix(Vec3f{0.0f,  0.0f, -0.001f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f}),
+			view_lookat_matrix(Vec3f{0.0f,  0.0f,  0.001f},  Vec3f{0.0f, 0.0f, 0.0f}, Vec3f{0.0f, -1.0f,  0.0f})
 		};
 
 
@@ -1091,20 +1091,6 @@ namespace glgpu
 	{
 		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
 		glUniform1f(uniform_loc, data);
-	}
-
-	void
-	uniform3f_set(Program prog, const char * uniform, const math::vec3f & data)
-	{
-		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
-		glUniform3f(uniform_loc, data[0], data[1], data[2]);
-	}
-
-	void
-	uniform4f_set(Program prog, const char* uniform, const math::vec4f& data)
-	{
-		int uniform_loc = glGetUniformLocation((GLuint)prog->program.id, uniform);
-		glUniform4f(uniform_loc, data[0], data[1], data[2], data[3]);
 	}
 
 	void

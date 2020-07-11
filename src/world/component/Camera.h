@@ -11,7 +11,7 @@ namespace world
 	struct Camera
 	{
 		//view
-		math::vec3f pos, fwd, right, up;
+		math::Vec3f pos, fwd, right, up;
 		float orbit_hangle, orbit_vangle;
 
 		//projection
@@ -26,10 +26,10 @@ namespace world
 	camera_new()
 	{
 		Camera self{};
-		self.pos = math::vec3f{ 0, 0, 5 };
-		self.fwd = math::vec3f{ 0,0,-1 };
-		self.right = math::vec3f{ 1,0,0 };
-		self.up = math::vec3f{ 0, 1, 0 };
+		self.pos = math::Vec3f{ 0, 0, 5 };
+		self.fwd = math::Vec3f{ 0,0,-1 };
+		self.right = math::Vec3f{ 1,0,0 };
+		self.up = math::Vec3f{ 0, 1, 0 };
 		self.orbit_hangle = 0;
 		self.orbit_vangle = 0;
 		self.l = -1;
@@ -45,7 +45,7 @@ namespace world
 	}
 
 	inline static void
-	camera_viewport(Camera& self, const math::vec2f& viewport)
+	camera_viewport(Camera& self, const math::Vec2f& viewport)
 	{
 		self.l = -viewport[0] / 2;
 		self.r = viewport[0] + self.l;
@@ -62,7 +62,7 @@ namespace world
 	}
 
 	inline static void
-	camera_lookat(Camera& self, const math::vec3f& eye, const math::vec3f& target, const math::vec3f& up)
+	camera_lookat(Camera& self, const math::Vec3f& eye, const math::Vec3f& target, const math::Vec3f& up)
 	{
 		self.pos = eye;
 		self.fwd = math::normalize(target - eye);
@@ -82,23 +82,23 @@ namespace world
 		return camera_proj_matrix(self) * camera_view_matrix(self);
 	}
 
-	inline static math::vec2f
+	inline static math::Vec2f
 	camera_viewport(const Camera& self)
 	{
-		return math::vec2f{ self.r - self.l, self.t - self.b };
+		return math::Vec2f{ self.r - self.l, self.t - self.b };
 	}
 
 	inline static void
-	camera_rotate(Camera& self, const math::vec2f& mouse_delta)
+	camera_rotate(Camera& self, const math::Vec2f& mouse_delta)
 	{
-		math::vec3f fwd = math::quat_from_axis(self.right, to_radian(mouse_delta[1]) / 10.0f) *
+		math::Vec3f fwd = math::quat_from_axis(self.right, to_radian(mouse_delta[1]) / 10.0f) *
 						  math::quat_from_axis(self.up, -to_radian(mouse_delta[0]) / 10.0f) *
 						  self.fwd;
 		camera_lookat(self, self.pos, self.pos + fwd, math::Y_AXIS);
 	}
 
 	inline static void
-	camera_orbit(Camera& self, const math::vec2f& mouse_delta)
+	camera_orbit(Camera& self, const math::Vec2f& mouse_delta)
 	{
 		self.orbit_hangle += to_radian((int)(mouse_delta[0] / 10.0f) % 360);
 		self.orbit_vangle += to_radian((int)(mouse_delta[1] / 10.0f) % 360);

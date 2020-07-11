@@ -14,8 +14,8 @@ namespace world
 		void
 		script_flash_cam(world::Camera* cam, world::Flash* flash)
 		{
-			flash->dir = math::vec4f{ cam->fwd[0], cam->fwd[1], cam->fwd[2], 0 };
-			flash->pos = math::vec4f{ cam->pos[0], cam->pos[1], cam->pos[2], 0 };
+			flash->dir = math::Vec4f{ cam->fwd[0], cam->fwd[1], cam->fwd[2], 0 };
+			flash->pos = math::Vec4f{ cam->pos[0], cam->pos[1], cam->pos[2], 0 };
 		}
 	};
 };

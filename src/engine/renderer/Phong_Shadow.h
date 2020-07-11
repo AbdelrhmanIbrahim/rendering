@@ -22,5 +22,5 @@
 //	phong_shadow_unpack(Phong_Shadow mr);
 //
 //	void
-//	phong_shadow_draw(const Phong_Shadow mr, const math::vec3f& light_pos, const world::Camera& viewer);
+//	phong_shadow_draw(const Phong_Shadow mr, const math::Vec3f& light_pos, const world::Camera& viewer);
 //};

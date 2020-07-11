@@ -46,7 +46,7 @@ namespace rndr
 	}
 
 	void
-	tquad_set(TQuad self, math::Mat4f& view_proj, math::vec2f& viewport)
+	tquad_set(TQuad self, math::Mat4f& view_proj, math::Vec2f& viewport)
 	{
 		program_use(self->prog);
 		buffer_uniform_bind(0, self->uvp);

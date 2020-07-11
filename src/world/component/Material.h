@@ -6,7 +6,7 @@ namespace world
 {
 	struct Material
 	{
-		math::vec4f color_norm;
+		math::Vec4f color_norm;
 		float metallicity;
 		float roughness;
 	};

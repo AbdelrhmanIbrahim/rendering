@@ -28,7 +28,7 @@ namespace world
 			auto b_lamps = ecs::world_active_components<world::Lamp>(w);
 			auto b_flashes = ecs::world_active_components<world::Flash>(w);
 
-			math::vec2f viewport = world::camera_viewport(cam);
+			math::Vec2f viewport = world::camera_viewport(cam);
 			rndr::pbr_set(pbr, 
 				&cam,
 				infra::mem::chunk<world::Sun>{ b_suns.size, b_suns.ptr },

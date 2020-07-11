@@ -26,5 +26,5 @@ namespace rndr
     postprocessor_effect_add(Postprocessor self, Pass& pass);
 
 	glgpu::Texture
-    postprocessor_run(Postprocessor self, math::vec2f view_port);
+    postprocessor_run(Postprocessor self, math::Vec2f view_port);
 };

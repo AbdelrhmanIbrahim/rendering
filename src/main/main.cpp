@@ -15,7 +15,7 @@ main(int argc, char** argv)
 	//	painter_input(Picasso, event);
 
 	//	//update
-	//	math::vec2f window_size = win::window_size(win);
+	//	math::Vec2f window_size = win::window_size(win);
 	//	painter_update(Picasso, window_size[0], window_size[1]);
 
 	//	//render

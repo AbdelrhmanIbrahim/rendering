@@ -95,6 +95,15 @@ enum class IMAGE_FORMAT
 	HDR
 };
 
+enum class UNIFORM_TYPE
+{
+	FLOAT,
+	VEC3,
+	VEC4,
+	MAT4,
+	SAMPLER
+};
+
 //remove later
 struct Unifrom_Float
 {
@@ -103,10 +112,10 @@ struct Unifrom_Float
 };
 
 //colored quad
-constexpr static world::CVertex ctl{ math::vec3f{ -1,  1, 1 }, math::vec4f{0.7, 0.7, 0.7, 1} };
-constexpr static world::CVertex cbl{ math::vec3f{ -1, -1, 1 }, math::vec4f{0.2, 0.2, 0.2, 1} };
-constexpr static world::CVertex cbr{ math::vec3f{  1, -1, 1 }, math::vec4f{0.2, 0.2, 0.2, 1} };
-constexpr static world::CVertex ctr{ math::vec3f{  1,  1, 1 }, math::vec4f{0.7, 0.7, 0.7, 1} };
+constexpr static world::CVertex ctl{ math::Vec3f{ -1,  1, 1 }, math::Vec4f{0.7, 0.7, 0.7, 1} };
+constexpr static world::CVertex cbl{ math::Vec3f{ -1, -1, 1 }, math::Vec4f{0.2, 0.2, 0.2, 1} };
+constexpr static world::CVertex cbr{ math::Vec3f{  1, -1, 1 }, math::Vec4f{0.2, 0.2, 0.2, 1} };
+constexpr static world::CVertex ctr{ math::Vec3f{  1,  1, 1 }, math::Vec4f{0.7, 0.7, 0.7, 1} };
 constexpr static world::CVertex cbg_quad[6]
 {
 	ctl, cbl, cbr,
@@ -114,10 +123,10 @@ constexpr static world::CVertex cbg_quad[6]
 };
 
 //bg quad
-constexpr static world::TVertex ttl{ math::vec3f{ -1,  1, 1 }, math::vec3f{}, math::vec2f{0, 1} };
-constexpr static world::TVertex tbl{ math::vec3f{ -1, -1, 1 }, math::vec3f{}, math::vec2f{0, 0} };
-constexpr static world::TVertex tbr{ math::vec3f{  1, -1, 1 }, math::vec3f{}, math::vec2f{1, 0} };
-constexpr static world::TVertex ttr{ math::vec3f{  1,  1, 1 }, math::vec3f{}, math::vec2f{1, 1} };
+constexpr static world::TVertex ttl{ math::Vec3f{ -1,  1, 1 }, math::Vec3f{}, math::Vec2f{0, 1} };
+constexpr static world::TVertex tbl{ math::Vec3f{ -1, -1, 1 }, math::Vec3f{}, math::Vec2f{0, 0} };
+constexpr static world::TVertex tbr{ math::Vec3f{  1, -1, 1 }, math::Vec3f{}, math::Vec2f{1, 0} };
+constexpr static world::TVertex ttr{ math::Vec3f{  1,  1, 1 }, math::Vec3f{}, math::Vec2f{1, 1} };
 constexpr static world::TVertex tbg_quad[6]
 {
 	ttl, tbl, tbr,
@@ -125,10 +134,10 @@ constexpr static world::TVertex tbg_quad[6]
 };
 
 //front quad
-constexpr static world::TVertex fttl{ math::vec3f{ -1,  1, -1 }, math::vec3f{}, math::vec2f{0, 1} };
-constexpr static world::TVertex ftbl{ math::vec3f{ -1, -1, -1 }, math::vec3f{}, math::vec2f{0, 0} };
-constexpr static world::TVertex ftbr{ math::vec3f{  1, -1, -1 }, math::vec3f{}, math::vec2f{1, 0} };
-constexpr static world::TVertex fttr{ math::vec3f{  1,  1, -1 }, math::vec3f{}, math::vec2f{1, 1} };
+constexpr static world::TVertex fttl{ math::Vec3f{ -1,  1, -1 }, math::Vec3f{}, math::Vec2f{0, 1} };
+constexpr static world::TVertex ftbl{ math::Vec3f{ -1, -1, -1 }, math::Vec3f{}, math::Vec2f{0, 0} };
+constexpr static world::TVertex ftbr{ math::Vec3f{  1, -1, -1 }, math::Vec3f{}, math::Vec2f{1, 0} };
+constexpr static world::TVertex fttr{ math::Vec3f{  1,  1, -1 }, math::Vec3f{}, math::Vec2f{1, 1} };
 constexpr static world::TVertex tfr_quad[6]
 {
 	fttl, ftbl, ftbr,

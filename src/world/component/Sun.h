@@ -6,7 +6,7 @@ namespace world
 {
 	struct Sun
 	{
-		math::vec4f col;
-		math::vec4f dir;
+		math::Vec4f col;
+		math::Vec4f dir;
 	};
 };

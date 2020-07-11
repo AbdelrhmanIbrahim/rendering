@@ -37,7 +37,7 @@ namespace world
 			auto tbag = ecs::world_active_components<world::Transform>(w);
 			for (int x = 0; x < tbag.size; ++x)
 			{
-				math::vec2f mouse_dir{ io::input_mouse_delta(i) };
+				math::Vec2f mouse_dir{ io::input_mouse_delta(i) };
 				_transform_update(&tbag[x], i);
 			}
 		}

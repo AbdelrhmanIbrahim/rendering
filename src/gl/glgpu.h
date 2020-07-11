@@ -21,7 +21,16 @@ namespace glgpu
 
 	struct Uniform
     {
-
+		unsigned int slot;
+		UNIFORM_TYPE type;
+		union
+		{
+			float f;
+			math::Vec3f vec3;
+			math::Vec4f vec4;
+			math::Mat4f mat4;
+			Texture sampler;
+		} value;
     };
     
 	void
@@ -88,7 +97,7 @@ namespace glgpu
 	vao_delete(Vao va);
 
 	Texture
-	texture2d_create(math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
+	texture2d_create(math::Vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap);
 
 	Texture
 	texture2d_create(const io::Image& img, IMAGE_FORMAT format);
@@ -97,13 +106,13 @@ namespace glgpu
 	texture2d_create(const char* image_path, IMAGE_FORMAT format);
 
 	void
-	texture2d_resize(Texture tex, math::vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
+	texture2d_resize(Texture tex, math::Vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
 
-	math::vec2f
+	math::Vec2f
 	texture2d_size(Texture tex);
 
 	void
-	texture2d_render_offline_to(Texture output, Program prog, math::vec2f view_size);
+	texture2d_render_offline_to(Texture output, Program prog, math::Vec2f view_size);
 
 	void
 	texture2d_bind(Texture texture, unsigned int texture_unit_index);
@@ -127,17 +136,17 @@ namespace glgpu
 	sampler_free(Sampler self);
 
 	Cubemap
-	cubemap_create(math::vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap);
+	cubemap_create(math::Vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap);
 
 	Cubemap
 	cubemap_rgba_create(const io::Image imgs[6]);
 
 	Cubemap
-	cubemap_hdr_create(const io::Image& img, math::vec2f view_size, bool mipmap);
+	cubemap_hdr_create(const io::Image& img, math::Vec2f view_size, bool mipmap);
 
 	//TODO -- ability to send array of different uniforms types table (revisit)
 	void
-	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, math::vec2f view_size, int mipmap_level);
+	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, math::Vec2f view_size, int mipmap_level);
 
 	void
 	cubemap_bind(Cubemap texture, unsigned int texture_unit);
@@ -195,12 +204,6 @@ namespace glgpu
 
 	void
 	uniform1f_set(Program prog, const char* uniform, float data);
-
-	void
-	uniform3f_set(Program prog, const char* uniform, const math::vec3f& data);
-
-	void
-	uniform4f_set(Program prog, const char* uniform, const math::vec4f& data);
 
 	void
 	uniformmat4f_set(Program prog, const char* uniform, const math::Mat4f& data);

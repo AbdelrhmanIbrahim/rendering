@@ -66,18 +66,18 @@ namespace rndr
 
 	struct Light_Uniform
 	{
-		vec4f color;
-		vec4f dir;
+		Vec4f color;
+		Vec4f dir;
 	};
 
 	struct Camera_Uniform
 	{
-		vec4f camera_world_pos;
+		Vec4f camera_world_pos;
 	};
 
 	struct Material_Uniform
 	{
-		math::vec4f color;
+		math::Vec4f color;
 		float metallicity;
 		float roughness;
 		float dummy_padding[2];
@@ -112,25 +112,25 @@ namespace rndr
 
 		/*Diffuse irriadiance convoluted map*/
 		io::Image diff = io::image_read(DIR_PATH"/res/imgs/hdr/Tokyo_diff.hdr", IMAGE_FORMAT::HDR);
-		self->diffuse_irradiance_map = cubemap_hdr_create(diff, vec2f{512, 512}, false);
+		self->diffuse_irradiance_map = cubemap_hdr_create(diff, Vec2f{512, 512}, false);
 		image_free(diff);
 
 		//Specular prefiltered convoluted map (Part 1 from the specular integration of the reflectance equation)
 		//1) create prefiltered convolution map with mipmap generated, rougher = blurrier reflections
 		//2) create env_cmap that will be used for convolution to create prefilterd map
 		//3) convolute env_cmap 5 times (mipmaps) using prefiltering shader and save them to specular_prefiltered_map mipmaps, diff roughness = diff prefiltered map
-		vec2f prefiltered_initial_size{ 128, 128 };
+		Vec2f prefiltered_initial_size{ 128, 128 };
 		self->specular_prefiltered_map = cubemap_create(prefiltered_initial_size, INTERNAL_TEXTURE_FORMAT::RGB16F, EXTERNAL_TEXTURE_FORMAT::RGB, DATA_TYPE::FLOAT, true);
 
 		io::Image env = io::image_read(DIR_PATH"/res/imgs/hdr/Tokyo_spec.hdr", IMAGE_FORMAT::HDR);
-		Cubemap env_cmap = cubemap_hdr_create(env, vec2f{ 512, 512 }, true);
+		Cubemap env_cmap = cubemap_hdr_create(env, Vec2f{ 512, 512 }, true);
 
 		Program prefiltering_prog = program_create(DIR_PATH"/src/engine/shaders/cube.vertex", DIR_PATH"/src/engine/shaders/specular_prefiltering_convolution.pixel");
 		unsigned int max_mipmaps = 5;
 		for (unsigned int mip_level = 0; mip_level < max_mipmaps; ++mip_level)
 		{
 			float roughness = (float)mip_level / max_mipmaps;
-			vec2f mipmap_size{ prefiltered_initial_size[0] * pow(0.5, mip_level) , prefiltered_initial_size[0] * pow(0.5, mip_level) };
+			Vec2f mipmap_size{ prefiltered_initial_size[0] * pow(0.5, mip_level) , prefiltered_initial_size[0] * pow(0.5, mip_level) };
 			cubemap_postprocess(env_cmap, self->specular_prefiltered_map, prefiltering_prog, Unifrom_Float{"roughness", roughness}, mipmap_size, mip_level);
 		}
 		program_delete(prefiltering_prog);
@@ -139,7 +139,7 @@ namespace rndr
 
 		//Specular BRDF convoluted LUT (Part 2 from the specular integration of the reflectance equation)
 		Program BRDF_prog = program_create(DIR_PATH"/src/engine/shaders/quad_ndc.vertex", DIR_PATH"/src/engine/shaders/specular_BRDF_convolution.pixel");
-		vec2f BRDF_LUT_size{ 512, 512 };
+		Vec2f BRDF_LUT_size{ 512, 512 };
 		self->specular_BRDF_LUT = texture2d_create(BRDF_LUT_size, INTERNAL_TEXTURE_FORMAT::RG16F, EXTERNAL_TEXTURE_FORMAT::RG, DATA_TYPE::FLOAT, false);
 		texture2d_render_offline_to(self->specular_BRDF_LUT, BRDF_prog, BRDF_LUT_size);
 		program_delete(BRDF_prog);
@@ -194,7 +194,7 @@ namespace rndr
 		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
-		math::vec2f viewport = camera_viewport(*camera);
+		math::Vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 		//lights settings
@@ -215,7 +215,7 @@ namespace rndr
 		Space_Uniform mvp{ model_mat, view_proj, model_mat };
 
 		//non uniform scaling
-		if (model->scale != vec3f{ model->scale[0],model->scale[0], model->scale[0] })
+		if (model->scale != Vec3f{ model->scale[0],model->scale[0], model->scale[0] })
 			mvp.normal_mat = mat4_transpose(mat4_inverse(model_mat));
 
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));

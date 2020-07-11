@@ -14,15 +14,15 @@ namespace math
 	*/
 	struct Mat4f
 	{
-		vec4f data[4];
+		Vec4f data[4];
 
-		vec4f&
+		Vec4f&
 		operator[](unsigned int index)
 		{
 			return data[index];
 		}
 
-		const vec4f&
+		const Vec4f&
 		operator[](unsigned int index) const
 		{
 			return data[index];
@@ -52,10 +52,10 @@ namespace math
 			};
 		}
 
-		vec3f
-		operator*(const vec4f& other)
+		Vec3f
+		operator*(const Vec4f& other)
 		{
-			return vec3f
+			return Vec3f
 			{
 				data[0][0] * other[0] + data[1][0] * other[1] + data[2][0] * other[2] + data[3][0] * other[3],
 				data[0][1] * other[0] + data[1][1] * other[1] + data[2][1] * other[2] + data[3][1] * other[3],
@@ -72,7 +72,7 @@ namespace math
 	}
 
 	inline static Mat4f
-	mat4_scale(const vec4f& scale)
+	mat4_scale(const Vec4f& scale)
 	{
 		Mat4f m{};
 		m[0][0] = scale[0];
@@ -83,7 +83,7 @@ namespace math
 	}
 
 	inline Mat4f
-	mat4_scale(const vec3f& scale)
+	mat4_scale(const Vec3f& scale)
 	{
 		Mat4f m{};
 		m[0][0] = scale[0];
@@ -96,19 +96,19 @@ namespace math
 	inline static Mat4f
 	mat4_id()
 	{
-		return mat4_scale(vec4f{ 1, 1, 1, 1 });
+		return mat4_scale(Vec4f{ 1, 1, 1, 1 });
 	}
 
 	inline static Mat4f
-	mat4_translate(const vec3f& translation)
+	mat4_translate(const Vec3f& translation)
 	{
 		Mat4f m = mat4_id();
-		m[3] = vec4f{translation[0], translation[1], translation[2], 1.0f};
+		m[3] = Vec4f{translation[0], translation[1], translation[2], 1.0f};
 		return m;
 	}
 
 	inline static Mat4f
-	mat4f_rotate(const vec3f& axis_normal, float rad)
+	mat4f_rotate(const Vec3f& axis_normal, float rad)
 	{
 		Mat4f m = mat4_id();
 		float cosine = (float)cos(rad);
@@ -116,7 +116,7 @@ namespace math
 		float nx = axis_normal[0];
 		float ny = axis_normal[1];
 		float nz = axis_normal[2];
-		vec3f temp = axis_normal * (1.0f - cosine);
+		Vec3f temp = axis_normal * (1.0f - cosine);
 
 		// Rodriguries formula
 		m[0][0] = nx * temp[0] + cosine;
@@ -135,7 +135,7 @@ namespace math
 	}
 
 	inline static Mat4f
-	mat4_transform(const vec3f axis, float angle_rad, const vec3f& scale, const vec3f& translation)
+	mat4_transform(const Vec3f axis, float angle_rad, const Vec3f& scale, const Vec3f& translation)
 	{
 		return mat4_translate(translation) * mat4f_rotate(axis, angle_rad) * mat4_scale(scale);
 	}
@@ -217,32 +217,32 @@ namespace math
 		float cof22 = mat[1][0] * mat[3][1] - mat[3][0] * mat[1][1];
 		float cof23 = mat[1][0] * mat[2][1] - mat[2][0] * mat[1][1];
 
-		vec4f fac0{ cof00, cof00, cof02, cof03 };
-		vec4f fac1{ cof04, cof04, cof06, cof07 };
-		vec4f fac2{ cof08, cof08, cof10, cof11 };
-		vec4f fac3{ cof12, cof12, cof14, cof15 };
-		vec4f fac4{ cof16, cof16, cof18, cof19 };
-		vec4f fac5{ cof20, cof20, cof22, cof23 };
+		Vec4f fac0{ cof00, cof00, cof02, cof03 };
+		Vec4f fac1{ cof04, cof04, cof06, cof07 };
+		Vec4f fac2{ cof08, cof08, cof10, cof11 };
+		Vec4f fac3{ cof12, cof12, cof14, cof15 };
+		Vec4f fac4{ cof16, cof16, cof18, cof19 };
+		Vec4f fac5{ cof20, cof20, cof22, cof23 };
 
-		vec4f vec0{ mat[1][0], mat[0][0], mat[0][0], mat[0][0] };
-		vec4f vec1{ mat[1][1], mat[0][1], mat[0][1], mat[0][1] };
-		vec4f vec2{ mat[1][2], mat[0][2], mat[0][2], mat[0][2] };
-		vec4f vec3{ mat[1][3], mat[0][3], mat[0][3], mat[0][3] };
+		Vec4f vec0{ mat[1][0], mat[0][0], mat[0][0], mat[0][0] };
+		Vec4f vec1{ mat[1][1], mat[0][1], mat[0][1], mat[0][1] };
+		Vec4f vec2{ mat[1][2], mat[0][2], mat[0][2], mat[0][2] };
+		Vec4f vec3{ mat[1][3], mat[0][3], mat[0][3], mat[0][3] };
 
 		//cominors
-		vec4f inv0(vec1 * fac0 - vec2 * fac1 + vec3 * fac2);
-		vec4f inv1(vec0 * fac0 - vec2 * fac3 + vec3 * fac4);
-		vec4f inv2(vec0 * fac1 - vec1 * fac3 + vec3 * fac5);
-		vec4f inv3(vec0 * fac2 - vec1 * fac4 + vec2 * fac5);
+		Vec4f inv0(vec1 * fac0 - vec2 * fac1 + vec3 * fac2);
+		Vec4f inv1(vec0 * fac0 - vec2 * fac3 + vec3 * fac4);
+		Vec4f inv2(vec0 * fac1 - vec1 * fac3 + vec3 * fac5);
+		Vec4f inv3(vec0 * fac2 - vec1 * fac4 + vec2 * fac5);
 
 		//cofactors
-		vec4f s0{ +1, -1, +1, -1 };
-		vec4f s1{ -1, +1, -1, +1 };
+		Vec4f s0{ +1, -1, +1, -1 };
+		Vec4f s1{ -1, +1, -1, +1 };
 		Mat4f inverse{ inv0 * s0, inv1 * s1, inv2 * s0, inv3 * s1 };
 
 		//you already calculated many determinants while inverting, use them to get 1/determinant of the matrix
-		vec4f row0{ inverse[0][0], inverse[1][0], inverse[2][0], inverse[3][0] };
-		vec4f dot0 = mat[0] * row0;
+		Vec4f row0{ inverse[0][0], inverse[1][0], inverse[2][0], inverse[3][0] };
+		Vec4f dot0 = mat[0] * row0;
 		float d = 1 / ((dot0[0] + dot0[1]) + (dot0[2] + dot0[3]));
 
 		return d * inverse;

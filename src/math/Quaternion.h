@@ -20,23 +20,23 @@ namespace math
 		inline Quat
 		operator*(const Quat& other) const
 		{
-			vec3f quat_img = vec3f{ x, y, z };
-			vec3f other_img = vec3f{ other.x, other.y, other.z };
-			vec3f res_img = cross(quat_img, other_img) + other_img*w + quat_img*other.w;
+			Vec3f quat_img = Vec3f{ x, y, z };
+			Vec3f other_img = Vec3f{ other.x, other.y, other.z };
+			Vec3f res_img = cross(quat_img, other_img) + other_img*w + quat_img*other.w;
 			float res_real = w*other.w - dot(quat_img, other_img);
 			return Quat{ res_img[0], res_img[1], res_img[2], res_real };
 		}
 
-		inline vec3f
-		operator*(const vec3f& other) const
+		inline Vec3f
+		operator*(const Vec3f& other) const
 		{
-			vec3f img{ x, y, z };
+			Vec3f img{ x, y, z };
 			return 2.0f * dot(img, other) * img + (w*w - dot(img, img)) * other + 2.0f * w * cross(img, other);
 		}
 	};
 
 	inline Quat
-	quat_from_axis(const math::vec3f& axis_normal, float theta_radian)
+	quat_from_axis(const math::Vec3f& axis_normal, float theta_radian)
 	{
 		float theta_half = theta_radian / 2;
 		float w = cos(theta_half);

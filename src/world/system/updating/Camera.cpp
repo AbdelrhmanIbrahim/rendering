@@ -10,8 +10,8 @@ namespace world
 		_cam_update(world::Camera* cam, const io::Input& i)
 		{
 			//Mouse
-			math::vec2f mouse_dir{ io::input_mouse_delta(i) };
-			if (mouse_dir != math::vec2f{})
+			math::Vec2f mouse_dir{ io::input_mouse_delta(i) };
+			if (mouse_dir != math::Vec2f{})
 			{
 				if (i.mouse[(int)io::MOUSE::RIGHT] == true)
 					camera_rotate(*cam, mouse_dir);
@@ -37,7 +37,7 @@ namespace world
 
 		//API
 		void
-		camera_viewport_all_run(ecs::World& w, math::vec2f win_size)
+		camera_viewport_all_run(ecs::World& w, math::Vec2f win_size)
 		{
 			//mark active cam
 			int active_cam_index = 0;

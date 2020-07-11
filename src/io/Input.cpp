@@ -58,10 +58,10 @@ namespace io
 		}
 	}
 
-	math::vec2f
+	math::Vec2f
 	input_mouse_delta(const Input & i)
 	{
-		return math::vec2f{ (float)i.mouse_x - i.pmouse_x, (float)i.pmouse_y - i.mouse_y };
+		return math::Vec2f{ (float)i.mouse_x - i.pmouse_x, (float)i.pmouse_y - i.mouse_y };
 	}
 
 	void

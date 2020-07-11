@@ -44,7 +44,7 @@ namespace rndr
 	struct
 	Camera_Uniform
 	{
-		vec4f world_pos;
+		Vec4f world_pos;
 	};
 
 	struct
@@ -63,7 +63,7 @@ namespace rndr
 
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/src/engine/shaders/phong.vertex", DIR_PATH"/src/engine/shaders/phong.pixel");
-		self->uniform_object_color = buffer_uniform_create(sizeof(vec4f));
+		self->uniform_object_color = buffer_uniform_create(sizeof(Vec4f));
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 		self->uniform_light_count = buffer_uniform_create(sizeof(Lights_Count_Uniform));
 		self->uniform_suns = buffer_uniform_create(MAX_NUMBER_LIGHT_TYPE * sizeof(world::Sun));
@@ -108,7 +108,7 @@ namespace rndr
 		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
 
-		math::vec2f viewport = camera_viewport(*camera);
+		math::Vec2f viewport = camera_viewport(*camera);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 		//lights setting
@@ -133,7 +133,7 @@ namespace rndr
 		Space_Uniform mvp{model_mat, view_proj, model_mat };
 
 		//non uniform scaling
-		if (model->scale != vec3f{ model->scale[0],model->scale[0], model->scale[0] })
+		if (model->scale != Vec3f{ model->scale[0],model->scale[0], model->scale[0] })
 			mvp.nomral_mat = mat4_transpose(mat4_inverse(model_mat));
 			
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));

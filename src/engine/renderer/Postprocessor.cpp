@@ -33,7 +33,7 @@ namespace rndr
         self->palette_vbo = buffer_vertex_create();
 		self->uvp = buffer_uniform_create(sizeof(math::Mat4f));
         self->fb = framebuffer_create();
-        self->out = texture2d_create(math::vec2f{1,1}, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
+        self->out = texture2d_create(math::Vec2f{1,1}, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
 
         //palette quad
 		vao_attach(self->palette_vao, self->palette_vbo);
@@ -77,7 +77,7 @@ namespace rndr
     }
 
 	glgpu::Texture
-    postprocessor_run(Postprocessor self, math::vec2f viewport)
+    postprocessor_run(Postprocessor self, math::Vec2f viewport)
     {
         view_port(0,0, viewport[0], viewport[1]);
         if(viewport != texture2d_size(self->out))

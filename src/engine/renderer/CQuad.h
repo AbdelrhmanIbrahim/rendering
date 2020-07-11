@@ -17,7 +17,7 @@ namespace rndr
 	cquad_free(CQuad self);
 
 	void
-	cquad_set(CQuad self, math::Mat4f& view_proj, math::vec2f& viewport);
+	cquad_set(CQuad self, math::Mat4f& view_proj, math::Vec2f& viewport);
 
 	void
 	cquad_draw(CQuad self, const world::CVertex quad_strip[6]);

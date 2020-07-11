@@ -34,7 +34,7 @@ namespace rndr
 		//TODO, deploy shaders to bin when moving to cmake or create a res obj (revisit)
 		self->prog = program_create(DIR_PATH"/src/engine/shaders/colored.vertex", DIR_PATH"/src/engine/shaders/colored.pixel");
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
-		self->uniform_object_color = buffer_uniform_create(sizeof(vec4f));
+		self->uniform_object_color = buffer_uniform_create(sizeof(Vec4f));
 		return self;
 	}
 
@@ -49,7 +49,7 @@ namespace rndr
 	}
 
 	void
-	colored_set(Colored self, math::vec2f viewport)
+	colored_set(Colored self, math::Vec2f viewport)
 	{
 		program_use(self->prog);
 		buffer_uniform_bind(0, self->uniform_space);
@@ -58,7 +58,7 @@ namespace rndr
 	}
 
 	void
-	colored_draw(const Colored self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::vec4f& col)
+	colored_draw(const Colored self, const math::Mat4f& view_proj, const world::Mesh* mesh, const world::Transform* model, const math::Vec4f& col)
 	{
 		//uniform blocks
 		Space_Uniform mvp{ view_proj * mat4_from_transform(*model) };

@@ -2,7 +2,7 @@
 
 namespace math
 {
-	struct vec2f
+	struct Vec2f
 	{
 		float data[2];
 
@@ -18,14 +18,14 @@ namespace math
 			return data[index];
 		}
 
-		inline vec2f
+		inline Vec2f
 		operator*(float factor) const
 		{
-			return vec2f{ data[0] * factor, data[1] * factor};
+			return Vec2f{ data[0] * factor, data[1] * factor};
 		}
 	};
 
-	struct vec3f
+	struct Vec3f
 	{
 		float data[3];
 
@@ -41,32 +41,32 @@ namespace math
 			return data[index];
 		}
 
-		inline vec3f
-		operator+(const vec3f& other) const
+		inline Vec3f
+		operator+(const Vec3f& other) const
 		{
-			return vec3f{ data[0] + other.data[0], data[1] + other.data[1], data[2] + other.data[2] };
+			return Vec3f{ data[0] + other.data[0], data[1] + other.data[1], data[2] + other.data[2] };
 		}
 
-		inline vec3f
-		operator-(const vec3f& other) const
+		inline Vec3f
+		operator-(const Vec3f& other) const
 		{
-			return vec3f{ data[0] - other.data[0], data[1] - other.data[1], data[2] - other.data[2] };
+			return Vec3f{ data[0] - other.data[0], data[1] - other.data[1], data[2] - other.data[2] };
 		}
 
-		inline vec3f
+		inline Vec3f
 		operator-() const
 		{
-			return vec3f{ -data[0], -data[1], -data[2]};
+			return Vec3f{ -data[0], -data[1], -data[2]};
 		}
 
-		inline vec3f
-		operator*(const vec3f& other) const
+		inline Vec3f
+		operator*(const Vec3f& other) const
 		{
-			return vec3f{ other.data[0]*data[0], other.data[1]*data[1], other.data[2]*data[2] };
+			return Vec3f{ other.data[0]*data[0], other.data[1]*data[1], other.data[2]*data[2] };
 		}
 
-		inline vec3f&
-		operator-=(const vec3f& vec)
+		inline Vec3f&
+		operator-=(const Vec3f& vec)
 		{
 			data[0] -= vec[0];
 			data[1] -= vec[1];
@@ -74,8 +74,8 @@ namespace math
 			return *this;
 		}
 
-		inline vec3f&
-		operator+=(const vec3f& vec)
+		inline Vec3f&
+		operator+=(const Vec3f& vec)
 		{
 			data[0] += vec[0];
 			data[1] += vec[1];
@@ -83,19 +83,19 @@ namespace math
 			return *this;
 		}
 
-		inline vec3f
+		inline Vec3f
 		operator*(const float factor) const
 		{
-			return vec3f{ factor*data[0], factor*data[1], factor*data[2] };
+			return Vec3f{ factor*data[0], factor*data[1], factor*data[2] };
 		}
 
-		inline vec3f
+		inline Vec3f
 		operator/(const float factor) const
 		{
-			return vec3f{ data[0]/factor, data[1]/factor, data[2]/factor };
+			return Vec3f{ data[0]/factor, data[1]/factor, data[2]/factor };
 		}
 
-		inline vec3f&
+		inline Vec3f&
 		operator*=(const float factor)
 		{
 			data[0] *= factor;
@@ -104,7 +104,7 @@ namespace math
 			return *this;
 		}
 
-		inline vec3f&
+		inline Vec3f&
 		operator+=(const float factor)
 		{
 			data[0] += factor;
@@ -114,7 +114,7 @@ namespace math
 		}
 	};
 
-	struct vec4f
+	struct Vec4f
 	{
 		float data[4];
 
@@ -130,43 +130,43 @@ namespace math
 			return data[index];
 		}
 
-		inline vec4f
-		operator+(const vec4f& other) const
+		inline Vec4f
+		operator+(const Vec4f& other) const
 		{
-			return vec4f{ data[0] + other.data[0], data[1] + other.data[1], data[2] + other.data[2], data[3] + other.data[3] };
+			return Vec4f{ data[0] + other.data[0], data[1] + other.data[1], data[2] + other.data[2], data[3] + other.data[3] };
 		}
 
-		inline vec4f
-		operator-(const vec4f& other) const
+		inline Vec4f
+		operator-(const Vec4f& other) const
 		{
-			return vec4f{ data[0] - other.data[0], data[1] - other.data[1], data[2] - other.data[2], data[3] - other.data[3] };
+			return Vec4f{ data[0] - other.data[0], data[1] - other.data[1], data[2] - other.data[2], data[3] - other.data[3] };
 		}
 
-		inline vec4f
+		inline Vec4f
 		operator-() const
 		{
-			return vec4f{ -data[0], -data[1], -data[2], -data[3] };
+			return Vec4f{ -data[0], -data[1], -data[2], -data[3] };
 		}
 
-		inline vec4f
-		operator*(const vec4f& other) const
+		inline Vec4f
+		operator*(const Vec4f& other) const
 		{
-			return vec4f{ data[0] * other.data[0], data[1] * other.data[1], data[2] * other.data[2], data[3] * other.data[3] };
+			return Vec4f{ data[0] * other.data[0], data[1] * other.data[1], data[2] * other.data[2], data[3] * other.data[3] };
 		}
 
-		inline vec4f
+		inline Vec4f
 		operator*(const float factor) const
 		{
-			return vec4f{ factor*data[0], factor*data[1], factor*data[2], factor*data[3] };
+			return Vec4f{ factor*data[0], factor*data[1], factor*data[2], factor*data[3] };
 		}
 
-		inline vec4f
+		inline Vec4f
 		operator/(const float factor) const
 		{
-			return vec4f{ data[0] / factor, data[1] / factor, data[2] / factor, data[3]/factor };
+			return Vec4f{ data[0] / factor, data[1] / factor, data[2] / factor, data[3]/factor };
 		}
 
-		inline vec4f&
+		inline Vec4f&
 		operator*=(const float factor)
 		{
 			data[0] *= factor;
@@ -176,7 +176,7 @@ namespace math
 			return *this;
 		}
 
-		inline vec4f&
+		inline Vec4f&
 		operator+=(const float factor)
 		{
 			data[0] += factor;
@@ -189,60 +189,60 @@ namespace math
 
 	//lhs
 	inline bool
-	operator==(const vec2f& first, const vec2f& second)
+	operator==(const Vec2f& first, const Vec2f& second)
 	{
 		return first.data[0] == second.data[0] && first.data[1] == second.data[1];
 	}
 
 	inline bool
-	operator!=(const vec2f& first, const vec2f& second)
+	operator!=(const Vec2f& first, const Vec2f& second)
 	{
 		return first.data[0] != second.data[0] || first.data[1] != second.data[1];
 	}
 
 	inline bool
-	operator==(const vec3f& first, const vec3f& second)
+	operator==(const Vec3f& first, const Vec3f& second)
 	{
 		return first.data[0] == second.data[0] && first.data[1] == second.data[1] && first.data[2] == second.data[2];
 	}
 
 	inline bool
-	operator!=(const vec3f& first, const vec3f& second)
+	operator!=(const Vec3f& first, const Vec3f& second)
 	{
 		return first.data[0] != second.data[0] || first.data[1] != second.data[1] || first.data[2] != second.data[2];
 	}
 
 	inline bool
-	operator==(const vec4f& first, const vec4f& second)
+	operator==(const Vec4f& first, const Vec4f& second)
 	{
 		return first.data[0] == second.data[0] && first.data[1] == second.data[1] && first.data[2] == second.data[2] && first.data[3] == second.data[3];
 	}
 
 	inline bool
-	operator!=(const vec4f& first, const vec4f& second)
+	operator!=(const Vec4f& first, const Vec4f& second)
 	{
 		return first.data[0] != second.data[0] || first.data[1] != second.data[1] || first.data[2] != second.data[2] || first.data[3] != second.data[3];
 	}
 
-	inline vec2f
-	operator*(float factor, const vec2f& vec)
+	inline Vec2f
+	operator*(float factor, const Vec2f& vec)
 	{
 		return vec * factor;
 	}
 
-	inline vec3f
-	operator*(float factor, const vec3f& vec)
+	inline Vec3f
+	operator*(float factor, const Vec3f& vec)
 	{
 		return vec * factor;
 	}
 
-	inline vec4f
-	operator*(float factor, const vec4f& vec)
+	inline Vec4f
+	operator*(float factor, const Vec4f& vec)
 	{
 		return vec * factor;
 	}
 
-	constexpr vec3f X_AXIS = vec3f{ 1.0f, 0.0f, 0.0f };
-	constexpr vec3f Y_AXIS = vec3f{ 0.0f, 1.0f, 0.0f };
-	constexpr vec3f Z_AXIS = vec3f{ 0.0f, 0.0f, 1.0f };
+	constexpr Vec3f X_AXIS = Vec3f{ 1.0f, 0.0f, 0.0f };
+	constexpr Vec3f Y_AXIS = Vec3f{ 0.0f, 1.0f, 0.0f };
+	constexpr Vec3f Z_AXIS = Vec3f{ 0.0f, 0.0f, 1.0f };
 }

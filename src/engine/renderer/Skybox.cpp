@@ -126,7 +126,7 @@ namespace rndr
 
 		//load skybox hdr
 		Image img = image_read(skybox_hdr_path, IMAGE_FORMAT::HDR);
-		self->cubemap = cubemap_hdr_create(img, vec2f{800, 800}, false);
+		self->cubemap = cubemap_hdr_create(img, Vec2f{800, 800}, false);
 		self->sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 		self->uniform_space = buffer_uniform_create(sizeof(Space_Uniform));
 
@@ -161,7 +161,7 @@ namespace rndr
 			buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
 
 			//viewport
-			vec2f viewport = camera_viewport(*cam);
+			Vec2f viewport = camera_viewport(*cam);
 			view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 			//cubemap, till we get sampler objects in

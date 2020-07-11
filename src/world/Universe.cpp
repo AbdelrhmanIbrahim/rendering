@@ -48,11 +48,11 @@ namespace world
 
 			auto handle_t = world_component_add<world::Transform>(w, e);
 			auto data_t = world_handle_component<world::Transform>(w, handle_t);
-			*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ 0, 0, -6} };
+			*data_t = world::Transform{ 0.0, math::Y_AXIS, math::Vec3f{ 1,1,1 }, math::Vec3f{ 0, 0, -6} };
 
 			auto handle_c = world_component_add<world::Material>(w, e);
 			auto data_c = world_handle_component<world::Material>(w, handle_t);
-			*data_c = world::Material{ math::vec4f{ 0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
+			*data_c = world::Material{ math::Vec4f{ 0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
 		}
 
 		//sphere 2
@@ -64,11 +64,11 @@ namespace world
 
 			auto handle_t = world_component_add<world::Transform>(w, e);
 			auto data_t = world_handle_component<world::Transform>(w, handle_t);
-			*data_t = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 1,1,1 }, math::vec3f{ 1, 0, 2 } };
+			*data_t = world::Transform{ 0.0, math::Y_AXIS, math::Vec3f{ 1,1,1 }, math::Vec3f{ 1, 0, 2 } };
 
 			auto handle_c = world_component_add<world::Material>(w, e);
 			auto data_c = world_handle_component<world::Material>(w, handle_t);
-			*data_c = world::Material{ math::vec4f{  0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
+			*data_c = world::Material{ math::Vec4f{  0.75, 0.75, 0.75, 1.0f  }, 0.9, 0.2 };
 		}
 
 		//lights
@@ -128,21 +128,21 @@ namespace world
 		{
 			auto handle = world_component_add<world::Transform>(u.world, stl);
 			auto data = world_handle_component<world::Transform>(u.world, handle);
-			*data = world::Transform{ 0.0, math::Y_AXIS, math::vec3f{ 0.5, 0.5, 0.5 }, math::vec3f{0, 0, 0} };
+			*data = world::Transform{ 0.0, math::Y_AXIS, math::Vec3f{ 0.5, 0.5, 0.5 }, math::Vec3f{0, 0, 0} };
 		}
 
 		//add material component
 		{
 			auto handle = world_component_add<world::Material>(u.world, stl);
 			auto data = world_handle_component<world::Material>(u.world, handle);
-			*data = world::Material{ math::vec4f{ 0, 1, 0, 1  }, 0.9, 0.2 };
+			*data = world::Material{ math::Vec4f{ 0, 1, 0, 1  }, 0.9, 0.2 };
 		}
 
 		return true;
 	}
 
 	void
-	universe_update_sys_run(Universe& u, math::vec2f win_size, const io::Input& i)
+	universe_update_sys_run(Universe& u, math::Vec2f win_size, const io::Input& i)
 	{
 		world::system::camera_viewport_all_run(u.world, win_size);
 		world::system::camera_input_all_run(u.world, i);

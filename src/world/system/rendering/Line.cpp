@@ -22,25 +22,25 @@ namespace world
 			lines.reserve(4 * length + 6);
 			for (float x = -length/2; x <= length/2; ++x)
 			{
-				lines.emplace_back(CVertex{ math::vec3f{x, 0, -length / 2}, math::vec4f{1,1,0,1} });
-				lines.emplace_back(CVertex{ math::vec3f{x, 0, length / 2}, math::vec4f{1,1,0,1} });
+				lines.emplace_back(CVertex{ math::Vec3f{x, 0, -length / 2}, math::Vec4f{1,1,0,1} });
+				lines.emplace_back(CVertex{ math::Vec3f{x, 0, length / 2}, math::Vec4f{1,1,0,1} });
 			}
 
 			for (float z = -length/2; z <= length/2; ++z)
 			{
-				lines.emplace_back(CVertex{ math::vec3f{-length / 2, 0, z}, math::vec4f{1,1,0,1} });
-				lines.emplace_back(CVertex{ math::vec3f{length / 2, 0, z}, math::vec4f{1,1,0,1} });
+				lines.emplace_back(CVertex{ math::Vec3f{-length / 2, 0, z}, math::Vec4f{1,1,0,1} });
+				lines.emplace_back(CVertex{ math::Vec3f{length / 2, 0, z}, math::Vec4f{1,1,0,1} });
 			}
 
 			//world ref axes
-			lines.emplace_back(CVertex{ math::vec3f{0, 0.01, 0}, math::vec4f{1,0,0,1} });
-			lines.emplace_back(CVertex{ math::vec3f{1, 0, 0}, math::vec4f{1,0,0,1} });
+			lines.emplace_back(CVertex{ math::Vec3f{0, 0.01, 0}, math::Vec4f{1,0,0,1} });
+			lines.emplace_back(CVertex{ math::Vec3f{1, 0, 0}, math::Vec4f{1,0,0,1} });
 
-			lines.emplace_back(CVertex{ math::vec3f{0, 0.01, 0}, math::vec4f{0,1,0,1} });
-			lines.emplace_back(CVertex{ math::vec3f{0, 1, 0}, math::vec4f{0,1,0,1} });
+			lines.emplace_back(CVertex{ math::Vec3f{0, 0.01, 0}, math::Vec4f{0,1,0,1} });
+			lines.emplace_back(CVertex{ math::Vec3f{0, 1, 0}, math::Vec4f{0,1,0,1} });
 
-			lines.emplace_back(CVertex{ math::vec3f{0, 0.01, 0}, math::vec4f{0,0,1,1} });
-			lines.emplace_back(CVertex{ math::vec3f{0, 0, 1}, math::vec4f{0,0,1,1} });
+			lines.emplace_back(CVertex{ math::Vec3f{0, 0.01, 0}, math::Vec4f{0,0,1,1} });
+			lines.emplace_back(CVertex{ math::Vec3f{0, 0, 1}, math::Vec4f{0,0,1,1} });
 		}
 
 		void

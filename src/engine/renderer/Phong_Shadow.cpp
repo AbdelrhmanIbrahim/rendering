@@ -34,7 +34,7 @@
 //		self->depth_prog = program_create(DIR_PATH"/src/engine/shaders/depth.vertex", DIR_PATH"/src/engine/shaders/depth.pixel");
 //		self->phong_shadow_prog = program_create(DIR_PATH"/src/engine/shaders/phong_shadow.vertex", DIR_PATH"/src/engine/shaders/phong_shadow.pixel");
 //		self->fb = framebuffer_create();
-//		self->depth = texture2d_create(vec2f{ SHADOW_WIDTH, SHADOW_HEIGHT}, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8, false);
+//		self->depth = texture2d_create(Vec2f{ SHADOW_WIDTH, SHADOW_HEIGHT}, INTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, EXTERNAL_TEXTURE_FORMAT::DEPTH_STENCIL, DATA_TYPE::UINT_24_8, false);
 //
 //		return self;
 //	}
@@ -63,7 +63,7 @@
 //	}
 //
 //	void
-//	phong_shadow_draw(const Phong_Shadow self, const vec3f& light_pos, const world::Camera& viewer)
+//	phong_shadow_draw(const Phong_Shadow self, const Vec3f& light_pos, const world::Camera& viewer)
 //	{
 //		//calc shadow map (depth buffer from light prespective) -- for now we render to color framebuffer color attachment as depth attachment does not work right (TODO)
 //		{
@@ -112,12 +112,12 @@
 //			//program_use(mr.phong_shadow_prog);
 //
 //			////viewport
-//			//vec2f viewport = world::camera_viewport(viewer);
+//			//Vec2f viewport = world::camera_viewport(viewer);
 //			//view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 //
 //			////unifroms
-//			//uniform3f_set(mr.phong_shadow_prog, "light_color", vec3f{ 1.0f, 1.0f, 1.0f });
-//			//uniform3f_set(mr.phong_shadow_prog, "light_dir", vec3f{ 0.0f, -1.0f, 0.0f });
+//			//uniform3f_set(mr.phong_shadow_prog, "light_color", Vec3f{ 1.0f, 1.0f, 1.0f });
+//			//uniform3f_set(mr.phong_shadow_prog, "light_dir", Vec3f{ 0.0f, -1.0f, 0.0f });
 //			//uniform3f_set(mr.phong_shadow_prog, "camera_world_pos", viewer.pos);
 //			//
 //			////shadow map
@@ -132,7 +132,7 @@
 //
 //			//	uniformmat4f_set(mr.phong_shadow_prog, "mvp", mvp);
 //			//	uniformmat4f_set(mr.phong_shadow_prog, "model", model);
-//			//	uniform3f_set(mr.phong_shadow_prog, "object_color", vec3f{ 1.0, 0.5, 0.31 });
+//			//	uniform3f_set(mr.phong_shadow_prog, "object_color", Vec3f{ 1.0, 0.5, 0.31 });
 //
 //			//	//draw geometry
 //			//	vao_bind(object->mesh.va, object->mesh.vs, object->mesh.is);

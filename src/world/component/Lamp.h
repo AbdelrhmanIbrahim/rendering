@@ -6,8 +6,8 @@ namespace world
 {
 	struct Lamp
 	{
-		math::vec4f col;
-		math::vec4f pos;
+		math::Vec4f col;
+		math::Vec4f pos;
 		float max;
 
 		//std140 alignment, this should not be here -revisit-

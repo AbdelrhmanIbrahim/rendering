@@ -4,8 +4,6 @@
 
 #include "math/Vector.h"
 
-#include <vector>
-
 namespace rndr
 {
 	typedef struct IPostprocessor* Postprocessor;

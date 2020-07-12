@@ -3,6 +3,7 @@
 #include "defs/Defs.h"
 
 #include "gl/glgpu.h"
+#include "gl/Uniform.h"
 
 using namespace glgpu;
 

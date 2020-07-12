@@ -80,6 +80,7 @@ set(HEADERS
 	src/engine/renderer/Postprocessor.h
 	src/engine/renderer/Outlines3D.h
 	src/gl/glgpu.h
+	src/gl/Uniform.h
 	src/gl/gl_context.h
 	src/gl/glew.h
 	src/gl/wglew.h

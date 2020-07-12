@@ -8,6 +8,7 @@
 
 #include "gl/glgpu.h"
 #include "gl/gl_context.h"
+#include "gl/Uniform.h"
 
 #include "defs/Defs.h"
 

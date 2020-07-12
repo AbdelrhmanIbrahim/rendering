@@ -297,22 +297,23 @@ namespace glgpu
 		return obj;
 	}
 
+	//free
 	void
-	_program_delete(Program prog)
+	_program_free(Program prog)
 	{
 		glDeleteProgram(prog->program.id);
 		delete prog;
 	}
 
 	void
-	_buffer_delete(Buffer buf)
+	_buffer_free(Buffer buf)
 	{
 		glDeleteBuffers(1, &buf->buffer.id);
 		delete buf;
 	}
 
 	void
-	_vao_delete(Vao va)
+	_vao_free(Vao va)
 	{
 		glDeleteVertexArrays(1, &va->vao.id);
 	}
@@ -344,6 +345,13 @@ namespace glgpu
 		glDeleteFramebuffers(1, &fb->framebuffer.id);
 	}
 
+	//bind
+	void
+	_program_use(Program prog)
+	{
+		glUseProgram(prog->program.id);
+	}
+
 	void
 	_vao_bind(Vao va)
 	{
@@ -354,12 +362,6 @@ namespace glgpu
 	_framebuffer_bind(Framebuffer fb)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, fb->framebuffer.id);
-	}
-	
-	void
-	_program_use(Program prog)
-	{
-		glUseProgram(prog->program.id);
 	}
 
 	void
@@ -674,8 +676,8 @@ namespace glgpu
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		glDeleteFramebuffers(1, &fbo);
-		_vao_delete(quad_vao);
-		_buffer_delete(quad_vbo);
+		_vao_free(quad_vao);
+		_buffer_free(quad_vbo);
 	}
 
 	void
@@ -832,9 +834,9 @@ namespace glgpu
 
 		//free
 		glDeleteFramebuffers(1, &fbo);
-		_vao_delete(cube_vao);
-		_buffer_delete(cube_vbo);
-		_program_delete(prog);
+		_vao_free(cube_vao);
+		_buffer_free(cube_vbo);
+		_program_free(prog);
 		_texture_free(hdr);
 		_sampler_free(sampler);
 
@@ -912,8 +914,8 @@ namespace glgpu
 
 		//free
 		glDeleteFramebuffers(1, &fbo);
-		_vao_delete(cube_vao);
-		_buffer_delete(cube_vbo);
+		_vao_free(cube_vao);
+		_buffer_free(cube_vbo);
 		_sampler_free(sampler);
 	}
 
@@ -947,7 +949,7 @@ namespace glgpu
 		switch (handle->kind)
 		{
 			case IGL_Handle::KIND::KIND_BUFFER :
-				_buffer_delete(handle);
+				_buffer_free(handle);
 				break;
 			case IGL_Handle::KIND::KIND_CUBEMAP :
 				_cubemap_free(handle);
@@ -956,7 +958,7 @@ namespace glgpu
 				_framebuffer_free(handle);
 				break;
 			case IGL_Handle::KIND::KIND_PROGRAM :
-				_program_delete(handle);
+				_program_free(handle);
 				break;
 			case IGL_Handle::KIND::KIND_SAMPLER :
 				_sampler_free(handle);
@@ -965,7 +967,7 @@ namespace glgpu
 				_texture_free(handle);
 				break;
 			case IGL_Handle::KIND::KIND_VAO :
-				_vao_delete(handle);
+				_vao_free(handle);
 				break;
 			default:
 				assert(false);

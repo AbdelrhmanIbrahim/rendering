@@ -20,20 +20,6 @@ namespace glgpu
 	typedef struct IGL_Handle* Framebuffer;
 	typedef struct IGL_Handle* Cubemap;
 
-	struct Uniform
-    {
-		unsigned int slot;
-		UNIFORM_TYPE type;
-		union
-		{
-			float f;
-			math::Vec3f vec3;
-			math::Vec4f vec4;
-			math::Mat4f mat4;
-			glgpu::Texture texture;
-		} value;
-    };
-
 	void
 	graphics_init();
 

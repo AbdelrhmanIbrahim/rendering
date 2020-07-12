@@ -172,7 +172,7 @@ namespace rndr
 	void
 	engine_world_draw(Engine e, ecs::World& w, void* win)
 	{
-		//attach current glcontext to palette, make sure that palette handle got the default pixel format first
+		//attach current glcontext to palette, make sure that palette handle got the default pixel format first (refactor that -revisit-)
 		glgpu::context_attach(e->ctx, win);
 
 		//run rendering systems
@@ -180,15 +180,15 @@ namespace rndr
 			//init frame
 			glgpu::frame_start(0.6f, 0.68f, 0.5f);
 
-			//scene
+			//scene rendering pass
 			{
 				_engine_world_mesh_render(e, w);
 				world::system::point_sys_run(e->point, w);
 				world::system::line_sys_run(e->line, w);
-				world::system::bg_img_sys_run(e->tquad, w);
+				world::system::bg_col_sys_run(e->cquad, w);
 			}
 
-			//postprocessing (blur, SSAO, etc..)
+			//postprocessing pass (blur, SSAO, etc..)
 			{
 				glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w);
 			}

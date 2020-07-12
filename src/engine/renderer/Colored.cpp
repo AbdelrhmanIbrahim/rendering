@@ -51,7 +51,7 @@ namespace rndr
 	void
 	colored_set(Colored self, math::Vec2f viewport)
 	{
-		program_use(self->prog);
+		handle_bind(self->prog);
 		buffer_uniform_bind(self->uniform_space, 0);
 		buffer_uniform_bind(self->uniform_object_color, 1);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
@@ -66,7 +66,7 @@ namespace rndr
 		buffer_uniform_set(self->uniform_object_color, (void*)&col, sizeof(col));
 
 		//draw geometry
-		vao_bind(mesh->vao);
+		handle_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();
 	}

@@ -33,13 +33,7 @@ namespace glgpu
 			glgpu::Texture texture;
 		} value;
     };
-    
-    struct Postprocessing_Pass
-    {
-        const char* frag_shader_path;
-        std::vector<glgpu::Uniform> cpu_uniforms;
-    };
-    
+
 	void
 	graphics_init();
 
@@ -48,9 +42,6 @@ namespace glgpu
 
 	Program
 	program_create(const char* vertex_shader_path, const char* geometry_shader_path, const char* pixel_shader_path);
-
-	void
-	program_use(Program prog);
 
 	Buffer
 	buffer_vertex_create();
@@ -83,9 +74,6 @@ namespace glgpu
 	vao_create();
 
 	void
-	vao_bind(Vao vao);
-
-	void
 	vao_unbind();
 
 	void
@@ -113,9 +101,6 @@ namespace glgpu
 	texture2d_render_offline_to(Texture output, Program prog, math::Vec2f view_size);
 
 	void
-	texture2d_bind(Texture texture, unsigned int texture_unit_index);
-
-	void
 	texture2d_unbind();
 
 	void
@@ -123,9 +108,6 @@ namespace glgpu
 
 	Sampler
 	sampler_create(TEXTURE_FILTERING min_filtering, TEXTURE_FILTERING mag_filtering, TEXTURE_SAMPLING sampling);
-
-	void
-	sampler_bind(Sampler self, unsigned int texture_unit);
 
 	Cubemap
 	cubemap_create(math::Vec2f view_size, INTERNAL_TEXTURE_FORMAT texture_format, EXTERNAL_TEXTURE_FORMAT ext_format, DATA_TYPE type, bool mipmap);
@@ -140,14 +122,8 @@ namespace glgpu
 	void
 	cubemap_postprocess(Cubemap input, Cubemap output, Program postprocessor, Unifrom_Float uniform, math::Vec2f view_size, int mipmap_level);
 
-	void
-	cubemap_bind(Cubemap texture, unsigned int texture_unit);
-
 	Framebuffer
 	framebuffer_create();
-
-	void
-	framebuffer_bind(Framebuffer fb);
 
 	void
 	framebuffer_attach(Framebuffer fb, Texture tex, FRAMEBUFFER_ATTACHMENT attachment);
@@ -157,7 +133,10 @@ namespace glgpu
 
 	void
 	handle_free(IGL_Handle* handle);
-	
+
+	void
+	handle_bind(IGL_Handle* handle, unsigned int texture_unit = 0);
+
 	void
 	disable_color_buffer_rw();
 

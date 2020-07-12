@@ -58,7 +58,7 @@ namespace rndr
 	void
 	point_set(Point self, const math::Mat4f& view_proj)
 	{
-		program_use(self->prog);
+		handle_bind(self->prog);
 
 		Space_Uniform mvp{ view_proj };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
@@ -69,7 +69,7 @@ namespace rndr
 	void
 	point_draw(Point self)
 	{
-		vao_bind(self->vao);
+		handle_bind(self->vao);
 		draw_points(self->points.size(), 10);
 		vao_unbind();
 		self->points.clear();

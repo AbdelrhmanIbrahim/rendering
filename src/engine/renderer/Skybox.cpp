@@ -153,7 +153,7 @@ namespace rndr
 	{
 		depth_test(DEPTH_TEST::LE);
 		{
-			program_use(self->prog);
+			handle_bind(self->prog);
 
 			//Uniform blocks
 			buffer_uniform_bind(self->uniform_space, 0);
@@ -165,11 +165,11 @@ namespace rndr
 			view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 
 			//cubemap, till we get sampler objects in
-			cubemap_bind(self->cubemap, 0);
-			sampler_bind(self->sampler, 0);
+			handle_bind(self->cubemap, 0);
+			handle_bind(self->sampler, 0);
 
 			//draw world cube
-			vao_bind(self->cube_vao);
+			handle_bind(self->cube_vao);
 			draw_strips(36);
 			vao_unbind();
 		}

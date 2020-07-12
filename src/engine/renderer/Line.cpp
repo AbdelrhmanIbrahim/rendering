@@ -59,7 +59,7 @@ namespace rndr
 	void
 	line_set(Line self, const math::Mat4f& view_proj)
 	{
-		program_use(self->prog);
+		handle_bind(self->prog);
 
 		Space_Uniform mvp{ view_proj };
 		buffer_uniform_set(self->uniform_space, &mvp, sizeof(mvp));
@@ -70,7 +70,7 @@ namespace rndr
 	void
 	line_draw(Line self)
 	{
-		vao_bind(self->vao);
+		handle_bind(self->vao);
 		draw_lines(self->lines.size(), 5);
 		vao_unbind();
 		self->lines.clear();

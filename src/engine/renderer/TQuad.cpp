@@ -48,11 +48,11 @@ namespace rndr
 	void
 	tquad_set(TQuad self, math::Mat4f& view_proj, math::Vec2f& viewport)
 	{
-		program_use(self->prog);
+		handle_bind(self->prog);
 		buffer_uniform_bind(self->uvp, 0);
 		buffer_uniform_set(self->uvp, &view_proj, sizeof(view_proj));
-		sampler_bind(self->sampler, 1);
-		texture2d_bind(self->bg, 1);
+		handle_bind(self->sampler, 1);
+		handle_bind(self->bg, 1);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
 	}
 
@@ -61,7 +61,7 @@ namespace rndr
 	{
 		//draw geometry
 		buffer_vertex_set(self->quad_vbo, quad_strip, 6 * sizeof(world::TVertex), STORAGE::DYNAMIC);
-		vao_bind(self->quad_vao);
+		handle_bind(self->quad_vao);
 		draw_strips(6);
 		vao_unbind();
 	}

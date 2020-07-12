@@ -97,8 +97,8 @@ namespace rndr
             }
             case UNIFORM_TYPE::TEXTURE2D:
             {
-            	sampler_bind(cgpu_uniform.ugpu, cgpu_uniform.ucpu.slot);
-		        texture2d_bind(cgpu_uniform.ucpu.value.texture, cgpu_uniform.ucpu.slot);
+                handle_bind(cgpu_uniform.ugpu, cgpu_uniform.ucpu.slot);
+                handle_bind(cgpu_uniform.ucpu.value.texture, cgpu_uniform.ucpu.slot);
                 break;
             }
             default:
@@ -170,7 +170,7 @@ namespace rndr
         if(viewport != texture2d_size(self->out))
             texture2d_resize(self->out, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
 
-        framebuffer_bind(self->fb);
+        handle_bind(self->fb);
         framebuffer_attach(self->fb, self->out, FRAMEBUFFER_ATTACHMENT::COLOR0);
 		{
             //run all your passes here
@@ -178,7 +178,7 @@ namespace rndr
             {
                 //prepare postprocessor
                 {
-                    program_use(pass.prog);
+                    handle_bind(pass.prog);
                     for(const auto& uniform : pass.gpu_uniforms)
                         _bind_gpu_uniform(uniform);
                 }
@@ -188,7 +188,7 @@ namespace rndr
                     color_clear(1, 1, 1, 1);
                     depth_clear();
                     depth_test(DEPTH_TEST::LE);
-                    vao_bind(self->palette_vao);
+                    handle_bind(self->palette_vao);
                     draw_strips(6);
                     vao_unbind();
                 }

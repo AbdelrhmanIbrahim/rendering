@@ -6,6 +6,8 @@
 #include "math/Matrix.h"
 #include "math/Gfx.h"
 
+#include "defs/Defs.h"
+
 #include <assert.h>
 #include <fstream>
 #include <string>
@@ -16,69 +18,6 @@ using namespace world;
 
 namespace glgpu
 {
-	//unit cube can be used in some algorithms like equirectangle mapping, irradiance map, etc..
-	constexpr static TVertex unit_cube[36] =
-	{
-		//back
-		TVertex{-1.0f, -1.0f, -1.0f},
-		TVertex{1.0f, 1.0f, -1.0f},
-		TVertex{1.0f, -1.0f, -1.0f},
-		TVertex{1.0f, 1.0f, -1.0f},
-		TVertex{-1.0f, -1.0f, -1.0f},
-		TVertex{-1.0f, 1.0f, -1.0},
-
-		//front
-		TVertex{-1.0f, -1.0f, 1.0},
-		TVertex{1.0f, -1.0f, 1.0f},
-		TVertex{1.0f, 1.0f, 1.0f,},
-		TVertex{1.0f, 1.0f, 1.0f,},
-		TVertex{-1.0f, 1.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, 1.0},
-
-		//left
-		TVertex{-1.0f, 1.0f, 1.0f},
-		TVertex{-1.0f, 1.0f, -1.0f},
-		TVertex{-1.0f, -1.0f, -1.0f},
-		TVertex{-1.0f, -1.0f, -1.0f},
-		TVertex{-1.0f, -1.0f, 1.0},
-		TVertex{-1.0f, 1.0f, 1.0f},
-
-		//right
-		TVertex{1.0f, 1.0f, 1.0f,},
-		TVertex{1.0f, -1.0f, -1.0},
-		TVertex{1.0f, 1.0f, -1.0f},
-		TVertex{1.0f, -1.0f, -1.0f},
-		TVertex{1.0f, 1.0f, 1.0f,},
-		TVertex{1.0f, -1.0f, 1.0f},
-
-		//bottom
-		TVertex{-1.0f, -1.0f, -1.0f},
-		TVertex{1.0f, -1.0f, -1.0f},
-		TVertex{1.0f, -1.0f, 1.0f},
-		TVertex{1.0f, -1.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, -1.0f},
-
-		//top
-		TVertex{-1.0f, 1.0f, -1.0f},
-		TVertex{1.0f, 1.0f, 1.0f,},
-		TVertex{1.0f, 1.0f, -1.0f},
-		TVertex{1.0f, 1.0f, 1.0f,},
-		TVertex{-1.0f, 1.0f, -1.0f},
-		TVertex{-1.0f, 1.0f, 1.0f}
-	};
-
-	constexpr static TVertex quad_ndc[6] =
-	{
-		TVertex{-1.0f,  1.0f, 0.0f,  Vec3f{0,0,1}, 0.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, 0.0f,  Vec3f{0,0,1}, 0.0f, 0.0f},
-		TVertex{ 1.0f,  1.0f, 0.0f,  Vec3f{0,0,1}, 1.0f, 1.0f},
-
-		TVertex{ 1.0f,  1.0f, 0.0f,  Vec3f{0,0,1}, 1.0f, 1.0f},
-		TVertex{-1.0f, -1.0f, 0.0f,  Vec3f{0,0,1}, 0.0f, 0.0f},
-		TVertex{ 1.0f, -1.0f, 0.0f,  Vec3f{0,0,1}, 1.0f, 0.0f}
-	};
-
 	struct IGL_Handle
 	{
 		enum KIND
@@ -146,21 +85,7 @@ namespace glgpu
 		};
 	};
 
-	void
-	graphics_init()
-	{
-		GLenum gl_ok = glewInit();
-		assert(gl_ok == GLEW_OK);
-	}
-
-	enum class SHADER_STAGE
-	{
-		VERTEX,
-		GEOMETRY,
-		PIXEL
-	};
-
-	//do we really need all this function name mangling to avoid a longer function name? nah (TODO)
+	//Internal
 	GLenum
 	_map(DEPTH_TEST test)
 	{
@@ -419,6 +344,52 @@ namespace glgpu
 		glDeleteFramebuffers(1, &fb->framebuffer.id);
 	}
 
+	void
+	_vao_bind(Vao va)
+	{
+		glBindVertexArray(va->vao.id);
+	}
+
+	void
+	_framebuffer_bind(Framebuffer fb)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, fb->framebuffer.id);
+	}
+	
+	void
+	_program_use(Program prog)
+	{
+		glUseProgram(prog->program.id);
+	}
+
+	void
+	_texture2d_bind(Texture texture, unsigned int texture_unit)
+	{
+		glActiveTexture(GL_TEXTURE0 + texture_unit);
+		glBindTexture(GL_TEXTURE_2D, (GLuint)texture->texture.id);
+	}
+
+	void
+	_sampler_bind(Sampler self, unsigned int texture_unit)
+	{
+		glBindSampler(texture_unit, self->sampler.id);
+	}
+
+	void
+	_cubemap_bind(Cubemap cmap, unsigned int texture_unit)
+	{
+		glActiveTexture(GL_TEXTURE0 + texture_unit);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap->cubemap.id);
+	}
+
+	//API
+	void
+	graphics_init()
+	{
+		GLenum gl_ok = glewInit();
+		assert(gl_ok == GLEW_OK);
+	}
+
 	Program
 	program_create(const char* vertex_shader_path, const char* pixel_shader_path)
 	{
@@ -456,12 +427,6 @@ namespace glgpu
 		glDeleteShader(pobj);
 		error();
 		return handle;
-	}
-
-	void
-	program_use(Program prog)
-	{
-		glUseProgram(prog->program.id);
 	}
 
 	Buffer
@@ -555,12 +520,6 @@ namespace glgpu
 	}
 
 	void
-	vao_bind(Vao va)
-	{
-		glBindVertexArray(va->vao.id);
-	}
-
-	void
 	vao_unbind()
 	{
 		glBindVertexArray(NULL);
@@ -569,14 +528,14 @@ namespace glgpu
 	void
 	vao_attach(Vao vao, Buffer vbo)
 	{
-		vao_bind(vao);
+		_vao_bind(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 	}
 
 	void
 	vao_attach(Vao vao, Buffer vbo, Buffer ibo)
 	{
-		vao_bind(vao);
+		_vao_bind(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer.id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->buffer.id);
 	}
@@ -695,7 +654,7 @@ namespace glgpu
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, (GLuint)output->texture.id, 0);
 
 		//setup
-		program_use(prog);
+		_program_use(prog);
 		glViewport(0, 0, view_size[0], view_size[1]);
 
 		//render to output attached texture
@@ -709,7 +668,7 @@ namespace glgpu
 		vao_unbind();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		vao_bind(quad_vao);
+		_vao_bind(quad_vao);
 		draw_strips(6);
 		vao_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -717,13 +676,6 @@ namespace glgpu
 		glDeleteFramebuffers(1, &fbo);
 		_vao_delete(quad_vao);
 		_buffer_delete(quad_vbo);
-	}
-
-	void
-	texture2d_bind(Texture texture, unsigned int texture_unit_index)
-	{
-		glActiveTexture(GL_TEXTURE0 + texture_unit_index);
-		glBindTexture(GL_TEXTURE_2D, (GLuint)texture->texture.id);
 	}
 
 	void
@@ -735,7 +687,7 @@ namespace glgpu
 	void
 	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type)
 	{
-		texture2d_bind(texture, 0);
+		handle_bind(texture, 0);
 		glGetTexImage(GL_TEXTURE_2D, 0, texture->texture.pixel_format, texture->texture.type, image.data);
 	}
 
@@ -759,12 +711,6 @@ namespace glgpu
 		glSamplerParameteri(*id, GL_TEXTURE_WRAP_R, handle->sampler.sampling);
 
 		return handle;
-	}
-
-	void
-	sampler_bind(Sampler self, unsigned int texture_unit)
-	{
-		glBindSampler(texture_unit, self->sampler.id);
 	}
 
 	Cubemap
@@ -847,9 +793,9 @@ namespace glgpu
 
 		//setup
 		Program prog = program_create(DIR_PATH"/src/engine/shaders/cube.vertex", DIR_PATH"/src/engine/shaders/equarectangular_to_cubemap.pixel");
-		program_use(prog);
-		texture2d_bind(hdr, 0);
-		sampler_bind(sampler, 0);
+		_program_use(prog);
+		handle_bind(hdr, 0);
+		handle_bind(sampler, 0);
 		error();
 
 		//render offline to the output cubemap texs
@@ -869,7 +815,7 @@ namespace glgpu
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cube_map->cubemap.id, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(prog, "vp", proj * views[i]);
-			vao_bind(cube_vao);
+			_vao_bind(cube_vao);
 			draw_strips(36);
 			vao_unbind();
 		}
@@ -919,9 +865,9 @@ namespace glgpu
 
 		//convolute
 		Sampler sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
-		program_use(postprocessor);
-		cubemap_bind(input, 0);
-		sampler_bind(sampler, 0);
+		_program_use(postprocessor);
+		handle_bind(input, 0);
+		handle_bind(sampler, 0);
 
 		//assign float uniforms (move to arrays)
 		uniform1f_set(postprocessor, uniform.uniform, uniform.value);
@@ -947,7 +893,7 @@ namespace glgpu
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, output->cubemap.id, mipmap_level);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
-			vao_bind(cube_vao);
+			_vao_bind(cube_vao);
 			draw_strips(36);
 			vao_unbind();
 
@@ -971,13 +917,6 @@ namespace glgpu
 		_sampler_free(sampler);
 	}
 
-	void
-	cubemap_bind(Cubemap cmap, unsigned int texture_unit_index)
-	{
-		glActiveTexture(GL_TEXTURE0 + texture_unit_index);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap->cubemap.id);
-	}
-
 	Framebuffer
 	framebuffer_create()
 	{
@@ -986,12 +925,6 @@ namespace glgpu
 		glGenFramebuffers(1, &self->framebuffer.id);
 
 		return self;
-	}
-
-	void
-	framebuffer_bind(Framebuffer fb)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, fb->framebuffer.id);
 	}
 
 	void
@@ -1035,6 +968,36 @@ namespace glgpu
 				_vao_delete(handle);
 				break;
 			default:
+				assert(false);
+				break;
+		}
+	}
+
+	void
+	handle_bind(IGL_Handle* handle, unsigned int texture_unit /* = 0*/)
+	{
+		switch (handle->kind)
+		{
+			case IGL_Handle::KIND::KIND_VAO :
+				_vao_bind(handle);
+				break;
+			case IGL_Handle::KIND::KIND_FRAMEBUFFER :
+				_framebuffer_bind(handle);
+				break;
+			case IGL_Handle::KIND::KIND_PROGRAM :
+				_program_use(handle);
+				break;
+			case IGL_Handle::KIND::KIND_CUBEMAP :
+				_cubemap_bind(handle, texture_unit);
+				break;
+			case IGL_Handle::KIND::KIND_SAMPLER :
+				_sampler_bind(handle, texture_unit);
+				break;
+			case IGL_Handle::KIND::KIND_TEXTURE :
+				_texture2d_bind(handle, texture_unit);
+				break;
+			default:
+				//buffer
 				assert(false);
 				break;
 		}

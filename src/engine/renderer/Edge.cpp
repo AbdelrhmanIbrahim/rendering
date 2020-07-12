@@ -53,7 +53,7 @@ namespace rndr
 	void
 	edge_set(Edge self, math::Vec2f viewport)
 	{
-		program_use(self->prog);
+		handle_bind(self->prog);
 		buffer_uniform_bind(self->uniform_space, 0);
 		buffer_uniform_bind(self->uniform_edge_color, 2);
 		view_port(0, 0, (int)viewport[0], (int)viewport[1]);
@@ -69,7 +69,7 @@ namespace rndr
 
 		//draw geometry
 		poly_edges_enable();
-		vao_bind(mesh->vao);
+		handle_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();
 		poly_edges_disable();

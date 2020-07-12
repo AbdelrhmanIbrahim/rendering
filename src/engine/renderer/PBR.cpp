@@ -174,7 +174,7 @@ namespace rndr
 		infra::mem::chunk<world::Lamp> lamps,
 		infra::mem::chunk<world::Flash> flashes)
 	{
-		program_use(self->prog);
+		handle_bind(self->prog);
 
 		buffer_uniform_bind(self->uniform_space, 0);
 		buffer_uniform_bind(self->uniform_camera, 1);
@@ -184,12 +184,12 @@ namespace rndr
 		buffer_uniform_bind(self->uniform_lamps, 5);
 		buffer_uniform_bind(self->uniform_flashes, 6);
 
-		cubemap_bind(self->diffuse_irradiance_map, 0);
-		sampler_bind(self->sampler_diffuse, 0);
-		cubemap_bind(self->specular_prefiltered_map, 1);
-		sampler_bind(self->sampler_specular_prefiltering, 1);
-		texture2d_bind(self->specular_BRDF_LUT, 2);
-		sampler_bind(self->sampler_specular_BRDF, 2);
+		handle_bind(self->diffuse_irradiance_map, 0);
+		handle_bind(self->sampler_diffuse, 0);
+		handle_bind(self->specular_prefiltered_map, 1);
+		handle_bind(self->sampler_specular_prefiltering, 1);
+		handle_bind(self->specular_BRDF_LUT, 2);
+		handle_bind(self->sampler_specular_BRDF, 2);
 
 		Camera_Uniform cam{ camera->pos[0], camera->pos[1], camera->pos[2], 0.0f };
 		buffer_uniform_set(self->uniform_camera, &cam, sizeof(cam));
@@ -224,7 +224,7 @@ namespace rndr
 		buffer_uniform_set(self->uniform_material, &mat, sizeof(mat));
 
 		//draw geometry
-		vao_bind(mesh->vao);
+		handle_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
 		vao_unbind();
 	}

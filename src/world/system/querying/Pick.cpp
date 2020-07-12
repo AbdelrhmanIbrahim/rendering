@@ -70,7 +70,7 @@ namespace world
 			}
 
 			//bind fb to render colored with entity ids into
-			framebuffer_bind(sys->fb);
+			handle_bind(sys->fb);
 			framebuffer_attach(sys->fb, sys->tex, FRAMEBUFFER_ATTACHMENT::COLOR0);
 			{
 				frame_start(1, 1, 1);

@@ -104,6 +104,13 @@ enum class UNIFORM_TYPE
 	TEXTURE2D
 };
 
+enum class SHADER_STAGE
+{
+	VERTEX,
+	GEOMETRY,
+	PIXEL
+};
+
 //remove later
 struct Unifrom_Float
 {
@@ -142,4 +149,67 @@ constexpr static world::TVertex tfr_quad[6]
 {
 	fttl, ftbl, ftbr,
 	fttl, ftbr, fttr
+};
+
+//unit cube can be used in some algorithms like equirectangle mapping, irradiance map, etc..
+constexpr static world::TVertex unit_cube[36] =
+{
+	//back
+	world::TVertex{-1.0f, -1.0f, -1.0f},
+	world::TVertex{1.0f, 1.0f, -1.0f},
+	world::TVertex{1.0f, -1.0f, -1.0f},
+	world::TVertex{1.0f, 1.0f, -1.0f},
+	world::TVertex{-1.0f, -1.0f, -1.0f},
+	world::TVertex{-1.0f, 1.0f, -1.0},
+
+	//front
+	world::TVertex{-1.0f, -1.0f, 1.0},
+	world::TVertex{1.0f, -1.0f, 1.0f},
+	world::TVertex{1.0f, 1.0f, 1.0f,},
+	world::TVertex{1.0f, 1.0f, 1.0f,},
+	world::TVertex{-1.0f, 1.0f, 1.0f},
+	world::TVertex{-1.0f, -1.0f, 1.0},
+
+	//left
+	world::TVertex{-1.0f, 1.0f, 1.0f},
+	world::TVertex{-1.0f, 1.0f, -1.0f},
+	world::TVertex{-1.0f, -1.0f, -1.0f},
+	world::TVertex{-1.0f, -1.0f, -1.0f},
+	world::TVertex{-1.0f, -1.0f, 1.0},
+	world::TVertex{-1.0f, 1.0f, 1.0f},
+
+	//right
+	world::TVertex{1.0f, 1.0f, 1.0f,},
+	world::TVertex{1.0f, -1.0f, -1.0},
+	world::TVertex{1.0f, 1.0f, -1.0f},
+	world::TVertex{1.0f, -1.0f, -1.0f},
+	world::TVertex{1.0f, 1.0f, 1.0f,},
+	world::TVertex{1.0f, -1.0f, 1.0f},
+
+	//bottom
+	world::TVertex{-1.0f, -1.0f, -1.0f},
+	world::TVertex{1.0f, -1.0f, -1.0f},
+	world::TVertex{1.0f, -1.0f, 1.0f},
+	world::TVertex{1.0f, -1.0f, 1.0f},
+	world::TVertex{-1.0f, -1.0f, 1.0f},
+	world::TVertex{-1.0f, -1.0f, -1.0f},
+
+	//top
+	world::TVertex{-1.0f, 1.0f, -1.0f},
+	world::TVertex{1.0f, 1.0f, 1.0f,},
+	world::TVertex{1.0f, 1.0f, -1.0f},
+	world::TVertex{1.0f, 1.0f, 1.0f,},
+	world::TVertex{-1.0f, 1.0f, -1.0f},
+	world::TVertex{-1.0f, 1.0f, 1.0f}
+};
+
+constexpr static world::TVertex quad_ndc[6] =
+{
+	world::TVertex{-1.0f,  1.0f, 0.0f,  math::Vec3f{0,0,1}, 0.0f, 1.0f},
+	world::TVertex{-1.0f, -1.0f, 0.0f,  math::Vec3f{0,0,1}, 0.0f, 0.0f},
+	world::TVertex{ 1.0f,  1.0f, 0.0f,  math::Vec3f{0,0,1}, 1.0f, 1.0f},
+
+	world::TVertex{ 1.0f,  1.0f, 0.0f,  math::Vec3f{0,0,1}, 1.0f, 1.0f},
+	world::TVertex{-1.0f, -1.0f, 0.0f,  math::Vec3f{0,0,1}, 0.0f, 0.0f},
+	world::TVertex{ 1.0f, -1.0f, 0.0f,  math::Vec3f{0,0,1}, 1.0f, 0.0f}
 };

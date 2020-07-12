@@ -82,7 +82,7 @@ namespace world
 					rndr::colored_draw(colored, view_proj, &b_meshes[i], &b_transforms[i], math::Vec4f{ rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, 1.0f });
 				}
 			}
-			framebuffer_unbind();
+			handle_unbind(glgpu::HANDLE_KIND::KIND_FRAMEBUFFER);
 
 			//read pixel where mouse_pos
 			{

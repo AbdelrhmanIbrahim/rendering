@@ -63,6 +63,6 @@ namespace rndr
 		buffer_vertex_set(self->quad_vbo, quad_strip, 6 * sizeof(world::TVertex), STORAGE::DYNAMIC);
 		handle_bind(self->quad_vao);
 		draw_strips(6);
-		vao_unbind();
+		handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 	}
 };

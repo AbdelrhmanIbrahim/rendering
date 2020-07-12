@@ -20,6 +20,17 @@ namespace glgpu
 	typedef struct IGL_Handle* Framebuffer;
 	typedef struct IGL_Handle* Cubemap;
 
+	enum class HANDLE_KIND
+	{
+		KIND_VAO,
+		KIND_BUFFER,
+		KIND_PROGRAM,
+		KIND_SAMPLER,
+		KIND_TEXTURE,
+		KIND_CUBEMAP,
+		KIND_FRAMEBUFFER
+	};
+
 	void
 	graphics_init();
 
@@ -60,9 +71,6 @@ namespace glgpu
 	vao_create();
 
 	void
-	vao_unbind();
-
-	void
 	vao_attach(Vao vao, Buffer vbo);
 
 	void
@@ -85,9 +93,6 @@ namespace glgpu
 
 	void
 	texture2d_render_offline_to(Texture output, Program prog, math::Vec2f view_size);
-
-	void
-	texture2d_unbind();
 
 	void
 	texture2d_unpack(Texture texture, io::Image& image, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type);
@@ -115,13 +120,13 @@ namespace glgpu
 	framebuffer_attach(Framebuffer fb, Texture tex, FRAMEBUFFER_ATTACHMENT attachment);
 
 	void
-	framebuffer_unbind();
-
-	void
 	handle_free(IGL_Handle* handle);
 
 	void
 	handle_bind(IGL_Handle* handle, unsigned int texture_unit = 0);
+
+	void
+	handle_unbind(HANDLE_KIND kind);
 
 	void
 	disable_color_buffer_rw();

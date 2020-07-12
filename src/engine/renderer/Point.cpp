@@ -35,7 +35,7 @@ namespace rndr
 		vao_attach(self->vao, self->vbo);
 		buffer_vertex_attribute(self->vbo, 0, 3, sizeof(world::CVertex), 0);
 		buffer_vertex_attribute(self->vbo, 1, 4, sizeof(world::CVertex), 3 * sizeof(float));
-		vao_unbind();
+		handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 
 		return self;
 	}
@@ -71,7 +71,7 @@ namespace rndr
 	{
 		handle_bind(self->vao);
 		draw_points(self->points.size(), 10);
-		vao_unbind();
+		handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 		self->points.clear();
 	}
 };

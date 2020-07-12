@@ -226,6 +226,6 @@ namespace rndr
 		//draw geometry
 		handle_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
-		vao_unbind();
+		handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 	}
 }

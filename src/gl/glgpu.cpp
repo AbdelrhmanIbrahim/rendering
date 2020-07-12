@@ -20,18 +20,7 @@ namespace glgpu
 {
 	struct IGL_Handle
 	{
-		enum KIND
-		{
-			KIND_VAO,
-			KIND_BUFFER,
-			KIND_PROGRAM,
-			KIND_SAMPLER,
-			KIND_TEXTURE,
-			KIND_CUBEMAP,
-			KIND_FRAMEBUFFER
-		};
-
-		KIND kind;
+		HANDLE_KIND kind;
 
 		union
 		{
@@ -384,6 +373,25 @@ namespace glgpu
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cmap->cubemap.id);
 	}
 
+	//unbind
+	void
+	_vao_unbind()
+	{
+		glBindVertexArray(NULL);
+	}
+
+	void
+	_framebuffer_unbind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	}
+
+	void
+	_texture2d_unbind()
+	{
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+
 	//API
 	void
 	graphics_init()
@@ -396,7 +404,7 @@ namespace glgpu
 	program_create(const char* vertex_shader_path, const char* pixel_shader_path)
 	{
 		IGL_Handle* handle = new IGL_Handle{};
-		handle->kind = IGL_Handle::KIND::KIND_PROGRAM;
+		handle->kind = HANDLE_KIND::KIND_PROGRAM;
 		handle->program.id = glCreateProgram();
 		std::ifstream stream;
 		GLuint vobj = _shader_obj(stream, vertex_shader_path, SHADER_STAGE::VERTEX);
@@ -414,7 +422,7 @@ namespace glgpu
 	program_create(const char* vertex_shader_path, const char* geometry_shader_path, const char* pixel_shader_path)
 	{
 		IGL_Handle* handle = new IGL_Handle{};
-		handle->kind = IGL_Handle::KIND::KIND_PROGRAM;
+		handle->kind = HANDLE_KIND::KIND_PROGRAM;
 		handle->program.id = glCreateProgram();
 		std::ifstream stream;
 		GLuint vobj = _shader_obj(stream, vertex_shader_path, SHADER_STAGE::VERTEX);
@@ -435,7 +443,7 @@ namespace glgpu
 	buffer_vertex_create()
 	{
 		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_BUFFER;
+		self->kind = HANDLE_KIND::KIND_BUFFER;
 		self->buffer.type = GL_ARRAY_BUFFER;
 		glGenBuffers(1, &self->buffer.id);
 		return self;
@@ -474,7 +482,7 @@ namespace glgpu
 	buffer_index_create(unsigned int indices[], std::size_t count)
 	{
 		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_BUFFER;
+		self->kind = HANDLE_KIND::KIND_BUFFER;
 		self->buffer.type = GL_ELEMENT_ARRAY_BUFFER;
 
 		glGenBuffers(1, &self->buffer.id);
@@ -488,7 +496,7 @@ namespace glgpu
 	buffer_uniform_create(unsigned int size_in_bytes)
 	{
 		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_BUFFER;
+		self->kind = HANDLE_KIND::KIND_BUFFER;
 		self->buffer.type = GL_UNIFORM_BUFFER;
 
 		glGenBuffers(1, &self->buffer.id);
@@ -516,15 +524,9 @@ namespace glgpu
 	vao_create()
 	{
 		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_VAO;
+		self->kind = HANDLE_KIND::KIND_VAO;
 		glGenVertexArrays(1, &self->vao.id);
 		return self;
-	}
-
-	void
-	vao_unbind()
-	{
-		glBindVertexArray(NULL);
 	}
 
 	void
@@ -546,7 +548,7 @@ namespace glgpu
 	texture2d_create(Vec2f size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT format, DATA_TYPE type, bool mipmap)
 	{
 		IGL_Handle* handle = new IGL_Handle{};
-		handle->kind = IGL_Handle::KIND::KIND_TEXTURE;
+		handle->kind = HANDLE_KIND::KIND_TEXTURE;
 
 		handle->texture.width = size[0];
 		handle->texture.height = size[1];
@@ -572,7 +574,7 @@ namespace glgpu
 	texture2d_create(const io::Image& img, IMAGE_FORMAT format)
 	{
 		IGL_Handle* handle = new IGL_Handle{};
-		handle->kind = IGL_Handle::KIND::KIND_TEXTURE;
+		handle->kind = HANDLE_KIND::KIND_TEXTURE;
 
 		INTERNAL_TEXTURE_FORMAT internal_format;
 		EXTERNAL_TEXTURE_FORMAT tex_format;
@@ -667,23 +669,17 @@ namespace glgpu
 		buffer_vertex_attribute(quad_vbo, 0, 3, sizeof(world::TVertex), 0);
 		buffer_vertex_attribute(quad_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
 		buffer_vertex_attribute(quad_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
-		vao_unbind();
+		_vao_unbind();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		_vao_bind(quad_vao);
 		draw_strips(6);
-		vao_unbind();
+		_vao_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		glDeleteFramebuffers(1, &fbo);
 		_vao_free(quad_vao);
 		_buffer_free(quad_vbo);
-	}
-
-	void
-	texture2d_unbind()
-	{
-		glBindTexture(GL_TEXTURE_2D, NULL);
 	}
 
 	void
@@ -698,7 +694,7 @@ namespace glgpu
 	{
 		//go for handles pool?
 		IGL_Handle* handle = new IGL_Handle;
-		handle->kind = IGL_Handle::KIND::KIND_SAMPLER;
+		handle->kind = HANDLE_KIND::KIND_SAMPLER;
 
 		GLuint* id = (GLuint*)&handle->sampler.id;
 		handle->sampler.min_filtering = _map(min_filtering);
@@ -719,7 +715,7 @@ namespace glgpu
 	cubemap_create(Vec2f view_size, INTERNAL_TEXTURE_FORMAT internal_format, EXTERNAL_TEXTURE_FORMAT pixel_format, DATA_TYPE type, bool mipmap)
 	{
 		IGL_Handle* handle = new IGL_Handle;
-		handle->kind = IGL_Handle::KIND::KIND_CUBEMAP;
+		handle->kind = HANDLE_KIND::KIND_CUBEMAP;
 		handle->cubemap.width = view_size[0];
 		handle->cubemap.height = view_size[1];
 		handle->cubemap.internal_format = _map(internal_format);
@@ -742,7 +738,7 @@ namespace glgpu
 	cubemap_rgba_create(const io::Image imgs[6])
 	{
 		IGL_Handle* handle = new IGL_Handle;
-		handle->kind = IGL_Handle::KIND::KIND_CUBEMAP;
+		handle->kind = HANDLE_KIND::KIND_CUBEMAP;
 		handle->cubemap.width = imgs[0].width;
 		handle->cubemap.height = imgs[0].height;
 		handle->cubemap.internal_format = GL_RGB;
@@ -809,7 +805,7 @@ namespace glgpu
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::TVertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
-		vao_unbind();
+		_vao_unbind();
 
 		error();
 		for (unsigned int i = 0; i < 6; ++i)
@@ -819,7 +815,7 @@ namespace glgpu
 			uniformmat4f_set(prog, "vp", proj * views[i]);
 			_vao_bind(cube_vao);
 			draw_strips(36);
-			vao_unbind();
+			_vao_unbind();
 		}
 
 		if (mipmap)
@@ -829,7 +825,7 @@ namespace glgpu
 			glBindTexture(GL_TEXTURE_CUBE_MAP, NULL);
 		}
 
-		texture2d_unbind();
+		_texture2d_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free
@@ -883,7 +879,7 @@ namespace glgpu
 		buffer_vertex_attribute(cube_vbo, 0, 3, sizeof(world::TVertex), 0);
 		buffer_vertex_attribute(cube_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
 		buffer_vertex_attribute(cube_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
-		vao_unbind();
+		_vao_unbind();
 
 		//TEST
 		/*io::Image imgs[6];
@@ -897,7 +893,7 @@ namespace glgpu
 			uniformmat4f_set(postprocessor, "vp", proj * views[i]);
 			_vao_bind(cube_vao);
 			draw_strips(36);
-			vao_unbind();
+			_vao_unbind();
 
 			//TEST
 			/*glReadPixels(0, 0, view_size[0], view_size[1], GL_RGBA, GL_UNSIGNED_BYTE, imgs[i].data);
@@ -909,7 +905,7 @@ namespace glgpu
 		/*for (int i = 0; i < 6; ++i)
 			io::image_free(imgs[i]);*/
 
-		texture2d_unbind();
+		_texture2d_unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 		//free
@@ -923,7 +919,7 @@ namespace glgpu
 	framebuffer_create()
 	{
 		IGL_Handle* self = new IGL_Handle{};
-		self->kind = IGL_Handle::KIND::KIND_FRAMEBUFFER;
+		self->kind = HANDLE_KIND::KIND_FRAMEBUFFER;
 		glGenFramebuffers(1, &self->framebuffer.id);
 
 		return self;
@@ -938,35 +934,29 @@ namespace glgpu
 	}
 
 	void
-	framebuffer_unbind()
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	}
-
-	void
 	handle_free(IGL_Handle* handle)
 	{
 		switch (handle->kind)
 		{
-			case IGL_Handle::KIND::KIND_BUFFER :
+			case HANDLE_KIND::KIND_BUFFER :
 				_buffer_free(handle);
 				break;
-			case IGL_Handle::KIND::KIND_CUBEMAP :
+			case HANDLE_KIND::KIND_CUBEMAP :
 				_cubemap_free(handle);
 				break;
-			case IGL_Handle::KIND::KIND_FRAMEBUFFER :
+			case HANDLE_KIND::KIND_FRAMEBUFFER :
 				_framebuffer_free(handle);
 				break;
-			case IGL_Handle::KIND::KIND_PROGRAM :
+			case HANDLE_KIND::KIND_PROGRAM :
 				_program_free(handle);
 				break;
-			case IGL_Handle::KIND::KIND_SAMPLER :
+			case HANDLE_KIND::KIND_SAMPLER :
 				_sampler_free(handle);
 				break;
-			case IGL_Handle::KIND::KIND_TEXTURE :
+			case HANDLE_KIND::KIND_TEXTURE :
 				_texture_free(handle);
 				break;
-			case IGL_Handle::KIND::KIND_VAO :
+			case HANDLE_KIND::KIND_VAO :
 				_vao_free(handle);
 				break;
 			default:
@@ -980,26 +970,47 @@ namespace glgpu
 	{
 		switch (handle->kind)
 		{
-			case IGL_Handle::KIND::KIND_VAO :
+			case HANDLE_KIND::KIND_VAO :
 				_vao_bind(handle);
 				break;
-			case IGL_Handle::KIND::KIND_FRAMEBUFFER :
+			case HANDLE_KIND::KIND_FRAMEBUFFER :
 				_framebuffer_bind(handle);
 				break;
-			case IGL_Handle::KIND::KIND_PROGRAM :
+			case HANDLE_KIND::KIND_PROGRAM :
 				_program_use(handle);
 				break;
-			case IGL_Handle::KIND::KIND_CUBEMAP :
+			case HANDLE_KIND::KIND_CUBEMAP :
 				_cubemap_bind(handle, texture_unit);
 				break;
-			case IGL_Handle::KIND::KIND_SAMPLER :
+			case HANDLE_KIND::KIND_SAMPLER :
 				_sampler_bind(handle, texture_unit);
 				break;
-			case IGL_Handle::KIND::KIND_TEXTURE :
+			case HANDLE_KIND::KIND_TEXTURE :
 				_texture2d_bind(handle, texture_unit);
 				break;
 			default:
-				//buffer
+				//buffer TODO -revisit-
+				assert(false);
+				break;
+		}
+	}
+
+	void
+	handle_unbind(HANDLE_KIND kind)
+	{
+		switch (kind)
+		{
+			case HANDLE_KIND::KIND_VAO :
+				_vao_unbind();
+				break;
+			case HANDLE_KIND::KIND_FRAMEBUFFER :
+				_framebuffer_unbind();
+				break;
+			case HANDLE_KIND::KIND_TEXTURE :
+				_texture2d_unbind();
+				break;
+			default:
+				//buffer TODO -revisit-
 				assert(false);
 				break;
 		}

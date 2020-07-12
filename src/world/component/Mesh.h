@@ -51,7 +51,7 @@ namespace world
 		glgpu::buffer_vertex_attribute(self.vbo, 0, 3, sizeof(world::TVertex), 0);
 		glgpu::buffer_vertex_attribute(self.vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
 		glgpu::buffer_vertex_attribute(self.vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
-		glgpu::vao_unbind();
+		glgpu::handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 
 		return self;
 	}

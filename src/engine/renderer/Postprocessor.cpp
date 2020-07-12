@@ -191,11 +191,11 @@ namespace rndr
                     depth_test(DEPTH_TEST::LE);
                     handle_bind(self->palette_vao);
                     draw_strips(6);
-                    vao_unbind();
+                    handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
                 }
             }
         }
-        framebuffer_unbind();
+        handle_unbind(glgpu::HANDLE_KIND::KIND_FRAMEBUFFER);
 
         return self->out;
     }

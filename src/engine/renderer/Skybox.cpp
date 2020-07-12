@@ -96,7 +96,7 @@ namespace rndr
 		buffer_vertex_attribute(self->cube_vbo, 0, 3, sizeof(world::TVertex), 0);
 		buffer_vertex_attribute(self->cube_vbo, 1, 3, sizeof(world::TVertex), 3 * sizeof(float));
 		buffer_vertex_attribute(self->cube_vbo, 2, 2, sizeof(world::TVertex), 6 * sizeof(float));
-		vao_unbind();
+		handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 	}
 
 	Skybox
@@ -171,7 +171,7 @@ namespace rndr
 			//draw world cube
 			handle_bind(self->cube_vao);
 			draw_strips(36);
-			vao_unbind();
+			handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 		}
 		depth_test(DEPTH_TEST::L);
 	}

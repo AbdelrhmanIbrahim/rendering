@@ -71,7 +71,7 @@ namespace rndr
 		poly_edges_enable();
 		handle_bind(mesh->vao);
 		draw_indexed(mesh->indices.size());
-		vao_unbind();
+		handle_unbind(glgpu::HANDLE_KIND::KIND_VAO);
 		poly_edges_disable();
 	}
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gl/glgpu.h"
+#include "engine/renderer/Pass.h"
 
 #include "math/Vector.h"
 
@@ -17,7 +17,7 @@ namespace rndr
     postprocessor_free(Postprocessor self);
 
     void
-    postprocessor_effect_add(Postprocessor self, glgpu::Postprocessing_Pass& pass);
+    postprocessor_effect_add(Postprocessor self, rndr::Postprocessing_Pass& pass);
 
 	glgpu::Texture
     postprocessor_run(Postprocessor self, math::Vec2f view_port);

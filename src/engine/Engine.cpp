@@ -20,6 +20,7 @@
 #include "engine/renderer/TQuad.h"
 #include "engine/renderer/Hiddenline.h"
 #include "engine/renderer/Skybox.h"
+#include "engine/renderer/Pass.h"
 #include "engine/renderer/PostProcessor.h"
 
 #include "world/system/rendering/Phong.h"
@@ -96,7 +97,7 @@ namespace rndr
 		rndr::postprocessor_effect_add
 		(
 			pp, 
-			glgpu::Postprocessing_Pass
+			rndr::Postprocessing_Pass
 			{
 				//postprocessing frag shader
 				DIR_PATH"/src/engine/shaders/postprocessing/color.pixel", 

@@ -76,6 +76,7 @@ set(HEADERS
 	src/engine/renderer/TQuad.h
 	src/engine/renderer/Skybox.h
 	src/engine/renderer/Hiddenline.h
+	src/engine/renderer/Pass.h
 	src/engine/renderer/Postprocessor.h
 	src/engine/renderer/Outlines3D.h
 	src/gl/glgpu.h

@@ -2,7 +2,7 @@
 
 #include "defs/Defs.h"
 
-#include <vector>
+#include "gl/glgpu.h"
 
 using namespace glgpu;
 
@@ -151,7 +151,7 @@ namespace rndr
     }
 
     void
-    postprocessor_effect_add(Postprocessor self, glgpu::Postprocessing_Pass& pass)
+    postprocessor_effect_add(Postprocessor self, rndr::Postprocessing_Pass& pass)
     {
         self->passes.emplace_back
         (

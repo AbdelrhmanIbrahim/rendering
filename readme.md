@@ -48,11 +48,14 @@
 - Textured quad ✔
 - Fix PBR distortion bug (happened after camera orbiral change commit : https://github.com/AbdelrhmanIbrahim/rendering/commit/1138169c966fd829c145cfd172d17c5601d78ae1, revert camera_view_matrix() and bug fixed but figure out why)
 - 3d objects outlines
+- application state (e.g. Picking state)
 - load obj textured models, check assimp impl
 - normal mapping
+- deferred shading
+- improve PBR + maps usage
+- shadows 
+- SSAO
 - parallex mapping or relief mapping (raymarching) 
-- application state (e.g. Picking state)
-- shadows
 - OI and OD transparency like weighted average or depth peeling (nvidia bookmark and https://m.habr.com/en/post/457292/) 
 - continue in real time rendering book
 - MSAA enable when needed
@@ -67,9 +70,7 @@
 - propagate uniform blocks to phong_shadow
 - if we don't need exceptions, disable them
 - fix imgui input handling bug
-- deferred shading
 - realtime GI (global illumination) 
-- ambient occlusion
 - main loop indpendent frame rate
 - compute shaders
 - space partitioning 

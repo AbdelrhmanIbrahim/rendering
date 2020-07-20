@@ -56,10 +56,10 @@ namespace io
 			stbi_write_png(path, img.width, img.height, img.channels, img.data, img.width * img.channels);
 			break;
 		case IMAGE_FORMAT::JPG:
-			stbi_write_jpg(path, img.width, img.height, 4, img.data, 100);
+			stbi_write_jpg(path, img.width, img.height, img.channels, img.data, 100);
 			break;
 		case IMAGE_FORMAT::HDR:
-			stbi_write_hdr(path, img.width, img.height, 4, (float*)img.data);
+			stbi_write_hdr(path, img.width, img.height, img.channels, (float*)img.data);
 			break;
 		default:
 			assert("unsupported image format" && false);

@@ -141,10 +141,10 @@ constexpr static world::TVertex tbg_quad[6]
 };
 
 //front quad
-constexpr static world::TVertex fttl{ math::Vec3f{ -1,  1, -1 }, math::Vec3f{}, math::Vec2f{0, 1} };
-constexpr static world::TVertex ftbl{ math::Vec3f{ -1, -1, -1 }, math::Vec3f{}, math::Vec2f{0, 0} };
-constexpr static world::TVertex ftbr{ math::Vec3f{  1, -1, -1 }, math::Vec3f{}, math::Vec2f{1, 0} };
-constexpr static world::TVertex fttr{ math::Vec3f{  1,  1, -1 }, math::Vec3f{}, math::Vec2f{1, 1} };
+constexpr static world::TVertex fttl{ math::Vec3f{-1,  1, -1}, math::Vec3f{}, math::Vec2f{0, 1} };
+constexpr static world::TVertex ftbl{ math::Vec3f{-1, -1, -1}, math::Vec3f{}, math::Vec2f{0, 0} };
+constexpr static world::TVertex ftbr{ math::Vec3f{ 1, -1, -1}, math::Vec3f{}, math::Vec2f{1, 0} };
+constexpr static world::TVertex fttr{ math::Vec3f{ 1,  1, -1}, math::Vec3f{}, math::Vec2f{1, 1} };
 constexpr static world::TVertex tfr_quad[6]
 {
 	fttl, ftbl, ftbr,

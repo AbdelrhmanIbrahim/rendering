@@ -29,7 +29,7 @@ namespace rndr
        glgpu::Buffer palette_vbo;
        glgpu::Buffer uvp;
        glgpu::Framebuffer fb;
-        glgpu::Sampler sampler;
+       glgpu::Sampler sampler;
 
        std::vector<IPass> passes;
     };
@@ -127,11 +127,6 @@ namespace rndr
 		buffer_vertex_attribute(self->palette_vbo, 2, 2, sizeof(world::TVertex), sizeof(world::TVertex::pos) + sizeof(world::TVertex::normal));
 		buffer_vertex_set(self->palette_vbo, tfr_quad, 6 * sizeof(world::TVertex), STORAGE::STATIC);
 
-        //postprocess vertex shader uniforms
-        math::Mat4f identity = math::mat4_id();
-		buffer_uniform_bind(self->uvp, 0);
-		buffer_uniform_set(self->uvp, &identity, sizeof(math::Mat4f));
-
         return self;
     }
 
@@ -184,6 +179,13 @@ namespace rndr
                 //prepare postprocessor
                 {
                     handle_bind(pass.prog);
+
+                    //vertex shader uniforms
+                    math::Mat4f identity = math::mat4_id();
+                    buffer_uniform_bind(self->uvp, 0);
+                    buffer_uniform_set(self->uvp, &identity, sizeof(math::Mat4f));
+
+                    //fragment shader uniforms -- in is blanck in rdoc -revisit-
                     handle_bind(in, 0);
                     handle_bind(self->sampler, 0);
                     for(const auto& uniform : pass.gpu_uniforms)
@@ -202,7 +204,6 @@ namespace rndr
             }
         }
         handle_unbind(glgpu::HANDLE_KIND::KIND_FRAMEBUFFER);
-        error();
 
         return in;
     }

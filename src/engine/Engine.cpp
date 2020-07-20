@@ -96,7 +96,7 @@ namespace rndr
 		glgpu::Uniform color;
 		color.slot = 1;
 		color.type = UNIFORM_TYPE::VEC4;
-		color.value.vec4 = math::Vec4f{ 1, 1, 0, 1 };
+		color.value.vec4 = math::Vec4f{ 1, 0, 0, 1 };
 
 		rndr::postprocessor_effect_add
 		(
@@ -189,13 +189,13 @@ namespace rndr
 			//init frame
 			glgpu::frame_start(0.6f, 0.68f, 0.5f);
 
-			//scene rendering pass
-			{
-				_engine_world_mesh_render(e, w);
-				world::system::point_sys_run(e->point, w);
-				world::system::line_sys_run(e->line, w);
-				world::system::bg_col_sys_run(e->cquad, w);
-			}
+			////scene rendering pass
+			//{
+			//	_engine_world_mesh_render(e, w);
+			//	world::system::point_sys_run(e->point, w);
+			//	world::system::line_sys_run(e->line, w);
+			//	world::system::bg_col_sys_run(e->cquad, w);
+			//}
 
 			//postprocessing pass (blur, SSAO, etc..)
 			{

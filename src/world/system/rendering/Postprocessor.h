@@ -11,6 +11,6 @@ namespace world
 	namespace system
 	{
 		glgpu::Texture
-		postprocess_sys_run(rndr::Postprocessor pp, ecs::World& w);
+		postprocess_sys_run(rndr::Postprocessor pp, ecs::World& w, glgpu::Texture in);
 	};
 };

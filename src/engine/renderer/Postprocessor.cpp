@@ -5,6 +5,8 @@
 #include "gl/glgpu.h"
 #include "gl/Uniform.h"
 
+#include <assert.h>
+
 using namespace glgpu;
 
 namespace rndr
@@ -27,7 +29,7 @@ namespace rndr
        glgpu::Buffer palette_vbo;
        glgpu::Buffer uvp;
        glgpu::Framebuffer fb;
-       glgpu::Texture out;
+        glgpu::Sampler sampler;
 
        std::vector<IPass> passes;
     };
@@ -116,7 +118,7 @@ namespace rndr
         self->palette_vbo = buffer_vertex_create();
 		self->uvp = buffer_uniform_create(sizeof(math::Mat4f));
         self->fb = framebuffer_create();
-        self->out = texture2d_create(math::Vec2f{1,1}, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE, false);
+        self->sampler = sampler_create(TEXTURE_FILTERING::LINEAR, TEXTURE_FILTERING::LINEAR, TEXTURE_SAMPLING::CLAMP_TO_EDGE);
 
         //palette quad
 		vao_attach(self->palette_vao, self->palette_vbo);
@@ -140,7 +142,7 @@ namespace rndr
         handle_free(self->palette_vbo);
         handle_free(self->uvp);
         handle_free(self->fb);
-        handle_free(self->out);
+        handle_free(self->sampler);
 
         //delete passes
         for(auto& pass : self->passes)
@@ -165,14 +167,16 @@ namespace rndr
     }
 
 	glgpu::Texture
-    postprocessor_run(Postprocessor self, math::Vec2f viewport)
+    postprocessor_run(Postprocessor self, glgpu::Texture in, math::Vec2f viewport)
     {
-        view_port(0,0, viewport[0], viewport[1]);
-        if(viewport != texture2d_size(self->out))
-            texture2d_resize(self->out, viewport, INTERNAL_TEXTURE_FORMAT::RGBA, EXTERNAL_TEXTURE_FORMAT::RGBA, DATA_TYPE::UBYTE);
+        if(in == nullptr)
+        {
+            assert(false && "no input texture for postprocessor.");
+        }
 
         handle_bind(self->fb);
-        framebuffer_attach(self->fb, self->out, FRAMEBUFFER_ATTACHMENT::COLOR0);
+        framebuffer_attach(self->fb, in, FRAMEBUFFER_ATTACHMENT::COLOR0);
+        view_port(0, 0, viewport[0], viewport[1]);
 		{
             //run all your passes here
             for(const auto& pass : self->passes)
@@ -180,6 +184,8 @@ namespace rndr
                 //prepare postprocessor
                 {
                     handle_bind(pass.prog);
+                    handle_bind(in, 0);
+                    handle_bind(self->sampler, 0);
                     for(const auto& uniform : pass.gpu_uniforms)
                         _bind_gpu_uniform(uniform);
                 }
@@ -196,7 +202,8 @@ namespace rndr
             }
         }
         handle_unbind(glgpu::HANDLE_KIND::KIND_FRAMEBUFFER);
+        error();
 
-        return self->out;
+        return in;
     }
 };

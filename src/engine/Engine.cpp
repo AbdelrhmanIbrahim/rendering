@@ -58,6 +58,9 @@ namespace rndr
 		rndr::Hiddenline hline;
 		rndr::Skybox skybox;
 		rndr::Postprocessor pp;
+
+		//should we move to pp sys? -revisit-
+		glgpu::Texture postprocessing_texture;
 	};
 
 	//helpers
@@ -94,7 +97,7 @@ namespace rndr
 		color.slot = 1;
 		color.type = UNIFORM_TYPE::VEC4;
 		color.value.vec4 = math::Vec4f{ 1, 1, 0, 1 };
-		
+
 		rndr::postprocessor_effect_add
 		(
 			pp, 
@@ -137,6 +140,9 @@ namespace rndr
 		self->pp = rndr::postprocessor_create();
 		_init_postprocessor(self->pp);
 
+		//testing for now
+		self->postprocessing_texture = glgpu::texture2d_create(DIR_PATH"/res/imgs/skybox/sky/back.jpg", IMAGE_FORMAT::JPG);
+
 		//imgui
 		ImGui::CreateContext();
 		ImGui_ImplOpenGL3_Init("#version 400");
@@ -158,6 +164,9 @@ namespace rndr
 		rndr::hiddenline_free(e->hline);
 		rndr::skybox_renderer_free(e->skybox);
 		rndr::postprocessor_free(e->pp);
+
+		//testing for now
+		glgpu::handle_free(e->postprocessing_texture);
 
 		glgpu::context_free(e->ctx);
 		delete e;
@@ -190,7 +199,7 @@ namespace rndr
 
 			//postprocessing pass (blur, SSAO, etc..)
 			{
-				glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w);
+				glgpu::Texture out = world::system::postprocess_sys_run(e->pp, w, e->postprocessing_texture);
 			}
 		}
 	}

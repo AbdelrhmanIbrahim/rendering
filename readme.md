@@ -51,6 +51,7 @@
 - application state (e.g. Picking state)
 - load obj textured models, check assimp impl
 - normal mapping
+- read more about material systems (shading models impl chp 5 in rtr + unreal blueprint) 
 - deferred shading
 - improve PBR + maps usage
 - shadows 

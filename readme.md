@@ -46,6 +46,7 @@
 - selection manager ✔
 - orbiting camera ✔
 - Textured quad ✔
+- fix postprocessing bug (input texture is bound as the result outprocessing texture, you dumb) 
 - 3d objects outlines
 - Fix PBR distortion bug (happened after camera orbiral change commit : https://github.com/AbdelrhmanIbrahim/rendering/commit/1138169c966fd829c145cfd172d17c5601d78ae1, revert camera_view_matrix() and bug fixed but figure out why)
 - application state (e.g. Picking state)
